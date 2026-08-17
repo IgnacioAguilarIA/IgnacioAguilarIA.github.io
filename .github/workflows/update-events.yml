@@ -1,0 +1,50 @@
+name: Actualizar paros y feriados
+
+on:
+  schedule:
+    - cron: "15 6 * * *"
+      timezone: "America/Argentina/Cordoba"
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+
+  update-events:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Actualizar eventos
+        run: |
+          python scripts/update_events.py
+
+      - name: Guardar cambios
+        run: |
+
+          git config user.name "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add data/events.json
+
+          git diff --cached --quiet || \
+            git commit -m "Actualiza eventos"
+
+          git push
