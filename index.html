@@ -73,11 +73,54 @@ button,input,select{font:inherit}.hidden{display:none!important}
       <div class="cal-status" id="calendarStatus">Cargando eventos...</div>
     </section>
 
+
+    <button class="toggle" id="workoutToggle"><span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span><span class="toggle-icon" id="workoutIcon">+</span></button>
+
+    <section class="workout-panel" id="workoutPanel">
+      <div class="workout-head">
+        <div><h2>Rutina de entrenamiento</h2><p>Cargá cada ejercicio con series, repeticiones, RIR y las demás especificaciones. Queda guardado en tu cuenta.</p></div>
+        <button class="small-btn" id="addExerciseBtn">＋ Agregar ejercicio</button>
+      </div>
+      <div class="workout-days" id="workoutDays"></div>
+      <div class="workout-list" id="workoutList"></div>
+    </section>
+
     <div class="schedule" id="schedule"></div>
   </main>
 </section>
 
 <div class="overlay" id="taskOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3>➕ Agregar tarea</h3><span id="taskModalInfo"></span></div><button class="close" onclick="closeTaskModal()">×</button></div><div class="field"><label>Título</label><input class="input" id="taskTitleInput"></div><div class="field"><label>Descripción</label><input class="input" id="taskDescInput"></div><button class="save" id="saveTaskBtn">Guardar tarea</button></div></div>
+
+
+<div class="overlay" id="workoutOverlay">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div><h3 id="workoutModalTitle">＋ Agregar ejercicio</h3><span id="workoutModalInfo"></span></div>
+      <button class="close" id="workoutCloseBtn">×</button>
+    </div>
+
+    <div class="field"><label>Ejercicio</label><input class="input" id="exerciseName" placeholder="Ej: Press banca plano"></div>
+
+    <div class="workout-form-grid">
+      <div class="field"><label>Series</label><input class="input" id="exerciseSets" type="number" min="1" step="1" placeholder="4"></div>
+      <div class="field"><label>Repeticiones</label><input class="input" id="exerciseReps" placeholder="8-10"></div>
+      <div class="field"><label>RIR</label><input class="input" id="exerciseRir" type="number" min="0" step="1" placeholder="2"></div>
+      <div class="field"><label>Descanso (seg)</label><input class="input" id="exerciseRest" type="number" min="0" step="15" placeholder="120"></div>
+    </div>
+
+    <div class="workout-form-grid two">
+      <div class="field"><label>Peso / carga</label><input class="input" id="exerciseWeight" placeholder="Ej: 80 kg"></div>
+      <div class="field"><label>Tempo</label><input class="input" id="exerciseTempo" placeholder="Ej: 3-1-1-0"></div>
+    </div>
+
+    <div class="field"><label>Notas / técnica</label><input class="input" id="exerciseNotes" placeholder="Ej: Pausa 1s abajo, agarre medio..."></div>
+
+    <div class="workout-form-actions">
+      <button class="save" id="saveExerciseBtn">Guardar ejercicio</button>
+      <button class="secondary hidden" id="cancelExerciseBtn">Cancelar edición</button>
+    </div>
+  </div>
+</div>
 
 <div class="overlay" id="dateOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="dateModalTitle">＋ Agregar fecha</h3><span id="dateModalInfo">Fecha personal</span></div><button class="close" onclick="closeDateModal()">×</button></div><div class="field"><label>Fecha</label><input class="input" id="dateInput" type="date"></div><div class="field"><label>Tipo</label><select class="input" id="dateType"><option value="ocupado">📌 Día ocupado</option><option value="importante">⭐ Día importante</option></select></div><div class="field"><label>Título</label><input class="input" id="dateTitle"></div><div class="field"><label>Descripción</label><input class="input" id="dateDescription"></div><button class="save" id="saveDateBtn">Guardar fecha</button><button class="danger hidden" id="deleteDateBtn">🗑️ Eliminar fecha</button></div></div>
 
@@ -90,6 +133,7 @@ const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'
 const HOURS=[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
 const TZ='America/Argentina/Cordoba';
 let currentUser=null, selectedDay=getArgentinaWeekday(), selectedHour=7, currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear(), tasks=[], personalDates=[], sharedEvents=[], editingDateId=null, tooltip=null, authMode='login';
+let workoutDay=selectedDay, workoutExercises=[], editingExerciseId=null;
 
 const $=id=>document.getElementById(id);
 function argentinaParts(){const p=new Intl.DateTimeFormat('es-AR',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'}).formatToParts(new Date()); const o={}; p.forEach(x=>{if(x.type!=='literal')o[x.type]=x.value}); return o;}
@@ -109,13 +153,13 @@ $('logoutBtn').onclick=async()=>{await sb.auth.signOut();};
 async function init(){const {data:{session}}=await sb.auth.getSession();await handleSession(session);sb.auth.onAuthStateChange(async(_event,session)=>{await handleSession(session);});}
 async function handleSession(session){if(!session){currentUser=null;$('authScreen').classList.remove('hidden');$('app').classList.add('hidden');return;}currentUser=session.user;$('authScreen').classList.add('hidden');$('app').classList.remove('hidden');$('userEmail').textContent=currentUser.email||'';await refreshAll();}
 
-async function refreshAll(){await Promise.all([loadTasks(),loadPersonalDates(),loadSharedEvents()]);createDays();renderSchedule();buildMonthOptions();renderCalendar();updateStats();updateNotice();}
+async function refreshAll(){await Promise.all([loadTasks(),loadPersonalDates(),loadSharedEvents(),loadWorkoutExercises()]);createDays();renderSchedule();buildMonthOptions();renderCalendar();updateStats();renderWorkoutDays();renderWorkoutList();updateNotice();}
 
 async function loadTasks(){const {data,error}=await sb.from('tasks').select('*').order('hour',{ascending:true});if(error){console.error(error);tasks=[];}else tasks=data||[];}
 async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
 async function loadSharedEvents(){try{const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('events.json no disponible');const data=await res.json();sharedEvents=Array.isArray(data)?data:(data.events||[]);$('calendarStatus').textContent='Eventos compartidos cargados.';}catch(e){console.warn(e);sharedEvents=[];$('calendarStatus').textContent='No se pudo cargar data/events.json; feriados/paros compartidos pueden no aparecer.';}}
 
-function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;createDays();renderSchedule();updateStats();};c.appendChild(b);});}
+function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;createDays();renderSchedule();updateStats();renderWorkoutDays();loadWorkoutExercises().then(renderWorkoutList);};c.appendChild(b);});}
 function renderSchedule(){const c=$('schedule');c.innerHTML='';HOURS.forEach(hour=>{const row=document.createElement('div');row.className='hour';const t=document.createElement('div');t.className='time';t.textContent=String(hour).padStart(2,'0')+':00';t.onclick=()=>openTaskModal(hour);const s=document.createElement('div');s.className='slot';s.onclick=()=>openTaskModal(hour);const list=tasks.filter(x=>x.day===selectedDay&&x.hour===hour);if(!list.length){const e=document.createElement('div');e.className='empty';e.textContent='Tocá para agregar';s.appendChild(e);}list.forEach(task=>{const card=document.createElement('div');card.className='task';const del=document.createElement('button');del.className='delete-task';del.textContent='×';del.onclick=ev=>{ev.stopPropagation();deleteTask(task.id)};const h=document.createElement('h4');h.textContent=task.title;const p=document.createElement('p');p.textContent=task.description||'';card.append(del,h,p);card.onclick=ev=>ev.stopPropagation();enableTooltip(card,task.title,task.description||'Sin descripción',`${DAYS[selectedDay]} · ${String(task.hour).padStart(2,'0')}:00`);s.appendChild(card)});row.append(t,s);c.appendChild(row);});}
 function updateStats(){const todayCount=tasks.filter(x=>x.day===selectedDay).length;const used=new Set(tasks.filter(x=>x.day===selectedDay).map(x=>x.hour)).size;$('totalTasks').textContent=tasks.length;$('todayTasks').textContent=todayCount;$('freeHours').textContent=HOURS.length-used;}
 
@@ -123,6 +167,17 @@ function openTaskModal(hour){selectedHour=hour;$('taskModalInfo').textContent=`$
 function closeTaskModal(){$('taskOverlay').classList.remove('show');}
 $('saveTaskBtn').onclick=async()=>{const title=$('taskTitleInput').value.trim();const description=$('taskDescInput').value.trim();if(!title)return alert('Escribí el título.');const {error}=await sb.from('tasks').insert({user_id:currentUser.id,title,description,day:selectedDay,hour:selectedHour});if(error){alert(error.message);return;}closeTaskModal();await loadTasks();renderSchedule();updateStats();}
 async function deleteTask(id){const {error}=await sb.from('tasks').delete().eq('id',id);if(error)alert(error.message);else{await loadTasks();renderSchedule();updateStats();}}
+
+
+function openWorkoutPanel(){const p=$('workoutPanel');const open=!p.classList.contains('open');p.classList.toggle('open',open);$('workoutIcon').textContent=open?'−':'+';}
+function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=()=>{workoutDay=i;renderWorkoutDays();renderWorkoutList()};c.appendChild(b)});}
+async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);workoutExercises=[]}else workoutExercises=data||[]}
+function renderWorkoutList(){const c=$('workoutList');c.innerHTML='';if(!workoutExercises.length){const e=document.createElement('div');e.className='workout-empty';e.textContent='No hay ejercicios cargados para '+DAYS[workoutDay]+'. Tocá “Agregar ejercicio” para crear la rutina.';c.appendChild(e);return;}workoutExercises.forEach(ex=>{const card=document.createElement('div');card.className='exercise-card';const top=document.createElement('div');top.className='exercise-top';const left=document.createElement('div');const name=document.createElement('div');name.className='exercise-name';name.textContent=ex.exercise;const chips=document.createElement('div');chips.className='exercise-meta';[[`Series: ${ex.sets||'-'}`],[`Reps: ${ex.reps||'-'}`],[`RIR: ${ex.rir??'-'}`],[`Descanso: ${ex.rest_seconds?ex.rest_seconds+'s':'-'}`],[`Peso: ${ex.weight||'-'}`],[`Tempo: ${ex.tempo||'-'}`]].forEach(([txt])=>{const ch=document.createElement('span');ch.className='exercise-chip';ch.textContent=txt;chips.appendChild(ch)});left.append(name,chips);if(ex.notes){const note=document.createElement('div');note.className='exercise-note';note.textContent=ex.notes;left.appendChild(note)}const actions=document.createElement('div');actions.className='exercise-actions';const edit=document.createElement('button');edit.className='exercise-action';edit.textContent='✎';edit.title='Editar';edit.onclick=()=>openExerciseModal(ex);const del=document.createElement('button');del.className='exercise-action delete';del.textContent='×';del.title='Eliminar';del.onclick=()=>deleteExercise(ex.id);actions.append(edit,del);top.append(left,actions);card.append(top);c.appendChild(card)})}
+function openExerciseModal(ex=null){editingExerciseId=ex?.id||null;$('workoutModalTitle').textContent=ex?'✎ Editar ejercicio':'＋ Agregar ejercicio';$('workoutModalInfo').textContent=DAYS[workoutDay];$('exerciseName').value=ex?.exercise||'';$('exerciseSets').value=ex?.sets??'';$('exerciseReps').value=ex?.reps??'';$('exerciseRir').value=ex?.rir??'';$('exerciseRest').value=ex?.rest_seconds??'';$('exerciseWeight').value=ex?.weight??'';$('exerciseTempo').value=ex?.tempo??'';$('exerciseNotes').value=ex?.notes??'';$('cancelExerciseBtn').classList.toggle('hidden',!ex);$('workoutOverlay').classList.add('show');setTimeout(()=>$('exerciseName').focus(),80)}
+function closeExerciseModal(){ $('workoutOverlay').classList.remove('show'); editingExerciseId=null; }
+$('saveExerciseBtn').onclick=async()=>{const payload={exercise:$('exerciseName').value.trim(),sets:Number($('exerciseSets').value)||null,reps:$('exerciseReps').value.trim(),rir:$('exerciseRir').value===''?null:Number($('exerciseRir').value),rest_seconds:Number($('exerciseRest').value)||null,weight:$('exerciseWeight').value.trim(),tempo:$('exerciseTempo').value.trim(),notes:$('exerciseNotes').value.trim()};if(!payload.exercise)return alert('Escribí el nombre del ejercicio.');if(editingExerciseId){const {error}=await sb.from('workout_exercises').update(payload).eq('id',editingExerciseId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=workoutDay;payload.position=workoutExercises.length+1;const {error}=await sb.from('workout_exercises').insert(payload);if(error){alert(error.message);return}}closeExerciseModal();await loadWorkoutExercises();renderWorkoutList();}
+async function deleteExercise(id){if(!confirm('¿Eliminar este ejercicio?'))return;const {error}=await sb.from('workout_exercises').delete().eq('id',id);if(error)alert(error.message);else{await loadWorkoutExercises();renderWorkoutList();}}
+$('workoutToggle').onclick=openWorkoutPanel;$('addExerciseBtn').onclick=()=>openExerciseModal();$('workoutCloseBtn').onclick=closeExerciseModal;$('cancelExerciseBtn').onclick=closeExerciseModal;$('workoutOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExerciseModal()});
 
 function buildMonthOptions(){const sel=$('calendarMonth');if(sel.options.length)return;['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'].forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;sel.appendChild(o)});sel.value=currentMonth;$('calendarYear').value=currentYear;}
 function eventsForDate(d){return sharedEvents.filter(e=>(e.date||e.fecha)===d).map(e=>({kind:e.type||e.tipo||'important',title:e.title||e.titulo||'Evento',description:e.description||e.descripcion||'',meta:e.scope||e.alcance||e.source||e.fuente||''}));}
