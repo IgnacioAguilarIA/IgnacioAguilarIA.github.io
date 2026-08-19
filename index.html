@@ -25,7 +25,7 @@ button,input,select{font:inherit}.hidden{display:none!important}
 
 .section-switcher{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:14px;
   margin-bottom:14px;
 }
@@ -307,6 +307,34 @@ button,input,select{font:inherit}.hidden{display:none!important}
   border-color:#60a5fa;
 }
 
+
+
+/* ======================================================
+   ALIMENTACIÓN
+====================================================== */
+
+.nutrition-panel{display:none;background:rgba(17,24,39,.96);border:1px solid var(--line);border-radius:24px;padding:20px;margin-bottom:20px;box-shadow:var(--shadow)}
+.nutrition-panel.open{display:block}
+.nutrition-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:15px}
+.nutrition-head h2{font-size:20px;margin-bottom:5px}
+.nutrition-head p{color:var(--muted);font-size:12px;line-height:1.45;max-width:620px}
+.meal-tabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.meal-tab{padding:10px 9px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:#cbd5e1;cursor:pointer;font-size:11px;font-weight:800;line-height:1.25}
+.meal-tab.active{background:linear-gradient(135deg,var(--blue),#1d4ed8);color:#fff;border-color:#60a5fa}
+.meal-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-height:520px;overflow:auto;padding-right:3px}
+.meal-card{background:linear-gradient(135deg,rgba(34,197,94,.10),rgba(59,130,246,.10));border:1px solid rgba(96,165,250,.18);border-radius:16px;padding:14px}
+.meal-card-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.meal-name{font-size:15px;font-weight:800;margin-bottom:6px}
+.meal-description{font-size:11px;color:#cbd5e1;line-height:1.45;margin-top:8px;white-space:pre-wrap}
+.meal-foods{font-size:11px;color:#dbeafe;line-height:1.4;margin-top:8px;white-space:pre-wrap}
+.meal-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.meal-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:#dbeafe;font-size:10px}
+.meal-actions{display:flex;gap:6px;flex-shrink:0}.meal-action{width:30px;height:30px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.06);color:#fff;cursor:pointer}.meal-action:hover{border-color:#60a5fa}.meal-action.delete:hover{background:var(--danger);border-color:var(--danger)}
+.meal-empty{min-height:180px;border:1px dashed rgba(148,163,184,.22);border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--muted);font-size:12px;line-height:1.45;grid-column:1/-1}
+.meal-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.meal-form-grid.three{grid-template-columns:1fr 1fr 1fr}.meal-form-actions{display:flex;gap:8px;flex-direction:column}
+.meal-help{color:var(--muted);font-size:11px;line-height:1.45;margin-top:8px}
+@media(max-width:900px){.meal-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.meal-list{grid-template-columns:1fr}}
+@media(max-width:700px){.meal-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.meal-form-grid,.meal-form-grid.three{grid-template-columns:1fr}.nutrition-panel{padding:16px}}
 @media (min-width: 1150px){
   .sections-grid{
     grid-template-columns:minmax(0,1fr) minmax(0,1fr);
@@ -372,6 +400,11 @@ button,input,select{font:inherit}.hidden{display:none!important}
         <span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span>
         <span class="toggle-icon" id="workoutIcon">+</span>
       </button>
+
+      <button class="toggle section-tab" id="nutritionToggle">
+        <span>🍽️ Alimentación<small>Tu plan semanal personal</small></span>
+        <span class="toggle-icon" id="nutritionIcon">+</span>
+      </button>
     </div>
 
     <div class="section-stage">
@@ -406,6 +439,20 @@ button,input,select{font:inherit}.hidden{display:none!important}
 
         <div class="workout-days" id="workoutDays"></div>
         <div class="workout-list" id="workoutList"></div>
+      </section>
+
+      <section class="nutrition-panel section-view" id="nutritionPanel">
+        <div class="nutrition-head">
+          <div>
+            <h2>Plan de alimentación</h2>
+            <p>Organizá de lunes a domingo tus comidas en el orden: pre entrenamiento, post entrenamiento, almuerzo, merienda, cena y antes de dormir. Queda guardado en tu cuenta.</p>
+          </div>
+          <button class="small-btn" id="addMealBtn">＋ Agregar comida</button>
+        </div>
+
+        <div class="workout-days" id="nutritionDays"></div>
+        <div class="meal-tabs" id="mealTabs"></div>
+        <div class="meal-list" id="mealList"></div>
       </section>
     </div>
 
@@ -455,6 +502,45 @@ button,input,select{font:inherit}.hidden{display:none!important}
   </div>
 </div>
 
+<div class="overlay" id="nutritionOverlay">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div><h3 id="nutritionModalTitle">＋ Agregar comida</h3><span id="nutritionModalInfo"></span></div>
+      <button class="close" id="nutritionCloseBtn">×</button>
+    </div>
+
+    <div class="field"><label>Comida</label><select class="input" id="mealType">
+      <option value="pre">Pre entrenamiento</option>
+      <option value="post">Post entrenamiento</option>
+      <option value="lunch">Almuerzo</option>
+      <option value="snack">Merienda</option>
+      <option value="dinner">Cena</option>
+      <option value="sleep">Antes de dormir</option>
+    </select></div>
+
+    <div class="field"><label>Título</label><input class="input" id="mealTitle" placeholder="Ej: Avena con banana y yogur"></div>
+    <div class="field"><label>Alimentos / cantidades</label><input class="input" id="mealFoods" placeholder="Ej: 80 g avena, 1 banana, 200 g yogur"></div>
+
+    <div class="meal-form-grid three">
+      <div class="field"><label>Calorías</label><input class="input" id="mealCalories" type="number" min="0" placeholder="500"></div>
+      <div class="field"><label>Proteínas (g)</label><input class="input" id="mealProtein" type="number" min="0" step="0.1" placeholder="30"></div>
+      <div class="field"><label>Carbohidratos (g)</label><input class="input" id="mealCarbs" type="number" min="0" step="0.1" placeholder="60"></div>
+    </div>
+
+    <div class="meal-form-grid three">
+      <div class="field"><label>Grasas (g)</label><input class="input" id="mealFat" type="number" min="0" step="0.1" placeholder="15"></div>
+      <div class="field"><label>Horario</label><input class="input" id="mealTime" type="time"></div>
+      <div class="field"><label>Descripción</label><input class="input" id="mealDescription" placeholder="Notas, preparación, etc."></div>
+    </div>
+
+    <div class="meal-form-actions">
+      <button class="save" id="saveMealBtn">Guardar comida</button>
+      <button class="secondary hidden" id="cancelMealBtn">Cancelar edición</button>
+    </div>
+    <div class="meal-help">La comida queda asociada al día seleccionado y a tu cuenta.</div>
+  </div>
+</div>
+
 <div class="overlay" id="dateOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="dateModalTitle">＋ Agregar fecha</h3><span id="dateModalInfo">Fecha personal</span></div><button class="close" onclick="closeDateModal()">×</button></div><div class="field"><label>Fecha</label><input class="input" id="dateInput" type="date"></div><div class="field"><label>Tipo</label><select class="input" id="dateType"><option value="ocupado">📌 Día ocupado</option><option value="importante">⭐ Día importante</option></select></div><div class="field"><label>Título</label><input class="input" id="dateTitle"></div><div class="field"><label>Descripción</label><input class="input" id="dateDescription"></div><button class="save" id="saveDateBtn">Guardar fecha</button><button class="danger hidden" id="deleteDateBtn">🗑️ Eliminar fecha</button></div></div>
 
 <script>
@@ -467,6 +553,15 @@ const HOURS=[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
 const TZ='America/Argentina/Cordoba';
 let currentUser=null, selectedDay=getArgentinaWeekday(), selectedHour=7, currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear(), tasks=[], personalDates=[], sharedEvents=[], editingDateId=null, tooltip=null, authMode='login';
 let workoutDay=selectedDay, workoutExercises=[], editingExerciseId=null;
+let nutritionDay=selectedDay, nutritionMeals=[], editingMealId=null, activeMealType='pre';
+const MEAL_TYPES=[
+  {key:'pre',label:'Pre entrenamiento'},
+  {key:'post',label:'Post entrenamiento'},
+  {key:'lunch',label:'Almuerzo'},
+  {key:'snack',label:'Merienda'},
+  {key:'dinner',label:'Cena'},
+  {key:'sleep',label:'Antes de dormir'}
+];
 
 const $=id=>document.getElementById(id);
 function argentinaParts(){const p=new Intl.DateTimeFormat('es-AR',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'}).formatToParts(new Date()); const o={}; p.forEach(x=>{if(x.type!=='literal')o[x.type]=x.value}); return o;}
@@ -486,13 +581,13 @@ $('logoutBtn').onclick=async()=>{await sb.auth.signOut();};
 async function init(){const {data:{session}}=await sb.auth.getSession();await handleSession(session);sb.auth.onAuthStateChange(async(_event,session)=>{await handleSession(session);});}
 async function handleSession(session){if(!session){currentUser=null;$('authScreen').classList.remove('hidden');$('app').classList.add('hidden');return;}currentUser=session.user;$('authScreen').classList.add('hidden');$('app').classList.remove('hidden');$('userEmail').textContent=currentUser.email||'';await refreshAll();}
 
-async function refreshAll(){await Promise.all([loadTasks(),loadPersonalDates(),loadSharedEvents(),loadWorkoutExercises()]);createDays();renderSchedule();buildMonthOptions();renderCalendar();updateStats();renderWorkoutDays();renderWorkoutList();updateNotice();}
+async function refreshAll(){await Promise.all([loadTasks(),loadPersonalDates(),loadSharedEvents(),loadWorkoutExercises(),loadNutritionMeals()]);createDays();renderSchedule();buildMonthOptions();renderCalendar();updateStats();renderWorkoutDays();renderWorkoutList();renderNutritionDays();renderMealTabs();renderNutritionList();updateNotice();}
 
 async function loadTasks(){const {data,error}=await sb.from('tasks').select('*').order('hour',{ascending:true});if(error){console.error(error);tasks=[];}else tasks=data||[];}
 async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
 async function loadSharedEvents(){try{const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('events.json no disponible');const data=await res.json();sharedEvents=Array.isArray(data)?data:(data.events||[]);$('calendarStatus').textContent='Eventos compartidos cargados.';}catch(e){console.warn(e);sharedEvents=[];$('calendarStatus').textContent='No se pudo cargar data/events.json; feriados/paros compartidos pueden no aparecer.';}}
 
-function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;createDays();renderSchedule();updateStats();renderWorkoutDays();loadWorkoutExercises().then(renderWorkoutList);};c.appendChild(b);});}
+function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;nutritionDay=i;createDays();renderSchedule();updateStats();renderWorkoutDays();renderNutritionDays();loadWorkoutExercises().then(renderWorkoutList);loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();});};c.appendChild(b);});}
 function renderSchedule(){const c=$('schedule');c.innerHTML='';HOURS.forEach(hour=>{const row=document.createElement('div');row.className='hour';const t=document.createElement('div');t.className='time';t.textContent=String(hour).padStart(2,'0')+':00';t.onclick=()=>openTaskModal(hour);const s=document.createElement('div');s.className='slot';s.onclick=()=>openTaskModal(hour);const list=tasks.filter(x=>x.day===selectedDay&&x.hour===hour);if(!list.length){const e=document.createElement('div');e.className='empty';e.textContent='Tocá para agregar';s.appendChild(e);}list.forEach(task=>{const card=document.createElement('div');card.className='task';const del=document.createElement('button');del.className='delete-task';del.textContent='×';del.onclick=ev=>{ev.stopPropagation();deleteTask(task.id)};const h=document.createElement('h4');h.textContent=task.title;const p=document.createElement('p');p.textContent=task.description||'';card.append(del,h,p);card.onclick=ev=>ev.stopPropagation();enableTooltip(card,task.title,task.description||'Sin descripción',`${DAYS[selectedDay]} · ${String(task.hour).padStart(2,'0')}:00`);s.appendChild(card)});row.append(t,s);c.appendChild(row);});}
 function updateStats(){const todayCount=tasks.filter(x=>x.day===selectedDay).length;const used=new Set(tasks.filter(x=>x.day===selectedDay).map(x=>x.hour)).size;$('totalTasks').textContent=tasks.length;$('todayTasks').textContent=todayCount;$('freeHours').textContent=HOURS.length-used;}
 
@@ -515,8 +610,10 @@ function toggleCalendarPanel(){
   const willOpen=!$('calendarPanel').classList.contains('open');
   setPanelOpen('calendarPanel','calendarIcon',willOpen);
   setPanelOpen('workoutPanel','workoutIcon',false);
+  setPanelOpen('nutritionPanel','nutritionIcon',false);
   setTabActive('calendarToggle',willOpen);
   setTabActive('workoutToggle',false);
+  setTabActive('nutritionToggle',false);
   if(willOpen){
     requestAnimationFrame(()=>{
       $('calendarPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
@@ -527,14 +624,28 @@ function openWorkoutPanel(){
   const willOpen=!$('workoutPanel').classList.contains('open');
   setPanelOpen('workoutPanel','workoutIcon',willOpen);
   setPanelOpen('calendarPanel','calendarIcon',false);
+  setPanelOpen('nutritionPanel','nutritionIcon',false);
   setTabActive('workoutToggle',willOpen);
   setTabActive('calendarToggle',false);
+  setTabActive('nutritionToggle',false);
   if(willOpen){
     requestAnimationFrame(()=>{
       $('workoutPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
     });
   }
 }
+
+function renderNutritionDays(){const c=$('nutritionDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===nutritionDay?' active':'');b.textContent=d;b.onclick=()=>{nutritionDay=i;renderNutritionDays();renderNutritionList();};c.appendChild(b);});}
+function renderMealTabs(){const c=$('mealTabs');c.innerHTML='';MEAL_TYPES.forEach(m=>{const b=document.createElement('button');b.className='meal-tab'+(m.key===activeMealType?' active':'');b.textContent=m.label;b.onclick=()=>{activeMealType=m.key;renderMealTabs();renderNutritionList();};c.appendChild(b);});}
+async function loadNutritionMeals(){const {data,error}=await sb.from('nutrition_meals').select('*').eq('day',nutritionDay).order('meal_order',{ascending:true}).order('meal_time',{ascending:true});if(error){console.error(error);nutritionMeals=[]}else nutritionMeals=data||[];}
+function mealLabel(key){return MEAL_TYPES.find(m=>m.key===key)?.label||key;}
+function renderNutritionList(){const c=$('mealList');c.innerHTML='';const list=nutritionMeals.filter(m=>m.meal_type===activeMealType);if(!list.length){const e=document.createElement('div');e.className='meal-empty';e.textContent='No hay ninguna comida cargada para '+DAYS[nutritionDay]+' en '+mealLabel(activeMealType)+'. Tocá “Agregar comida” para crearla.';c.appendChild(e);return;}list.forEach(meal=>{const card=document.createElement('div');card.className='meal-card';const top=document.createElement('div');top.className='meal-card-head';const left=document.createElement('div');const name=document.createElement('div');name.className='meal-name';name.textContent=meal.title;left.appendChild(name);if(meal.foods){const foods=document.createElement('div');foods.className='meal-foods';foods.textContent=meal.foods;left.appendChild(foods);}if(meal.description){const desc=document.createElement('div');desc.className='meal-description';desc.textContent=meal.description;left.appendChild(desc);}const meta=document.createElement('div');meta.className='meal-meta';const chips=[meal.calories!=null?`Cal: ${meal.calories}`:null,meal.protein_g!=null?`Prot: ${meal.protein_g} g`:null,meal.carbs_g!=null?`Carbs: ${meal.carbs_g} g`:null,meal.fat_g!=null?`Grasas: ${meal.fat_g} g`:null,meal.meal_time?`Hora: ${meal.meal_time}`:null].filter(Boolean);chips.forEach(t=>{const ch=document.createElement('span');ch.className='meal-chip';ch.textContent=t;meta.appendChild(ch);});if(chips.length)left.appendChild(meta);const actions=document.createElement('div');actions.className='meal-actions';const edit=document.createElement('button');edit.className='meal-action';edit.textContent='✎';edit.title='Editar';edit.onclick=()=>openNutritionModal(meal);const del=document.createElement('button');del.className='meal-action delete';del.textContent='×';del.title='Eliminar';del.onclick=()=>deleteMeal(meal.id);actions.append(edit,del);top.append(left,actions);card.appendChild(top);enableTooltip(card,meal.title,meal.description||meal.foods||'Sin descripción',`${DAYS[nutritionDay]} · ${mealLabel(meal.meal_type)}`);c.appendChild(card);});}
+function openNutritionPanel(){const willOpen=!$('nutritionPanel').classList.contains('open');setPanelOpen('nutritionPanel','nutritionIcon',willOpen);setPanelOpen('calendarPanel','calendarIcon',false);setPanelOpen('workoutPanel','workoutIcon',false);setTabActive('nutritionToggle',willOpen);setTabActive('calendarToggle',false);setTabActive('workoutToggle',false);if(willOpen){renderNutritionDays();renderMealTabs();loadNutritionMeals().then(renderNutritionList);requestAnimationFrame(()=>$('nutritionPanel').scrollIntoView({behavior:'smooth',block:'nearest'}));}}
+function openNutritionModal(meal=null){editingMealId=meal?.id||null;$('nutritionModalTitle').textContent=meal?'✎ Editar comida':'＋ Agregar comida';$('nutritionModalInfo').textContent=`${DAYS[nutritionDay]} · ${mealLabel(meal?.meal_type||activeMealType)}`;$('mealType').value=meal?.meal_type||activeMealType;$('mealTitle').value=meal?.title||'';$('mealFoods').value=meal?.foods||'';$('mealCalories').value=meal?.calories??'';$('mealProtein').value=meal?.protein_g??'';$('mealCarbs').value=meal?.carbs_g??'';$('mealFat').value=meal?.fat_g??'';$('mealTime').value=meal?.meal_time||'';$('mealDescription').value=meal?.description||'';$('cancelMealBtn').classList.toggle('hidden',!meal);$('nutritionOverlay').classList.add('show');setTimeout(()=>$('mealTitle').focus(),80)}
+function closeNutritionModal(){$('nutritionOverlay').classList.remove('show');editingMealId=null;}
+$('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:Number($('mealCalories').value)||null,protein_g:Number($('mealProtein').value)||null,carbs_g:Number($('mealCarbs').value)||null,fat_g:Number($('mealFat').value)||null,meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};if(!payload.title)return alert('Escribí el nombre de la comida.');if(editingMealId){const {error}=await sb.from('nutrition_meals').update(payload).eq('id',editingMealId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=nutritionDay;payload.meal_order=MEAL_TYPES.findIndex(m=>m.key===meal_type);const {error}=await sb.from('nutrition_meals').insert(payload);if(error){alert(error.message);return}}closeNutritionModal();await loadNutritionMeals();renderNutritionList();};
+async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();}}
+
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=()=>{workoutDay=i;renderWorkoutDays();renderWorkoutList()};c.appendChild(b)});}
 async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);workoutExercises=[]}else workoutExercises=data||[]}
 function renderWorkoutList(){const c=$('workoutList');c.innerHTML='';if(!workoutExercises.length){const e=document.createElement('div');e.className='workout-empty';e.textContent='No hay ejercicios cargados para '+DAYS[workoutDay]+'. Tocá “Agregar ejercicio” para crear la rutina.';c.appendChild(e);return;}workoutExercises.forEach(ex=>{const card=document.createElement('div');card.className='exercise-card';const top=document.createElement('div');top.className='exercise-top';const left=document.createElement('div');const name=document.createElement('div');name.className='exercise-name';name.textContent=ex.exercise;const chips=document.createElement('div');chips.className='exercise-meta';[[`Series: ${ex.sets||'-'}`],[`Reps: ${ex.reps||'-'}`],[`RIR: ${ex.rir??'-'}`],[`Descanso: ${ex.rest_seconds?ex.rest_seconds+'s':'-'}`],[`Peso: ${ex.weight||'-'}`],[`Tempo: ${ex.tempo||'-'}`]].forEach(([txt])=>{const ch=document.createElement('span');ch.className='exercise-chip';ch.textContent=txt;chips.appendChild(ch)});left.append(name,chips);if(ex.notes){const note=document.createElement('div');note.className='exercise-note';note.textContent=ex.notes;left.appendChild(note)}const actions=document.createElement('div');actions.className='exercise-actions';const edit=document.createElement('button');edit.className='exercise-action';edit.textContent='✎';edit.title='Editar';edit.onclick=()=>openExerciseModal(ex);const del=document.createElement('button');del.className='exercise-action delete';del.textContent='×';del.title='Eliminar';del.onclick=()=>deleteExercise(ex.id);actions.append(edit,del);top.append(left,actions);card.append(top);c.appendChild(card)})}
@@ -542,7 +653,7 @@ function openExerciseModal(ex=null){editingExerciseId=ex?.id||null;$('workoutMod
 function closeExerciseModal(){ $('workoutOverlay').classList.remove('show'); editingExerciseId=null; }
 $('saveExerciseBtn').onclick=async()=>{const payload={exercise:$('exerciseName').value.trim(),sets:Number($('exerciseSets').value)||null,reps:$('exerciseReps').value.trim(),rir:$('exerciseRir').value===''?null:Number($('exerciseRir').value),rest_seconds:Number($('exerciseRest').value)||null,weight:$('exerciseWeight').value.trim(),tempo:$('exerciseTempo').value.trim(),notes:$('exerciseNotes').value.trim()};if(!payload.exercise)return alert('Escribí el nombre del ejercicio.');if(editingExerciseId){const {error}=await sb.from('workout_exercises').update(payload).eq('id',editingExerciseId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=workoutDay;payload.position=workoutExercises.length+1;const {error}=await sb.from('workout_exercises').insert(payload);if(error){alert(error.message);return}}closeExerciseModal();await loadWorkoutExercises();renderWorkoutList();}
 async function deleteExercise(id){if(!confirm('¿Eliminar este ejercicio?'))return;const {error}=await sb.from('workout_exercises').delete().eq('id',id);if(error)alert(error.message);else{await loadWorkoutExercises();renderWorkoutList();}}
-$('calendarToggle').onclick=toggleCalendarPanel;$('workoutToggle').onclick=openWorkoutPanel;$('addExerciseBtn').onclick=()=>openExerciseModal();$('workoutCloseBtn').onclick=closeExerciseModal;$('cancelExerciseBtn').onclick=closeExerciseModal;$('workoutOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExerciseModal()});
+$('calendarToggle').onclick=toggleCalendarPanel;$('workoutToggle').onclick=openWorkoutPanel;$('nutritionToggle').onclick=openNutritionPanel;$('addExerciseBtn').onclick=()=>openExerciseModal();$('addMealBtn').onclick=()=>openNutritionModal();$('workoutCloseBtn').onclick=closeExerciseModal;$('cancelExerciseBtn').onclick=closeExerciseModal;$('workoutOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExerciseModal()});$('nutritionCloseBtn').onclick=closeNutritionModal;$('cancelMealBtn').onclick=closeNutritionModal;$('nutritionOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeNutritionModal()});
 
 function buildMonthOptions(){const sel=$('calendarMonth');if(sel.options.length)return;['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'].forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;sel.appendChild(o)});sel.value=currentMonth;$('calendarYear').value=currentYear;}
 function eventsForDate(d){return sharedEvents.filter(e=>(e.date||e.fecha)===d).map(e=>({kind:e.type||e.tipo||'important',title:e.title||e.titulo||'Evento',description:e.description||e.descripcion||'',meta:e.scope||e.alcance||e.source||e.fuente||''}));}
