@@ -373,6 +373,13 @@ button,input,select{font:inherit}.hidden{display:none!important}
 
 @media(max-width:700px){
   .message-tooltip{display:none}.topbar{align-items:flex-start}.user-email{max-width:150px}.calendar-tools{grid-template-columns:1fr}.hour{grid-template-columns:64px 1fr;gap:10px}.time{font-size:12px}.slot{min-height:114px}.stats{gap:8px}.stat{padding:12px 6px}.stat-number{font-size:20px}.month-grid{gap:5px}.day-cell{min-height:72px;padding:6px}.event{font-size:8px}}
+
+/* ======================================================
+   RECORDATORIOS
+====================================================== */
+.reminder-btn{padding:9px 12px;border-radius:999px;border:1px solid rgba(245,158,11,.25);background:rgba(245,158,11,.08);color:#fde68a;cursor:pointer;font-weight:800;font-size:11px;white-space:nowrap}.reminder-btn.active{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.10);color:#bbf7d0}.reminder-panel{display:none;position:fixed;right:18px;top:76px;width:min(360px,calc(100vw - 24px));background:rgba(17,24,39,.98);border:1px solid var(--line);border-radius:20px;padding:16px;z-index:90;box-shadow:0 24px 70px rgba(0,0,0,.42);backdrop-filter:blur(14px)}.reminder-panel.open{display:block;animation:panelPop .18s ease-out}.reminder-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}.reminder-head h3{font-size:16px;margin-bottom:4px}.reminder-head p{font-size:11px;color:var(--muted);line-height:1.4}.reminder-close{border:0;background:rgba(255,255,255,.08);color:#fff;width:32px;height:32px;border-radius:9px;cursor:pointer}.reminder-card{padding:12px;border:1px solid var(--line);border-radius:14px;background:rgba(15,23,42,.7);margin-bottom:10px}.reminder-row{display:flex;justify-content:space-between;gap:10px;align-items:center}.reminder-label{font-size:12px;font-weight:800;color:#e5e7eb}.reminder-sub{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}.reminder-select{background:#0f172a;color:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:11px;outline:0}.reminder-enable{width:100%;padding:12px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:800;cursor:pointer}.reminder-enable.active{background:linear-gradient(135deg,#16a34a,#15803d)}.next-reminder{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(59,130,246,.08);border:1px solid rgba(96,165,250,.16);color:#dbeafe;font-size:11px;line-height:1.45}.next-reminder strong{color:#fff}.reminder-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.45}@keyframes panelPop{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:700px){.reminder-panel{top:118px;right:12px}}
+
 </style>
 </head>
 <body>
@@ -397,10 +404,27 @@ button,input,select{font:inherit}.hidden{display:none!important}
 <section id="app" class="hidden">
   <div class="topbar">
     <div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
-    <div class="userbar"><span class="refresh-status" id="refreshStatus">Actualizando…</span><span class="user-email" id="userEmail"></span><button class="ghost" id="logoutBtn">Salir</button></div>
+    <div class="userbar"><button class="reminder-btn" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status" id="refreshStatus">Actualizando…</span><span class="user-email" id="userEmail"></span><button class="ghost" id="logoutBtn">Salir</button></div>
   </div>
 
   <div class="days" id="days"></div>
+
+
+  <div class="reminder-panel" id="reminderPanel">
+    <div class="reminder-head">
+      <div><h3>🔔 Recordatorios</h3><p>Recibí avisos de tus próximas tareas y comidas. Necesitás dejar esta página abierta para recibirlos.</p></div>
+      <button class="reminder-close" id="reminderClose">×</button>
+    </div>
+    <div class="reminder-card">
+      <div class="reminder-row">
+        <div><div class="reminder-label">Avisar con anticipación</div><div class="reminder-sub">Antes del horario de la tarea o comida.</div></div>
+        <select class="reminder-select" id="reminderLead"><option value="0">A la hora</option><option value="5">5 min</option><option value="10" selected>10 min</option><option value="15">15 min</option><option value="30">30 min</option></select>
+      </div>
+    </div>
+    <button class="reminder-enable" id="reminderEnable">Activar recordatorios</button>
+    <div class="next-reminder" id="nextReminder">No hay próximos recordatorios.</div>
+    <div class="reminder-note">En algunos navegadores las notificaciones requieren permiso. El navegador también puede bloquearlas si la página no está abierta.</div>
+  </div>
 
   <main class="container">
     <div class="notice" id="notice"><strong id="noticeTitle">Aviso</strong><div id="noticeText"></div></div>
@@ -621,6 +645,11 @@ let currentUser=null, selectedDay=getArgentinaWeekday(), selectedHour=7, current
 let workoutDay=selectedDay, workoutExercises=[], editingExerciseId=null;
 let nutritionDay=selectedDay, nutritionMeals=[], editingMealId=null, activeMealType='pre';
 const AUTO_REFRESH_MS=60000;
+const REMINDER_PREF_KEY='agendaReminderPrefs';
+let reminderTimer=null;
+let remindersEnabled=localStorage.getItem(REMINDER_PREF_KEY)==='on';
+let reminderLeadMinutes=Number(localStorage.getItem('agendaReminderLead')||10);
+let lastReminderKey=localStorage.getItem('agendaLastReminderKey')||'';
 let autoRefreshTimer=null;
 let refreshInProgress=false;
 const MEAL_TYPES=[
@@ -647,11 +676,19 @@ $('registerTab').onclick=()=>setAuthMode('register');
 $('authForm').onsubmit=async e=>{e.preventDefault();const email=$('authEmail').value.trim();const password=$('authPassword').value;authMessage('Procesando...','ok');if(authMode==='register'){const {data,error}=await sb.auth.signUp({email,password});if(error){authMessage(error.message);return;} if(!data.session){authMessage('Cuenta creada. Revisá tu email si la confirmación está activada.','ok');return;} }else{const {error}=await sb.auth.signInWithPassword({email,password});if(error){authMessage(error.message);return;}}};
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();};
 
+$('reminderBtn').onclick=()=>{$('reminderPanel').classList.toggle('open');updateReminderUI();};
+$('reminderClose').onclick=()=>{$('reminderPanel').classList.remove('open');};
+$('reminderLead').onchange=()=>{reminderLeadMinutes=Number($('reminderLead').value);localStorage.setItem('agendaReminderLead',String(reminderLeadMinutes));updateReminderUI();};
+$('reminderEnable').onclick=()=>{if(remindersEnabled)disableReminders();else enableReminders();};
+document.addEventListener('click',e=>{const panel=$('reminderPanel');const btn=$('reminderBtn');if(panel?.classList.contains('open')&&!panel.contains(e.target)&&e.target!==btn)panel.classList.remove('open');});
+
+
 async function init(){const {data:{session}}=await sb.auth.getSession();await handleSession(session);sb.auth.onAuthStateChange(async(_event,session)=>{await handleSession(session);});}
 async function handleSession(session){
   if(!session){
     currentUser=null;
     stopAutoRefresh();
+    stopReminderTimer();
     $('authScreen').classList.remove('hidden');
     $('app').classList.add('hidden');
     return;
@@ -662,6 +699,7 @@ async function handleSession(session){
   $('userEmail').textContent=currentUser.email||'';
   await refreshAll();
   startAutoRefresh();
+  if(remindersEnabled) startReminderTimer();
 }
 
 async function refreshAll(){
@@ -683,6 +721,8 @@ async function refreshAll(){
     renderMealTabs();
     renderNutritionList();
     updateNotice();
+    updateReminderUI();
+    checkReminders();
     setRefreshStatus('Actualizado '+new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}),'ok');
   }catch(err){
     console.error(err);
@@ -713,6 +753,81 @@ function stopAutoRefresh(){
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible' && currentUser) refreshAll();
 });
+
+
+function getArgentinaNow(){return new Date(new Date().toLocaleString('en-US',{timeZone:TZ}));}
+function getTodayIndex(){return getArgentinaWeekday();}
+function pad2(n){return String(n).padStart(2,'0');}
+function reminderDateForTask(task){
+  const now=getArgentinaNow();
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const currentDay=getTodayIndex();
+  let delta=task.day-currentDay;
+  if(delta<0) delta+=7;
+  d.setDate(d.getDate()+delta);
+  d.setHours(task.hour,0,0,0);
+  d.setMinutes(d.getMinutes()-reminderLeadMinutes);
+  return d;
+}
+function reminderDateForMeal(meal){
+  if(!meal.meal_time) return null;
+  const [hh,mm]=meal.meal_time.split(':').map(Number);
+  const now=getArgentinaNow();
+  const d=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const currentDay=getTodayIndex();
+  let delta=meal.day-currentDay;
+  if(delta<0) delta+=7;
+  d.setDate(d.getDate()+delta);
+  d.setHours(hh||0,mm||0,0,0);
+  d.setMinutes(d.getMinutes()-reminderLeadMinutes);
+  return d;
+}
+function buildReminderCandidates(){
+  const candidates=[];
+  tasks.filter(t=>!t.completed).forEach(t=>candidates.push({when:reminderDateForTask(t),title:t.title,body:t.description||'Tarea programada',kind:'task',id:t.id,meta:`${DAYS[t.day]} · ${pad2(t.hour)}:00`}));
+  nutritionMeals.filter(m=>m.meal_time).forEach(m=>{const when=reminderDateForMeal(m); if(when)candidates.push({when,title:m.title,body:m.description||m.foods||'Comida programada',kind:'meal',id:m.id,meta:`${DAYS[m.day]} · ${m.meal_time}`});});
+  return candidates.filter(x=>x.when instanceof Date && !isNaN(x.when)).sort((a,b)=>a.when-b.when);
+}
+function updateNextReminder(){
+  const el=$('nextReminder'); if(!el) return;
+  const candidates=buildReminderCandidates(); const now=getArgentinaNow();
+  const next=candidates.find(x=>x.when>=now);
+  if(!next){el.textContent='No hay próximos recordatorios.';return;}
+  el.innerHTML=`<strong>Próximo:</strong> ${esc(next.title)} · ${esc(next.meta)}`;
+}
+function updateReminderUI(){
+  const btn=$('reminderBtn'), enable=$('reminderEnable'), lead=$('reminderLead');
+  if(!btn||!enable||!lead) return;
+  lead.value=String(reminderLeadMinutes);
+  btn.classList.toggle('active',remindersEnabled);
+  btn.textContent=remindersEnabled?'🔔 Recordatorios activos':'🔔 Recordatorios';
+  enable.classList.toggle('active',remindersEnabled);
+  enable.textContent=remindersEnabled?'Recordatorios activados':'Activar recordatorios';
+  updateNextReminder();
+}
+async function enableReminders(){
+  if(!('Notification' in window)){alert('Tu navegador no admite notificaciones.');return;}
+  const permission=await Notification.requestPermission();
+  if(permission!=='granted'){alert('No se concedió permiso para las notificaciones. Podés activarlo desde la configuración del navegador.');return;}
+  remindersEnabled=true; localStorage.setItem(REMINDER_PREF_KEY,'on'); updateReminderUI(); startReminderTimer();
+}
+function disableReminders(){remindersEnabled=false;localStorage.setItem(REMINDER_PREF_KEY,'off');stopReminderTimer();updateReminderUI();}
+function checkReminders(){
+  if(!remindersEnabled || !currentUser || !document.hidden) {
+    // Visible or background both can notify; keep running while app is open.
+  }
+  const now=getArgentinaNow();
+  const candidates=buildReminderCandidates();
+  const hit=candidates.find(x=>Math.abs(x.when-now)<32000 && !localStorage.getItem(`rem_${x.kind}_${x.id}_${x.when.toISOString()}`));
+  if(!hit)return;
+  const key=`rem_${hit.kind}_${hit.id}_${hit.when.toISOString()}`;
+  localStorage.setItem(key,'1');
+  lastReminderKey=key;
+  try{new Notification(hit.kind==='task'?'📚 Recordatorio de tarea':'🍽️ Recordatorio de comida',{body:`${hit.title}\n${hit.meta}`});}catch(e){console.warn(e)}
+  updateNextReminder();
+}
+function startReminderTimer(){stopReminderTimer(); if(!remindersEnabled)return; reminderTimer=setInterval(checkReminders,30000); updateNextReminder();}
+function stopReminderTimer(){if(reminderTimer){clearInterval(reminderTimer);reminderTimer=null;}}
 
 async function loadTasks(){const {data,error}=await sb.from('tasks').select('*').order('hour',{ascending:true});if(error){console.error(error);tasks=[];}else tasks=data||[];}
 async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
@@ -932,6 +1047,7 @@ function enableTooltip(el,title,desc,meta){
 $('taskOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeTaskModal()});$('dateOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeDateModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeTaskModal();closeDateModal();removeTooltip()}});
 window.addEventListener('resize',removeTooltip);window.addEventListener('scroll',removeTooltip,true);
 
+updateReminderUI();
 init();
 setRefreshStatus('Listo');
 
