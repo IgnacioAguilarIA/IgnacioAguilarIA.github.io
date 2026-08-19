@@ -25,6 +25,8 @@ button,input,select{font:inherit}.hidden{display:none!important}
 .conflict-panel.show{display:block;animation:conflictIn .22s ease-out}
 @keyframes conflictIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
 .conflict-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}.conflict-head h3{font-size:16px;margin-bottom:3px}.conflict-head p{font-size:11px;color:var(--muted);line-height:1.4}.conflict-count{padding:7px 10px;border-radius:999px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.22);color:#fde68a;font-size:11px;font-weight:800}.conflict-list{display:flex;flex-direction:column;gap:9px}.conflict-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:11px 12px;border-radius:14px;background:rgba(15,23,42,.88);border:1px solid rgba(245,158,11,.16)}.conflict-icon{width:30px;height:30px;border-radius:10px;background:rgba(245,158,11,.12);display:flex;align-items:center;justify-content:center;font-size:15px}.conflict-main{min-width:0}.conflict-title{font-size:12px;font-weight:800;line-height:1.35}.conflict-meta{font-size:10px;color:#cbd5e1;margin-top:3px;line-height:1.35}.conflict-meta strong{color:#fde68a}.conflict-action{padding:8px 10px;border-radius:10px;border:1px solid rgba(96,165,250,.24);background:rgba(59,130,246,.10);color:#dbeafe;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap}.conflict-action:hover{background:rgba(59,130,246,.18);border-color:#60a5fa}.conflict-safe{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:14px;background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.20);color:#bbf7d0;font-size:11px}@media(max-width:600px){.conflict-item{grid-template-columns:auto 1fr}.conflict-action{grid-column:2;justify-self:start}.conflict-panel{padding:13px}}
+.conflict-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.conflict-ignore{padding:8px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.20);background:rgba(255,255,255,.06);color:#cbd5e1;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap}.conflict-ignore:hover{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.28);color:#fecaca}.conflict-suggest{padding:8px 10px;border-radius:10px;border:1px solid rgba(34,197,94,.20);background:rgba(34,197,94,.08);color:#bbf7d0;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap}.conflict-suggest:hover{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.32)}.conflict-filterbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}.conflict-filterbar button{padding:7px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.05);color:#cbd5e1;font-size:10px;font-weight:800;cursor:pointer}.conflict-filterbar button.active{background:rgba(59,130,246,.12);border-color:rgba(96,165,250,.24);color:#dbeafe}@media(max-width:600px){.conflict-actions{grid-column:2;justify-content:flex-start}.conflict-filterbar{align-items:flex-start}}
+
 
 /* ======================================================
    SELECTOR Y PANEL DE SECCIONES
@@ -659,7 +661,7 @@ const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{aut
 const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const HOURS=[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
 const TZ='America/Argentina/Cordoba';
-let currentUser=null, selectedDay=getArgentinaWeekday(), selectedHour=7, currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear(), tasks=[], personalDates=[], sharedEvents=[], editingDateId=null, tooltip=null, authMode='login';
+let currentUser=null, selectedDay=getArgentinaWeekday(), selectedHour=7, currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear(), tasks=[], personalDates=[], sharedEvents=[], editingDateId=null, tooltip=null, authMode='login', conflictShowIgnored=false, ignoredConflicts=new Set();
 let workoutDay=selectedDay, workoutExercises=[], editingExerciseId=null;
 let nutritionDay=selectedDay, nutritionMeals=[], editingMealId=null, activeMealType='pre';
 const AUTO_REFRESH_MS=60000;
@@ -716,10 +718,22 @@ async function handleSession(session){
   $('authScreen').classList.add('hidden');
   $('app').classList.remove('hidden');
   $('userEmail').textContent=currentUser.email||'';
+  loadIgnoredConflicts();
   await refreshAll();
   startAutoRefresh();
   if(remindersEnabled) startReminderTimer();
 }
+
+function ignoredConflictStorageKey(){return currentUser?`agendaIgnoredConflicts:${currentUser.id}`:'agendaIgnoredConflicts:guest';}
+function loadIgnoredConflicts(){try{const raw=localStorage.getItem(ignoredConflictStorageKey());const arr=raw?JSON.parse(raw):[];ignoredConflicts=new Set(Array.isArray(arr)?arr:[]);}catch{ignoredConflicts=new Set();}}
+function saveIgnoredConflicts(){localStorage.setItem(ignoredConflictStorageKey(),JSON.stringify([...ignoredConflicts]));}
+function conflictKey(c){const aId=c.a?.id||c.a?.title||'a';const bId=c.b?.id||c.b?.title||'b';return [c.kind,aId,bId,c.a?minutesOfItem(c.a):'',c.kind==='task-task'?minutesOfItem(c.b):c.b?c.b._minutes:''].join('|');}
+function formatSuggestedSlots(day){const blocked=new Set();tasks.filter(t=>Number(t.day)===day).forEach(t=>blocked.add(minutesOfItem(t)));const meals=(nutritionMeals||[]).filter(m=>Number(m.day)===day&&m.meal_time);meals.forEach(m=>{const [h,mi]=String(m.meal_time).split(':').map(Number);blocked.add((h||0)*60+(mi||0));});const suggestions=[];for(let min=7*60;min<=22*60+45;min+=15){if(blocked.has(min))continue;const prev=min-15,next=min+15;if(!blocked.has(prev)&&!blocked.has(next))suggestions.push(clockFromMinutes(min));if(suggestions.length>=3)break;}return suggestions;}
+function showConflictSuggestion(c){const title=c.a?.title||'Actividad';const options=formatSuggestedSlots(selectedDay);if(!options.length){alert(`No encontré un hueco claro para reubicar «${title}».`);return;}alert(`Sugerencia para «${title}»:
+
+${options.join('  ·  ')}
+
+No moví nada automáticamente; elegí el horario que te convenga.`);}
 
 async function refreshAll(){
   if(!currentUser || refreshInProgress) return;
@@ -870,22 +884,35 @@ function renderConflicts(){
     }
   }
   dayTasks.forEach(task=>{dayMeals.forEach(meal=>{const diff=Math.abs(minutesOfItem(task)-meal._minutes);if(diff<=15)conflicts.push({kind:'task-meal',severity:diff===0?'same':'near',a:task,b:meal,diff});});});
-  if(!conflicts.length){panel.classList.remove('show');count.textContent='0';list.innerHTML='<div class="conflict-safe">✓ No detectamos horarios superpuestos ni actividades demasiado próximas para este día.</div>';return;}
-  count.textContent=String(conflicts.length);list.innerHTML='';
-  conflicts.slice(0,12).forEach(c=>{
-    const wrap=document.createElement('div');wrap.className='conflict-item';
+  const active=conflicts.filter(c=>!ignoredConflicts.has(conflictKey(c)));
+  const ignored=conflicts.filter(c=>ignoredConflicts.has(conflictKey(c)));
+  if(!conflicts.length){panel.classList.remove('show');count.textContent='0';list.innerHTML='';return;}
+  panel.classList.add('show');
+  count.textContent=String(active.length);
+  const filter=document.createElement('div');filter.className='conflict-filterbar';
+  const info=document.createElement('div');info.className='conflict-meta';info.textContent=active.length?`${active.length} conflicto(s) activo(s)${ignored.length?` · ${ignored.length} ignorado(s)`:''}`:`No hay conflictos activos${ignored.length?` · ${ignored.length} ignorado(s)`:''}.`;
+  const toggle=document.createElement('button');toggle.textContent=conflictShowIgnored?'Ocultar ignorados':'Mostrar ignorados';toggle.className=conflictShowIgnored?'active':'';toggle.onclick=()=>{conflictShowIgnored=!conflictShowIgnored;renderConflicts();};
+  filter.append(info,toggle);
+  list.innerHTML='';list.appendChild(filter);
+  const visible=conflictShowIgnored?conflicts:active;
+  if(!visible.length){const safe=document.createElement('div');safe.className='conflict-safe';safe.textContent='✓ No hay conflictos activos para este día.';list.appendChild(safe);return;}
+  visible.slice(0,12).forEach(c=>{
+    const wrap=document.createElement('div');wrap.className='conflict-item';if(ignoredConflicts.has(conflictKey(c)))wrap.style.opacity='.58';
     const icon=document.createElement('div');icon.className='conflict-icon';icon.textContent=c.severity==='same'?'⛔':'⚠️';
     const main=document.createElement('div');main.className='conflict-main';
     let titleA=c.a.title,timeA=clockFromMinutes(minutesOfItem(c.a)),titleB,timeB;
     if(c.kind==='task-task'){titleB=c.b.title;timeB=clockFromMinutes(minutesOfItem(c.b));}else{titleB='🍽️ '+c.b.title;timeB=c.b.meal_time;}
     const t=document.createElement('div');t.className='conflict-title';t.textContent=`${titleA} ↔ ${titleB}`;
     const m=document.createElement('div');m.className='conflict-meta';m.innerHTML=c.severity==='same'?`Ambas están programadas a las <strong>${esc(timeA)}</strong>.`:`Están separadas por solo <strong>${c.diff} min</strong> (${esc(timeA)} y ${esc(timeB)}).`;
+    if(ignoredConflicts.has(conflictKey(c)))m.innerHTML+=' <strong>· Ignorado</strong>';
     main.append(t,m);
-    const b=document.createElement('button');b.className='conflict-action';b.textContent='Ver horario';b.onclick=()=>{removeTooltip();scrollToTime(Math.min(minutesOfItem(c.a),c.kind==='task-task'?minutesOfItem(c.b):c.b._minutes));};
-    wrap.append(icon,main,b);list.appendChild(wrap);
+    const actions=document.createElement('div');actions.className='conflict-actions';
+    const view=document.createElement('button');view.className='conflict-action';view.textContent='Ver horario';view.onclick=()=>{removeTooltip();scrollToTime(Math.min(minutesOfItem(c.a),c.kind==='task-task'?minutesOfItem(c.b):c.b._minutes));};
+    const suggest=document.createElement('button');suggest.className='conflict-suggest';suggest.textContent='Sugerir';suggest.onclick=()=>showConflictSuggestion(c);
+    const ignore=document.createElement('button');ignore.className='conflict-ignore';ignore.textContent=ignoredConflicts.has(conflictKey(c))?'Reactivar':'Ignorar';ignore.onclick=()=>{const key=conflictKey(c);if(ignoredConflicts.has(key))ignoredConflicts.delete(key);else ignoredConflicts.add(key);saveIgnoredConflicts();renderConflicts();};
+    actions.append(view,suggest,ignore);wrap.append(icon,main,actions);list.appendChild(wrap);
   });
-  if(conflicts.length>12){const more=document.createElement('div');more.className='conflict-meta';more.textContent=`Hay ${conflicts.length-12} conflicto(s) más.`;list.appendChild(more);}
-  panel.classList.add('show');
+  if(visible.length>12){const more=document.createElement('div');more.className='conflict-meta';more.textContent=`Hay ${visible.length-12} conflicto(s) más.`;list.appendChild(more);}
 }
 function scrollToTime(totalMinutes){const hour=Math.floor(totalMinutes/60);const idx=HOURS.indexOf(hour);const rows=document.querySelectorAll('.hour');if(idx>=0&&rows[idx])rows[idx].scrollIntoView({behavior:'smooth',block:'center'});}
 
