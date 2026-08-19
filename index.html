@@ -640,7 +640,6 @@ const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{aut
 
 const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const HOURS=[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
-for(let m=0;m<60;m++){const o=document.createElement('option');o.value=m;o.textContent=String(m).padStart(2,'0');$('taskMinuteInput')?.appendChild(o);}
 const TZ='America/Argentina/Cordoba';
 let currentUser=null, selectedDay=getArgentinaWeekday(), selectedHour=7, currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear(), tasks=[], personalDates=[], sharedEvents=[], editingDateId=null, tooltip=null, authMode='login';
 let workoutDay=selectedDay, workoutExercises=[], editingExerciseId=null;
@@ -663,6 +662,7 @@ const MEAL_TYPES=[
 ];
 
 const $=id=>document.getElementById(id);
+for(let m=0;m<60;m++){const o=document.createElement('option');o.value=m;o.textContent=String(m).padStart(2,'0');$('taskMinuteInput')?.appendChild(o);}
 function argentinaParts(){const p=new Intl.DateTimeFormat('es-AR',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'}).formatToParts(new Date()); const o={}; p.forEach(x=>{if(x.type!=='literal')o[x.type]=x.value}); return o;}
 function todayISO(){const p=argentinaParts();return `${p.year}-${p.month}-${p.day}`;}
 function getArgentinaWeekday(){const map={lun:0,mar:1,mié:2,jue:3,vie:4,sáb:5,dom:6};return map[(argentinaParts().weekday||'lun').toLowerCase().replace('.','')]??0;}
