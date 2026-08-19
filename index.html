@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0} body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0b1120,#0f172a);color:var(--text);min-height:100vh}
 button,input,select{font:inherit}.hidden{display:none!important}
 #authScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}.auth-card{width:min(420px,100%);background:rgba(17,24,39,.96);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.auth-card h1{font-size:24px;margin-bottom:6px}.auth-card p{color:var(--muted);font-size:13px;line-height:1.45;margin-bottom:18px}.auth-tabs{display:flex;gap:8px;margin-bottom:16px}.auth-tab{flex:1;padding:11px;border-radius:12px;border:1px solid var(--line);background:var(--card2);color:#cbd5e1;cursor:pointer}.auth-tab.active{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;border-color:#60a5fa}.field{margin-bottom:12px}.field label{display:block;font-size:12px;color:#cbd5e1;margin-bottom:7px}.input{width:100%;padding:14px;border-radius:14px;border:1px solid var(--line);background:#0f172a;color:#fff;outline:0}.input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,130,246,.14)}.primary{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:700;cursor:pointer}.msg{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:12px;display:none}.msg.show{display:block}.msg.error{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.25);color:#fecaca}.msg.ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:#bbf7d0}
-#app{min-height:100vh}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;background:rgba(17,24,39,.96);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;backdrop-filter:blur(10px)}.brand{font-weight:800}.brand small{display:block;color:var(--muted);font-weight:400;font-size:11px;margin-top:3px}.userbar{display:flex;align-items:center;gap:8px}.user-email{font-size:12px;color:#cbd5e1;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ghost{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#e5e7eb;cursor:pointer}
+#app{min-height:100vh}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;background:rgba(17,24,39,.96);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;backdrop-filter:blur(10px)}.brand{font-weight:800}.brand small{display:block;color:var(--muted);font-weight:400;font-size:11px;margin-top:3px}.userbar{display:flex;align-items:center;gap:8px}.user-email{font-size:12px;color:#cbd5e1;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ghost{padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#e5e7eb;cursor:pointer}.refresh-status{font-size:10px;color:var(--muted);padding:7px 10px;border-radius:999px;border:1px solid rgba(96,165,250,.16);background:rgba(59,130,246,.06);white-space:nowrap}.refresh-status.updating{color:#bfdbfe}.refresh-status.ok{color:#bbf7d0}
 .days{display:flex;gap:10px;overflow-x:auto;padding:12px 16px;background:rgba(17,24,39,.96);position:sticky;top:68px;z-index:35;border-bottom:1px solid var(--line);backdrop-filter:blur(10px);scrollbar-width:none}.days::-webkit-scrollbar{display:none}.day-btn{min-width:100px;padding:13px 15px;border-radius:14px;border:1px solid var(--line);background:var(--card2);color:#cbd5e1;cursor:pointer;font-weight:700}.day-btn.active{background:linear-gradient(135deg,var(--blue),#1d4ed8);color:#fff;border-color:#60a5fa}
 .container{max-width:1200px;margin:auto;padding:22px 22px 52px}.notice{display:none;margin-bottom:16px;padding:14px 16px;border-radius:18px;border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.12);color:#fde68a}.notice.show{display:block}.notice strong{display:block;color:#fff7ed;margin-bottom:4px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}.stat{background:rgba(17,24,39,.95);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center}.stat-number{font-size:22px;font-weight:800;color:#60a5fa}.stat-label{font-size:11px;color:var(--muted);margin-top:3px}
 .toggle{display:flex;justify-content:space-between;align-items:center;gap:10px;width:fit-content;padding:10px 13px;border-radius:999px;border:1px solid var(--line);background:rgba(17,24,39,.92);color:#dbeafe;cursor:pointer;margin-bottom:14px}.toggle small{display:block;color:var(--muted);font-size:10px}.toggle-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,.14);color:#bfdbfe}
@@ -376,7 +376,7 @@ button,input,select{font:inherit}.hidden{display:none!important}
 <section id="app" class="hidden">
   <div class="topbar">
     <div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
-    <div class="userbar"><span class="user-email" id="userEmail"></span><button class="ghost" id="logoutBtn">Salir</button></div>
+    <div class="userbar"><span class="refresh-status" id="refreshStatus">Actualizando…</span><span class="user-email" id="userEmail"></span><button class="ghost" id="logoutBtn">Salir</button></div>
   </div>
 
   <div class="days" id="days"></div>
@@ -554,6 +554,9 @@ const TZ='America/Argentina/Cordoba';
 let currentUser=null, selectedDay=getArgentinaWeekday(), selectedHour=7, currentMonth=new Date().getMonth(), currentYear=new Date().getFullYear(), tasks=[], personalDates=[], sharedEvents=[], editingDateId=null, tooltip=null, authMode='login';
 let workoutDay=selectedDay, workoutExercises=[], editingExerciseId=null;
 let nutritionDay=selectedDay, nutritionMeals=[], editingMealId=null, activeMealType='pre';
+const AUTO_REFRESH_MS=60000;
+let autoRefreshTimer=null;
+let refreshInProgress=false;
 const MEAL_TYPES=[
   {key:'pre',label:'Pre entrenamiento'},
   {key:'post',label:'Post entrenamiento'},
@@ -579,9 +582,70 @@ $('authForm').onsubmit=async e=>{e.preventDefault();const email=$('authEmail').v
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();};
 
 async function init(){const {data:{session}}=await sb.auth.getSession();await handleSession(session);sb.auth.onAuthStateChange(async(_event,session)=>{await handleSession(session);});}
-async function handleSession(session){if(!session){currentUser=null;$('authScreen').classList.remove('hidden');$('app').classList.add('hidden');return;}currentUser=session.user;$('authScreen').classList.add('hidden');$('app').classList.remove('hidden');$('userEmail').textContent=currentUser.email||'';await refreshAll();}
+async function handleSession(session){
+  if(!session){
+    currentUser=null;
+    stopAutoRefresh();
+    $('authScreen').classList.remove('hidden');
+    $('app').classList.add('hidden');
+    return;
+  }
+  currentUser=session.user;
+  $('authScreen').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  $('userEmail').textContent=currentUser.email||'';
+  await refreshAll();
+  startAutoRefresh();
+}
 
-async function refreshAll(){await Promise.all([loadTasks(),loadPersonalDates(),loadSharedEvents(),loadWorkoutExercises(),loadNutritionMeals()]);createDays();renderSchedule();buildMonthOptions();renderCalendar();updateStats();renderWorkoutDays();renderWorkoutList();renderNutritionDays();renderMealTabs();renderNutritionList();updateNotice();}
+async function refreshAll(){
+  if(!currentUser || refreshInProgress) return;
+  if(document.querySelector('.overlay.show')) return;
+  refreshInProgress=true;
+  setRefreshStatus('Actualizando…','updating');
+  try{
+    await Promise.all([loadTasks(),loadPersonalDates(),loadSharedEvents(),loadWorkoutExercises(),loadNutritionMeals()]);
+    createDays();
+    renderSchedule();
+    buildMonthOptions();
+    renderCalendar();
+    updateStats();
+    renderWorkoutDays();
+    renderWorkoutList();
+    renderNutritionDays();
+    renderMealTabs();
+    renderNutritionList();
+    updateNotice();
+    setRefreshStatus('Actualizado '+new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}),'ok');
+  }catch(err){
+    console.error(err);
+    setRefreshStatus('Error al actualizar','');
+  }finally{
+    refreshInProgress=false;
+  }
+}
+
+function setRefreshStatus(text,cls=''){
+  const el=$('refreshStatus');
+  if(!el) return;
+  el.textContent=text;
+  el.className='refresh-status'+(cls?' '+cls:'');
+}
+
+function startAutoRefresh(){
+  stopAutoRefresh();
+  autoRefreshTimer=setInterval(()=>{
+    if(document.visibilityState==='visible') refreshAll();
+  },AUTO_REFRESH_MS);
+}
+
+function stopAutoRefresh(){
+  if(autoRefreshTimer){clearInterval(autoRefreshTimer);autoRefreshTimer=null;}
+}
+
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible' && currentUser) refreshAll();
+});
 
 async function loadTasks(){const {data,error}=await sb.from('tasks').select('*').order('hour',{ascending:true});if(error){console.error(error);tasks=[];}else tasks=data||[];}
 async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
@@ -594,7 +658,16 @@ function updateStats(){const todayCount=tasks.filter(x=>x.day===selectedDay).len
 function openTaskModal(hour){selectedHour=hour;$('taskModalInfo').textContent=`${DAYS[selectedDay]} · ${String(hour).padStart(2,'0')}:00`;$('taskTitleInput').value='';$('taskDescInput').value='';$('taskOverlay').classList.add('show');setTimeout(()=>$('taskTitleInput').focus(),80)}
 function closeTaskModal(){$('taskOverlay').classList.remove('show');}
 $('saveTaskBtn').onclick=async()=>{const title=$('taskTitleInput').value.trim();const description=$('taskDescInput').value.trim();if(!title)return alert('Escribí el título.');const {error}=await sb.from('tasks').insert({user_id:currentUser.id,title,description,day:selectedDay,hour:selectedHour});if(error){alert(error.message);return;}closeTaskModal();await loadTasks();renderSchedule();updateStats();}
-async function deleteTask(id){const {error}=await sb.from('tasks').delete().eq('id',id);if(error)alert(error.message);else{await loadTasks();renderSchedule();updateStats();}}
+async function deleteTask(id){
+  removeTooltip();
+  const {error}=await sb.from('tasks').delete().eq('id',id);
+  if(error){alert(error.message);return;}
+  await loadTasks();
+  removeTooltip();
+  renderSchedule();
+  updateStats();
+  setRefreshStatus('Actualizado','ok');
+}
 
 
 function setPanelOpen(panelId, iconId, open){
@@ -738,12 +811,37 @@ $('addDateBtn').onclick=()=>openDateModal();$('saveDateBtn').onclick=async()=>{c
 function updateNotice(){const today=todayISO();const events=[...eventsForDate(today),...personalForDate(today)];if(!events.length){$('notice').classList.remove('show');return;}$('noticeTitle').textContent='Aviso de hoy';$('noticeText').textContent=events.map(e=>e.title).join(' · ');$('notice').classList.add('show');}
 
 function removeTooltip(){if(tooltip){tooltip.remove();tooltip=null}}
-function enableTooltip(el,title,desc,meta){if(window.innerWidth<=700)return;el.addEventListener('mouseenter',()=>{removeTooltip();tooltip=document.createElement('div');tooltip.className='message-tooltip';tooltip.innerHTML=`<div class="tooltip-title">${esc(title)}</div><div class="tooltip-desc">${esc(desc||'Sin descripción')}</div><div class="tooltip-meta">${esc(meta||'')}</div>`;document.body.appendChild(tooltip);requestAnimationFrame(()=>{const r=el.getBoundingClientRect();let left=r.left+r.width/2-tooltip.offsetWidth/2;let top=r.top-tooltip.offsetHeight-14;if(left<12)left=12;if(left+tooltip.offsetWidth>innerWidth-12)left=innerWidth-tooltip.offsetWidth-12;if(top<12)top=r.bottom+14;tooltip.style.left=left+'px';tooltip.style.top=top+'px';requestAnimationFrame(()=>tooltip.classList.add('show'))})});el.addEventListener('mouseleave',removeTooltip)}
+function enableTooltip(el,title,desc,meta){
+  if(window.innerWidth<=700)return;
+  el.addEventListener('mouseenter',()=>{
+    if(!document.body.contains(el)) return;
+    removeTooltip();
+    tooltip=document.createElement('div');
+    tooltip.className='message-tooltip';
+    tooltip.innerHTML=`<div class="tooltip-title">${esc(title)}</div><div class="tooltip-desc">${esc(desc||'Sin descripción')}</div><div class="tooltip-meta">${esc(meta||'')}</div>`;
+    document.body.appendChild(tooltip);
+    requestAnimationFrame(()=>{
+      if(!document.body.contains(el) || !tooltip) return;
+      const r=el.getBoundingClientRect();
+      let left=r.left+r.width/2-tooltip.offsetWidth/2;
+      let top=r.top-tooltip.offsetHeight-14;
+      if(left<12)left=12;
+      if(left+tooltip.offsetWidth>innerWidth-12)left=innerWidth-tooltip.offsetWidth-12;
+      if(top<12)top=r.bottom+14;
+      tooltip.style.left=left+'px';
+      tooltip.style.top=top+'px';
+      requestAnimationFrame(()=>tooltip&&tooltip.classList.add('show'));
+    });
+  });
+  el.addEventListener('mouseleave',removeTooltip);
+  el.addEventListener('click',removeTooltip);
+}
 
 $('taskOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeTaskModal()});$('dateOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeDateModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeTaskModal();closeDateModal();removeTooltip()}});
 window.addEventListener('resize',removeTooltip);window.addEventListener('scroll',removeTooltip,true);
 
 init();
+setRefreshStatus('Listo');
 </script>
 </body>
 </html>
