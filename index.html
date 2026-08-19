@@ -20,39 +20,76 @@ button,input,select{font:inherit}.hidden{display:none!important}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}.overlay.show{display:flex}.modal{width:min(520px,100%);background:rgba(17,24,39,.99);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.5)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:16px}.modal h3{font-size:20px;margin-bottom:4px}.modal span{color:var(--muted);font-size:12px}.close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:20px}.save{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:800;cursor:pointer}.danger{width:100%;padding:12px;border:1px solid rgba(239,68,68,.3);border-radius:14px;background:rgba(239,68,68,.12);color:#fecaca;font-weight:800;cursor:pointer;margin-top:9px}
 
 /* ======================================================
-   PANEL LATERAL / SECCIONES
+   SELECTOR Y PANEL DE SECCIONES
 ====================================================== */
 
-.sections-grid{
+.section-switcher{
   display:grid;
-  grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
-  gap:24px;
-  align-items:start;
-  margin-bottom:28px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin-bottom:14px;
 }
 
-.section-column{
-  min-width:0;
-}
-
-.sections-grid .toggle{
+.section-tab{
   width:100%;
-  margin-bottom:12px;
+  min-height:66px;
+  margin:0;
   padding:13px 16px;
   box-shadow:0 10px 24px rgba(0,0,0,.16);
 }
-.sections-grid .toggle > span:first-child{
+
+.section-tab.active{
+  border-color:#60a5fa;
+  background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(37,99,235,.10));
+  box-shadow:0 12px 28px rgba(37,99,235,.12);
+}
+
+.section-tab > span:first-child{
   display:flex;
   flex-direction:column;
   gap:2px;
   text-align:left;
 }
-.sections-grid .toggle small{margin-top:0;}
+
+.section-tab small{margin-top:0}
+
+.section-stage{
+  width:100%;
+  min-width:0;
+  margin-bottom:28px;
+}
+
+.section-view{
+  display:none;
+  width:100%;
+  margin:0;
+  min-width:0;
+}
+
+.section-view.open{
+  display:block;
+}
+
+.calendar.section-view.open{
+  animation:panelFromRight .28s ease-out;
+}
+
+.workout-panel.section-view.open{
+  animation:panelFromLeft .28s ease-out;
+}
+
+@keyframes panelFromRight{
+  from{opacity:0;transform:translateX(38px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
+@keyframes panelFromLeft{
+  from{opacity:0;transform:translateX(-38px)}
+  to{opacity:1;transform:translateX(0)}
+}
 
 .calendar,
 .workout-panel{
-  margin-bottom:0;
-  min-width:0;
   box-shadow:0 16px 34px rgba(0,0,0,.18);
 }
 
@@ -277,6 +314,9 @@ button,input,select{font:inherit}.hidden{display:none!important}
 }
 
 @media(max-width:900px){
+  .section-switcher{grid-template-columns:1fr;gap:9px}
+  .section-tab{min-height:58px}
+
   .container{padding:18px 14px 44px}
   .sections-grid{grid-template-columns:1fr;gap:18px}
   .workout-days{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -322,56 +362,52 @@ button,input,select{font:inherit}.hidden{display:none!important}
       <div class="stat"><div class="stat-number" id="freeHours">16</div><div class="stat-label">Horas libres</div></div>
     </div>
 
-    <div class="sections-grid">
+    <div class="section-switcher">
+      <button class="toggle section-tab" id="calendarToggle">
+        <span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
+        <span class="toggle-icon" id="calendarIcon">+</span>
+      </button>
 
-      <div class="section-column">
-        <button class="toggle" id="calendarToggle">
-          <span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
-          <span class="toggle-icon" id="calendarIcon">+</span>
-        </button>
+      <button class="toggle section-tab" id="workoutToggle">
+        <span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span>
+        <span class="toggle-icon" id="workoutIcon">+</span>
+      </button>
+    </div>
 
-        <section class="calendar" id="calendarPanel">
-          <div class="cal-head">
-            <div>
-              <h2>Calendario</h2>
-              <p>Feriados y eventos compartidos desde <code>data/events.json</code>. Tus fechas personales también aparecen aquí.</p>
-            </div>
-            <div class="cal-actions">
-              <button class="small-btn" id="addDateBtn">＋ Agregar fecha</button>
-            </div>
+    <div class="section-stage">
+      <section class="calendar section-view" id="calendarPanel">
+        <div class="cal-head">
+          <div>
+            <h2>Calendario</h2>
+            <p>Feriados y eventos compartidos desde <code>data/events.json</code>. Tus fechas personales también aparecen aquí.</p>
           </div>
-
-          <div class="calendar-tools">
-            <select class="input" id="calendarMonth"></select>
-            <input class="input" id="calendarYear" type="number" min="2000" max="2100">
-            <button class="load-btn" id="loadCalendarBtn">Cargar</button>
+          <div class="cal-actions">
+            <button class="small-btn" id="addDateBtn">＋ Agregar fecha</button>
           </div>
+        </div>
 
-          <div class="month-grid" id="monthGrid"></div>
-          <div class="cal-status" id="calendarStatus">Cargando eventos...</div>
-        </section>
-      </div>
+        <div class="calendar-tools">
+          <select class="input" id="calendarMonth"></select>
+          <input class="input" id="calendarYear" type="number" min="2000" max="2100">
+          <button class="load-btn" id="loadCalendarBtn">Cargar</button>
+        </div>
 
-      <div class="section-column">
-        <button class="toggle" id="workoutToggle">
-          <span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span>
-          <span class="toggle-icon" id="workoutIcon">+</span>
-        </button>
+        <div class="month-grid" id="monthGrid"></div>
+        <div class="cal-status" id="calendarStatus">Cargando eventos...</div>
+      </section>
 
-        <section class="workout-panel" id="workoutPanel">
-          <div class="workout-head">
-            <div>
-              <h2>Rutina de entrenamiento</h2>
-              <p>Cargá cada ejercicio con series, repeticiones, RIR y las demás especificaciones. Queda guardado en tu cuenta.</p>
-            </div>
-            <button class="small-btn" id="addExerciseBtn">＋ Agregar ejercicio</button>
+      <section class="workout-panel section-view" id="workoutPanel">
+        <div class="workout-head">
+          <div>
+            <h2>Rutina de entrenamiento</h2>
+            <p>Cargá cada ejercicio con series, repeticiones, RIR y las demás especificaciones. Queda guardado en tu cuenta.</p>
           </div>
+          <button class="small-btn" id="addExerciseBtn">＋ Agregar ejercicio</button>
+        </div>
 
-          <div class="workout-days" id="workoutDays"></div>
-          <div class="workout-list" id="workoutList"></div>
-        </section>
-      </div>
-
+        <div class="workout-days" id="workoutDays"></div>
+        <div class="workout-list" id="workoutList"></div>
+      </section>
     </div>
 
     <div class="schedule-block">
@@ -473,15 +509,32 @@ function setPanelOpen(panelId, iconId, open){
   panel.classList.toggle('open',open);
   icon.textContent=open?'−':'+';
 }
+function setTabActive(tabId, active){
+  $(tabId).classList.toggle('active', active);
+}
 function toggleCalendarPanel(){
   const willOpen=!$('calendarPanel').classList.contains('open');
   setPanelOpen('calendarPanel','calendarIcon',willOpen);
-  if(willOpen){setPanelOpen('workoutPanel','workoutIcon',false);setTimeout(()=>$('calendarPanel').scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  setPanelOpen('workoutPanel','workoutIcon',false);
+  setTabActive('calendarToggle',willOpen);
+  setTabActive('workoutToggle',false);
+  if(willOpen){
+    requestAnimationFrame(()=>{
+      $('calendarPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+    });
+  }
 }
 function openWorkoutPanel(){
   const willOpen=!$('workoutPanel').classList.contains('open');
   setPanelOpen('workoutPanel','workoutIcon',willOpen);
-  if(willOpen){setPanelOpen('calendarPanel','calendarIcon',false);setTimeout(()=>$('workoutPanel').scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  setPanelOpen('calendarPanel','calendarIcon',false);
+  setTabActive('workoutToggle',willOpen);
+  setTabActive('calendarToggle',false);
+  if(willOpen){
+    requestAnimationFrame(()=>{
+      $('workoutPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+    });
+  }
 }
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=()=>{workoutDay=i;renderWorkoutDays();renderWorkoutList()};c.appendChild(b)});}
 async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);workoutExercises=[]}else workoutExercises=data||[]}
