@@ -93,6 +93,27 @@ button,input,select{font:inherit}.hidden{display:none!important}
   box-shadow:0 16px 34px rgba(0,0,0,.18);
 }
 
+
+/* ======================================================
+   DASHBOARD / RESUMEN DE HOY
+====================================================== */
+.dashboard{
+  background:linear-gradient(135deg,rgba(59,130,246,.11),rgba(34,197,94,.06));
+  border:1px solid rgba(96,165,250,.18);
+  border-radius:24px;
+  padding:20px;
+  margin-bottom:22px;
+  box-shadow:var(--shadow);
+}
+.dashboard-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.dashboard-head h2{font-size:20px;margin-bottom:5px}.dashboard-head p{font-size:12px;color:var(--muted);line-height:1.45}
+.dashboard-date{padding:8px 11px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:11px;color:#dbeafe;white-space:nowrap}
+.dashboard-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.dashboard-card{background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.16);border-radius:18px;padding:14px;min-height:122px}
+.dashboard-card h3{font-size:12px;color:#bfdbfe;margin-bottom:9px}.dashboard-main{font-size:16px;font-weight:800;line-height:1.3}.dashboard-sub{font-size:11px;color:var(--muted);line-height:1.45;margin-top:7px}.dashboard-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;font-size:10px;font-weight:800;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:#cbd5e1;margin-top:9px}.dashboard-progress{height:8px;border-radius:999px;background:#1e293b;overflow:hidden;margin-top:12px}.dashboard-progress span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3b82f6,#22c55e);width:0}.dashboard-list{display:flex;flex-direction:column;gap:7px;margin-top:8px}.dashboard-row{display:flex;justify-content:space-between;gap:10px;font-size:11px;color:#dbeafe}.dashboard-row span:last-child{color:var(--muted);white-space:nowrap}.dashboard-empty{color:var(--muted);font-size:11px;line-height:1.45}.dashboard-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.dashboard-btn{padding:8px 11px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#dbeafe;font-size:11px;font-weight:800;cursor:pointer}.dashboard-btn:hover{border-color:#60a5fa}
+@media(max-width:1100px){.dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.dashboard{padding:16px}.dashboard-grid{grid-template-columns:1fr}.dashboard-card{min-height:110px}}
+
 /* ======================================================
    HORARIO — ENCABEZADO
 ====================================================== */
@@ -390,6 +411,49 @@ button,input,select{font:inherit}.hidden{display:none!important}
       <div class="stat"><div class="stat-number" id="freeHours">16</div><div class="stat-label">Horas libres</div></div>
     </div>
 
+    <section class="dashboard" id="dashboard">
+      <div class="dashboard-head">
+        <div>
+          <h2>Resumen de hoy</h2>
+          <p>Una vista rápida de tus tareas, entrenamiento y alimentación.</p>
+        </div>
+        <div class="dashboard-date" id="dashboardDate">Hoy</div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <h3>📚 Próxima tarea</h3>
+          <div class="dashboard-main" id="dashNextTask">Sin tareas</div>
+          <div class="dashboard-sub" id="dashNextTaskMeta">Tu agenda está libre por ahora.</div>
+        </div>
+
+        <div class="dashboard-card">
+          <h3>🏋️ Entrenamiento</h3>
+          <div class="dashboard-main" id="dashWorkout">Sin rutina cargada</div>
+          <div class="dashboard-sub" id="dashWorkoutMeta">Podés cargar tu rutina desde Entrenamientos.</div>
+          <div class="dashboard-chip" id="dashWorkoutChip">0 ejercicios</div>
+        </div>
+
+        <div class="dashboard-card">
+          <h3>🍽️ Alimentación</h3>
+          <div class="dashboard-main" id="dashMeals">0 comidas</div>
+          <div class="dashboard-sub" id="dashMealMeta">Todavía no cargaste comidas para hoy.</div>
+          <div class="dashboard-progress"><span id="dashMealProgress"></span></div>
+        </div>
+
+        <div class="dashboard-card">
+          <h3>📈 Estado del día</h3>
+          <div class="dashboard-main" id="dashTaskCount">0 tareas</div>
+          <div class="dashboard-sub" id="dashTaskMeta">0 de 16 bloques horarios ocupados</div>
+          <div class="dashboard-actions">
+            <button class="dashboard-btn" id="goCalendarBtn">📅 Calendario</button>
+            <button class="dashboard-btn" id="goWorkoutBtn">🏋️ Entrenamiento</button>
+            <button class="dashboard-btn" id="goNutritionBtn">🍽️ Alimentación</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div class="section-switcher">
       <button class="toggle section-tab" id="calendarToggle">
         <span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
@@ -610,6 +674,7 @@ async function refreshAll(){
     buildMonthOptions();
     renderCalendar();
     updateStats();
+    renderDashboard();
     renderWorkoutDays();
     renderWorkoutList();
     renderNutritionDays();
@@ -651,13 +716,54 @@ async function loadTasks(){const {data,error}=await sb.from('tasks').select('*')
 async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
 async function loadSharedEvents(){try{const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('events.json no disponible');const data=await res.json();sharedEvents=Array.isArray(data)?data:(data.events||[]);$('calendarStatus').textContent='Eventos compartidos cargados.';}catch(e){console.warn(e);sharedEvents=[];$('calendarStatus').textContent='No se pudo cargar data/events.json; feriados/paros compartidos pueden no aparecer.';}}
 
-function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;nutritionDay=i;createDays();renderSchedule();updateStats();renderWorkoutDays();renderNutritionDays();loadWorkoutExercises().then(renderWorkoutList);loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();});};c.appendChild(b);});}
+function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;nutritionDay=i;createDays();renderSchedule();updateStats();renderDashboard();renderWorkoutDays();renderNutritionDays();loadWorkoutExercises().then(renderWorkoutList);loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();renderDashboard();});};c.appendChild(b);});}
 function renderSchedule(){const c=$('schedule');c.innerHTML='';HOURS.forEach(hour=>{const row=document.createElement('div');row.className='hour';const t=document.createElement('div');t.className='time';t.textContent=String(hour).padStart(2,'0')+':00';t.onclick=()=>openTaskModal(hour);const s=document.createElement('div');s.className='slot';s.onclick=()=>openTaskModal(hour);const list=tasks.filter(x=>x.day===selectedDay&&x.hour===hour);if(!list.length){const e=document.createElement('div');e.className='empty';e.textContent='Tocá para agregar';s.appendChild(e);}list.forEach(task=>{const card=document.createElement('div');card.className='task';const del=document.createElement('button');del.className='delete-task';del.textContent='×';del.onclick=ev=>{ev.stopPropagation();deleteTask(task.id)};const h=document.createElement('h4');h.textContent=task.title;const p=document.createElement('p');p.textContent=task.description||'';card.append(del,h,p);card.onclick=ev=>ev.stopPropagation();enableTooltip(card,task.title,task.description||'Sin descripción',`${DAYS[selectedDay]} · ${String(task.hour).padStart(2,'0')}:00`);s.appendChild(card)});row.append(t,s);c.appendChild(row);});}
+
+function renderDashboard(){
+  const now = new Date();
+  $('dashboardDate').textContent = now.toLocaleDateString('es-AR',{weekday:'long',day:'2-digit',month:'long'});
+
+  const dayTasks = tasks.filter(x=>x.day===selectedDay).sort((a,b)=>a.hour-b.hour);
+  const currentHour = Number(new Intl.DateTimeFormat('es-AR',{timeZone:TZ,hour:'2-digit',hour12:false}).format(new Date()));
+  const nextTask = dayTasks.find(x=>x.hour>=currentHour) || dayTasks[0];
+
+  if(nextTask){
+    $('dashNextTask').textContent = nextTask.title;
+    $('dashNextTaskMeta').textContent = `${DAYS[selectedDay]} · ${String(nextTask.hour).padStart(2,'0')}:00${nextTask.description ? ' · '+nextTask.description : ''}`;
+  }else{
+    $('dashNextTask').textContent = 'Sin tareas';
+    $('dashNextTaskMeta').textContent = 'No tenés tareas cargadas para este día.';
+  }
+
+  const todaysExercises = workoutExercises.filter(x=>x.day===workoutDay);
+  if(todaysExercises.length){
+    $('dashWorkout').textContent = `${todaysExercises.length} ${todaysExercises.length===1?'ejercicio':'ejercicios'}`;
+    $('dashWorkoutMeta').textContent = `Rutina de ${DAYS[workoutDay]}`;
+    $('dashWorkoutChip').textContent = `${todaysExercises.length} ${todaysExercises.length===1?'ejercicio':'ejercicios'}`;
+  }else{
+    $('dashWorkout').textContent = 'Sin rutina cargada';
+    $('dashWorkoutMeta').textContent = `No hay ejercicios guardados para ${DAYS[workoutDay]}.`;
+    $('dashWorkoutChip').textContent = '0 ejercicios';
+  }
+
+  const todaysMeals = nutritionMeals.filter(x=>x.day===nutritionDay);
+  const mealCount=todaysMeals.length;
+  const kcal=todaysMeals.reduce((sum,x)=>sum+(Number(x.calories)||0),0);
+  const protein=todaysMeals.reduce((sum,x)=>sum+(Number(x.protein_g)||0),0);
+  $('dashMeals').textContent = `${mealCount} ${mealCount===1?'comida':'comidas'}`;
+  $('dashMealMeta').textContent = mealCount ? `${Math.round(kcal)} kcal · ${Math.round(protein)} g de proteína cargada` : 'Todavía no cargaste comidas para hoy.';
+  $('dashMealProgress').style.width = `${Math.min(100, (mealCount/6)*100)}%`;
+
+  const usedHours=new Set(dayTasks.map(x=>x.hour)).size;
+  $('dashTaskCount').textContent = `${dayTasks.length} ${dayTasks.length===1?'tarea':'tareas'}`;
+  $('dashTaskMeta').textContent = `${usedHours} de ${HOURS.length} bloques horarios ocupados`;
+}
+
 function updateStats(){const todayCount=tasks.filter(x=>x.day===selectedDay).length;const used=new Set(tasks.filter(x=>x.day===selectedDay).map(x=>x.hour)).size;$('totalTasks').textContent=tasks.length;$('todayTasks').textContent=todayCount;$('freeHours').textContent=HOURS.length-used;}
 
 function openTaskModal(hour){selectedHour=hour;$('taskModalInfo').textContent=`${DAYS[selectedDay]} · ${String(hour).padStart(2,'0')}:00`;$('taskTitleInput').value='';$('taskDescInput').value='';$('taskOverlay').classList.add('show');setTimeout(()=>$('taskTitleInput').focus(),80)}
 function closeTaskModal(){$('taskOverlay').classList.remove('show');}
-$('saveTaskBtn').onclick=async()=>{const title=$('taskTitleInput').value.trim();const description=$('taskDescInput').value.trim();if(!title)return alert('Escribí el título.');const {error}=await sb.from('tasks').insert({user_id:currentUser.id,title,description,day:selectedDay,hour:selectedHour});if(error){alert(error.message);return;}closeTaskModal();await loadTasks();renderSchedule();updateStats();}
+$('saveTaskBtn').onclick=async()=>{const title=$('taskTitleInput').value.trim();const description=$('taskDescInput').value.trim();if(!title)return alert('Escribí el título.');const {error}=await sb.from('tasks').insert({user_id:currentUser.id,title,description,day:selectedDay,hour:selectedHour});if(error){alert(error.message);return;}closeTaskModal();await loadTasks();renderSchedule();updateStats();renderDashboard();}
 async function deleteTask(id){
   removeTooltip();
   const {error}=await sb.from('tasks').delete().eq('id',id);
@@ -708,24 +814,24 @@ function openWorkoutPanel(){
   }
 }
 
-function renderNutritionDays(){const c=$('nutritionDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===nutritionDay?' active':'');b.textContent=d;b.onclick=()=>{nutritionDay=i;renderNutritionDays();renderNutritionList();};c.appendChild(b);});}
-function renderMealTabs(){const c=$('mealTabs');c.innerHTML='';MEAL_TYPES.forEach(m=>{const b=document.createElement('button');b.className='meal-tab'+(m.key===activeMealType?' active':'');b.textContent=m.label;b.onclick=()=>{activeMealType=m.key;renderMealTabs();renderNutritionList();};c.appendChild(b);});}
+function renderNutritionDays(){const c=$('nutritionDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===nutritionDay?' active':'');b.textContent=d;b.onclick=()=>{nutritionDay=i;renderNutritionDays();renderNutritionList();renderDashboard();};c.appendChild(b);});}
+function renderMealTabs(){const c=$('mealTabs');c.innerHTML='';MEAL_TYPES.forEach(m=>{const b=document.createElement('button');b.className='meal-tab'+(m.key===activeMealType?' active':'');b.textContent=m.label;b.onclick=()=>{activeMealType=m.key;renderMealTabs();renderNutritionList();renderDashboard();};c.appendChild(b);});}
 async function loadNutritionMeals(){const {data,error}=await sb.from('nutrition_meals').select('*').eq('day',nutritionDay).order('meal_order',{ascending:true}).order('meal_time',{ascending:true});if(error){console.error(error);nutritionMeals=[]}else nutritionMeals=data||[];}
 function mealLabel(key){return MEAL_TYPES.find(m=>m.key===key)?.label||key;}
 function renderNutritionList(){const c=$('mealList');c.innerHTML='';const list=nutritionMeals.filter(m=>m.meal_type===activeMealType);if(!list.length){const e=document.createElement('div');e.className='meal-empty';e.textContent='No hay ninguna comida cargada para '+DAYS[nutritionDay]+' en '+mealLabel(activeMealType)+'. Tocá “Agregar comida” para crearla.';c.appendChild(e);return;}list.forEach(meal=>{const card=document.createElement('div');card.className='meal-card';const top=document.createElement('div');top.className='meal-card-head';const left=document.createElement('div');const name=document.createElement('div');name.className='meal-name';name.textContent=meal.title;left.appendChild(name);if(meal.foods){const foods=document.createElement('div');foods.className='meal-foods';foods.textContent=meal.foods;left.appendChild(foods);}if(meal.description){const desc=document.createElement('div');desc.className='meal-description';desc.textContent=meal.description;left.appendChild(desc);}const meta=document.createElement('div');meta.className='meal-meta';const chips=[meal.calories!=null?`Cal: ${meal.calories}`:null,meal.protein_g!=null?`Prot: ${meal.protein_g} g`:null,meal.carbs_g!=null?`Carbs: ${meal.carbs_g} g`:null,meal.fat_g!=null?`Grasas: ${meal.fat_g} g`:null,meal.meal_time?`Hora: ${meal.meal_time}`:null].filter(Boolean);chips.forEach(t=>{const ch=document.createElement('span');ch.className='meal-chip';ch.textContent=t;meta.appendChild(ch);});if(chips.length)left.appendChild(meta);const actions=document.createElement('div');actions.className='meal-actions';const edit=document.createElement('button');edit.className='meal-action';edit.textContent='✎';edit.title='Editar';edit.onclick=()=>openNutritionModal(meal);const del=document.createElement('button');del.className='meal-action delete';del.textContent='×';del.title='Eliminar';del.onclick=()=>deleteMeal(meal.id);actions.append(edit,del);top.append(left,actions);card.appendChild(top);enableTooltip(card,meal.title,meal.description||meal.foods||'Sin descripción',`${DAYS[nutritionDay]} · ${mealLabel(meal.meal_type)}`);c.appendChild(card);});}
 function openNutritionPanel(){const willOpen=!$('nutritionPanel').classList.contains('open');setPanelOpen('nutritionPanel','nutritionIcon',willOpen);setPanelOpen('calendarPanel','calendarIcon',false);setPanelOpen('workoutPanel','workoutIcon',false);setTabActive('nutritionToggle',willOpen);setTabActive('calendarToggle',false);setTabActive('workoutToggle',false);if(willOpen){renderNutritionDays();renderMealTabs();loadNutritionMeals().then(renderNutritionList);requestAnimationFrame(()=>$('nutritionPanel').scrollIntoView({behavior:'smooth',block:'nearest'}));}}
 function openNutritionModal(meal=null){editingMealId=meal?.id||null;$('nutritionModalTitle').textContent=meal?'✎ Editar comida':'＋ Agregar comida';$('nutritionModalInfo').textContent=`${DAYS[nutritionDay]} · ${mealLabel(meal?.meal_type||activeMealType)}`;$('mealType').value=meal?.meal_type||activeMealType;$('mealTitle').value=meal?.title||'';$('mealFoods').value=meal?.foods||'';$('mealCalories').value=meal?.calories??'';$('mealProtein').value=meal?.protein_g??'';$('mealCarbs').value=meal?.carbs_g??'';$('mealFat').value=meal?.fat_g??'';$('mealTime').value=meal?.meal_time||'';$('mealDescription').value=meal?.description||'';$('cancelMealBtn').classList.toggle('hidden',!meal);$('nutritionOverlay').classList.add('show');setTimeout(()=>$('mealTitle').focus(),80)}
 function closeNutritionModal(){$('nutritionOverlay').classList.remove('show');editingMealId=null;}
-$('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:Number($('mealCalories').value)||null,protein_g:Number($('mealProtein').value)||null,carbs_g:Number($('mealCarbs').value)||null,fat_g:Number($('mealFat').value)||null,meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};if(!payload.title)return alert('Escribí el nombre de la comida.');if(editingMealId){const {error}=await sb.from('nutrition_meals').update(payload).eq('id',editingMealId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=nutritionDay;payload.meal_order=MEAL_TYPES.findIndex(m=>m.key===meal_type);const {error}=await sb.from('nutrition_meals').insert(payload);if(error){alert(error.message);return}}closeNutritionModal();await loadNutritionMeals();renderNutritionList();};
-async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();}}
+$('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:Number($('mealCalories').value)||null,protein_g:Number($('mealProtein').value)||null,carbs_g:Number($('mealCarbs').value)||null,fat_g:Number($('mealFat').value)||null,meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};if(!payload.title)return alert('Escribí el nombre de la comida.');if(editingMealId){const {error}=await sb.from('nutrition_meals').update(payload).eq('id',editingMealId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=nutritionDay;payload.meal_order=MEAL_TYPES.findIndex(m=>m.key===meal_type);const {error}=await sb.from('nutrition_meals').insert(payload);if(error){alert(error.message);return}}closeNutritionModal();await loadNutritionMeals();renderNutritionList();renderDashboard();};
+async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();renderDashboard();}}
 
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=()=>{workoutDay=i;renderWorkoutDays();renderWorkoutList()};c.appendChild(b)});}
 async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);workoutExercises=[]}else workoutExercises=data||[]}
 function renderWorkoutList(){const c=$('workoutList');c.innerHTML='';if(!workoutExercises.length){const e=document.createElement('div');e.className='workout-empty';e.textContent='No hay ejercicios cargados para '+DAYS[workoutDay]+'. Tocá “Agregar ejercicio” para crear la rutina.';c.appendChild(e);return;}workoutExercises.forEach(ex=>{const card=document.createElement('div');card.className='exercise-card';const top=document.createElement('div');top.className='exercise-top';const left=document.createElement('div');const name=document.createElement('div');name.className='exercise-name';name.textContent=ex.exercise;const chips=document.createElement('div');chips.className='exercise-meta';[[`Series: ${ex.sets||'-'}`],[`Reps: ${ex.reps||'-'}`],[`RIR: ${ex.rir??'-'}`],[`Descanso: ${ex.rest_seconds?ex.rest_seconds+'s':'-'}`],[`Peso: ${ex.weight||'-'}`],[`Tempo: ${ex.tempo||'-'}`]].forEach(([txt])=>{const ch=document.createElement('span');ch.className='exercise-chip';ch.textContent=txt;chips.appendChild(ch)});left.append(name,chips);if(ex.notes){const note=document.createElement('div');note.className='exercise-note';note.textContent=ex.notes;left.appendChild(note)}const actions=document.createElement('div');actions.className='exercise-actions';const edit=document.createElement('button');edit.className='exercise-action';edit.textContent='✎';edit.title='Editar';edit.onclick=()=>openExerciseModal(ex);const del=document.createElement('button');del.className='exercise-action delete';del.textContent='×';del.title='Eliminar';del.onclick=()=>deleteExercise(ex.id);actions.append(edit,del);top.append(left,actions);card.append(top);c.appendChild(card)})}
 function openExerciseModal(ex=null){editingExerciseId=ex?.id||null;$('workoutModalTitle').textContent=ex?'✎ Editar ejercicio':'＋ Agregar ejercicio';$('workoutModalInfo').textContent=DAYS[workoutDay];$('exerciseName').value=ex?.exercise||'';$('exerciseSets').value=ex?.sets??'';$('exerciseReps').value=ex?.reps??'';$('exerciseRir').value=ex?.rir??'';$('exerciseRest').value=ex?.rest_seconds??'';$('exerciseWeight').value=ex?.weight??'';$('exerciseTempo').value=ex?.tempo??'';$('exerciseNotes').value=ex?.notes??'';$('cancelExerciseBtn').classList.toggle('hidden',!ex);$('workoutOverlay').classList.add('show');setTimeout(()=>$('exerciseName').focus(),80)}
 function closeExerciseModal(){ $('workoutOverlay').classList.remove('show'); editingExerciseId=null; }
-$('saveExerciseBtn').onclick=async()=>{const payload={exercise:$('exerciseName').value.trim(),sets:Number($('exerciseSets').value)||null,reps:$('exerciseReps').value.trim(),rir:$('exerciseRir').value===''?null:Number($('exerciseRir').value),rest_seconds:Number($('exerciseRest').value)||null,weight:$('exerciseWeight').value.trim(),tempo:$('exerciseTempo').value.trim(),notes:$('exerciseNotes').value.trim()};if(!payload.exercise)return alert('Escribí el nombre del ejercicio.');if(editingExerciseId){const {error}=await sb.from('workout_exercises').update(payload).eq('id',editingExerciseId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=workoutDay;payload.position=workoutExercises.length+1;const {error}=await sb.from('workout_exercises').insert(payload);if(error){alert(error.message);return}}closeExerciseModal();await loadWorkoutExercises();renderWorkoutList();}
-async function deleteExercise(id){if(!confirm('¿Eliminar este ejercicio?'))return;const {error}=await sb.from('workout_exercises').delete().eq('id',id);if(error)alert(error.message);else{await loadWorkoutExercises();renderWorkoutList();}}
+$('saveExerciseBtn').onclick=async()=>{const payload={exercise:$('exerciseName').value.trim(),sets:Number($('exerciseSets').value)||null,reps:$('exerciseReps').value.trim(),rir:$('exerciseRir').value===''?null:Number($('exerciseRir').value),rest_seconds:Number($('exerciseRest').value)||null,weight:$('exerciseWeight').value.trim(),tempo:$('exerciseTempo').value.trim(),notes:$('exerciseNotes').value.trim()};if(!payload.exercise)return alert('Escribí el nombre del ejercicio.');if(editingExerciseId){const {error}=await sb.from('workout_exercises').update(payload).eq('id',editingExerciseId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=workoutDay;payload.position=workoutExercises.length+1;const {error}=await sb.from('workout_exercises').insert(payload);if(error){alert(error.message);return}}closeExerciseModal();await loadWorkoutExercises();renderWorkoutList();renderDashboard();}
+async function deleteExercise(id){if(!confirm('¿Eliminar este ejercicio?'))return;const {error}=await sb.from('workout_exercises').delete().eq('id',id);if(error)alert(error.message);else{await loadWorkoutExercises();renderWorkoutList();renderDashboard();}}
 $('calendarToggle').onclick=toggleCalendarPanel;$('workoutToggle').onclick=openWorkoutPanel;$('nutritionToggle').onclick=openNutritionPanel;$('addExerciseBtn').onclick=()=>openExerciseModal();$('addMealBtn').onclick=()=>openNutritionModal();$('workoutCloseBtn').onclick=closeExerciseModal;$('cancelExerciseBtn').onclick=closeExerciseModal;$('workoutOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExerciseModal()});$('nutritionCloseBtn').onclick=closeNutritionModal;$('cancelMealBtn').onclick=closeNutritionModal;$('nutritionOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeNutritionModal()});
 
 function buildMonthOptions(){const sel=$('calendarMonth');if(sel.options.length)return;['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'].forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;sel.appendChild(o)});sel.value=currentMonth;$('calendarYear').value=currentYear;}
@@ -842,6 +948,11 @@ window.addEventListener('resize',removeTooltip);window.addEventListener('scroll'
 
 init();
 setRefreshStatus('Listo');
+
+$('goCalendarBtn').onclick=()=>toggleCalendarPanel();
+$('goWorkoutBtn').onclick=()=>openWorkoutPanel();
+$('goNutritionBtn').onclick=()=>openNutritionPanel();
+
 </script>
 </body>
 </html>
