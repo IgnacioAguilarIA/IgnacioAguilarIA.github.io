@@ -19,6 +19,13 @@ button,input,select{font:inherit}.hidden{display:none!important}
 .task-time{display:inline-flex;align-items:center;margin:0 0 7px 28px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.10);color:#dbeafe;font-size:10px;font-weight:800;border:1px solid rgba(255,255,255,.12)}.minute-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.minute-help{font-size:10px;color:var(--muted);margin-top:-4px;margin-bottom:10px;line-height:1.4}@media(max-width:600px){.minute-row{grid-template-columns:1fr}}.message-tooltip{position:fixed;z-index:9999;width:min(310px,calc(100vw - 24px));padding:13px 15px;border-radius:16px;background:rgba(17,24,39,.98);border:1px solid rgba(148,163,184,.25);box-shadow:0 20px 50px rgba(0,0,0,.42);pointer-events:none;opacity:0;transform:translateY(7px) scale(.97);transition:.16s}.message-tooltip.show{opacity:1;transform:translateY(0) scale(1)}.message-tooltip:after{content:"";position:absolute;width:10px;height:10px;background:rgba(17,24,39,.98);border-right:1px solid rgba(148,163,184,.25);border-bottom:1px solid rgba(148,163,184,.25);transform:rotate(45deg);bottom:-6px;left:24px}.tooltip-title{font-size:14px;font-weight:800;margin-bottom:5px}.tooltip-desc{font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:8px}.tooltip-meta{font-size:10px;color:#93c5fd;background:rgba(59,130,246,.12);padding:5px 8px;border-radius:999px;display:inline-block}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}.overlay.show{display:flex}.modal{width:min(520px,100%);background:rgba(17,24,39,.99);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.5)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:16px}.modal h3{font-size:20px;margin-bottom:4px}.modal span{color:var(--muted);font-size:12px}.close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:20px}.save{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:800;cursor:pointer}.danger{width:100%;padding:12px;border:1px solid rgba(239,68,68,.3);border-radius:14px;background:rgba(239,68,68,.12);color:#fecaca;font-weight:800;cursor:pointer;margin-top:9px}
 
+
+/* CONFLICTOS */
+.conflict-panel{display:none;margin:0 0 18px;background:rgba(17,24,39,.96);border:1px solid rgba(245,158,11,.30);border-radius:20px;padding:16px;box-shadow:0 12px 30px rgba(0,0,0,.16)}
+.conflict-panel.show{display:block;animation:conflictIn .22s ease-out}
+@keyframes conflictIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.conflict-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}.conflict-head h3{font-size:16px;margin-bottom:3px}.conflict-head p{font-size:11px;color:var(--muted);line-height:1.4}.conflict-count{padding:7px 10px;border-radius:999px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.22);color:#fde68a;font-size:11px;font-weight:800}.conflict-list{display:flex;flex-direction:column;gap:9px}.conflict-item{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:11px 12px;border-radius:14px;background:rgba(15,23,42,.88);border:1px solid rgba(245,158,11,.16)}.conflict-icon{width:30px;height:30px;border-radius:10px;background:rgba(245,158,11,.12);display:flex;align-items:center;justify-content:center;font-size:15px}.conflict-main{min-width:0}.conflict-title{font-size:12px;font-weight:800;line-height:1.35}.conflict-meta{font-size:10px;color:#cbd5e1;margin-top:3px;line-height:1.35}.conflict-meta strong{color:#fde68a}.conflict-action{padding:8px 10px;border-radius:10px;border:1px solid rgba(96,165,250,.24);background:rgba(59,130,246,.10);color:#dbeafe;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap}.conflict-action:hover{background:rgba(59,130,246,.18);border-color:#60a5fa}.conflict-safe{display:flex;align-items:center;gap:8px;padding:11px 12px;border-radius:14px;background:rgba(34,197,94,.10);border:1px solid rgba(34,197,94,.20);color:#bbf7d0;font-size:11px}@media(max-width:600px){.conflict-item{grid-template-columns:auto 1fr}.conflict-action{grid-column:2;justify-self:start}.conflict-panel{padding:13px}}
+
 /* ======================================================
    SELECTOR Y PANEL DE SECCIONES
 ====================================================== */
@@ -546,13 +553,24 @@ button,input,select{font:inherit}.hidden{display:none!important}
       </section>
     </div>
 
+    <section class="conflict-panel" id="conflictPanel">
+  <div class="conflict-head">
+    <div>
+      <h3>⚠️ Posibles conflictos</h3>
+      <p>Detectamos actividades a la misma hora o muy próximas. Como todavía no definimos duraciones, se muestran como posibles conflictos.</p>
+    </div>
+    <div class="conflict-count" id="conflictCount">0</div>
+  </div>
+  <div class="conflict-list" id="conflictList"></div>
+</section>
+
     <div class="schedule-block">
       <div class="schedule-heading">
         <div>
           <h2>Horario del día</h2>
           <p>Organizá tus tareas de 07:00 a 22:00.</p>
         </div>
-        <div class="schedule-badge">16 bloques horarios</div>
+        <div class="schedule-badge">16 bloques · revisión de conflictos</div>
       </div>
       <div class="schedule" id="schedule"></div>
     </div>
@@ -721,6 +739,7 @@ async function refreshAll(){
     renderNutritionDays();
     renderMealTabs();
     renderNutritionList();
+    renderConflicts();
     updateNotice();
     updateReminderUI();
     checkReminders();
@@ -834,9 +853,43 @@ async function loadTasks(){const {data,error}=await sb.from('tasks').select('*')
 async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
 async function loadSharedEvents(){try{const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('events.json no disponible');const data=await res.json();sharedEvents=Array.isArray(data)?data:(data.events||[]);$('calendarStatus').textContent='Eventos compartidos cargados.';}catch(e){console.warn(e);sharedEvents=[];$('calendarStatus').textContent='No se pudo cargar data/events.json; feriados/paros compartidos pueden no aparecer.';}}
 
-function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;nutritionDay=i;createDays();renderSchedule();updateStats();renderDashboard();renderWorkoutDays();renderNutritionDays();loadWorkoutExercises().then(renderWorkoutList);loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();renderDashboard();});};c.appendChild(b);});}
+function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;nutritionDay=i;createDays();renderSchedule();updateStats();renderDashboard();renderConflicts();renderWorkoutDays();renderNutritionDays();loadWorkoutExercises().then(renderWorkoutList);loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();renderDashboard();});};c.appendChild(b);});}
 function taskSort(a,b){return (Number(a.hour)||0)-(Number(b.hour)||0)||(Number(a.minute)||0)-(Number(b.minute)||0)||String(a.title||'').localeCompare(String(b.title||''));}
-function renderSchedule(){const c=$('schedule');c.innerHTML='';HOURS.forEach(hour=>{const row=document.createElement('div');row.className='hour';const t=document.createElement('div');t.className='time';t.textContent=String(hour).padStart(2,'0')+':00';t.onclick=()=>openTaskModal(hour,0);const s=document.createElement('div');s.className='slot';s.onclick=()=>openTaskModal(hour,0);const list=tasks.filter(x=>x.day===selectedDay&&Number(x.hour)===hour).sort(taskSort);if(!list.length){const e=document.createElement('div');e.className='empty';e.textContent='Tocá para agregar';s.appendChild(e);}list.forEach(task=>{const card=document.createElement('div');card.className='task'+(task.completed?' completed':'');const check=document.createElement('input');check.type='checkbox';check.className='task-complete';check.checked=!!task.completed;check.title=task.completed?'Marcar como pendiente':'Marcar como completada';check.onclick=ev=>{ev.stopPropagation();toggleTaskComplete(task)};const del=document.createElement('button');del.className='delete-task';del.textContent='×';del.title='Eliminar tarea';del.onclick=ev=>{ev.stopPropagation();deleteTask(task.id)};const tm=document.createElement('div');tm.className='task-time';tm.textContent=`${pad2(Number(task.hour)||0)}:${pad2(Number(task.minute)||0)}`;const h=document.createElement('h4');h.textContent=task.title;const p=document.createElement('p');p.textContent=task.description||'';card.append(check,del,tm,h,p);if(task.completed){const status=document.createElement('div');status.className='task-status';status.textContent='✓ Completada';card.appendChild(status);}card.onclick=ev=>ev.stopPropagation();enableTooltip(card,task.title,task.description||'Sin descripción',`${DAYS[selectedDay]} · ${pad2(Number(task.hour)||0)}:${pad2(Number(task.minute)||0)}`);s.appendChild(card)});row.append(t,s);c.appendChild(row);});}
+function minutesOfItem(x){return (Number(x.hour)||0)*60+(Number(x.minute)||0)}
+function clockFromMinutes(total){return `${pad2(Math.floor(total/60))}:${pad2(total%60)}`}
+function renderConflicts(){
+  const panel=$('conflictPanel'),list=$('conflictList'),count=$('conflictCount');
+  if(!panel||!list||!count)return;
+  const dayTasks=tasks.filter(t=>Number(t.day)===selectedDay).sort(taskSort);
+  const dayMeals=(nutritionMeals||[]).filter(m=>Number(m.day)===selectedDay && m.meal_time).map(m=>{const [h,mi]=String(m.meal_time).split(':').map(Number);return {...m,_minutes:(h||0)*60+(mi||0)}}).sort((a,b)=>a._minutes-b._minutes);
+  const conflicts=[];
+  for(let i=0;i<dayTasks.length;i++){
+    for(let j=i+1;j<dayTasks.length;j++){
+      const a=dayTasks[i],b=dayTasks[j],diff=Math.abs(minutesOfItem(a)-minutesOfItem(b));
+      if(diff===0||diff<=15)conflicts.push({kind:'task-task',severity:diff===0?'same':'near',a,b,diff});
+    }
+  }
+  dayTasks.forEach(task=>{dayMeals.forEach(meal=>{const diff=Math.abs(minutesOfItem(task)-meal._minutes);if(diff<=15)conflicts.push({kind:'task-meal',severity:diff===0?'same':'near',a:task,b:meal,diff});});});
+  if(!conflicts.length){panel.classList.remove('show');count.textContent='0';list.innerHTML='<div class="conflict-safe">✓ No detectamos horarios superpuestos ni actividades demasiado próximas para este día.</div>';return;}
+  count.textContent=String(conflicts.length);list.innerHTML='';
+  conflicts.slice(0,12).forEach(c=>{
+    const wrap=document.createElement('div');wrap.className='conflict-item';
+    const icon=document.createElement('div');icon.className='conflict-icon';icon.textContent=c.severity==='same'?'⛔':'⚠️';
+    const main=document.createElement('div');main.className='conflict-main';
+    let titleA=c.a.title,timeA=clockFromMinutes(minutesOfItem(c.a)),titleB,timeB;
+    if(c.kind==='task-task'){titleB=c.b.title;timeB=clockFromMinutes(minutesOfItem(c.b));}else{titleB='🍽️ '+c.b.title;timeB=c.b.meal_time;}
+    const t=document.createElement('div');t.className='conflict-title';t.textContent=`${titleA} ↔ ${titleB}`;
+    const m=document.createElement('div');m.className='conflict-meta';m.innerHTML=c.severity==='same'?`Ambas están programadas a las <strong>${esc(timeA)}</strong>.`:`Están separadas por solo <strong>${c.diff} min</strong> (${esc(timeA)} y ${esc(timeB)}).`;
+    main.append(t,m);
+    const b=document.createElement('button');b.className='conflict-action';b.textContent='Ver horario';b.onclick=()=>{removeTooltip();scrollToTime(Math.min(minutesOfItem(c.a),c.kind==='task-task'?minutesOfItem(c.b):c.b._minutes));};
+    wrap.append(icon,main,b);list.appendChild(wrap);
+  });
+  if(conflicts.length>12){const more=document.createElement('div');more.className='conflict-meta';more.textContent=`Hay ${conflicts.length-12} conflicto(s) más.`;list.appendChild(more);}
+  panel.classList.add('show');
+}
+function scrollToTime(totalMinutes){const hour=Math.floor(totalMinutes/60);const idx=HOURS.indexOf(hour);const rows=document.querySelectorAll('.hour');if(idx>=0&&rows[idx])rows[idx].scrollIntoView({behavior:'smooth',block:'center'});}
+
+function renderSchedule(){const c=$('schedule');c.innerHTML='';HOURS.forEach(hour=>{const row=document.createElement('div');row.className='hour';const t=document.createElement('div');t.className='time';t.textContent=String(hour).padStart(2,'0')+':00';t.onclick=()=>openTaskModal(hour,0);const s=document.createElement('div');s.className='slot';s.onclick=()=>openTaskModal(hour,0);const list=tasks.filter(x=>x.day===selectedDay&&Number(x.hour)===hour).sort(taskSort);if(!list.length){const e=document.createElement('div');e.className='empty';e.textContent='Tocá para agregar';s.appendChild(e);}list.forEach(task=>{const card=document.createElement('div');card.className='task'+(task.completed?' completed':'');const check=document.createElement('input');check.type='checkbox';check.className='task-complete';check.checked=!!task.completed;check.title=task.completed?'Marcar como pendiente':'Marcar como completada';check.onclick=ev=>{ev.stopPropagation();toggleTaskComplete(task)};const del=document.createElement('button');del.className='delete-task';del.textContent='×';del.title='Eliminar tarea';del.onclick=ev=>{ev.stopPropagation();deleteTask(task.id)};const tm=document.createElement('div');tm.className='task-time';tm.textContent=`${pad2(Number(task.hour)||0)}:${pad2(Number(task.minute)||0)}`;const h=document.createElement('h4');h.textContent=task.title;const p=document.createElement('p');p.textContent=task.description||'';card.append(check,del,tm,h,p);if(task.completed){const status=document.createElement('div');status.className='task-status';status.textContent='✓ Completada';card.appendChild(status);}card.onclick=ev=>ev.stopPropagation();enableTooltip(card,task.title,task.description||'Sin descripción',`${DAYS[selectedDay]} · ${pad2(Number(task.hour)||0)}:${pad2(Number(task.minute)||0)}`);s.appendChild(card)});row.append(t,s);c.appendChild(row);});renderConflicts();}
 
 function renderDashboard(){
   const now = new Date();
@@ -927,8 +980,8 @@ function renderNutritionList(){const c=$('mealList');c.innerHTML='';const list=n
 function openNutritionPanel(){const willOpen=!$('nutritionPanel').classList.contains('open');setPanelOpen('nutritionPanel','nutritionIcon',willOpen);setPanelOpen('calendarPanel','calendarIcon',false);setPanelOpen('workoutPanel','workoutIcon',false);setTabActive('nutritionToggle',willOpen);setTabActive('calendarToggle',false);setTabActive('workoutToggle',false);if(willOpen){renderNutritionDays();renderMealTabs();loadNutritionMeals().then(renderNutritionList);requestAnimationFrame(()=>$('nutritionPanel').scrollIntoView({behavior:'smooth',block:'nearest'}));}}
 function openNutritionModal(meal=null){editingMealId=meal?.id||null;$('nutritionModalTitle').textContent=meal?'✎ Editar comida':'＋ Agregar comida';$('nutritionModalInfo').textContent=`${DAYS[nutritionDay]} · ${mealLabel(meal?.meal_type||activeMealType)}`;$('mealType').value=meal?.meal_type||activeMealType;$('mealTitle').value=meal?.title||'';$('mealFoods').value=meal?.foods||'';$('mealCalories').value=meal?.calories??'';$('mealProtein').value=meal?.protein_g??'';$('mealCarbs').value=meal?.carbs_g??'';$('mealFat').value=meal?.fat_g??'';$('mealTime').value=meal?.meal_time||'';$('mealDescription').value=meal?.description||'';$('cancelMealBtn').classList.toggle('hidden',!meal);$('nutritionOverlay').classList.add('show');setTimeout(()=>$('mealTitle').focus(),80)}
 function closeNutritionModal(){$('nutritionOverlay').classList.remove('show');editingMealId=null;}
-$('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:Number($('mealCalories').value)||null,protein_g:Number($('mealProtein').value)||null,carbs_g:Number($('mealCarbs').value)||null,fat_g:Number($('mealFat').value)||null,meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};if(!payload.title)return alert('Escribí el nombre de la comida.');if(editingMealId){const {error}=await sb.from('nutrition_meals').update(payload).eq('id',editingMealId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=nutritionDay;payload.meal_order=MEAL_TYPES.findIndex(m=>m.key===meal_type);const {error}=await sb.from('nutrition_meals').insert(payload);if(error){alert(error.message);return}}closeNutritionModal();await loadNutritionMeals();renderNutritionList();renderDashboard();};
-async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();renderDashboard();}}
+$('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:Number($('mealCalories').value)||null,protein_g:Number($('mealProtein').value)||null,carbs_g:Number($('mealCarbs').value)||null,fat_g:Number($('mealFat').value)||null,meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};if(!payload.title)return alert('Escribí el nombre de la comida.');if(editingMealId){const {error}=await sb.from('nutrition_meals').update(payload).eq('id',editingMealId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=nutritionDay;payload.meal_order=MEAL_TYPES.findIndex(m=>m.key===meal_type);const {error}=await sb.from('nutrition_meals').insert(payload);if(error){alert(error.message);return}}closeNutritionModal();await loadNutritionMeals();renderNutritionList();renderDashboard();renderConflicts();};
+async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();renderDashboard();renderConflicts();}}
 
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=()=>{workoutDay=i;renderWorkoutDays();renderWorkoutList()};c.appendChild(b)});}
 async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);workoutExercises=[]}else workoutExercises=data||[]}
