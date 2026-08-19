@@ -18,7 +18,246 @@ button,input,select{font:inherit}.hidden{display:none!important}
 .schedule{display:flex;flex-direction:column;gap:18px}.hour{display:grid;grid-template-columns:78px 1fr;gap:12px;min-height:118px}.time{display:flex;justify-content:center;align-items:flex-start;padding-top:18px;background:#1e293b;border:1px solid var(--line);border-radius:18px;color:#93c5fd;font-weight:800;font-size:13px;cursor:pointer}.slot{background:rgba(17,24,39,.95);border:1px solid var(--line);border-radius:18px;padding:12px;min-height:118px;cursor:pointer}.empty{min-height:90px;height:100%;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:12px;border:1px dashed rgba(148,163,184,.2);border-radius:14px}.task{position:relative;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:0 8px 18px rgba(0,0,0,.2)}.task:last-child{margin-bottom:0}.task h4{font-size:15px;padding-right:34px;margin-bottom:5px}.task p{font-size:12px;color:#dbeafe;line-height:1.4}.delete-task{position:absolute;right:9px;top:9px;width:28px;height:28px;border:0;border-radius:9px;background:rgba(255,255,255,.16);color:#fff;cursor:pointer}.delete-task:hover{background:var(--danger)}
 .message-tooltip{position:fixed;z-index:9999;width:min(310px,calc(100vw - 24px));padding:13px 15px;border-radius:16px;background:rgba(17,24,39,.98);border:1px solid rgba(148,163,184,.25);box-shadow:0 20px 50px rgba(0,0,0,.42);pointer-events:none;opacity:0;transform:translateY(7px) scale(.97);transition:.16s}.message-tooltip.show{opacity:1;transform:translateY(0) scale(1)}.message-tooltip:after{content:"";position:absolute;width:10px;height:10px;background:rgba(17,24,39,.98);border-right:1px solid rgba(148,163,184,.25);border-bottom:1px solid rgba(148,163,184,.25);transform:rotate(45deg);bottom:-6px;left:24px}.tooltip-title{font-size:14px;font-weight:800;margin-bottom:5px}.tooltip-desc{font-size:12px;color:#cbd5e1;line-height:1.4;margin-bottom:8px}.tooltip-meta{font-size:10px;color:#93c5fd;background:rgba(59,130,246,.12);padding:5px 8px;border-radius:999px;display:inline-block}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}.overlay.show{display:flex}.modal{width:min(520px,100%);background:rgba(17,24,39,.99);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.5)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:16px}.modal h3{font-size:20px;margin-bottom:4px}.modal span{color:var(--muted);font-size:12px}.close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:20px}.save{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:800;cursor:pointer}.danger{width:100%;padding:12px;border:1px solid rgba(239,68,68,.3);border-radius:14px;background:rgba(239,68,68,.12);color:#fecaca;font-weight:800;cursor:pointer;margin-top:9px}
-@media(max-width:700px){.message-tooltip{display:none}.topbar{align-items:flex-start}.user-email{max-width:150px}.calendar-tools{grid-template-columns:1fr}.hour{grid-template-columns:64px 1fr;gap:10px}.time{font-size:12px}.slot{min-height:114px}.stats{gap:8px}.stat{padding:12px 6px}.stat-number{font-size:20px}.month-grid{gap:5px}.day-cell{min-height:72px;padding:6px}.event{font-size:8px}}
+
+/* ======================================================
+   PANEL LATERAL / SECCIONES
+====================================================== */
+
+.sections-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:16px;
+  align-items:start;
+  margin-bottom:18px;
+}
+
+.section-column{
+  min-width:0;
+}
+
+.sections-grid .toggle{
+  margin-bottom:10px;
+}
+
+.calendar,
+.workout-panel{
+  margin-bottom:0;
+}
+
+/* ======================================================
+   ENTRENAMIENTOS
+====================================================== */
+
+.workout-panel{
+  display:none;
+  background:rgba(17,24,39,.96);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  min-width:0;
+}
+
+.workout-panel.open{
+  display:block;
+}
+
+.workout-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+
+.workout-head h2{
+  font-size:18px;
+  margin-bottom:5px;
+}
+
+.workout-head p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+  max-width:520px;
+}
+
+.workout-days{
+  display:flex;
+  gap:7px;
+  overflow-x:auto;
+  padding:2px 1px 10px;
+  scrollbar-width:none;
+}
+
+.workout-days::-webkit-scrollbar{
+  display:none;
+}
+
+.workout-day-btn{
+  flex:0 0 auto;
+  padding:9px 11px;
+  border-radius:11px;
+  border:1px solid var(--line);
+  background:var(--card2);
+  color:#cbd5e1;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.18s;
+}
+
+.workout-day-btn:hover{
+  border-color:#60a5fa;
+}
+
+.workout-day-btn.active{
+  background:linear-gradient(135deg,var(--blue),#1d4ed8);
+  color:#fff;
+  border-color:#60a5fa;
+}
+
+.workout-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.workout-empty{
+  min-height:140px;
+  border:1px dashed rgba(148,163,184,.22);
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.45;
+}
+
+.exercise-card{
+  background:
+    linear-gradient(
+      135deg,
+      rgba(59,130,246,.12),
+      rgba(34,197,94,.08)
+    );
+  border:1px solid rgba(96,165,250,.18);
+  border-radius:16px;
+  padding:14px;
+}
+
+.exercise-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.exercise-name{
+  font-size:15px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.exercise-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.exercise-chip{
+  display:inline-flex;
+  align-items:center;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  color:#dbeafe;
+  font-size:10px;
+}
+
+.exercise-note{
+  margin-top:9px;
+  color:#cbd5e1;
+  font-size:11px;
+  line-height:1.45;
+  white-space:pre-wrap;
+}
+
+.exercise-actions{
+  display:flex;
+  gap:6px;
+  flex-shrink:0;
+}
+
+.exercise-action{
+  width:30px;
+  height:30px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:rgba(255,255,255,.06);
+  color:#fff;
+  cursor:pointer;
+}
+
+.exercise-action:hover{
+  border-color:#60a5fa;
+}
+
+.exercise-action.delete:hover{
+  background:var(--danger);
+  border-color:var(--danger);
+}
+
+.workout-form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.workout-form-grid.two{
+  grid-template-columns:1fr 1fr;
+}
+
+.workout-form-actions{
+  display:flex;
+  gap:8px;
+  flex-direction:column;
+}
+
+.secondary{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.06);
+  color:#e5e7eb;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.secondary:hover{
+  border-color:#60a5fa;
+}
+
+@media (min-width: 1150px){
+  .sections-grid{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  }
+}
+
+@media(max-width:900px){
+  .sections-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  .message-tooltip{display:none}.topbar{align-items:flex-start}.user-email{max-width:150px}.calendar-tools{grid-template-columns:1fr}.hour{grid-template-columns:64px 1fr;gap:10px}.time{font-size:12px}.slot{min-height:114px}.stats{gap:8px}.stat{padding:12px 6px}.stat-number{font-size:20px}.month-grid{gap:5px}.day-cell{min-height:72px;padding:6px}.event{font-size:8px}}
 </style>
 </head>
 <body>
@@ -57,33 +296,57 @@ button,input,select{font:inherit}.hidden{display:none!important}
       <div class="stat"><div class="stat-number" id="freeHours">16</div><div class="stat-label">Horas libres</div></div>
     </div>
 
-    <button class="toggle" id="calendarToggle"><span>📅 Calendario / feriados / paros<small>Información compartida</small></span><span class="toggle-icon" id="calendarIcon">+</span></button>
+    <div class="sections-grid">
 
-    <section class="calendar" id="calendarPanel">
-      <div class="cal-head">
-        <div><h2>Calendario</h2><p>Feriados y eventos compartidos desde <code>data/events.json</code>. Tus fechas personales también aparecen aquí.</p></div>
-        <div class="cal-actions"><button class="small-btn" id="addDateBtn">＋ Agregar fecha</button></div>
+      <div class="section-column">
+        <button class="toggle" id="calendarToggle">
+          <span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
+          <span class="toggle-icon" id="calendarIcon">+</span>
+        </button>
+
+        <section class="calendar" id="calendarPanel">
+          <div class="cal-head">
+            <div>
+              <h2>Calendario</h2>
+              <p>Feriados y eventos compartidos desde <code>data/events.json</code>. Tus fechas personales también aparecen aquí.</p>
+            </div>
+            <div class="cal-actions">
+              <button class="small-btn" id="addDateBtn">＋ Agregar fecha</button>
+            </div>
+          </div>
+
+          <div class="calendar-tools">
+            <select class="input" id="calendarMonth"></select>
+            <input class="input" id="calendarYear" type="number" min="2000" max="2100">
+            <button class="load-btn" id="loadCalendarBtn">Cargar</button>
+          </div>
+
+          <div class="month-grid" id="monthGrid"></div>
+          <div class="cal-status" id="calendarStatus">Cargando eventos...</div>
+        </section>
       </div>
-      <div class="calendar-tools">
-        <select class="input" id="calendarMonth"></select>
-        <input class="input" id="calendarYear" type="number" min="2000" max="2100">
-        <button class="load-btn" id="loadCalendarBtn">Cargar</button>
+
+      <div class="section-column">
+        <button class="toggle" id="workoutToggle">
+          <span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span>
+          <span class="toggle-icon" id="workoutIcon">+</span>
+        </button>
+
+        <section class="workout-panel" id="workoutPanel">
+          <div class="workout-head">
+            <div>
+              <h2>Rutina de entrenamiento</h2>
+              <p>Cargá cada ejercicio con series, repeticiones, RIR y las demás especificaciones. Queda guardado en tu cuenta.</p>
+            </div>
+            <button class="small-btn" id="addExerciseBtn">＋ Agregar ejercicio</button>
+          </div>
+
+          <div class="workout-days" id="workoutDays"></div>
+          <div class="workout-list" id="workoutList"></div>
+        </section>
       </div>
-      <div class="month-grid" id="monthGrid"></div>
-      <div class="cal-status" id="calendarStatus">Cargando eventos...</div>
-    </section>
 
-
-    <button class="toggle" id="workoutToggle"><span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span><span class="toggle-icon" id="workoutIcon">+</span></button>
-
-    <section class="workout-panel" id="workoutPanel">
-      <div class="workout-head">
-        <div><h2>Rutina de entrenamiento</h2><p>Cargá cada ejercicio con series, repeticiones, RIR y las demás especificaciones. Queda guardado en tu cuenta.</p></div>
-        <button class="small-btn" id="addExerciseBtn">＋ Agregar ejercicio</button>
-      </div>
-      <div class="workout-days" id="workoutDays"></div>
-      <div class="workout-list" id="workoutList"></div>
-    </section>
+    </div>
 
     <div class="schedule" id="schedule"></div>
   </main>
@@ -169,7 +432,22 @@ $('saveTaskBtn').onclick=async()=>{const title=$('taskTitleInput').value.trim();
 async function deleteTask(id){const {error}=await sb.from('tasks').delete().eq('id',id);if(error)alert(error.message);else{await loadTasks();renderSchedule();updateStats();}}
 
 
-function openWorkoutPanel(){const p=$('workoutPanel');const open=!p.classList.contains('open');p.classList.toggle('open',open);$('workoutIcon').textContent=open?'−':'+';}
+function setPanelOpen(panelId, iconId, open){
+  const panel=$(panelId);
+  const icon=$(iconId);
+  panel.classList.toggle('open',open);
+  icon.textContent=open?'−':'+';
+}
+function toggleCalendarPanel(){
+  const willOpen=!$('calendarPanel').classList.contains('open');
+  setPanelOpen('calendarPanel','calendarIcon',willOpen);
+  if(willOpen) setPanelOpen('workoutPanel','workoutIcon',false);
+}
+function openWorkoutPanel(){
+  const willOpen=!$('workoutPanel').classList.contains('open');
+  setPanelOpen('workoutPanel','workoutIcon',willOpen);
+  if(willOpen) setPanelOpen('calendarPanel','calendarIcon',false);
+}
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=()=>{workoutDay=i;renderWorkoutDays();renderWorkoutList()};c.appendChild(b)});}
 async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);workoutExercises=[]}else workoutExercises=data||[]}
 function renderWorkoutList(){const c=$('workoutList');c.innerHTML='';if(!workoutExercises.length){const e=document.createElement('div');e.className='workout-empty';e.textContent='No hay ejercicios cargados para '+DAYS[workoutDay]+'. Tocá “Agregar ejercicio” para crear la rutina.';c.appendChild(e);return;}workoutExercises.forEach(ex=>{const card=document.createElement('div');card.className='exercise-card';const top=document.createElement('div');top.className='exercise-top';const left=document.createElement('div');const name=document.createElement('div');name.className='exercise-name';name.textContent=ex.exercise;const chips=document.createElement('div');chips.className='exercise-meta';[[`Series: ${ex.sets||'-'}`],[`Reps: ${ex.reps||'-'}`],[`RIR: ${ex.rir??'-'}`],[`Descanso: ${ex.rest_seconds?ex.rest_seconds+'s':'-'}`],[`Peso: ${ex.weight||'-'}`],[`Tempo: ${ex.tempo||'-'}`]].forEach(([txt])=>{const ch=document.createElement('span');ch.className='exercise-chip';ch.textContent=txt;chips.appendChild(ch)});left.append(name,chips);if(ex.notes){const note=document.createElement('div');note.className='exercise-note';note.textContent=ex.notes;left.appendChild(note)}const actions=document.createElement('div');actions.className='exercise-actions';const edit=document.createElement('button');edit.className='exercise-action';edit.textContent='✎';edit.title='Editar';edit.onclick=()=>openExerciseModal(ex);const del=document.createElement('button');del.className='exercise-action delete';del.textContent='×';del.title='Eliminar';del.onclick=()=>deleteExercise(ex.id);actions.append(edit,del);top.append(left,actions);card.append(top);c.appendChild(card)})}
@@ -177,7 +455,7 @@ function openExerciseModal(ex=null){editingExerciseId=ex?.id||null;$('workoutMod
 function closeExerciseModal(){ $('workoutOverlay').classList.remove('show'); editingExerciseId=null; }
 $('saveExerciseBtn').onclick=async()=>{const payload={exercise:$('exerciseName').value.trim(),sets:Number($('exerciseSets').value)||null,reps:$('exerciseReps').value.trim(),rir:$('exerciseRir').value===''?null:Number($('exerciseRir').value),rest_seconds:Number($('exerciseRest').value)||null,weight:$('exerciseWeight').value.trim(),tempo:$('exerciseTempo').value.trim(),notes:$('exerciseNotes').value.trim()};if(!payload.exercise)return alert('Escribí el nombre del ejercicio.');if(editingExerciseId){const {error}=await sb.from('workout_exercises').update(payload).eq('id',editingExerciseId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=workoutDay;payload.position=workoutExercises.length+1;const {error}=await sb.from('workout_exercises').insert(payload);if(error){alert(error.message);return}}closeExerciseModal();await loadWorkoutExercises();renderWorkoutList();}
 async function deleteExercise(id){if(!confirm('¿Eliminar este ejercicio?'))return;const {error}=await sb.from('workout_exercises').delete().eq('id',id);if(error)alert(error.message);else{await loadWorkoutExercises();renderWorkoutList();}}
-$('workoutToggle').onclick=openWorkoutPanel;$('addExerciseBtn').onclick=()=>openExerciseModal();$('workoutCloseBtn').onclick=closeExerciseModal;$('cancelExerciseBtn').onclick=closeExerciseModal;$('workoutOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExerciseModal()});
+$('calendarToggle').onclick=toggleCalendarPanel;$('workoutToggle').onclick=openWorkoutPanel;$('addExerciseBtn').onclick=()=>openExerciseModal();$('workoutCloseBtn').onclick=closeExerciseModal;$('cancelExerciseBtn').onclick=closeExerciseModal;$('workoutOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeExerciseModal()});
 
 function buildMonthOptions(){const sel=$('calendarMonth');if(sel.options.length)return;['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'].forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m;sel.appendChild(o)});sel.value=currentMonth;$('calendarYear').value=currentYear;}
 function eventsForDate(d){return sharedEvents.filter(e=>(e.date||e.fecha)===d).map(e=>({kind:e.type||e.tipo||'important',title:e.title||e.titulo||'Evento',description:e.description||e.descripcion||'',meta:e.scope||e.alcance||e.source||e.fuente||''}));}
@@ -185,7 +463,7 @@ function personalForDate(d){return personalDates.filter(e=>e.date===d).map(e=>({
 function mapKind(k){k=String(k).toLowerCase();if(k.includes('holiday')||k.includes('feriado'))return'holiday';if(k.includes('teacher')||k.includes('docente'))return'teacher';if(k.includes('nonteacher')||k.includes('nodocente')||k.includes('no docente'))return'nonteacher';if(k.includes('university')||k.includes('universit'))return'university';if(k.includes('important'))return'important';return'occupied';}
 function renderCalendar(){const grid=$('monthGrid');grid.innerHTML='';['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach(x=>{const w=document.createElement('div');w.className='weekday';w.textContent=x;grid.appendChild(w)});const first=new Date(currentYear,currentMonth,1);const last=new Date(currentYear,currentMonth+1,0);const start=(first.getDay()+6)%7;for(let i=0;i<start;i++){const b=document.createElement('div');b.className='day-cell';b.style.visibility='hidden';grid.appendChild(b)}const today=todayISO();for(let d=1;d<=last.getDate();d++){const date=iso(currentYear,currentMonth,d);const cell=document.createElement('div');cell.className='day-cell'+(date===today?' today':'');const n=document.createElement('div');n.className='day-num';n.textContent=d;cell.appendChild(n);const events=[...eventsForDate(date),...personalForDate(date)];events.slice(0,4).forEach(ev=>{const el=document.createElement('div');const cls=mapKind(ev.kind);el.className='event '+cls;el.textContent=(cls==='holiday'?'🇦🇷 ':cls==='teacher'?'🟠 ':cls==='nonteacher'?'🔴 ':cls==='university'?'🟣 ':cls==='important'?'⭐ ':'📌 ')+ev.title;enableTooltip(el,ev.title,ev.description||'Sin descripción',ev.meta||fmtDate(date));cell.appendChild(el)});cell.onclick=()=>openDateModal(null,date);grid.appendChild(cell)}}
 $('loadCalendarBtn').onclick=()=>{currentMonth=Number($('calendarMonth').value);currentYear=Number($('calendarYear').value);renderCalendar();};$('calendarMonth').onchange=()=>{currentMonth=Number($('calendarMonth').value);renderCalendar()};$('calendarYear').onchange=()=>{currentYear=Number($('calendarYear').value);renderCalendar()};
-$('calendarToggle').onclick=()=>{const p=$('calendarPanel');const o=!p.classList.contains('open');p.classList.toggle('open',o);$('calendarIcon').textContent=o?'−':'+'};
+
 
 function openDateModal(item=null,defaultDate=''){editingDateId=item?.id||null;$('dateModalTitle').textContent=item?'✎ Editar fecha':'＋ Agregar fecha';$('dateModalInfo').textContent=item?'Modificá tu fecha':'Fecha personal';$('dateInput').value=item?item.date:defaultDate;$('dateType').value=item?.type||'ocupado';$('dateTitle').value=item?.title||'';$('dateDescription').value=item?.description||'';$('deleteDateBtn').classList.toggle('hidden',!item);$('dateOverlay').classList.add('show');}
 function closeDateModal(){$('dateOverlay').classList.remove('show');editingDateId=null;}
