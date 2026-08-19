@@ -389,7 +389,6 @@ button,input,select{font:inherit}.hidden{display:none!important}
         <div class="calendar-tools">
           <select class="input" id="calendarMonth"></select>
           <input class="input" id="calendarYear" type="number" min="2000" max="2100">
-          <button class="load-btn" id="loadCalendarBtn">Cargar</button>
         </div>
 
         <div class="month-grid" id="monthGrid"></div>
@@ -549,8 +548,76 @@ function buildMonthOptions(){const sel=$('calendarMonth');if(sel.options.length)
 function eventsForDate(d){return sharedEvents.filter(e=>(e.date||e.fecha)===d).map(e=>({kind:e.type||e.tipo||'important',title:e.title||e.titulo||'Evento',description:e.description||e.descripcion||'',meta:e.scope||e.alcance||e.source||e.fuente||''}));}
 function personalForDate(d){return personalDates.filter(e=>e.date===d).map(e=>({kind:e.type,title:e.title,description:e.description||'',meta:'Tu fecha'}));}
 function mapKind(k){k=String(k).toLowerCase();if(k.includes('holiday')||k.includes('feriado'))return'holiday';if(k.includes('teacher')||k.includes('docente'))return'teacher';if(k.includes('nonteacher')||k.includes('nodocente')||k.includes('no docente'))return'nonteacher';if(k.includes('university')||k.includes('universit'))return'university';if(k.includes('important'))return'important';return'occupied';}
-function renderCalendar(){const grid=$('monthGrid');grid.innerHTML='';['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach(x=>{const w=document.createElement('div');w.className='weekday';w.textContent=x;grid.appendChild(w)});const first=new Date(currentYear,currentMonth,1);const last=new Date(currentYear,currentMonth+1,0);const start=(first.getDay()+6)%7;for(let i=0;i<start;i++){const b=document.createElement('div');b.className='day-cell';b.style.visibility='hidden';grid.appendChild(b)}const today=todayISO();for(let d=1;d<=last.getDate();d++){const date=iso(currentYear,currentMonth,d);const cell=document.createElement('div');cell.className='day-cell'+(date===today?' today':'');const n=document.createElement('div');n.className='day-num';n.textContent=d;cell.appendChild(n);const events=[...eventsForDate(date),...personalForDate(date)];events.slice(0,4).forEach(ev=>{const el=document.createElement('div');const cls=mapKind(ev.kind);el.className='event '+cls;el.textContent=(cls==='holiday'?'🇦🇷 ':cls==='teacher'?'🟠 ':cls==='nonteacher'?'🔴 ':cls==='university'?'🟣 ':cls==='important'?'⭐ ':'📌 ')+ev.title;enableTooltip(el,ev.title,ev.description||'Sin descripción',ev.meta||fmtDate(date));cell.appendChild(el)});cell.onclick=()=>openDateModal(null,date);grid.appendChild(cell)}}
-$('loadCalendarBtn').onclick=()=>{currentMonth=Number($('calendarMonth').value);currentYear=Number($('calendarYear').value);renderCalendar();};$('calendarMonth').onchange=()=>{currentMonth=Number($('calendarMonth').value);renderCalendar()};$('calendarYear').onchange=()=>{currentYear=Number($('calendarYear').value);renderCalendar()};
+function renderCalendar(){
+  const grid=$('monthGrid');
+  grid.innerHTML='';
+
+  ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].forEach(x=>{
+    const w=document.createElement('div');
+    w.className='weekday';
+    w.textContent=x;
+    grid.appendChild(w);
+  });
+
+  const first=new Date(currentYear,currentMonth,1);
+  const last=new Date(currentYear,currentMonth+1,0);
+  const start=(first.getDay()+6)%7;
+
+  for(let i=0;i<start;i++){
+    const b=document.createElement('div');
+    b.className='day-cell';
+    b.style.visibility='hidden';
+    grid.appendChild(b);
+  }
+
+  const today=todayISO();
+
+  for(let d=1;d<=last.getDate();d++){
+    const date=iso(currentYear,currentMonth,d);
+    const cell=document.createElement('div');
+    cell.className='day-cell'+(date===today?' today':'');
+
+    const n=document.createElement('div');
+    n.className='day-num';
+    n.textContent=d;
+    cell.appendChild(n);
+
+    const events=[
+      ...eventsForDate(date).map(ev=>({...ev, personal:false})),
+      ...personalDates.filter(e=>e.date===date).map(e=>({
+        kind:e.type,
+        title:e.title,
+        description:e.description||'',
+        meta:'Tu fecha · '+fmtDate(e.date),
+        personal:true,
+        item:e
+      }))
+    ];
+
+    events.slice(0,5).forEach(ev=>{
+      const el=document.createElement('div');
+      const cls=mapKind(ev.kind);
+      el.className='event '+cls;
+      el.textContent=(cls==='holiday'?'🇦🇷 ':cls==='teacher'?'🟠 ':cls==='nonteacher'?'🔴 ':cls==='university'?'🟣 ':cls==='important'?'⭐ ':'📌 ')+ev.title;
+
+      enableTooltip(el,ev.title,ev.description||'Sin descripción',ev.meta||fmtDate(date));
+
+      if(ev.personal){
+        el.title='Editar fecha';
+        el.onclick=(event)=>{
+          event.stopPropagation();
+          openDateModal(ev.item);
+        };
+      }
+
+      cell.appendChild(el);
+    });
+
+    cell.onclick=()=>openDateModal(null,date);
+    grid.appendChild(cell);
+  }
+}
+$('calendarMonth').onchange=()=>{currentMonth=Number($('calendarMonth').value);renderCalendar()};$('calendarYear').onchange=()=>{currentYear=Number($('calendarYear').value);renderCalendar()};
 
 
 function openDateModal(item=null,defaultDate=''){editingDateId=item?.id||null;$('dateModalTitle').textContent=item?'✎ Editar fecha':'＋ Agregar fecha';$('dateModalInfo').textContent=item?'Modificá tu fecha':'Fecha personal';$('dateInput').value=item?item.date:defaultDate;$('dateType').value=item?.type||'ocupado';$('dateTitle').value=item?.title||'';$('dateDescription').value=item?.description||'';$('deleteDateBtn').classList.toggle('hidden',!item);$('dateOverlay').classList.add('show');}
