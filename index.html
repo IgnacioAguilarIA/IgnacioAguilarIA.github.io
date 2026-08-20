@@ -526,8 +526,62 @@ body.light .input{background:#fff;color:#0f172a}
 .v15-search-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,.12);font-size:17px}
 .v15-search-title{font-size:12px;font-weight:800}.v15-search-meta{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.35}.v15-search-type{font-size:9px;color:#93c5fd;background:rgba(59,130,246,.1);border:1px solid rgba(96,165,250,.14);padding:5px 7px;border-radius:999px;white-space:nowrap}
 body.light .v15-search-box{background:#fff} body.light .v15-search-top input{color:#0f172a} body.light .v15-search-result{color:#0f172a}
-.focus-mode .dashboard,.focus-mode .insights-panel,.focus-mode .smart-panel,.focus-mode .v15-toolbar,.focus-mode .notice,.focus-mode .stats,.focus-mode .conflict-panel,.focus-mode .today-timeline{display:none!important}
+.focus-mode .dashboard,.focus-mode .insights-panel,.focus-mode .smart-panel,.focus-mode .utility-row,.focus-mode .notice,.focus-mode .stats,.focus-mode .conflict-panel,.focus-mode .today-timeline{display:none!important}
 @media(max-width:900px){.v15-toolbar{padding:9px}.v15-toolbar-left,.v15-toolbar-right{width:100%}.v15-toolbar-right{justify-content:flex-end}.v15-tool{flex:1;min-width:0}}
+
+<style id="v16-settings-style">
+.utility-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(148,163,184,.14);border-radius:16px;background:rgba(17,24,39,.62);box-shadow:0 10px 28px rgba(0,0,0,.10)}
+.utility-left,.utility-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.utility-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;border-radius:11px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.045);color:#dbeafe;font-size:10px;font-weight:800;cursor:pointer}
+.utility-btn:hover{border-color:rgba(96,165,250,.35);background:rgba(59,130,246,.08)}
+.settings-overlay{position:fixed;inset:0;background:rgba(2,6,23,.42);backdrop-filter:blur(3px);display:none;z-index:118}
+.settings-overlay.open{display:block}
+.settings-drawer{position:fixed;top:0;right:0;bottom:0;width:min(390px,calc(100vw - 18px));background:rgba(17,24,39,.985);border-left:1px solid var(--line);box-shadow:-24px 0 70px rgba(0,0,0,.28);z-index:120;padding:20px;transform:translateX(102%);transition:transform .22s ease;overflow:auto}
+.settings-drawer.open{transform:translateX(0)}
+.settings-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding-bottom:16px;border-bottom:1px solid rgba(148,163,184,.12)}
+.settings-title{font-size:20px;font-weight:900}.settings-sub{font-size:11px;color:var(--muted);line-height:1.45;margin-top:4px}
+.settings-close{width:38px;height:38px;border:0;border-radius:11px;background:rgba(255,255,255,.07);color:#fff;cursor:pointer;font-size:20px;flex:0 0 auto}.settings-close:hover{background:var(--danger)}
+.settings-section{padding:16px 0;border-bottom:1px solid rgba(148,163,184,.10)}
+.settings-section-title{text-transform:uppercase;letter-spacing:.08em;font-size:9px;color:#94a3b8;font-weight:900;margin-bottom:8px}
+.settings-option{width:100%;display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:center;text-align:left;padding:12px;border:1px solid rgba(148,163,184,.12);border-radius:14px;background:rgba(255,255,255,.035);color:#e5e7eb;cursor:pointer}
+.settings-option:hover{border-color:rgba(96,165,250,.30);background:rgba(59,130,246,.07)}
+.settings-option-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,.12);font-size:16px}
+.settings-option strong{display:block;font-size:12px}.settings-option small{display:block;color:var(--muted);font-size:9px;margin-top:3px;line-height:1.35}
+.settings-value{font-size:10px;color:#93c5fd;font-weight:800}.settings-arrow{font-size:18px;color:#94a3b8}
+.settings-note{margin-top:16px;padding:12px 13px;border-radius:13px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.12);color:var(--muted);font-size:10px;line-height:1.45}
+body.light .utility-row{background:rgba(255,255,255,.90);border-color:#dbe3ee}
+body.light .utility-btn{color:#334155;background:#f8fafc;border-color:#dbe3ee}
+body.light .utility-btn:hover{background:#eef6ff;border-color:#93c5fd}
+body.light .settings-overlay{background:rgba(15,23,42,.28)}
+body.light .settings-drawer{background:#ffffff;border-color:#dbe3ee;box-shadow:-20px 0 60px rgba(15,23,42,.16)}
+body.light .settings-title{color:#0f172a}
+body.light .settings-sub{color:#64748b}
+body.light .settings-close{background:#f1f5f9;color:#334155}
+body.light .settings-option{background:#f8fafc;border-color:#dbe3ee;color:#0f172a}
+body.light .settings-option:hover{background:#eef6ff;border-color:#93c5fd}
+body.light .settings-section-title{color:#64748b}
+body.light .settings-option-icon{background:#eff6ff;color:#1d4ed8}
+body.light .settings-value{color:#1d4ed8}
+body.light .settings-note{background:#eff6ff;border-color:#bfdbfe;color:#475569}
+body.light .task{box-shadow:0 8px 18px rgba(15,23,42,.10)}
+body.light .event.holiday{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+body.light .event.teacher{background:#ffedd5;color:#9a3412;border-color:#fb923c}
+body.light .event.nonTeacher,body.light .event.nonteacher{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+body.light .event.university{background:#f3e8ff;color:#6b21a8;border-color:#c084fc}
+body.light .event.important{background:#dcfce7;color:#166534;border-color:#86efac}
+body.light .event.occupied{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+body.light .task.completed{background:linear-gradient(135deg,#e2e8f0,#cbd5e1);color:#334155}
+body.light .task.completed h4{color:#334155}
+body.light .task p{color:#334155}
+body.light .task-time{background:#dbeafe;color:#1e3a8a;border-color:#bfdbfe}
+body.light .task-status{background:#dcfce7;color:#166534;border-color:#86efac}
+body.light .message-tooltip{background:#fff;color:#0f172a;border-color:#cbd5e1;box-shadow:0 20px 50px rgba(15,23,42,.18)}
+body.light .message-tooltip:after{background:#fff;border-color:#cbd5e1}
+body.light .tooltip-title{color:#0f172a}.tooltip-meta{color:#1d4ed8!important;background:#eff6ff!important;border-color:#bfdbfe!important}
+#focusExitFloating{top:auto!important;right:auto!important;bottom:22px!important;left:22px!important;border-radius:14px;background:rgba(17,24,39,.97);color:#dbeafe}
+body.light #focusExitFloating{background:#fff;color:#1d4ed8;border-color:#93c5fd;box-shadow:0 12px 28px rgba(15,23,42,.16)}
+@media(max-width:900px){.utility-row{padding:9px}.utility-btn{flex:0 0 auto}.settings-drawer{width:min(370px,calc(100vw - 12px));padding:16px}}
+@media(max-width:600px){.utility-row{margin-bottom:10px}.utility-left{width:100%;justify-content:space-between}.utility-right{width:100%}.settings-trigger{width:100%}.settings-drawer{width:100%;border-left:0;border-radius:18px 18px 0 0;top:auto;height:min(86vh,720px);transform:translateY(102%);transition:transform .22s ease}.settings-drawer.open{transform:translateY(0)}#focusExitFloating{bottom:92px!important;left:14px!important}}
 </style>
 <style id="v15-final-fixes">
 #focusExitFloating{display:none;position:fixed;top:14px;right:14px;z-index:1000;padding:10px 13px;border-radius:999px;border:1px solid rgba(96,165,250,.3);background:rgba(17,24,39,.94);color:#dbeafe;font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 12px 28px rgba(0,0,0,.28);backdrop-filter:blur(12px)}
@@ -571,7 +625,7 @@ body.light .refresh-status{background:#f8fafc;color:#475569;border-color:#dbe3ee
 <section id="app" class="hidden">
   <div class="topbar">
     <div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
-    <div class="userbar"><button class="install-app ghost" id="installAppBtn">📲 Instalar</button><button class="reminder-btn" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status" id="refreshStatus">Actualizando…</span><span class="user-email" id="userEmail"></span><button class="ghost" id="logoutBtn">Salir</button></div>
+    <div class="userbar"><button class="install-app ghost" id="installAppBtn">📲 Instalar</button><button class="reminder-btn" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status" id="refreshStatus">Actualizando…</span><span class="user-email" id="userEmail"></span><button class="ghost" id="settingsTopBtn" type="button">⚙</button><button class="ghost" id="logoutBtn">Salir</button></div>
   </div>
 
   <div class="days" id="days"></div>
@@ -707,23 +761,55 @@ body.light .refresh-status{background:#f8fafc;color:#475569;border-color:#dbe3ee
     </section>
 
     
-<div class="v15-toolbar" id="v15Toolbar">
-  <div class="v15-toolbar-left">
+<div class="utility-row" id="utilityRow">
+  <div class="utility-left">
     <span class="v15-date" id="v15DateLabel">Hoy</span>
-    <button class="v15-tool" id="v15SearchBtn" type="button">🔎 Buscar</button>
-    <button class="v15-tool" id="v15ThemeBtn" type="button">🌙 Tema oscuro</button>
-    <button class="v15-tool" id="v15FocusBtn" type="button">🎯 Modo enfoque</button>
+    <button class="utility-btn" id="v15SearchBtn" type="button">🔎 Buscar</button>
   </div>
-  <div class="v15-toolbar-right">
-    <button class="v15-tool" id="v15ExportBtn" type="button">📤 Exportar datos</button>
+  <div class="utility-right">
   </div>
 </div>
-<div class="v15-search-overlay" id="v15SearchOverlay">
-  <div class="v15-search-box">
-    <div class="v15-search-top"><span>🔎</span><input id="v15SearchInput" type="search" placeholder="Buscar tareas, ejercicios, comidas o fechas…" autocomplete="off"><button id="v15SearchClose" type="button">×</button></div>
-    <div class="v15-search-results" id="v15SearchResults"><div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div></div>
+
+<div class="settings-overlay" id="settingsOverlay"></div>
+<aside class="settings-drawer" id="settingsDrawer" aria-hidden="true">
+  <div class="settings-head">
+    <div>
+      <div class="settings-title">⚙ Ajustes</div>
+      <div class="settings-sub">Personalizá la app sin llenar la pantalla principal.</div>
+    </div>
+    <button class="settings-close" id="settingsClose" type="button" aria-label="Cerrar ajustes">×</button>
   </div>
-</div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Apariencia</div>
+    <button class="settings-option" id="v15ThemeBtn" type="button">
+      <span class="settings-option-icon">🌙</span>
+      <span><strong>Tema</strong><small>Claro u oscuro</small></span>
+      <span class="settings-value" id="themeValue">Oscuro</span>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Concentración</div>
+    <button class="settings-option" id="v15FocusBtn" type="button">
+      <span class="settings-option-icon">🎯</span>
+      <span><strong>Modo enfoque</strong><small>Oculta paneles secundarios</small></span>
+      <span class="settings-value" id="focusValue">Apagado</span>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Datos</div>
+    <button class="settings-option" id="v15ExportBtn" type="button">
+      <span class="settings-option-icon">📤</span>
+      <span><strong>Exportar datos</strong><small>Descargar una copia JSON</small></span>
+      <span class="settings-arrow">›</span>
+    </button>
+  </div>
+
+  <div class="settings-note">Los cambios visuales se guardan en este dispositivo. Tus tareas, fechas, entrenamientos y comidas continúan guardándose en tu cuenta.</div>
+</aside>
+
 <div class="section-switcher">
       <button class="toggle section-tab" id="calendarToggle">
         <span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
@@ -1705,10 +1791,10 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
 (function(){
   const $v=id=>document.getElementById(id);
   function todayLabel(){try{return new Intl.DateTimeFormat('es-AR',{timeZone:TZ,weekday:'long',day:'2-digit',month:'long'}).format(new Date()).replace(/^./,c=>c.toUpperCase())}catch{return 'Hoy'}}
-  function setThemeButton(){const b=$v('v15ThemeBtn');if(b)b.textContent=document.body.classList.contains('light')?'☀️ Tema claro':'🌙 Tema oscuro'}
+  function setThemeButton(){const b=$v('themeValue');if(b)b.textContent=document.body.classList.contains('light')?'Claro':'Oscuro';const i=$v('v15ThemeBtn');if(i)i.setAttribute('aria-label',document.body.classList.contains('light')?'Cambiar a tema oscuro':'Cambiar a tema claro')}
   function toggleTheme(){const on=document.body.classList.toggle('light');localStorage.setItem('agendaTheme',on?'light':'dark');setThemeButton()}
   function restoreTheme(){if(localStorage.getItem('agendaTheme')==='light')document.body.classList.add('light');setThemeButton()}
-  function setFocusButton(){const b=$v('v15FocusBtn');if(b)b.textContent=document.body.classList.contains('focus-mode')?'↩ Salir enfoque':'🎯 Modo enfoque'}
+  function setFocusButton(){const b=$v('focusValue');if(b)b.textContent=document.body.classList.contains('focus-mode')?'Activo':'Apagado';const i=$v('v15FocusBtn');if(i)i.setAttribute('aria-pressed',document.body.classList.contains('focus-mode')?'true':'false')}
   function toggleFocus(){const on=document.body.classList.toggle('focus-mode');localStorage.setItem('agendaFocusMode',on?'1':'0');setFocusButton()}
   function restoreFocus(){if(localStorage.getItem('agendaFocusMode')==='1')document.body.classList.add('focus-mode');setFocusButton()}
   function closeSearch(){const o=$v('v15SearchOverlay');if(o)o.classList.remove('show')}
@@ -1721,8 +1807,10 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
     const limited=r.slice(0,12); if(!limited.length){host.innerHTML='<div class="v15-search-empty">No encontré nada con ese texto.</div>';return;} host.innerHTML=''; limited.forEach(x=>{const b=document.createElement('button');b.type='button';b.className='v15-search-result';b.innerHTML=`<span class="v15-search-icon">${x.icon}</span><span><div class="v15-search-title">${esc(x.title)}</div><div class="v15-search-meta">${esc(x.meta)}</div></span><span class="v15-search-type">${esc(x.type)}</span>`;b.onclick=x.action;host.appendChild(b)})
   }
   function exportData(){const payload={exported_at:new Date().toISOString(),account:currentUser?.email||null,tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,nutrition_meals:nutritionMeals};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
-  function initV15(){restoreTheme();restoreFocus();$v('focusExitFloating')?.addEventListener('click',()=>{if(document.body.classList.contains('focus-mode'))toggleFocus();});const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();$v('v15ThemeBtn')?.addEventListener('click',toggleTheme);$v('v15FocusBtn')?.addEventListener('click',toggleFocus);$v('v15SearchBtn')?.addEventListener('click',openSearch);$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape')closeSearch()});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel()},60000)}
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV15);else initV15();
+  function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
+  function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
+  function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();$v('v15ThemeBtn')?.addEventListener('click',toggleTheme);$v('v15FocusBtn')?.addEventListener('click',toggleFocus);$v('v15SearchBtn')?.addEventListener('click',openSearch);$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel()},60000)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV16);else initV16();
 })();
 </script>\n</body>
 </html>
