@@ -2,7 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Agenda FICH">
+<link rel="manifest" href="./manifest.webmanifest">
 <title>Agenda FICH</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -434,6 +439,60 @@ button,input,select{font:inherit}.hidden{display:none!important}
 ====================================================== */
 .reschedule-panel{margin-top:8px;padding:10px 11px;border-radius:12px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.16);font-size:10px;color:#bbf7d0;line-height:1.4}.reschedule-options{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.reschedule-option{padding:6px 8px;border-radius:999px;border:1px solid rgba(34,197,94,.20);background:rgba(34,197,94,.08);color:#bbf7d0;font-size:9px;font-weight:800;cursor:pointer}.reschedule-option:hover{background:rgba(34,197,94,.15)}
 
+
+/* ======================================================
+   V13 - EXPERIENCIA MÓVIL / APP
+====================================================== */
+html{background:#0b1120;scroll-behavior:smooth}
+body{overflow-x:hidden;-webkit-tap-highlight-color:transparent;padding-bottom:0}
+button,.day-btn,.section-tab,.toggle,.task,.slot,.calendar-day,.event,.workout-day-btn,.meal-tab{touch-action:manipulation}
+
+.today-timeline{margin-top:14px;background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.14);border-radius:20px;padding:14px;box-shadow:0 10px 26px rgba(0,0,0,.12)}
+.today-timeline-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px}.today-timeline-head h3{font-size:13px;margin-bottom:3px}.today-timeline-head p{font-size:10px;color:var(--muted);line-height:1.4}.today-now-badge{padding:6px 9px;border-radius:999px;background:rgba(59,130,246,.10);border:1px solid rgba(96,165,250,.18);font-size:10px;color:#bfdbfe;font-weight:800;white-space:nowrap}
+.today-timeline-list{display:flex;flex-direction:column;gap:7px}.timeline-item{display:grid;grid-template-columns:60px 12px 1fr auto;gap:8px;align-items:center;padding:9px 10px;border-radius:13px;background:rgba(17,24,39,.72);border:1px solid rgba(148,163,184,.10)}.timeline-time{font-size:11px;font-weight:800;color:#93c5fd}.timeline-line{width:10px;height:10px;border-radius:50%;background:#3b82f6;box-shadow:0 0 0 4px rgba(59,130,246,.10)}.timeline-main{min-width:0}.timeline-title{font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.timeline-sub{font-size:9px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.timeline-type{padding:5px 7px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#cbd5e1;font-size:9px;font-weight:800;white-space:nowrap}.timeline-item.next{border-color:rgba(96,165,250,.24);background:linear-gradient(90deg,rgba(59,130,246,.11),rgba(17,24,39,.72))}.timeline-item.done{opacity:.60}.timeline-item.done .timeline-title{text-decoration:line-through}
+.quick-add-fab{display:none}
+.install-app{display:none}.install-app.show{display:inline-flex}
+
+/* Desktop: make main content breathe */
+@media(min-width:1200px){.container{max-width:1280px;padding-left:28px;padding-right:28px}.dashboard-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.section-switcher{gap:16px}.section-tab{min-height:72px}}
+
+/* Tablet / mobile */
+@media(max-width:900px){
+  .container{max-width:100%;padding:16px 14px 110px}
+  .topbar{padding:10px 12px;gap:8px}
+  .brand{font-size:14px}.brand small{font-size:9px}
+  .userbar{gap:6px}.user-email{display:none}.refresh-status{font-size:9px;padding:6px 8px}.reminder-btn{padding:7px 9px;font-size:10px}.ghost{padding:7px 9px;font-size:10px}.install-app.show{display:inline-flex}
+  .days{top:56px;padding:9px 10px;gap:7px}.day-btn{min-width:84px;padding:11px 12px;border-radius:12px;font-size:12px}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.stat{padding:11px 7px;border-radius:15px}.stat-number{font-size:19px}.stat-label{font-size:9px}
+  .dashboard{padding:14px}.dashboard-head{margin-bottom:12px}.dashboard-head h2{font-size:18px}.dashboard-date{font-size:10px;padding:7px 9px}
+  .dashboard-grid{grid-template-columns:1fr 1fr;gap:9px}.dashboard-card{min-height:108px;padding:12px;border-radius:16px}.dashboard-main{font-size:14px}.dashboard-sub{font-size:10px}.dashboard-actions{gap:6px}.dashboard-btn{padding:7px 9px;font-size:9px}
+  .insights-panel{padding:12px}.insight-summary{grid-template-columns:repeat(2,1fr)}
+  .section-switcher{position:fixed;left:0;right:0;bottom:0;z-index:80;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));margin:0;background:rgba(11,17,32,.92);border-top:1px solid rgba(148,163,184,.16);backdrop-filter:blur(16px);box-shadow:0 -14px 36px rgba(0,0,0,.34)}
+  .section-tab{min-height:58px;padding:9px 7px;border-radius:15px;box-shadow:none}.section-tab>span:first-child{font-size:10px;text-align:center;align-items:center}.section-tab small{font-size:8px;margin-top:2px}.section-tab .toggle-icon{width:20px;height:20px;font-size:14px;margin-top:4px}
+  .section-stage{margin-bottom:14px}.calendar,.workout-panel,.nutrition-panel{border-radius:20px;padding:14px}.cal-head h2,.workout-head h2,.nutrition-head h2{font-size:17px}.cal-head p,.workout-head p,.nutrition-head p{font-size:10px}
+  .calendar-tools{grid-template-columns:1fr 1fr}.month-grid{gap:4px}.day-cell{min-height:82px;border-radius:12px;padding:6px}.calendar-day{min-height:82px}.event{font-size:8px;padding:4px 5px}
+  .schedule-heading h2{font-size:17px}.schedule-heading p{font-size:10px}.schedule-badge{font-size:9px;padding:7px 8px}.hour{grid-template-columns:56px 1fr;gap:8px;min-height:112px}.time{min-height:112px;padding-top:15px;font-size:11px;border-radius:15px}.slot{min-height:112px;padding:9px;border-radius:15px}.empty{min-height:88px;font-size:11px}
+  .task{padding:12px;border-radius:13px}.task h4{font-size:14px;padding-left:27px}.task p{font-size:11px;padding-left:27px}.task-complete{width:18px;height:18px;left:9px;top:10px}.delete-task{width:27px;height:27px}.task-time{margin-left:27px}
+  .workout-days{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.workout-day-btn{padding:9px 5px;font-size:10px;border-radius:11px;min-width:0}.workout-stats{grid-template-columns:repeat(2,1fr)}.workout-stat{padding:10px}.workout-stat strong{font-size:16px}.workout-stat span{font-size:9px}
+  .today-timeline{padding:12px;border-radius:17px}.timeline-item{grid-template-columns:52px 10px 1fr;gap:7px}.timeline-type{display:none}.timeline-title{font-size:10px}.timeline-sub{font-size:8px}.timeline-time{font-size:10px}
+  .quick-add-fab{display:flex;position:fixed;right:15px;bottom:93px;z-index:85;width:54px;height:54px;border:0;border-radius:50%;align-items:center;justify-content:center;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-size:24px;font-weight:800;box-shadow:0 16px 30px rgba(37,99,235,.35);cursor:pointer}
+  .reminder-panel{top:103px;right:10px;width:min(360px,calc(100vw - 20px));max-height:calc(100vh - 145px);overflow:auto}
+}
+
+@media(max-width:520px){
+  .dashboard-grid{grid-template-columns:1fr}.dashboard-card{min-height:96px}
+  .calendar-actions,.nutrition-actions,.workout-head{width:100%}.calendar-actions .small-btn,.nutrition-actions .small-btn,#addExerciseBtn{width:100%}
+  .cal-head,.workout-head,.nutrition-head{gap:8px}.small-btn{padding:9px 11px}
+  .calendar-tools{grid-template-columns:1fr}.month-grid{gap:3px}.day-cell{min-height:74px}.event{font-size:7px}.weekday{font-size:9px}
+  .progress-summary{grid-template-columns:1fr 1fr}.progress-chart-wrap{height:205px}
+}
+
+@media(max-width:380px){
+  .day-btn{min-width:76px;padding:10px 9px;font-size:11px}.stats{gap:5px}.stat{padding:10px 5px}.stat-number{font-size:18px}.stat-label{font-size:8px}.section-tab{min-height:54px}.section-tab>span:first-child{font-size:9px}.section-tab small{display:none}.quick-add-fab{width:50px;height:50px;bottom:91px;right:12px}
+}
+
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
 </style>
 </head>
 <body>
@@ -458,7 +517,7 @@ button,input,select{font:inherit}.hidden{display:none!important}
 <section id="app" class="hidden">
   <div class="topbar">
     <div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
-    <div class="userbar"><button class="reminder-btn" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status" id="refreshStatus">Actualizando…</span><span class="user-email" id="userEmail"></span><button class="ghost" id="logoutBtn">Salir</button></div>
+    <div class="userbar"><button class="install-app ghost" id="installAppBtn">📲 Instalar</button><button class="reminder-btn" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status" id="refreshStatus">Actualizando…</span><span class="user-email" id="userEmail"></span><button class="ghost" id="logoutBtn">Salir</button></div>
   </div>
 
   <div class="days" id="days"></div>
@@ -550,6 +609,17 @@ button,input,select{font:inherit}.hidden{display:none!important}
         </div>
         <div class="weekly-detail" id="weeklyDetail"></div>
       </div>
+    <div class="today-timeline" id="todayTimeline">
+      <div class="today-timeline-head">
+        <div>
+          <h3>🕒 Próximas actividades</h3>
+          <p>Una vista rápida de lo que viene en tu día.</p>
+        </div>
+        <div class="today-now-badge" id="todayNowBadge">Ahora</div>
+      </div>
+      <div class="today-timeline-list" id="todayTimelineList"></div>
+    </div>
+
     </section>
 
     <div class="section-switcher">
@@ -680,6 +750,7 @@ button,input,select{font:inherit}.hidden{display:none!important}
       <div class="schedule" id="schedule"></div>
     </div>
   </main>
+  <button class="quick-add-fab" id="quickAddFab" aria-label="Agregar tarea">＋</button>
 </section>
 
 <div class="overlay" id="taskOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="taskModalTitle">➕ Agregar tarea</h3><span id="taskModalInfo"></span></div><button class="close" onclick="closeTaskModal()">×</button></div><div class="field"><label>Día</label><select class="input" id="taskDayInput"></select></div><div class="minute-row"><div class="field"><label>Hora</label><input class="input" id="taskHourInput" type="number" min="7" max="22" step="1"></div><div class="field"><label>Minuto</label><select class="input" id="taskMinuteInput"></select></div></div><div class="minute-help">Podés elegir cualquier minuto: 08:00, 08:07, 08:30, 08:47, etc.</div><div class="field"><label>Título</label><input class="input" id="taskTitleInput"></div><div class="field"><label>Descripción</label><input class="input" id="taskDescInput"></div><button class="save" id="saveTaskBtn">Guardar tarea</button></div></div>
@@ -1081,8 +1152,66 @@ function renderDashboard(){
   const usedHours=new Set(dayTasks.map(x=>x.hour)).size;const completed=dayTasks.filter(x=>x.completed).length;const progress=dayTasks.length?Math.round((completed/dayTasks.length)*100):0;$('dashTaskCount').textContent=`${completed}/${dayTasks.length} completadas`;$('dashTaskMeta').textContent=`${usedHours} de ${HOURS.length} bloques horarios ocupados`;$('dashTaskProgress').style.width=`${progress}%`;$('dashTaskProgressText').textContent=dayTasks.length?`${progress}% completado`:'Sin tareas para calcular progreso';
   renderInsights();
   renderNutritionGoals();
+  renderTodayTimeline();
 }
 
+
+
+function renderTodayTimeline(){
+  const list=$('todayTimelineList');
+  if(!list) return;
+  const now=getArgentinaNow();
+  const todayIdx=getTodayIndex();
+  const nowMin=now.getHours()*60+now.getMinutes();
+  const items=[];
+  tasks.filter(t=>Number(t.day)===todayIdx).forEach(t=>items.push({minutes:minutesOfItem(t),title:t.title,description:t.description||'',type:'Tarea',done:!!t.completed,id:t.id}));
+  nutritionMeals.filter(m=>Number(m.day)===nutritionDay && m.meal_time).forEach(m=>{
+    const [h,mi]=String(m.meal_time).split(':').map(Number);
+    items.push({minutes:(h||0)*60+(mi||0),title:m.title||mealLabel(m.meal_type),description:m.description||m.foods||'',type:mealLabel(m.meal_type),done:false,id:m.id});
+  });
+  items.sort((a,b)=>a.minutes-b.minutes);
+  list.innerHTML='';
+  if(!items.length){list.innerHTML='<div class="dashboard-empty">No hay actividades con horario para hoy.</div>'; $('todayNowBadge').textContent='Libre'; return;}
+  const upcoming=items.find(x=>!x.done && x.minutes>=nowMin) || items.find(x=>!x.done);
+  $('todayNowBadge').textContent=upcoming?`Siguiente ${clockFromMinutes(upcoming.minutes)}`:'Día completado';
+  items.slice(0,8).forEach(item=>{
+    const el=document.createElement('div');
+    el.className='timeline-item'+(item.done?' done':'')+(upcoming&&item.id===upcoming.id?' next':'');
+    el.innerHTML=`<div class="timeline-time">${clockFromMinutes(item.minutes)}</div><div class="timeline-line"></div><div class="timeline-main"><div class="timeline-title">${esc(item.title)}</div><div class="timeline-sub">${esc(item.description||item.type)}</div></div><div class="timeline-type">${esc(item.type)}</div>`;
+    list.appendChild(el);
+  });
+}
+
+// Instalable como app cuando el navegador lo admite.
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+  $('installAppBtn')?.classList.add('show');
+});
+window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  $('installAppBtn')?.classList.remove('show');
+});
+$('installAppBtn').onclick=async()=>{
+  if(!deferredInstallPrompt){
+    alert('En iPhone: Safari → Compartir → Agregar a pantalla de inicio. En Android/Chrome, usá el menú del navegador → Instalar aplicación.');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+  $('installAppBtn')?.classList.remove('show');
+};
+
+$('quickAddFab').onclick=()=>{
+  const now=getArgentinaNow();
+  let h=now.getHours();
+  let m=now.getMinutes();
+  if(h<7){h=7;m=0}
+  if(h>22){h=22;m=59}
+  openTaskModal(h,m);
+};
 
 function startOfWeekMonday(dateObj){const d=new Date(dateObj);d.setHours(12,0,0,0);const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d;}
 function dateKeyFromDate(d){return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;}
@@ -1450,6 +1579,7 @@ $('taskOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)clos
 window.addEventListener('resize',removeTooltip);window.addEventListener('scroll',removeTooltip,true);
 
 updateReminderUI();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 init();
 setRefreshStatus('Listo');
 

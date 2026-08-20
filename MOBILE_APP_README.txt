@@ -1,0 +1,1 @@
+Subi tambien manifest.webmanifest, sw.js, icon-192.png e icon-512.png al mismo nivel que index.html. En Android Chrome deberia aparecer la opcion Instalar. En iPhone: Compartir > Agregar a pantalla de inicio.
