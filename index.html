@@ -20,6 +20,16 @@ button,input,select{font:inherit}.hidden{display:none!important}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;padding:16px;z-index:100}.overlay.show{display:flex}.modal{width:min(520px,100%);background:rgba(17,24,39,.99);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 24px 60px rgba(0,0,0,.5)}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:16px}.modal h3{font-size:20px;margin-bottom:4px}.modal span{color:var(--muted);font-size:12px}.close{width:38px;height:38px;border:0;border-radius:10px;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:20px}.save{width:100%;padding:14px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:800;cursor:pointer}.danger{width:100%;padding:12px;border:1px solid rgba(239,68,68,.3);border-radius:14px;background:rgba(239,68,68,.12);color:#fecaca;font-weight:800;cursor:pointer;margin-top:9px}
 
 
+
+/* ======================================================
+   ANALÍTICAS DE ENTRENAMIENTO
+====================================================== */
+.workout-analytics{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.9fr);gap:12px;margin:14px 0 16px}
+.analytics-card{background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.15);border-radius:18px;padding:15px}
+.analytics-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:13px}.analytics-head h3{font-size:13px;margin-bottom:4px}.analytics-head p{font-size:10px;color:var(--muted);line-height:1.4}.analytics-badge{padding:6px 9px;border-radius:999px;background:rgba(59,130,246,.1);border:1px solid rgba(96,165,250,.18);font-size:10px;color:#bfdbfe;white-space:nowrap;font-weight:800}
+.weekly-bars{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:end;min-height:170px}.week-bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:7px;min-width:0}.week-bar-value{font-size:10px;color:#dbeafe;font-weight:800}.week-bar-track{height:112px;width:100%;max-width:46px;display:flex;align-items:flex-end;justify-content:center;background:#1e293b;border-radius:12px;padding:4px}.week-bar-fill{width:100%;border-radius:9px;background:linear-gradient(180deg,#60a5fa,#2563eb);min-height:4px}.week-bar-label{font-size:10px;color:var(--muted);white-space:nowrap}.highlight-exercise{min-height:136px;border-radius:14px;background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(34,197,94,.08));border:1px solid rgba(96,165,250,.16);display:flex;flex-direction:column;justify-content:center;padding:16px}.highlight-name{font-size:18px;font-weight:800;margin-bottom:8px}.highlight-meta{font-size:11px;color:#cbd5e1;line-height:1.5}.highlight-chip{display:inline-flex;width:fit-content;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:10px;color:#dbeafe;font-weight:800;margin-top:10px}
+@media(max-width:800px){.workout-analytics{grid-template-columns:1fr}.weekly-bars{min-height:150px}.week-bar-track{height:96px}}
+
 /* CONFLICTOS */
 .conflict-panel{display:none;margin:0 0 18px;background:rgba(17,24,39,.96);border:1px solid rgba(245,158,11,.30);border-radius:20px;padding:16px;box-shadow:0 12px 30px rgba(0,0,0,.16)}
 .conflict-panel.show{display:block;animation:conflictIn .22s ease-out}
@@ -555,6 +565,16 @@ button,input,select{font:inherit}.hidden{display:none!important}
           <div class="workout-stat"><strong id="workoutStatSets">0</strong><span>Series registradas</span></div>
           <div class="workout-stat"><strong id="workoutStatExercises">0</strong><span>Ejercicios en rutina</span></div>
           <div class="workout-stat"><strong id="workoutStatLast">—</strong><span>Última sesión</span></div>
+        </div>
+        <div class="workout-analytics">
+          <div class="analytics-card">
+            <div class="analytics-head"><div><h3>📈 Actividad semanal</h3><p>Sesiones registradas durante las últimas 4 semanas.</p></div><span class="analytics-badge" id="analyticsSummary">0 sesiones</span></div>
+            <div class="weekly-bars" id="weeklyBars"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="analytics-head"><div><h3>🏋️ Ejercicio destacado</h3><p>El ejercicio con más registros recientes.</p></div></div>
+            <div class="highlight-exercise" id="highlightExercise">Todavía no hay registros suficientes.</div>
+          </div>
         </div>
         <div class="workout-list" id="workoutList"></div>
         <div class="workout-history">
@@ -1096,7 +1116,7 @@ function closeNutritionModal(){$('nutritionOverlay').classList.remove('show');ed
 $('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:Number($('mealCalories').value)||null,protein_g:Number($('mealProtein').value)||null,carbs_g:Number($('mealCarbs').value)||null,fat_g:Number($('mealFat').value)||null,meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};if(!payload.title)return alert('Escribí el nombre de la comida.');if(editingMealId){const {error}=await sb.from('nutrition_meals').update(payload).eq('id',editingMealId);if(error){alert(error.message);return}}else{payload.user_id=currentUser.id;payload.day=nutritionDay;payload.meal_order=MEAL_TYPES.findIndex(m=>m.key===meal_type);const {error}=await sb.from('nutrition_meals').insert(payload);if(error){alert(error.message);return}}closeNutritionModal();await loadNutritionMeals();renderNutritionList();renderDashboard();renderConflicts();};
 async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();renderDashboard();renderConflicts();}}
 
-function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=()=>{workoutDay=i;renderWorkoutDays();renderWorkoutList()};c.appendChild(b)});}
+function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=async()=>{workoutDay=i;renderWorkoutDays();await loadWorkoutExercises();renderWorkoutList();renderWorkoutHistory();renderWorkoutAnalytics();renderDashboard();};c.appendChild(b)});}
 async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);workoutExercises=[]}else workoutExercises=data||[]}
 async function loadWorkoutLogs(){const {data,error}=await sb.from('workout_logs').select('*').order('performed_at',{ascending:false}).order('created_at',{ascending:false}).limit(100);if(error){console.error(error);workoutLogs=[]}else workoutLogs=data||[]}
 function renderWorkoutStats(){
@@ -1111,8 +1131,20 @@ function renderWorkoutStats(){
   $('workoutStatExercises').textContent=exerciseCount;
   $('workoutStatLast').textContent=last?fmtDate(last.performed_at).replace(' de ',' ').slice(0,6):'—';
 }
+function renderWorkoutAnalytics(){
+  const bars=$('weeklyBars'); if(!bars)return; bars.innerHTML='';
+  const now=new Date(); now.setHours(12,0,0,0);
+  const weeks=[0,1,2,3].map(offset=>{const end=new Date(now); end.setDate(end.getDate()-offset*7); const start=new Date(end); start.setDate(start.getDate()-6); return {start,end};}).reverse();
+  const counts=weeks.map(w=>workoutLogs.filter(l=>{const d=new Date(l.performed_at+'T12:00:00');return d>=w.start&&d<=w.end;}).length);
+  const max=Math.max(1,...counts);
+  counts.forEach((count,i)=>{const wrap=document.createElement('div');wrap.className='week-bar';const val=document.createElement('div');val.className='week-bar-value';val.textContent=count;const track=document.createElement('div');track.className='week-bar-track';const fill=document.createElement('div');fill.className='week-bar-fill';fill.style.height=(count/max*100)+'%';track.appendChild(fill);const label=document.createElement('div');label.className='week-bar-label';label.textContent=i===3?'Esta semana':`Sem ${i+1}`;wrap.append(val,track,label);bars.appendChild(wrap);});
+  const total=counts.reduce((a,b)=>a+b,0); $('analyticsSummary').textContent=`${total} ${total===1?'sesión':'sesiones'}`;
+  const countsByEx={}; workoutLogs.slice(0,100).forEach(l=>{const key=l.exercise_name||'Ejercicio';countsByEx[key]=(countsByEx[key]||0)+1;});
+  const top=Object.entries(countsByEx).sort((a,b)=>b[1]-a[1])[0]; const h=$('highlightExercise'); if(!top){h.innerHTML='<div class="highlight-name">Sin registros todavía</div><div class="highlight-meta">Registrá una sesión desde un ejercicio para empezar a ver tu progreso.</div>';return;} h.innerHTML=`<div class="highlight-name">${esc(top[0])}</div><div class="highlight-meta">${top[1]} ${top[1]===1?'registro reciente':'registros recientes'}.</div><div class="highlight-chip">⭐ Ejercicio con más seguimiento</div>`;
+}
 function renderWorkoutHistory(){
   renderWorkoutStats();
+  renderWorkoutAnalytics();
   const c=$('workoutHistoryList');if(!c)return;c.innerHTML='';
   if(!workoutLogs.length){const e=document.createElement('div');e.className='workout-empty';e.style.minHeight='100px';e.textContent='Todavía no registraste sesiones. Usá “Registrar sesión” en un ejercicio.';c.appendChild(e);return;}
   workoutLogs.slice(0,12).forEach(log=>{
