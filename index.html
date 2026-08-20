@@ -501,6 +501,33 @@ button,.day-btn,.section-tab,.toggle,.task,.slot,.calendar-day,.event,.workout-d
 .quick-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}.quick-summary-card{padding:9px 10px;border-radius:12px;background:rgba(17,24,39,.56);border:1px solid rgba(148,163,184,.10)}.quick-summary-card strong{display:block;font-size:13px;color:#dbeafe}.quick-summary-card span{display:block;font-size:9px;color:var(--muted);margin-top:2px}
 @media(max-width:900px){.smart-grid{grid-template-columns:1fr 1fr}.smart-primary{grid-column:1/-1}}
 @media(max-width:600px){.smart-grid{grid-template-columns:1fr 1fr}.smart-primary{grid-column:1/-1}.quick-summary{grid-template-columns:1fr 1fr}.smart-panel{padding:12px}.smart-primary .big{font-size:18px}}
+
+/* V15 clean UX */
+body.light{--bg:#eef2f7;--card:#fff;--card2:#e9eef5;--line:#d1d9e5;--text:#0f172a;--muted:#64748b;background:linear-gradient(180deg,#f8fafc,#eef2f7);color:var(--text)}
+body.light .topbar,body.light .days{background:rgba(255,255,255,.9)}
+body.light .stat,body.light .dashboard,body.light .calendar,body.light .workout-panel,body.light .nutrition-panel,body.light .smart-panel,body.light .conflict-panel,body.light .today-timeline{background:rgba(255,255,255,.94)}
+body.light .slot,body.light .calendar-day,body.light .analytics-card,body.light .smart-primary,body.light .smart-side{background:#f8fafc}
+body.light .input{background:#fff;color:#0f172a}
+.v15-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(148,163,184,.14);border-radius:16px;background:rgba(17,24,39,.62);box-shadow:0 10px 28px rgba(0,0,0,.10)}
+.v15-toolbar-left,.v15-toolbar-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.v15-tool{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 11px;border-radius:11px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.045);color:#dbeafe;font-size:10px;font-weight:800;cursor:pointer}
+.v15-tool:hover{border-color:rgba(96,165,250,.35);background:rgba(59,130,246,.08)}
+.v15-date{font-size:10px;color:var(--muted)}
+.v15-search-overlay{position:fixed;inset:0;background:rgba(2,6,23,.72);display:none;align-items:flex-start;justify-content:center;padding:9vh 16px 20px;z-index:160;backdrop-filter:blur(9px)}
+.v15-search-overlay.show{display:flex}
+.v15-search-box{width:min(700px,100%);background:rgba(17,24,39,.98);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.42);overflow:hidden}
+.v15-search-top{display:flex;align-items:center;gap:10px;padding:14px;border-bottom:1px solid var(--line)}
+.v15-search-top input{flex:1;border:0;outline:0;background:transparent;color:#fff;font-size:16px}
+.v15-search-top button{width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;cursor:pointer}
+.v15-search-results{max-height:min(58vh,520px);overflow:auto;padding:10px}
+.v15-search-empty{padding:28px 18px;text-align:center;color:var(--muted);font-size:12px}
+.v15-search-result{width:100%;display:grid;grid-template-columns:40px 1fr auto;gap:10px;align-items:center;padding:11px;border:1px solid transparent;background:rgba(255,255,255,.025);border-radius:14px;color:#fff;text-align:left;cursor:pointer;margin-bottom:7px}
+.v15-search-result:hover{border-color:rgba(96,165,250,.24);background:rgba(59,130,246,.06)}
+.v15-search-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,.12);font-size:17px}
+.v15-search-title{font-size:12px;font-weight:800}.v15-search-meta{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.35}.v15-search-type{font-size:9px;color:#93c5fd;background:rgba(59,130,246,.1);border:1px solid rgba(96,165,250,.14);padding:5px 7px;border-radius:999px;white-space:nowrap}
+body.light .v15-search-box{background:#fff} body.light .v15-search-top input{color:#0f172a} body.light .v15-search-result{color:#0f172a}
+.focus-mode .dashboard,.focus-mode .insights-panel,.focus-mode .smart-panel,.focus-mode .v15-toolbar,.focus-mode .notice,.focus-mode .stats,.focus-mode .conflict-panel,.focus-mode .today-timeline{display:none!important}
+@media(max-width:900px){.v15-toolbar{padding:9px}.v15-toolbar-left,.v15-toolbar-right{width:100%}.v15-toolbar-right{justify-content:flex-end}.v15-tool{flex:1;min-width:0}}
 </style>
 </head>
 <body>
@@ -660,7 +687,25 @@ button,.day-btn,.section-tab,.toggle,.task,.slot,.calendar-day,.event,.workout-d
       </div>
     </section>
 
-    <div class="section-switcher">
+    
+<div class="v15-toolbar" id="v15Toolbar">
+  <div class="v15-toolbar-left">
+    <span class="v15-date" id="v15DateLabel">Hoy</span>
+    <button class="v15-tool" id="v15SearchBtn" type="button">🔎 Buscar</button>
+    <button class="v15-tool" id="v15ThemeBtn" type="button">🌙 Tema oscuro</button>
+    <button class="v15-tool" id="v15FocusBtn" type="button">🎯 Modo enfoque</button>
+  </div>
+  <div class="v15-toolbar-right">
+    <button class="v15-tool" id="v15ExportBtn" type="button">📤 Exportar datos</button>
+  </div>
+</div>
+<div class="v15-search-overlay" id="v15SearchOverlay">
+  <div class="v15-search-box">
+    <div class="v15-search-top"><span>🔎</span><input id="v15SearchInput" type="search" placeholder="Buscar tareas, ejercicios, comidas o fechas…" autocomplete="off"><button id="v15SearchClose" type="button">×</button></div>
+    <div class="v15-search-results" id="v15SearchResults"><div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div></div>
+  </div>
+</div>
+<div class="section-switcher">
       <button class="toggle section-tab" id="calendarToggle">
         <span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
         <span class="toggle-icon" id="calendarIcon">+</span>
@@ -1637,5 +1682,5 @@ $('goNutritionBtn').onclick=()=>openNutritionPanel();
 $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoalsModal;$('goalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeGoalsModal()});$('saveGoalsBtn').onclick=()=>{nutritionGoals={calories:Number($('goalCalories').value)||0,protein:Number($('goalProtein').value)||0,carbs:Number($('goalCarbs').value)||0,fat:Number($('goalFat').value)||0};saveNutritionGoals();closeGoalsModal();renderNutritionGoals();renderDashboard();};
 
 </script>
-</body>
+\n<script>\n(function(){\n  const $v=id=>document.getElementById(id);\n  function todayLabel(){try{return new Intl.DateTimeFormat('es-AR',{timeZone:TZ,weekday:'long',day:'2-digit',month:'long'}).format(new Date()).replace(/^./,c=>c.toUpperCase())}catch{return 'Hoy'}}\n  function setThemeButton(){const b=$v('v15ThemeBtn');if(b)b.textContent=document.body.classList.contains('light')?'☀️ Tema claro':'🌙 Tema oscuro'}\n  function toggleTheme(){const on=document.body.classList.toggle('light');localStorage.setItem('agendaTheme',on?'light':'dark');setThemeButton()}\n  function restoreTheme(){if(localStorage.getItem('agendaTheme')==='light')document.body.classList.add('light');setThemeButton()}\n  function setFocusButton(){const b=$v('v15FocusBtn');if(b)b.textContent=document.body.classList.contains('focus-mode')?'↩ Salir enfoque':'🎯 Modo enfoque'}\n  function toggleFocus(){const on=document.body.classList.toggle('focus-mode');localStorage.setItem('agendaFocusMode',on?'1':'0');setFocusButton()}\n  function restoreFocus(){if(localStorage.getItem('agendaFocusMode')==='1')document.body.classList.add('focus-mode');setFocusButton()}\n  function closeSearch(){const o=$v('v15SearchOverlay');if(o)o.classList.remove('show')}\n  function openSearch(){const o=$v('v15SearchOverlay');if(!o)return;o.classList.add('show');const i=$v('v15SearchInput');if(i){i.value='';setTimeout(()=>i.focus(),50)};renderSearch('')}\n  function renderSearch(q){const host=$v('v15SearchResults');if(!host)return; q=String(q||'').trim().toLowerCase(); if(!q){host.innerHTML='<div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div>';return;} const r=[];\n    (tasks||[]).forEach(t=>{const h=`${t.title||''} ${t.description||''}`.toLowerCase();if(h.includes(q))r.push({icon:t.completed?'✅':'📚',title:t.title||'Tarea',meta:`${DAYS[Number(t.day)||0]} · ${String(Number(t.hour)||0).padStart(2,'0')}:${String(Number(t.minute)||0).padStart(2,'0')}`,type:'Tarea',action:()=>{selectedDay=Number(t.day)||0;createDays();renderSchedule();closeSearch();openTaskModal(Number(t.hour)||7,Number(t.minute)||0,t)}})});\n    (workoutExercises||[]).forEach(x=>{const h=`${x.exercise||''} ${x.notes||''}`.toLowerCase();if(h.includes(q))r.push({icon:'🏋️',title:x.exercise||'Ejercicio',meta:`${DAYS[Number(x.day)||0]} · ${x.sets||'-'} series · ${x.reps||'-'} reps`,type:'Entrenamiento',action:()=>{workoutDay=Number(x.day)||0;openWorkoutPanel();Promise.resolve(loadWorkoutExercises()).then(()=>{renderWorkoutList();renderWorkoutHistory();if(typeof renderWorkoutAnalytics==='function')renderWorkoutAnalytics()});closeSearch()}})});\n    (nutritionMeals||[]).forEach(m=>{const h=`${m.title||''} ${m.foods||''} ${m.description||''}`.toLowerCase();if(h.includes(q))r.push({icon:'🍽️',title:m.title||'Comida',meta:`${DAYS[Number(m.day)||0]} · ${typeof mealLabel==='function'?mealLabel(m.meal_type):(m.meal_type||'Comida')}`,type:'Alimentación',action:()=>{nutritionDay=Number(m.day)||0;activeMealType=m.meal_type;openNutritionPanel();Promise.resolve(loadNutritionMeals()).then(()=>{renderMealTabs();renderNutritionList();renderNutritionGoals()});closeSearch()}})});\n    (personalDates||[]).forEach(d=>{const h=`${d.title||''} ${d.description||''}`.toLowerCase();if(h.includes(q))r.push({icon:d.type==='importante'?'⭐':'📌',title:d.title||'Fecha',meta:typeof fmtDate==='function'?fmtDate(d.date):d.date,type:'Fecha',action:()=>{closeSearch();openDateModal(d)}})});\n    const limited=r.slice(0,12); if(!limited.length){host.innerHTML='<div class="v15-search-empty">No encontré nada con ese texto.</div>';return;} host.innerHTML=''; limited.forEach(x=>{const b=document.createElement('button');b.type='button';b.className='v15-search-result';b.innerHTML=`<span class="v15-search-icon">${x.icon}</span><span><div class="v15-search-title">${esc(x.title)}</div><div class="v15-search-meta">${esc(x.meta)}</div></span><span class="v15-search-type">${esc(x.type)}</span>`;b.onclick=x.action;host.appendChild(b)})\n  }\n  function exportData(){const payload={exported_at:new Date().toISOString(),account:currentUser?.email||null,tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,nutrition_meals:nutritionMeals};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}\n  function initV15(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();$v('v15ThemeBtn')?.addEventListener('click',toggleTheme);$v('v15FocusBtn')?.addEventListener('click',toggleFocus);$v('v15SearchBtn')?.addEventListener('click',openSearch);$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape')closeSearch()});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel()},60000)}\n  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV15);else initV15();\n})();\n</script>\n</body>
 </html>
