@@ -608,13 +608,44 @@ body.light .refresh-status{background:#f8fafc;color:#475569;border-color:#dbe3ee
 @media(max-width:700px){}
 </style>
 
+
+<style id="v22-search-fix">
+.v15-search-overlay{position:fixed;inset:0;background:rgba(2,6,23,.66);display:none;align-items:flex-start;justify-content:center;padding:8vh 16px 24px;z-index:240;backdrop-filter:blur(10px)}
+.v15-search-overlay.show{display:flex}
+.v15-search-box{width:min(720px,100%);background:rgba(17,24,39,.985);border:1px solid rgba(148,163,184,.22);border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.45);overflow:hidden}
+.v15-search-top{display:flex;align-items:center;gap:10px;padding:14px 14px 12px;border-bottom:1px solid rgba(148,163,184,.14)}
+.v15-search-glass{font-size:18px;line-height:1}
+.v15-search-top input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#fff;font-size:16px}
+.v15-search-top input::placeholder{color:#64748b}
+.v15-search-top button{width:36px;height:36px;border:1px solid rgba(148,163,184,.16);border-radius:10px;background:rgba(255,255,255,.06);color:#fff;cursor:pointer;font-size:20px}
+.v15-search-top button:hover{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.28)}
+.v15-search-hint{padding:8px 16px 0;color:#94a3b8;font-size:10px}
+.v15-search-hint kbd{display:inline-flex;align-items:center;justify-content:center;min-width:22px;padding:2px 6px;border-radius:6px;border:1px solid rgba(148,163,184,.22);background:rgba(255,255,255,.05);color:#cbd5e1;font-size:9px}
+.v15-search-results{max-height:min(60vh,560px);overflow:auto;padding:12px}
+.v15-search-empty{padding:32px 18px;text-align:center;color:#94a3b8;font-size:12px}
+.v15-search-result{width:100%;display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:11px;border:1px solid transparent;background:rgba(255,255,255,.025);border-radius:14px;color:#fff;text-align:left;cursor:pointer;margin-bottom:8px}
+.v15-search-result:hover{border-color:rgba(96,165,250,.30);background:rgba(59,130,246,.08)}
+.v15-search-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,.12);font-size:18px}
+.v15-search-title{font-size:12px;font-weight:800}.v15-search-meta{font-size:10px;color:#94a3b8;margin-top:3px;line-height:1.35}.v15-search-type{font-size:9px;color:#93c5fd;background:rgba(59,130,246,.10);border:1px solid rgba(96,165,250,.18);padding:5px 8px;border-radius:999px;white-space:nowrap}
+.top-search-btn{min-width:96px;box-shadow:0 8px 18px rgba(0,0,0,.16)}
+body.light .v15-search-box{background:#fff;border-color:#dbe3ee;box-shadow:0 30px 80px rgba(15,23,42,.18)}
+body.light .v15-search-top{border-color:#e2e8f0}
+body.light .v15-search-top input{color:#0f172a}
+body.light .v15-search-top input::placeholder{color:#94a3b8}
+body.light .v15-search-top button{background:#f8fafc;color:#334155;border-color:#dbe3ee}
+body.light .v15-search-hint{color:#64748b}
+body.light .v15-search-result{color:#0f172a;background:#f8fafc;border-color:#e5e7eb}
+body.light .v15-search-result:hover{background:#eef6ff;border-color:#93c5fd}
+body.light .v15-search-type{color:#1d4ed8;background:#eff6ff;border-color:#bfdbfe}
+@media(max-width:700px){.top-search-btn{min-width:42px;width:42px;height:42px;padding:0;border-radius:12px;font-size:18px}.top-search-btn span{display:none}.v15-search-overlay{padding:7vh 10px 14px}.v15-search-box{border-radius:18px}.v15-search-top{padding:12px}.v15-search-hint{padding:7px 12px 0}.v15-search-results{padding:9px}.v15-search-result{grid-template-columns:38px 1fr;gap:9px}.v15-search-type{display:none}}
+</style>
 <style id="v21-clean-import-style">
 .topbar-hidden{display:none!important}
 .import-progress{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.12);color:var(--muted);font-size:10px;line-height:1.45;display:none}
 .import-progress.show{display:block}
 body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#475569}
 .reminder-panel.open{z-index:140}
-</style>
+<style id="v22-focus-remove">#focusExitFloating{display:none!important}.focus-mode #focusExitFloating{display:none!important}</style>
 </head>
 <body>
 <section id="authScreen">
@@ -779,6 +810,21 @@ body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#47556
     
   </div>
   <div class="utility-right">
+  </div>
+</div>
+
+
+<div class="v15-search-overlay" id="v15SearchOverlay" aria-hidden="true">
+  <div class="v15-search-box" role="dialog" aria-modal="true" aria-label="Buscar">
+    <div class="v15-search-top">
+      <span class="v15-search-glass">🔎</span>
+      <input id="v15SearchInput" type="search" placeholder="Buscar tareas, ejercicios, comidas o fechas..." autocomplete="off">
+      <button id="v15SearchClose" type="button" aria-label="Cerrar búsqueda">×</button>
+    </div>
+    <div class="v15-search-hint">Escribí para buscar. En PC también podés usar <kbd>Ctrl</kbd> + <kbd>K</kbd>.</div>
+    <div class="v15-search-results" id="v15SearchResults">
+      <div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div>
+    </div>
   </div>
 </div>
 
@@ -1915,8 +1961,8 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
   function setFocusButton(){const b=$v('focusValue');if(b)b.textContent=document.body.classList.contains('focus-mode')?'Activo':'Apagado';const i=$v('v15FocusBtn');if(i)i.setAttribute('aria-pressed',document.body.classList.contains('focus-mode')?'true':'false')}
   function toggleFocus(){const on=document.body.classList.toggle('focus-mode');localStorage.setItem('agendaFocusMode',on?'1':'0');setFocusButton()}
   function restoreFocus(){if(localStorage.getItem('agendaFocusMode')==='1')document.body.classList.add('focus-mode');setFocusButton()}
-  function closeSearch(){const o=$v('v15SearchOverlay');if(o)o.classList.remove('show')}
-  function openSearch(){const o=$v('v15SearchOverlay');if(!o)return;o.classList.add('show');const i=$v('v15SearchInput');if(i){i.value='';setTimeout(()=>i.focus(),50)};renderSearch('')}
+  function closeSearch(){const o=$v('v15SearchOverlay');if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true')}}
+  function openSearch(){const o=$v('v15SearchOverlay');if(!o)return;o.classList.add('show');o.setAttribute('aria-hidden','false');const i=$v('v15SearchInput');if(i){i.value='';setTimeout(()=>i.focus(),50)};renderSearch('')}
   function renderSearch(q){const host=$v('v15SearchResults');if(!host)return; q=String(q||'').trim().toLowerCase(); if(!q){host.innerHTML='<div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div>';return;} const r=[];
     (tasks||[]).forEach(t=>{const h=`${t.title||''} ${t.description||''}`.toLowerCase();if(h.includes(q))r.push({icon:t.completed?'✅':'📚',title:t.title||'Tarea',meta:`${DAYS[Number(t.day)||0]} · ${String(Number(t.hour)||0).padStart(2,'0')}:${String(Number(t.minute)||0).padStart(2,'0')}`,type:'Tarea',action:()=>{selectedDay=Number(t.day)||0;createDays();renderSchedule();closeSearch();openTaskModal(Number(t.hour)||7,Number(t.minute)||0,t)}})});
     (workoutExercises||[]).forEach(x=>{const h=`${x.exercise||''} ${x.notes||''}`.toLowerCase();if(h.includes(q))r.push({icon:'🏋️',title:x.exercise||'Ejercicio',meta:`${DAYS[Number(x.day)||0]} · ${x.sets||'-'} series · ${x.reps||'-'} reps`,type:'Entrenamiento',action:()=>{workoutDay=Number(x.day)||0;openWorkoutPanel();Promise.resolve(loadWorkoutExercises()).then(()=>{renderWorkoutList();renderWorkoutHistory();if(typeof renderWorkoutAnalytics==='function')renderWorkoutAnalytics()});closeSearch()}})});
@@ -1928,8 +1974,9 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
   function syncSettingsExtras(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const s=$v('settingsRefreshStatus');if(s)s.textContent=$v('refreshStatus')?.textContent||'Listo'}
-function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsExtras()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsExtras()});$v('topSearchBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openSearch()});$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;try{await importMyData(f)}catch(err){console.error(err);setImportProgress('',false);alert('No se pudo importar el archivo.\n\n'+(err?.message||err))}});$v('settingsReminderBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeSettings();setTimeout(()=>{const p=$v('reminderPanel');if(p){p.classList.add('open');p.style.zIndex='140';}if(typeof updateReminderUI==='function')updateReminderUI();syncSettingsExtras()},0)});$v('settingsInstallBtn')?.addEventListener('click',()=>{$v('installAppBtn')?.click()});$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras()},60000)}
+function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsExtras()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsExtras()});$v('topSearchBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openSearch()});document.getElementById('topSearchBtn')?.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();openSearch()});$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;try{await importMyData(f)}catch(err){console.error(err);setImportProgress('',false);alert('No se pudo importar el archivo.\n\n'+(err?.message||err))}});$v('settingsReminderBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeSettings();const p=$v('reminderPanel');if(p){p.classList.add('open');p.style.zIndex='140';}if(typeof updateReminderUI==='function')updateReminderUI();syncSettingsExtras();});$v('settingsInstallBtn')?.addEventListener('click',()=>{$v('installAppBtn')?.click()});$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();return}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras()},60000)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV16);else initV16();
 })();
-</script>\n</body>
+</script>
+</body>
 </html>
