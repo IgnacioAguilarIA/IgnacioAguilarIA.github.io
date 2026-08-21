@@ -1184,7 +1184,10 @@ async function handleSession(session){
   $('app').classList.remove('hidden');
   $('userEmail').textContent=currentUser.email||'';
   loadIgnoredConflicts();
-  await refreshAll();
+  // Pintamos la estructura básica ANTES de cualquier consulta de red.
+  renderStaticShell();
+  // La sincronización es independiente y no bloquea la interfaz inicial.
+  refreshAll();
   startAutoRefresh();
   if(remindersEnabled) startReminderTimer();
 }
@@ -1195,6 +1198,59 @@ function saveIgnoredConflicts(){localStorage.setItem(ignoredConflictStorageKey()
 function conflictKey(c){const aId=c.a?.id||c.a?.title||'a';const bId=c.b?.id||c.b?.title||'b';return [c.kind,aId,bId,c.a?minutesOfItem(c.a):'',c.kind==='task-task'?minutesOfItem(c.b):c.b?c.b._minutes:''].join('|');}
 function formatSuggestedSlots(day){const blocked=new Set();tasks.filter(t=>Number(t.day)===day).forEach(t=>blocked.add(minutesOfItem(t)));const meals=(nutritionMeals||[]).filter(m=>Number(m.day)===day&&m.meal_time);meals.forEach(m=>{const [h,mi]=String(m.meal_time).split(':').map(Number);blocked.add((h||0)*60+(mi||0));});const suggestions=[];for(let min=7*60;min<=22*60+45;min+=15){if(blocked.has(min))continue;const prev=min-15,next=min+15;if(!blocked.has(prev)&&!blocked.has(next))suggestions.push(clockFromMinutes(min));if(suggestions.length>=3)break;}return suggestions;}
 function showConflictSuggestion(c){const title=c.a?.title||'Actividad';const options=formatSuggestedSlots(selectedDay);if(!options.length){alert(`No encontré un hueco claro para reubicar «${title}».`);return;}const panel=document.createElement('div');panel.className='reschedule-panel';panel.innerHTML=`<strong>💡 Opciones para «${esc(title)}»</strong><div class="reschedule-options"></div>`;const target=c.a;const opts=panel.querySelector('.reschedule-options');options.forEach(time=>{const b=document.createElement('button');b.className='reschedule-option';b.textContent=time;b.onclick=async()=>{const [h,m]=time.split(':').map(Number);const {error}=await sb.from('tasks').update({hour:h,minute:m}).eq('id',target.id);if(error){alert(error.message);return;}panel.remove();await loadTasks();renderSchedule();renderDashboard();renderConflicts();};opts.appendChild(b)});const host=document.querySelector('.conflict-list');if(host)host.appendChild(panel);setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),30);}
+
+
+function renderStaticShell(){
+  // Selector de días inmediato.
+  try{
+    const days=$('days');
+    if(days){
+      days.innerHTML='';
+      DAYS.forEach((name,i)=>{
+        const b=document.createElement('button');
+        b.className='day-btn'+(i===selectedDay?' active':'');
+        b.textContent=name;
+        b.onclick=()=>{
+          selectedDay=i; workoutDay=i; nutritionDay=i;
+          createDays();
+          renderSchedule();
+          updateStats();
+          renderDashboard();
+          renderConflicts();
+          renderWorkoutDays();
+          renderNutritionDays();
+          loadWorkoutExercises().then(()=>{renderWorkoutList();renderWorkoutHistory();}).catch(console.warn);
+          loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();renderNutritionGoals();renderDashboard();}).catch(console.warn);
+        };
+        days.appendChild(b);
+      });
+    }
+  }catch(e){console.warn('Selector de días inicial:',e)}
+
+  // Calendario base inmediato: mes completo, sin esperar eventos compartidos.
+  try{ buildMonthOptions(); }catch(e){console.warn('Opciones de calendario:',e)}
+  try{ renderCalendar(); }catch(e){console.warn('Calendario inicial:',e)}
+
+  // Horario base inmediato: filas 07:00–22:00 sin esperar tareas.
+  try{
+    const host=$('schedule');
+    if(host){
+      host.innerHTML='';
+      HOURS.forEach(hour=>{
+        const row=document.createElement('div'); row.className='hour';
+        const time=document.createElement('div'); time.className='time'; time.textContent=String(hour).padStart(2,'0')+':00'; time.onclick=()=>openTaskModal(hour,0);
+        const slot=document.createElement('div'); slot.className='slot'; slot.onclick=()=>openTaskModal(hour,0);
+        const empty=document.createElement('div'); empty.className='empty'; empty.textContent='Tocá para agregar'; slot.appendChild(empty);
+        row.append(time,slot); host.appendChild(row);
+      });
+    }
+  }catch(e){console.warn('Horario inicial:',e)}
+
+  // Los otros paneles también quedan dibujados sin bloquear el arranque.
+  try{renderWorkoutDays();}catch(e){console.warn('Días entrenamiento inicial:',e)}
+  try{renderWorkoutList();}catch(e){console.warn('Rutina inicial:',e)}
+  try{renderNutritionDays(); renderMealTabs(); renderNutritionList(); renderNutritionGoals();}catch(e){console.warn('Alimentación inicial:',e)}
+}
 
 async function refreshAll(){
   if(!currentUser || refreshInProgress) return;
