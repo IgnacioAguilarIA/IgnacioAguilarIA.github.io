@@ -618,7 +618,7 @@ body.light .settings-inline-btn{background:#fff;color:#334155;border-color:#dbe3
 body.light .settings-inline-btn.danger{background:#fef2f2;border-color:#fecaca;color:#991b1b}
 @media(max-width:600px){.settings-account-row{align-items:flex-start;flex-direction:column}.settings-account-row .settings-inline-btn{width:100%}}
 </style>
-</head>
+<style id="v17-fixes">.reminder-panel{z-index:240!important}body.light .reminder-panel{background:#fff;color:#0f172a;border-color:#dbe3ee}body.light .reminder-label,body.light .reminder-head h3{color:#0f172a}body.light .reminder-sub,body.light .reminder-note{color:#64748b}body.light .next-reminder{background:#eff6ff;color:#1e3a8a;border-color:#bfdbfe}</style></head>
 <body>
 
 
@@ -642,7 +642,7 @@ body.light .settings-inline-btn.danger{background:#fef2f2;border-color:#fecaca;c
 <section id="app" class="hidden">
   <div class="topbar">
     <div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
-    <div class="userbar"><button class="install-app ghost topbar-hidden-control" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden-control" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden-control" id="refreshStatus">Actualizando…</span><span class="user-email" id="userEmail"></span><button class="ghost" id="settingsTopBtn" type="button">⚙</button><button class="ghost topbar-hidden-control" id="logoutBtn">Salir</button></div>
+    <div class="userbar"><button class="install-app ghost topbar-hidden-control" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden-control" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden-control" id="refreshStatus">Actualizando…</span><button class="ghost" id="settingsTopBtn" type="button">⚙</button><button class="ghost topbar-hidden-control" id="logoutBtn">Salir</button></div>
   </div>
 
   <div class="days" id="days"></div>
@@ -822,6 +822,12 @@ body.light .settings-inline-btn.danger{background:#fef2f2;border-color:#fecaca;c
       <span><strong>Exportar datos</strong><small>Descargar una copia JSON</small></span>
       <span class="settings-arrow">›</span>
     </button>
+    <button class="settings-option" id="settingsImportBtn" type="button">
+      <span class="settings-option-icon">📥</span>
+      <span><strong>Importar datos</strong><small>Importar una copia exportada desde otra cuenta</small></span>
+      <span class="settings-arrow">›</span>
+    </button>
+    <input id="importDataInput" type="file" accept="application/json,.json" hidden>
   </div>
 
   <div class="settings-section">
@@ -853,7 +859,7 @@ body.light .settings-inline-btn.danger{background:#fef2f2;border-color:#fecaca;c
 
   <div class="settings-section">
     <div class="settings-section-title">Sincronización</div>
-    <div class="settings-status" id="settingsRefreshStatus">Última actualización: todavía no realizada.</div>
+    <div class="settings-status">La app sincroniza automáticamente tus datos con tu cuenta.</div>
   </div>
 
   <div class="settings-note">Los cambios visuales se guardan en este dispositivo. Tus tareas, fechas, entrenamientos y comidas continúan guardándose en tu cuenta.</div>
@@ -1159,7 +1165,7 @@ $('reminderBtn').onclick=()=>{$('reminderPanel').classList.toggle('open');update
 $('reminderClose').onclick=()=>{$('reminderPanel').classList.remove('open');};
 $('reminderLead').onchange=()=>{reminderLeadMinutes=Number($('reminderLead').value);localStorage.setItem('agendaReminderLead',String(reminderLeadMinutes));updateReminderUI();};
 $('reminderEnable').onclick=()=>{if(remindersEnabled)disableReminders();else enableReminders();};
-document.addEventListener('click',e=>{const panel=$('reminderPanel');const btn=$('reminderBtn');if(panel?.classList.contains('open')&&!panel.contains(e.target)&&e.target!==btn)panel.classList.remove('open');});
+document.addEventListener('click',e=>{const panel=$('reminderPanel');const btn=$('reminderBtn');const settingsBtn=$('settingsReminderBtn');if(panel?.classList.contains('open')&&!panel.contains(e.target)&&e.target!==btn&&e.target!==settingsBtn)panel.classList.remove('open');});
 
 
 async function init(){const {data:{session}}=await sb.auth.getSession();await handleSession(session);sb.auth.onAuthStateChange(async(_event,session)=>{await handleSession(session);});}
@@ -1431,11 +1437,11 @@ document.getElementById('smartOpenNutrition').addEventListener('click',()=>{$('n
 window.addEventListener('beforeinstallprompt',event=>{
   event.preventDefault();
   deferredInstallPrompt=event;
-  $('installAppBtn')?.classList.add('show'); if(typeof syncSettingsPanel==='function')syncSettingsPanel();
+  $('installAppBtn')?.classList.add('show'); syncSettingsPanel?.();
 });
 window.addEventListener('appinstalled',()=>{
   deferredInstallPrompt=null;
-  $('installAppBtn')?.classList.remove('show'); if(typeof syncSettingsPanel==='function')syncSettingsPanel();
+  $('installAppBtn')?.classList.remove('show'); syncSettingsPanel?.();
 });
 $('installAppBtn').onclick=async()=>{
   if(!deferredInstallPrompt){
@@ -1445,7 +1451,7 @@ $('installAppBtn').onclick=async()=>{
   deferredInstallPrompt.prompt();
   await deferredInstallPrompt.userChoice;
   deferredInstallPrompt=null;
-  $('installAppBtn')?.classList.remove('show'); if(typeof syncSettingsPanel==='function')syncSettingsPanel();
+  $('installAppBtn')?.classList.remove('show'); syncSettingsPanel?.();
 };
 
 $('quickAddFab').onclick=()=>{
@@ -1858,9 +1864,9 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
   function exportData(){const payload={exported_at:new Date().toISOString(),account:currentUser?.email||null,tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,nutrition_meals:nutritionMeals};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
-  function syncSettingsPanel(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const f=$v('focusValue');if(f)f.textContent=document.body.classList.contains('focus-mode')?'Activo':'Apagado';const t=$v('themeValue');if(t)t.textContent=document.body.classList.contains('light')?'Claro':'Oscuro';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const inst=$v('settingsInstallStatus');if(inst)inst.textContent=deferredInstallPrompt?'La instalación está disponible en este dispositivo.':'Usá el menú del navegador si la instalación no aparece automáticamente.';const rs=$v('settingsRefreshStatus');if(rs){const text=$v('refreshStatus')?.textContent||'Sin actualización registrada';rs.textContent='Última actualización: '+text}}
-function wireV17Settings(){syncSettingsPanel();$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsReminderBtn')?.addEventListener('click',()=>{closeSettings();$v('reminderPanel')?.classList.add('open');if(typeof updateReminderUI==='function')updateReminderUI()});$v('settingsInstallBtn')?.addEventListener('click',async()=>{const btn=$v('installAppBtn');if(btn){btn.click()}else if(typeof deferredInstallPrompt!=='undefined'&&deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null}syncSettingsPanel()})}
-function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsPanel()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsPanel()});$v('v15SearchBtn')?.addEventListener('click',openSearch);$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);wireV17Settings();document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsPanel()},60000)}
+  function syncSettingsPanel(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const f=$v('focusValue');if(f)f.textContent=document.body.classList.contains('focus-mode')?'Activo':'Apagado';const t=$v('themeValue');if(t)t.textContent=document.body.classList.contains('light')?'Claro':'Oscuro';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const inst=$v('settingsInstallStatus');if(inst)inst.textContent=deferredInstallPrompt?'La instalación está disponible en este dispositivo.':'Usá el menú del navegador si la instalación no aparece automáticamente.';}
+function wireV17Settings(){syncSettingsPanel();$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsReminderBtn')?.addEventListener('click',async()=>{closeSettings();const p=$v('reminderPanel');if(p)p.classList.add('open');if(typeof updateReminderUI==='function')updateReminderUI()});$v('settingsInstallBtn')?.addEventListener('click',async()=>{closeSettings();const btn=$v('installAppBtn');if(btn){btn.click();return;}if(typeof deferredInstallPrompt!=='undefined'&&deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;}syncSettingsPanel()});$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;try{await importMyData(file)}catch(err){console.error(err);alert('No se pudo importar el archivo.\n\n'+(err?.message||err));}});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings)}
+function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsPanel()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsPanel()});$v('v15SearchBtn')?.addEventListener('click',openSearch);$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);wireV17Settings();document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsPanel()},60000)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV16);else initV16();
 })();
 </script>
