@@ -1199,26 +1199,16 @@ function showConflictSuggestion(c){const title=c.a?.title||'Actividad';const opt
 async function refreshAll(){
   if(!currentUser || refreshInProgress) return;
   if(document.querySelector('.overlay.show')) return;
+
   refreshInProgress=true;
-  setRefreshStatus('Actualizando…','updating');
+  setRefreshStatus('Listo','ok');
 
+  // Pintamos la interfaz inmediatamente, sin esperar red ni Supabase.
+  // Así el horario y el calendario nunca dependen de la carga de eventos compartidos.
   try{
-    // Cargamos primero los datos personales. Los eventos compartidos no deben
-    // bloquear la agenda si events.json tarda o no responde.
-    const sharedEventsPromise = loadSharedEvents();
-
-    await Promise.allSettled([
-      loadTasks(),
-      loadPersonalDates(),
-      loadWorkoutExercises(),
-      loadWorkoutLogs(),
-      loadNutritionMeals()
-    ]);
-
-    // La agenda personal se pinta inmediatamente.
     createDays();
-    renderSchedule();
     buildMonthOptions();
+    renderSchedule();
     updateStats();
     renderDashboard();
     renderWorkoutDays();
@@ -1229,40 +1219,45 @@ async function refreshAll(){
     renderNutritionList();
     renderConflicts();
     updateNotice();
+    renderCalendar();
     updateReminderUI();
-    checkReminders();
-    renderCalendar();
-
-    setRefreshStatus('Listo','ok');
-
-    // Cuando lleguen feriados/paros, actualizamos solo esa parte.
-    sharedEventsPromise.finally(()=>{
-      if(currentUser){
-        renderCalendar();
-        updateNotice();
-      }
-    });
   }catch(err){
-    console.error(err);
-    // Nunca dejamos la agenda en blanco por un fallo secundario.
-    createDays();
-    renderSchedule();
-    buildMonthOptions();
-    updateStats();
-    renderDashboard();
-    renderWorkoutDays();
-    renderWorkoutList();
-    renderWorkoutHistory();
-    renderNutritionDays();
-    renderMealTabs();
-    renderNutritionList();
-    renderConflicts();
-    updateNotice();
-    renderCalendar();
-    setRefreshStatus('Agenda cargada','ok');
-  }finally{
-    refreshInProgress=false;
+    console.warn('No se pudo pintar la interfaz inicial:',err);
   }
+
+  // Cada fuente se actualiza de manera independiente. Ninguna bloquea a las demás.
+  const safeLoad = async(label, loader, after) => {
+    try{
+      await loader();
+      if(currentUser && typeof after==='function') after();
+    }catch(err){
+      console.warn(`Error cargando ${label}:`,err);
+    }
+  };
+
+  // Datos personales: se muestran apenas llega cada consulta.
+  safeLoad('tareas', loadTasks, ()=>{
+    createDays(); renderSchedule(); updateStats(); renderDashboard(); renderConflicts(); updateReminderUI(); renderSmartDashboard(); renderTodayTimeline();
+  });
+  safeLoad('fechas personales', loadPersonalDates, ()=>{
+    renderCalendar(); updateNotice();
+  });
+  safeLoad('entrenamientos', loadWorkoutExercises, ()=>{
+    renderWorkoutDays(); renderWorkoutList(); renderWorkoutHistory(); renderDashboard(); renderSmartDashboard();
+  });
+  safeLoad('historial de entrenamiento', loadWorkoutLogs, ()=>{
+    renderWorkoutHistory(); renderDashboard(); renderSmartDashboard(); renderInsights?.();
+  });
+  safeLoad('alimentación', loadNutritionMeals, ()=>{
+    renderNutritionDays(); renderMealTabs(); renderNutritionList(); renderNutritionGoals(); renderDashboard(); renderConflicts(); renderSmartDashboard(); renderTodayTimeline();
+  });
+
+  // Feriados/paros: independientes y no bloquean absolutamente nada.
+  safeLoad('feriados y paros', loadSharedEvents, ()=>{
+    renderCalendar(); updateNotice();
+  });
+
+  refreshInProgress=false;
 }
 
 function setRefreshStatus(text,cls=''){
