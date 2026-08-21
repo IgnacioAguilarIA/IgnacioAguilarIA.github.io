@@ -529,6 +529,14 @@ body.light .v15-search-box{background:#fff} body.light .v15-search-top input{col
 .focus-mode .dashboard,.focus-mode .insights-panel,.focus-mode .smart-panel,.focus-mode .utility-row,.focus-mode .notice,.focus-mode .stats,.focus-mode .conflict-panel,.focus-mode .today-timeline{display:none!important}
 @media(max-width:900px){.v15-toolbar{padding:9px}.v15-toolbar-left,.v15-toolbar-right{width:100%}.v15-toolbar-right{justify-content:flex-end}.v15-tool{flex:1;min-width:0}}
 
+
+<style id="v22-top-search-style">
+.top-search-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#dbeafe;cursor:pointer;font-size:11px;font-weight:800;transition:.18s}
+.top-search-btn:hover{border-color:#60a5fa;background:rgba(59,130,246,.09)}
+body.light .top-search-btn{background:#f8fafc;color:#334155;border-color:#dbe3ee}
+body.light .top-search-btn:hover{background:#eef6ff;border-color:#93c5fd}
+@media(max-width:700px){.top-search-btn{padding:8px 10px;font-size:10px}.top-search-btn span{display:none}}
+</style>
 <style id="v16-settings-style">
 .utility-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 14px;padding:10px 12px;border:1px solid rgba(148,163,184,.14);border-radius:16px;background:rgba(17,24,39,.62);box-shadow:0 10px 28px rgba(0,0,0,.10)}
 .utility-left,.utility-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -578,15 +586,13 @@ body.light .task-status{background:#dcfce7;color:#166534;border-color:#86efac}
 body.light .message-tooltip{background:#fff;color:#0f172a;border-color:#cbd5e1;box-shadow:0 20px 50px rgba(15,23,42,.18)}
 body.light .message-tooltip:after{background:#fff;border-color:#cbd5e1}
 body.light .tooltip-title{color:#0f172a}.tooltip-meta{color:#1d4ed8!important;background:#eff6ff!important;border-color:#bfdbfe!important}
-#focusExitFloating{top:auto!important;right:auto!important;bottom:22px!important;left:22px!important;border-radius:14px;background:rgba(17,24,39,.97);color:#dbeafe}
-body.light #focusExitFloating{background:#fff;color:#1d4ed8;border-color:#93c5fd;box-shadow:0 12px 28px rgba(15,23,42,.16)}
+body.light
 @media(max-width:900px){.utility-row{padding:9px}.utility-btn{flex:0 0 auto}.settings-drawer{width:min(370px,calc(100vw - 12px));padding:16px}}
-@media(max-width:600px){.utility-row{margin-bottom:10px}.utility-left{width:100%;justify-content:space-between}.utility-right{width:100%}.settings-trigger{width:100%}.settings-drawer{width:100%;border-left:0;border-radius:18px 18px 0 0;top:auto;height:min(86vh,720px);transform:translateY(102%);transition:transform .22s ease}.settings-drawer.open{transform:translateY(0)}#focusExitFloating{bottom:92px!important;left:14px!important}}
+@media(max-width:600px){.utility-row{margin-bottom:10px}.utility-left{width:100%;justify-content:space-between}.utility-right{width:100%}.settings-trigger{width:100%}.settings-drawer{width:100%;border-left:0;border-radius:18px 18px 0 0;top:auto;height:min(86vh,720px);transform:translateY(102%);transition:transform .22s ease}.settings-drawer.open{transform:translateY(0)}}
 </style>
 <style id="v15-final-fixes">
-#focusExitFloating{display:none;position:fixed;top:14px;right:14px;z-index:1000;padding:10px 13px;border-radius:999px;border:1px solid rgba(96,165,250,.3);background:rgba(17,24,39,.94);color:#dbeafe;font-size:11px;font-weight:800;cursor:pointer;box-shadow:0 12px 28px rgba(0,0,0,.28);backdrop-filter:blur(12px)}
-.focus-mode #focusExitFloating{display:inline-flex;align-items:center;justify-content:center}
-body.light #focusExitFloating{background:rgba(255,255,255,.96);color:#1e3a8a;border-color:#bfdbfe;box-shadow:0 12px 28px rgba(15,23,42,.12)}
+.focus-mode
+body.light
 body.light .time{background:#e2e8f0;color:#1d4ed8;border-color:#cbd5e1}
 body.light .slot,body.light .day-cell,body.light .calendar-day,body.light .analytics-card,body.light .progress-chart-wrap,body.light .progress-stat,body.light .workout-stat,body.light .history-row,body.light .exercise-card,body.light .meal-card,body.light .workout-empty,body.light .meal-empty,body.light .insight-day,body.light .insight-stat,body.light .conflict-item,body.light .smart-primary,body.light .smart-side,body.light .today-timeline,body.light .quick-summary-card{background:#fff;border-color:#dbe3ee;color:#0f172a}
 body.light .empty,body.light .cal-status,body.light .schedule-heading p,body.light .workout-head p,body.light .nutrition-head p,body.light .analytics-head p,body.light .dashboard-sub,body.light .smart-primary .sub,body.light .smart-side span,body.light .insight-day-date,body.light .insight-day-meta,body.light .history-meta,body.light .exercise-note,body.light .meal-description,body.light .meal-foods,body.light .progress-metric,body.light .pro-date{color:#64748b}
@@ -599,7 +605,7 @@ body.light .event.holiday{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
 body.light .message-tooltip{background:#fff;color:#0f172a;border-color:#dbe3ee;box-shadow:0 20px 50px rgba(15,23,42,.18)}body.light .message-tooltip:after{background:#fff;border-color:#dbe3ee}body.light .tooltip-title{color:#0f172a}body.light .tooltip-desc{color:#475569}body.light .tooltip-meta{color:#1d4ed8;background:#eff6ff;border-color:#bfdbfe}
 body.light .modal{background:#fff;color:#0f172a;border-color:#dbe3ee}body.light .modal span{color:#64748b}body.light .close{background:#f1f5f9;color:#334155}body.light .input,body.light .progress-select,body.light .reminder-select{background:#fff;color:#0f172a;border-color:#cbd5e1}body.light .input::placeholder{color:#94a3b8}
 body.light .refresh-status{background:#f8fafc;color:#475569;border-color:#dbe3ee}body.light .refresh-status.ok{color:#166534}body.light .notice{background:#fff7ed;border-color:#fed7aa;color:#9a3412}body.light .notice strong{color:#7c2d12}body.light .progress-chart-wrap{background:linear-gradient(180deg,#fff,#f8fafc)}body.light .progress-pill{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}body.light .goal-card{background:#fff;border-color:#dbe3ee}body.light .goal-card h4,body.light .goal-card strong{color:#0f172a}body.light .goal-card span,body.light .goal-settings{color:#64748b}body.light .conflict-panel{border-color:#fcd34d;background:#fffbeb}body.light .conflict-count{background:#fff7ed;border-color:#fed7aa;color:#9a3412}body.light .conflict-icon{background:#fff7ed}body.light .streak-badge{background:#fffbeb;border-color:#fde68a;color:#92400e}body.light .smart-badge{background:#f8fafc;border-color:#dbe3ee;color:#334155}body.light .smart-bar,body.light .dashboard-progress,body.light .goal-bar,body.light .insight-progress{background:#e2e8f0}
-@media(max-width:700px){#focusExitFloating{top:10px;right:10px;padding:9px 11px}}
+@media(max-width:700px){}
 </style>
 
 <style id="v21-clean-import-style">
@@ -607,11 +613,10 @@ body.light .refresh-status{background:#f8fafc;color:#475569;border-color:#dbe3ee
 .import-progress{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.12);color:var(--muted);font-size:10px;line-height:1.45;display:none}
 .import-progress.show{display:block}
 body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#475569}
+.reminder-panel.open{z-index:140}
 </style>
 </head>
 <body>
-<button id="focusExitFloating" type="button" aria-label="Salir del modo enfoque">↩ Salir enfoque</button>
-
 <section id="authScreen">
   <div class="auth-card">
     <h1>📅 Agenda FICH</h1>
@@ -632,7 +637,7 @@ body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#47556
 <section id="app" class="hidden">
   <div class="topbar">
     <div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
-    <div class="userbar"><button class="install-app ghost topbar-hidden" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden" id="refreshStatus">Listo</span><span class="user-email topbar-hidden" id="userEmail"></span><button class="ghost" id="settingsTopBtn" type="button" aria-label="Abrir ajustes">⚙</button><button class="ghost topbar-hidden" id="logoutBtn">Salir</button></div>
+    <div class="userbar"><button class="top-search-btn" id="topSearchBtn" type="button" aria-label="Buscar">🔎 <span>Buscar</span></button><button class="install-app ghost topbar-hidden" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden" id="refreshStatus">Listo</span><span class="user-email topbar-hidden" id="userEmail"></span><button class="ghost" id="settingsTopBtn" type="button" aria-label="Abrir ajustes">⚙</button><button class="ghost topbar-hidden" id="logoutBtn">Salir</button></div>
   </div>
 
   <div class="days" id="days"></div>
@@ -771,7 +776,7 @@ body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#47556
 <div class="utility-row" id="utilityRow">
   <div class="utility-left">
     <span class="v15-date" id="v15DateLabel">Hoy</span>
-    <button class="utility-btn" id="v15SearchBtn" type="button">🔎 Buscar</button>
+    
   </div>
   <div class="utility-right">
   </div>
@@ -1151,7 +1156,7 @@ $('registerTab').onclick=()=>setAuthMode('register');
 $('authForm').onsubmit=async e=>{e.preventDefault();const email=$('authEmail').value.trim();const password=$('authPassword').value;authMessage('Procesando...','ok');if(authMode==='register'){const {data,error}=await sb.auth.signUp({email,password});if(error){authMessage(error.message);return;} if(!data.session){authMessage('Cuenta creada. Revisá tu email si la confirmación está activada.','ok');return;} }else{const {error}=await sb.auth.signInWithPassword({email,password});if(error){authMessage(error.message);return;}}};
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();};
 
-$('reminderBtn').onclick=()=>{$('reminderPanel').classList.toggle('open');updateReminderUI();};
+$('reminderBtn').onclick=e=>{e.preventDefault();e.stopPropagation();$('reminderPanel').classList.toggle('open');updateReminderUI();};
 $('reminderClose').onclick=()=>{$('reminderPanel').classList.remove('open');};
 $('reminderLead').onchange=()=>{reminderLeadMinutes=Number($('reminderLead').value);localStorage.setItem('agendaReminderLead',String(reminderLeadMinutes));updateReminderUI();};
 $('reminderEnable').onclick=()=>{if(remindersEnabled)disableReminders();else enableReminders();};
@@ -1923,7 +1928,7 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
   function syncSettingsExtras(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const s=$v('settingsRefreshStatus');if(s)s.textContent=$v('refreshStatus')?.textContent||'Listo'}
-function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsExtras()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsExtras()});$v('v15SearchBtn')?.addEventListener('click',openSearch);$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;try{await importMyData(f)}catch(err){console.error(err);setImportProgress('',false);alert('No se pudo importar el archivo.\n\n'+(err?.message||err))}});$v('settingsReminderBtn')?.addEventListener('click',()=>{closeSettings();$v('reminderPanel')?.classList.add('open');if(typeof updateReminderUI==='function')updateReminderUI();syncSettingsExtras()});$v('settingsInstallBtn')?.addEventListener('click',()=>{$v('installAppBtn')?.click()});$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras()},60000)}
+function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsExtras()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsExtras()});$v('topSearchBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openSearch()});$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;try{await importMyData(f)}catch(err){console.error(err);setImportProgress('',false);alert('No se pudo importar el archivo.\n\n'+(err?.message||err))}});$v('settingsReminderBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeSettings();setTimeout(()=>{const p=$v('reminderPanel');if(p){p.classList.add('open');p.style.zIndex='140';}if(typeof updateReminderUI==='function')updateReminderUI();syncSettingsExtras()},0)});$v('settingsInstallBtn')?.addEventListener('click',()=>{$v('installAppBtn')?.click()});$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras()},60000)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV16);else initV16();
 })();
 </script>\n</body>
