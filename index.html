@@ -720,6 +720,10 @@ body.light .top-search-btn:hover{
 .v15-search-scope{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid rgba(96,165,250,.15);background:rgba(59,130,246,.06);border-radius:999px;color:#93c5fd;font-size:9px;font-weight:800}
 body.light .v15-search-scope{color:#1d4ed8;background:#eff6ff;border-color:#bfdbfe}
 </style>
+
+<style id="v24-upgrades">
+.mobile-nav,.quick-actions,.import-select-modal{display:none}.mobile-nav{position:fixed;left:10px;right:10px;bottom:10px;height:62px;z-index:155;grid-template-columns:repeat(4,1fr);background:rgba(15,23,42,.93);border:1px solid rgba(148,163,184,.18);border-radius:18px;box-shadow:0 18px 45px rgba(0,0,0,.28);backdrop-filter:blur(14px);padding:5px}.mobile-nav-btn{border:0;background:transparent;color:#94a3b8;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:800}.mobile-nav-btn span{font-size:18px;line-height:1}.mobile-nav-btn small{font-size:8px}.mobile-nav-btn.active{background:rgba(59,130,246,.16);color:#dbeafe}.quick-actions,.import-select-modal{position:fixed;inset:0;z-index:170;align-items:flex-end;justify-content:center;background:rgba(2,6,23,.62);backdrop-filter:blur(9px);padding:16px}.import-select-modal{align-items:center}.quick-actions.show,.import-select-modal.show{display:flex}.quick-actions-card,.import-select-card{width:min(520px,100%);background:rgba(17,24,39,.98);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.42);padding:15px}.quick-actions-head,.import-select-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.quick-actions-head strong,.import-select-head strong{color:#fff;font-size:14px}.quick-actions-head button,.import-select-head button{width:34px;height:34px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:18px}.quick-actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick-actions-grid button{min-height:94px;border:1px solid rgba(148,163,184,.16);border-radius:16px;background:rgba(255,255,255,.05);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:25px;font-weight:800}.quick-actions-grid button span{font-size:10px;color:#cbd5e1}.import-select-head small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.import-select-card label{display:flex;align-items:center;gap:9px;padding:11px;border-radius:12px;margin:6px 0;background:rgba(255,255,255,.04);color:#e2e8f0;font-size:11px}.import-select-card input{width:17px;height:17px;accent-color:#2563eb}.import-select-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.import-select-actions button{padding:10px 14px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#e2e8f0;font-weight:800}.import-select-actions button:last-child{background:#2563eb;color:#fff;border-color:#3b82f6}@media(max-width:700px){body{padding-bottom:82px}.mobile-nav{display:grid}.quick-actions{padding-bottom:82px}}body.light .quick-actions-card,body.light .import-select-card{background:#fff;border-color:#dbe3ee}body.light .quick-actions-head strong,body.light .import-select-head strong{color:#0f172a}body.light .quick-actions-grid button{background:#f8fafc;color:#0f172a;border-color:#dbe3ee}body.light .quick-actions-grid button span{color:#64748b}body.light .import-select-card label{background:#f8fafc;color:#334155}
+</style>
 </head>
 <body>
 <section id="authScreen">
@@ -1111,6 +1115,16 @@ body.light .v15-search-scope{color:#1d4ed8;background:#eff6ff;border-color:#bfdb
   <button class="quick-add-fab" id="quickAddFab" aria-label="Agregar tarea">＋</button>
 </section>
 
+
+<nav class="mobile-nav" id="mobileNav" aria-label="Navegación rápida">
+<button class="mobile-nav-btn active" id="mobileNavHome" type="button"><span>⌂</span><small>Inicio</small></button>
+<button class="mobile-nav-btn" id="mobileNavSchedule" type="button"><span>🗓</span><small>Agenda</small></button>
+<button class="mobile-nav-btn" id="mobileNavWorkout" type="button"><span>🏋️</span><small>Entreno</small></button>
+<button class="mobile-nav-btn" id="mobileNavFood" type="button"><span>🍽</span><small>Comida</small></button>
+</nav>
+<div class="quick-actions" id="quickActions" aria-hidden="true"><div class="quick-actions-card"><div class="quick-actions-head"><strong>Agregar rápidamente</strong><button id="quickActionsClose" type="button">×</button></div><div class="quick-actions-grid"><button id="quickTaskBtn" type="button">📚<span>Tarea</span></button><button id="quickMealBtn" type="button">🍽️<span>Comida</span></button><button id="quickExerciseBtn" type="button">🏋️<span>Ejercicio</span></button><button id="quickDateBtn" type="button">📅<span>Fecha</span></button></div></div></div>
+<div class="import-select-modal" id="importSelectModal" aria-hidden="true"><div class="import-select-card"><div class="import-select-head"><div><strong>📥 Importar datos</strong><small>Elegí qué partes querés importar</small></div><button id="importSelectClose" type="button">×</button></div><label><input id="impTasks" type="checkbox" checked> 📚 Tareas</label><label><input id="impDates" type="checkbox" checked> 📅 Fechas</label><label><input id="impExercises" type="checkbox" checked> 🏋️ Rutinas y ejercicios</label><label><input id="impLogs" type="checkbox" checked> 📈 Historial</label><label><input id="impMeals" type="checkbox" checked> 🍽️ Alimentación</label><div class="import-select-actions"><button id="importSelectCancel" type="button">Cancelar</button><button id="importSelectConfirm" type="button">Continuar</button></div></div></div>
+
 <div class="overlay" id="taskOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="taskModalTitle">➕ Agregar tarea</h3><span id="taskModalInfo"></span></div><button class="close" onclick="closeTaskModal()">×</button></div><div class="field"><label>Día</label><select class="input" id="taskDayInput"></select></div><div class="minute-row"><div class="field"><label>Hora</label><input class="input" id="taskHourInput" type="number" min="7" max="22" step="1"></div><div class="field"><label>Minuto</label><select class="input" id="taskMinuteInput"></select></div></div><div class="minute-help">Podés elegir cualquier minuto: 08:00, 08:07, 08:30, 08:47, etc.</div><div class="field"><label>Título</label><input class="input" id="taskTitleInput"></div><div class="field"><label>Descripción</label><input class="input" id="taskDescInput"></div><button class="save" id="saveTaskBtn">Guardar tarea</button></div></div>
 
 
@@ -1294,6 +1308,7 @@ async function handleSession(session){
     return;
   }
   currentUser=session.user;
+  seedFromCache();
   loadNutritionGoals();
   $('authScreen').classList.add('hidden');
   $('app').classList.remove('hidden');
@@ -1441,8 +1456,14 @@ function checkReminders(){
 function startReminderTimer(){stopReminderTimer(); if(!remindersEnabled)return; reminderTimer=setInterval(checkReminders,30000); updateNextReminder();}
 function stopReminderTimer(){if(reminderTimer){clearInterval(reminderTimer);reminderTimer=null;}}
 
-async function loadTasks(){const {data,error}=await sb.from('tasks').select('*').order('hour',{ascending:true}).order('minute',{ascending:true});if(error){console.error(error);tasks=[];}else tasks=data||[];}
-async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
+function cacheKey(name){return currentUser?`agendaCache:${currentUser.id}:${name}`:`agendaCache:guest:${name}`}
+function cacheWrite(name,value){try{localStorage.setItem(cacheKey(name),JSON.stringify({saved_at:Date.now(),value}))}catch{}}
+function cacheRead(name){try{const raw=localStorage.getItem(cacheKey(name));return raw?JSON.parse(raw).value:null}catch{return null}}
+function seedFromCache(){const a=cacheRead('tasks');if(Array.isArray(a))tasks=a;const b=cacheRead('personalDates');if(Array.isArray(b))personalDates=b;const c=cacheRead('workoutExercisesAll');if(Array.isArray(c))workoutExercises=c.filter(x=>Number(x.day)===Number(workoutDay));const d=cacheRead('workoutLogs');if(Array.isArray(d))workoutLogs=d;const e=cacheRead('nutritionMealsAll');if(Array.isArray(e))nutritionMeals=e.filter(x=>Number(x.day)===Number(nutritionDay))}
+function updateOfflineState(){document.body.classList.toggle('offline',!navigator.onLine)}
+window.addEventListener('online',()=>{updateOfflineState();if(currentUser)refreshAll()});window.addEventListener('offline',updateOfflineState);updateOfflineState();
+async function loadTasks(){const {data,error}=await sb.from('tasks').select('*').order('hour',{ascending:true}).order('minute',{ascending:true});if(error){console.error(error);const c=cacheRead('tasks');tasks=Array.isArray(c)?c:[]}else{tasks=data||[];cacheWrite('tasks',tasks)}}
+async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);const c=cacheRead('personalDates');personalDates=Array.isArray(c)?c:[]}else{personalDates=data||[];cacheWrite('personalDates',personalDates)}}
 async function loadSharedEvents(){try{const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('events.json no disponible');const data=await res.json();sharedEvents=Array.isArray(data)?data:(data.events||[]);$('calendarStatus').textContent='Eventos compartidos cargados.';}catch(e){console.warn(e);sharedEvents=[];$('calendarStatus').textContent='No se pudo cargar data/events.json; feriados/paros compartidos pueden no aparecer.';}}
 
 function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;nutritionDay=i;createDays();renderSchedule();updateStats();renderDashboard();renderConflicts();renderWorkoutDays();renderNutritionDays();loadWorkoutExercises().then(()=>{renderWorkoutList();renderWorkoutHistory();});loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();renderNutritionGoals();renderDashboard();});};c.appendChild(b);});}
@@ -1570,14 +1591,15 @@ $('installAppBtn').onclick=async()=>{
   $('installAppBtn')?.classList.remove('show');
 };
 
-$('quickAddFab').onclick=()=>{
-  const now=getArgentinaNow();
-  let h=now.getHours();
-  let m=now.getMinutes();
-  if(h<7){h=7;m=0}
-  if(h>22){h=22;m=59}
-  openTaskModal(h,m);
-};
+function openQuickActions(){const o=$('quickActions');if(o)o.classList.add('show')}
+function closeQuickActions(){const o=$('quickActions');if(o)o.classList.remove('show')}
+function setMobileNav(id){document.querySelectorAll('.mobile-nav-btn').forEach(b=>b.classList.remove('active'));$(id)?.classList.add('active')}
+function setupV24Nav(){
+ $('quickAddFab')?.addEventListener('click',openQuickActions);$('quickActionsClose')?.addEventListener('click',closeQuickActions);$('quickActions')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeQuickActions()});
+ $('quickTaskBtn')?.addEventListener('click',()=>{closeQuickActions();const n=getArgentinaNow();openTaskModal(Math.max(7,Math.min(22,n.getHours())),n.getMinutes())});$('quickMealBtn')?.addEventListener('click',()=>{closeQuickActions();openNutritionPanel();setTimeout(()=>openNutritionModal(),120)});$('quickExerciseBtn')?.addEventListener('click',()=>{closeQuickActions();openWorkoutPanel();setTimeout(()=>openExerciseModal(),120)});$('quickDateBtn')?.addEventListener('click',()=>{closeQuickActions();openDateModal(null,todayISO())});
+ $('mobileNavHome')?.addEventListener('click',()=>{setMobileNav('mobileNavHome');window.scrollTo({top:0,behavior:'smooth'})});$('mobileNavSchedule')?.addEventListener('click',()=>{setMobileNav('mobileNavSchedule');$('schedule')?.scrollIntoView({behavior:'smooth',block:'start'})});$('mobileNavWorkout')?.addEventListener('click',()=>{setMobileNav('mobileNavWorkout');openWorkoutPanel()});$('mobileNavFood')?.addEventListener('click',()=>{setMobileNav('mobileNavFood');openNutritionPanel()});
+}
+// quickAddFab handled by setupV24Nav()
 
 function startOfWeekMonday(dateObj){const d=new Date(dateObj);d.setHours(12,0,0,0);const day=(d.getDay()+6)%7;d.setDate(d.getDate()-day);return d;}
 function dateKeyFromDate(d){return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;}
@@ -1697,7 +1719,7 @@ function openWorkoutPanel(){
 
 function renderNutritionDays(){const c=$('nutritionDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===nutritionDay?' active':'');b.textContent=d;b.onclick=()=>{nutritionDay=i;renderNutritionDays();renderNutritionList();renderNutritionGoals();renderDashboard();};c.appendChild(b);});}
 function renderMealTabs(){const c=$('mealTabs');c.innerHTML='';MEAL_TYPES.forEach(m=>{const b=document.createElement('button');b.className='meal-tab'+(m.key===activeMealType?' active':'');b.textContent=m.label;b.onclick=()=>{activeMealType=m.key;renderMealTabs();renderNutritionList();renderNutritionGoals();renderDashboard();};c.appendChild(b);});}
-async function loadNutritionMeals(){const {data,error}=await sb.from('nutrition_meals').select('*').eq('day',nutritionDay).order('meal_order',{ascending:true}).order('meal_time',{ascending:true});if(error){console.error(error);nutritionMeals=[]}else nutritionMeals=data||[];}
+async function loadNutritionMeals(){const {data,error}=await sb.from('nutrition_meals').select('*').eq('day',nutritionDay).order('meal_order',{ascending:true}).order('meal_time',{ascending:true});if(error){console.error(error);const c=cacheRead('nutritionMealsAll');nutritionMeals=Array.isArray(c)?c.filter(x=>Number(x.day)===Number(nutritionDay)):[]}else{nutritionMeals=data||[];let all=cacheRead('nutritionMealsAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==Number(nutritionDay));all.push(...nutritionMeals);cacheWrite('nutritionMealsAll',all)}}
 function mealLabel(key){return MEAL_TYPES.find(m=>m.key===key)?.label||key;}
 function renderNutritionList(){const c=$('mealList');c.innerHTML='';const list=nutritionMeals.filter(m=>m.meal_type===activeMealType);if(!list.length){const e=document.createElement('div');e.className='meal-empty';e.textContent='No hay ninguna comida cargada para '+DAYS[nutritionDay]+' en '+mealLabel(activeMealType)+'. Tocá “Agregar comida” para crearla.';c.appendChild(e);return;}list.forEach(meal=>{const card=document.createElement('div');card.className='meal-card';const top=document.createElement('div');top.className='meal-card-head';const left=document.createElement('div');const name=document.createElement('div');name.className='meal-name';name.textContent=meal.title;left.appendChild(name);if(meal.foods){const foods=document.createElement('div');foods.className='meal-foods';foods.textContent=meal.foods;left.appendChild(foods);}if(meal.description){const desc=document.createElement('div');desc.className='meal-description';desc.textContent=meal.description;left.appendChild(desc);}const meta=document.createElement('div');meta.className='meal-meta';const chips=[meal.calories!=null?`Cal: ${meal.calories}`:null,meal.protein_g!=null?`Prot: ${meal.protein_g} g`:null,meal.carbs_g!=null?`Carbs: ${meal.carbs_g} g`:null,meal.fat_g!=null?`Grasas: ${meal.fat_g} g`:null,meal.meal_time?`Hora: ${meal.meal_time}`:null].filter(Boolean);chips.forEach(t=>{const ch=document.createElement('span');ch.className='meal-chip';ch.textContent=t;meta.appendChild(ch);});if(chips.length)left.appendChild(meta);const actions=document.createElement('div');actions.className='meal-actions';const edit=document.createElement('button');edit.className='meal-action';edit.textContent='✎';edit.title='Editar';edit.onclick=()=>openNutritionModal(meal);const del=document.createElement('button');del.className='meal-action delete';del.textContent='×';del.title='Eliminar';del.onclick=()=>deleteMeal(meal.id);actions.append(edit,del);top.append(left,actions);card.appendChild(top);enableTooltip(card,meal.title,meal.description||meal.foods||'Sin descripción',`${DAYS[nutritionDay]} · ${mealLabel(meal.meal_type)}`);c.appendChild(card);});}
 function openNutritionPanel(){const willOpen=!$('nutritionPanel').classList.contains('open');setPanelOpen('nutritionPanel','nutritionIcon',willOpen);setPanelOpen('calendarPanel','calendarIcon',false);setPanelOpen('workoutPanel','workoutIcon',false);setTabActive('nutritionToggle',willOpen);setTabActive('calendarToggle',false);setTabActive('workoutToggle',false);if(willOpen){renderNutritionDays();renderMealTabs();loadNutritionMeals().then(renderNutritionList);requestAnimationFrame(()=>$('nutritionPanel').scrollIntoView({behavior:'smooth',block:'nearest'}));}}
@@ -1707,8 +1729,8 @@ $('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const pay
 async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();renderNutritionGoals();renderDashboard();renderConflicts();}}
 
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=async()=>{workoutDay=i;renderWorkoutDays();await loadWorkoutExercises();renderWorkoutList();renderWorkoutHistory();renderWorkoutAnalytics();renderDashboard();};c.appendChild(b)});}
-async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);workoutExercises=[]}else workoutExercises=data||[]}
-async function loadWorkoutLogs(){const {data,error}=await sb.from('workout_logs').select('*').order('performed_at',{ascending:false}).order('created_at',{ascending:false}).limit(100);if(error){console.error(error);workoutLogs=[]}else workoutLogs=data||[]}
+async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);const c=cacheRead('workoutExercisesAll');workoutExercises=Array.isArray(c)?c.filter(x=>Number(x.day)===Number(workoutDay)):[]}else{workoutExercises=data||[];let all=cacheRead('workoutExercisesAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==Number(workoutDay));all.push(...workoutExercises);cacheWrite('workoutExercisesAll',all)}}
+async function loadWorkoutLogs(){const {data,error}=await sb.from('workout_logs').select('*').order('performed_at',{ascending:false}).order('created_at',{ascending:false}).limit(100);if(error){console.error(error);const c=cacheRead('workoutLogs');workoutLogs=Array.isArray(c)?c:[]}else{workoutLogs=data||[];cacheWrite('workoutLogs',workoutLogs)}}
 function renderWorkoutStats(){
   const now=new Date();
   const cutoff=new Date(now);cutoff.setDate(cutoff.getDate()-30);
@@ -1950,21 +1972,21 @@ window.addEventListener('resize',removeTooltip);window.addEventListener('scroll'
 
 function setImportProgress(text,show=true){const e=$('importProgress');if(!e)return;e.textContent=text;e.classList.toggle('show',show)}
 
-async function importMyData(file){
+async function importMyData(file, selected={tasks:true,dates:true,exercises:true,logs:true,meals:true}){
   if(!currentUser){alert('Primero iniciá sesión.');return}
   let parsed;
   try{parsed=JSON.parse(await file.text());}catch(err){throw new Error('El archivo no contiene un JSON válido.')}
-  const tasksIn=Array.isArray(parsed.tasks)?parsed.tasks:[];
-  const datesIn=Array.isArray(parsed.personal_dates)?parsed.personal_dates:[];
-  const exercisesIn=Array.isArray(parsed.workout_exercises)?parsed.workout_exercises:[];
-  const logsIn=Array.isArray(parsed.workout_logs)?parsed.workout_logs:[];
-  const mealsIn=Array.isArray(parsed.nutrition_meals)?parsed.nutrition_meals:[];
+  const tasksIn=selected.tasks&&Array.isArray(parsed.tasks)?parsed.tasks:[];
+  const datesIn=selected.dates&&Array.isArray(parsed.personal_dates)?parsed.personal_dates:[];
+  const exercisesIn=selected.exercises&&Array.isArray(parsed.workout_exercises)?parsed.workout_exercises:[];
+  const logsIn=selected.logs&&Array.isArray(parsed.workout_logs)?parsed.workout_logs:[];
+  const mealsIn=selected.meals&&Array.isArray(parsed.nutrition_meals)?parsed.nutrition_meals:[]
   const total=tasksIn.length+datesIn.length+exercisesIn.length+logsIn.length+mealsIn.length;
   if(!total)throw new Error('No encontré tareas, fechas, entrenamientos ni comidas en el archivo.')
   const replace=confirm('¿Querés REEMPLAZAR los datos actuales de esta cuenta?\n\nAceptar = reemplazar los datos personales actuales.\nCancelar = conservarlos y AGREGAR los importados.')
   setImportProgress(replace?'Preparando reemplazo…':'Preparando importación…')
   if(replace){
-    const tables=['workout_logs','workout_exercises','nutrition_meals','tasks','personal_dates'];
+    const tables=[];if(selected.logs)tables.push('workout_logs');if(selected.exercises)tables.push('workout_exercises');if(selected.meals)tables.push('nutrition_meals');if(selected.tasks)tables.push('tasks');if(selected.dates)tables.push('personal_dates');
     for(const table of tables){
       const {error}=await sb.from(table).delete().eq('user_id',currentUser.id);
       if(error)throw new Error(`No pude limpiar ${table}: ${error.message}`)
@@ -2017,6 +2039,7 @@ function renderImmediateShell(){
 renderImmediateShell();
 
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
+setupV24Nav();
 init();
 setRefreshStatus('Listo');
 
@@ -2220,7 +2243,7 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
   function syncSettingsExtras(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const s=$v('settingsRefreshStatus');if(s)s.textContent=$v('refreshStatus')?.textContent||'Listo'}
-function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsExtras()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsExtras()});$v('topSearchBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openSearch()});document.getElementById('topSearchBtn')?.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();openSearch()});$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;try{await importMyData(f)}catch(err){console.error(err);setImportProgress('',false);alert('No se pudo importar el archivo.\n\n'+(err?.message||err))}});$v('settingsReminderBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeSettings();const p=$v('reminderPanel');if(p){p.classList.add('open');p.style.zIndex='140';}if(typeof updateReminderUI==='function')updateReminderUI();syncSettingsExtras();});$v('settingsInstallBtn')?.addEventListener('click',()=>{$v('installAppBtn')?.click()});$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();return}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras()},60000)}
+function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsExtras()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsExtras()});$v('topSearchBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openSearch()});document.getElementById('topSearchBtn')?.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();openSearch()});$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;window.__pendingImportFile=f;$v('importSelectModal')?.classList.add('show')});$v('importSelectClose')?.addEventListener('click',()=>{$v('importSelectModal')?.classList.remove('show');window.__pendingImportFile=null});$v('importSelectCancel')?.addEventListener('click',()=>{$v('importSelectModal')?.classList.remove('show');window.__pendingImportFile=null});$v('importSelectConfirm')?.addEventListener('click',async()=>{const f=window.__pendingImportFile;if(!f)return;const selected={tasks:$v('impTasks')?.checked!==false,dates:$v('impDates')?.checked!==false,exercises:$v('impExercises')?.checked!==false,logs:$v('impLogs')?.checked!==false,meals:$v('impMeals')?.checked!==false};$v('importSelectModal')?.classList.remove('show');window.__pendingImportFile=null;try{await importMyData(f,selected)}catch(err){console.error(err);setImportProgress('',false);alert('No se pudo importar el archivo.\n\n'+(err?.message||err))}});$v('settingsReminderBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeSettings();const p=$v('reminderPanel');if(p){p.classList.add('open');p.style.zIndex='140';}if(typeof updateReminderUI==='function')updateReminderUI();syncSettingsExtras();});$v('settingsInstallBtn')?.addEventListener('click',()=>{$v('installAppBtn')?.click()});$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();return}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='q'){e.preventDefault();openQuickActions();return}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras()},60000)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV16);else initV16();
 })();
 </script>
