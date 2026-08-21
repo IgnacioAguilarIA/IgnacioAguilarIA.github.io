@@ -602,25 +602,15 @@ body.light .refresh-status{background:#f8fafc;color:#475569;border-color:#dbe3ee
 @media(max-width:700px){#focusExitFloating{top:10px;right:10px;padding:9px 11px}}
 </style>
 
-<style id="v16-v17-layout-fix">
-.topbar-hidden-control{display:none!important}
-#focusExitFloating{display:none!important}
-.settings-account-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(148,163,184,.12)}
-.settings-account-email{min-width:0}
-.settings-account-email strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.settings-account-email small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
-.settings-inline-btn{padding:9px 11px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#e5e7eb;font-size:10px;font-weight:800;cursor:pointer;white-space:nowrap}
-.settings-inline-btn:hover{border-color:rgba(96,165,250,.35);background:rgba(59,130,246,.08)}
-.settings-inline-btn.danger{border-color:rgba(239,68,68,.25);background:rgba(239,68,68,.08);color:#fecaca}
-.settings-status{margin-top:8px;padding:9px 10px;border-radius:11px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.12);color:var(--muted);font-size:10px;line-height:1.4}
-body.light .settings-account-row{background:#f8fafc;border-color:#dbe3ee}
-body.light .settings-inline-btn{background:#fff;color:#334155;border-color:#dbe3ee}
-body.light .settings-inline-btn.danger{background:#fef2f2;border-color:#fecaca;color:#991b1b}
-@media(max-width:600px){.settings-account-row{align-items:flex-start;flex-direction:column}.settings-account-row .settings-inline-btn{width:100%}}
+<style id="v21-clean-import-style">
+.topbar-hidden{display:none!important}
+.import-progress{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.12);color:var(--muted);font-size:10px;line-height:1.45;display:none}
+.import-progress.show{display:block}
+body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#475569}
 </style>
-<style id="v17-fixes">.reminder-panel{z-index:240!important}body.light .reminder-panel{background:#fff;color:#0f172a;border-color:#dbe3ee}body.light .reminder-label,body.light .reminder-head h3{color:#0f172a}body.light .reminder-sub,body.light .reminder-note{color:#64748b}body.light .next-reminder{background:#eff6ff;color:#1e3a8a;border-color:#bfdbfe}</style></head>
+</head>
 <body>
-
+<button id="focusExitFloating" type="button" aria-label="Salir del modo enfoque">↩ Salir enfoque</button>
 
 <section id="authScreen">
   <div class="auth-card">
@@ -642,7 +632,7 @@ body.light .settings-inline-btn.danger{background:#fef2f2;border-color:#fecaca;c
 <section id="app" class="hidden">
   <div class="topbar">
     <div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
-    <div class="userbar"><button class="install-app ghost topbar-hidden-control" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden-control" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden-control" id="refreshStatus">Actualizando…</span><button class="ghost" id="settingsTopBtn" type="button">⚙</button><button class="ghost topbar-hidden-control" id="logoutBtn">Salir</button></div>
+    <div class="userbar"><button class="install-app ghost topbar-hidden" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden" id="refreshStatus">Listo</span><span class="user-email topbar-hidden" id="userEmail"></span><button class="ghost" id="settingsTopBtn" type="button" aria-label="Abrir ajustes">⚙</button><button class="ghost topbar-hidden" id="logoutBtn">Salir</button></div>
   </div>
 
   <div class="days" id="days"></div>
@@ -828,24 +818,7 @@ body.light .settings-inline-btn.danger{background:#fef2f2;border-color:#fecaca;c
       <span class="settings-arrow">›</span>
     </button>
     <input id="importDataInput" type="file" accept="application/json,.json" hidden>
-  </div>
-
-  <div class="settings-section">
-    <div class="settings-section-title">Cuenta</div>
-    <div class="settings-account-row">
-      <div class="settings-account-email"><strong id="settingsUserEmail">Tu cuenta</strong><small>Sesión actual</small></div>
-      <button class="settings-inline-btn danger" id="settingsLogoutBtn" type="button">Salir</button>
-    </div>
-  </div>
-
-  <div class="settings-section">
-    <div class="settings-section-title">Aplicación</div>
-    <button class="settings-option" id="settingsInstallBtn" type="button">
-      <span class="settings-option-icon">📲</span>
-      <span><strong>Instalar aplicación</strong><small>Agregar Agenda FICH a la pantalla de inicio</small></span>
-      <span class="settings-arrow">›</span>
-    </button>
-    <div class="settings-status" id="settingsInstallStatus">Disponible cuando el navegador permita instalar la app.</div>
+    <div class="import-progress" id="importProgress"></div>
   </div>
 
   <div class="settings-section">
@@ -858,8 +831,25 @@ body.light .settings-inline-btn.danger{background:#fef2f2;border-color:#fecaca;c
   </div>
 
   <div class="settings-section">
+    <div class="settings-section-title">Aplicación</div>
+    <button class="settings-option" id="settingsInstallBtn" type="button">
+      <span class="settings-option-icon">📲</span>
+      <span><strong>Instalar aplicación</strong><small>Agregar Agenda FICH a la pantalla de inicio</small></span>
+      <span class="settings-arrow">›</span>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Cuenta</div>
+    <div class="settings-account-row">
+      <div class="settings-account-email"><strong id="settingsUserEmail">Tu cuenta</strong><small>Sesión actual</small></div>
+      <button class="settings-inline-btn danger" id="settingsLogoutBtn" type="button">Salir</button>
+    </div>
+  </div>
+
+  <div class="settings-section">
     <div class="settings-section-title">Sincronización</div>
-    <div class="settings-status">La app sincroniza automáticamente tus datos con tu cuenta.</div>
+    <div class="settings-status" id="settingsRefreshStatus">Listo</div>
   </div>
 
   <div class="settings-note">Los cambios visuales se guardan en este dispositivo. Tus tareas, fechas, entrenamientos y comidas continúan guardándose en tu cuenta.</div>
@@ -1184,10 +1174,7 @@ async function handleSession(session){
   $('app').classList.remove('hidden');
   $('userEmail').textContent=currentUser.email||'';
   loadIgnoredConflicts();
-  // Pintamos la estructura básica ANTES de cualquier consulta de red.
-  renderStaticShell();
-  // La sincronización es independiente y no bloquea la interfaz inicial.
-  refreshAll();
+  await refreshAll();
   startAutoRefresh();
   if(remindersEnabled) startReminderTimer();
 }
@@ -1199,72 +1186,17 @@ function conflictKey(c){const aId=c.a?.id||c.a?.title||'a';const bId=c.b?.id||c.
 function formatSuggestedSlots(day){const blocked=new Set();tasks.filter(t=>Number(t.day)===day).forEach(t=>blocked.add(minutesOfItem(t)));const meals=(nutritionMeals||[]).filter(m=>Number(m.day)===day&&m.meal_time);meals.forEach(m=>{const [h,mi]=String(m.meal_time).split(':').map(Number);blocked.add((h||0)*60+(mi||0));});const suggestions=[];for(let min=7*60;min<=22*60+45;min+=15){if(blocked.has(min))continue;const prev=min-15,next=min+15;if(!blocked.has(prev)&&!blocked.has(next))suggestions.push(clockFromMinutes(min));if(suggestions.length>=3)break;}return suggestions;}
 function showConflictSuggestion(c){const title=c.a?.title||'Actividad';const options=formatSuggestedSlots(selectedDay);if(!options.length){alert(`No encontré un hueco claro para reubicar «${title}».`);return;}const panel=document.createElement('div');panel.className='reschedule-panel';panel.innerHTML=`<strong>💡 Opciones para «${esc(title)}»</strong><div class="reschedule-options"></div>`;const target=c.a;const opts=panel.querySelector('.reschedule-options');options.forEach(time=>{const b=document.createElement('button');b.className='reschedule-option';b.textContent=time;b.onclick=async()=>{const [h,m]=time.split(':').map(Number);const {error}=await sb.from('tasks').update({hour:h,minute:m}).eq('id',target.id);if(error){alert(error.message);return;}panel.remove();await loadTasks();renderSchedule();renderDashboard();renderConflicts();};opts.appendChild(b)});const host=document.querySelector('.conflict-list');if(host)host.appendChild(panel);setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),30);}
 
-
-function renderStaticShell(){
-  // Selector de días inmediato.
-  try{
-    const days=$('days');
-    if(days){
-      days.innerHTML='';
-      DAYS.forEach((name,i)=>{
-        const b=document.createElement('button');
-        b.className='day-btn'+(i===selectedDay?' active':'');
-        b.textContent=name;
-        b.onclick=()=>{
-          selectedDay=i; workoutDay=i; nutritionDay=i;
-          createDays();
-          renderSchedule();
-          updateStats();
-          renderDashboard();
-          renderConflicts();
-          renderWorkoutDays();
-          renderNutritionDays();
-          loadWorkoutExercises().then(()=>{renderWorkoutList();renderWorkoutHistory();}).catch(console.warn);
-          loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();renderNutritionGoals();renderDashboard();}).catch(console.warn);
-        };
-        days.appendChild(b);
-      });
-    }
-  }catch(e){console.warn('Selector de días inicial:',e)}
-
-  // Calendario base inmediato: mes completo, sin esperar eventos compartidos.
-  try{ buildMonthOptions(); }catch(e){console.warn('Opciones de calendario:',e)}
-  try{ renderCalendar(); }catch(e){console.warn('Calendario inicial:',e)}
-
-  // Horario base inmediato: filas 07:00–22:00 sin esperar tareas.
-  try{
-    const host=$('schedule');
-    if(host){
-      host.innerHTML='';
-      HOURS.forEach(hour=>{
-        const row=document.createElement('div'); row.className='hour';
-        const time=document.createElement('div'); time.className='time'; time.textContent=String(hour).padStart(2,'0')+':00'; time.onclick=()=>openTaskModal(hour,0);
-        const slot=document.createElement('div'); slot.className='slot'; slot.onclick=()=>openTaskModal(hour,0);
-        const empty=document.createElement('div'); empty.className='empty'; empty.textContent='Tocá para agregar'; slot.appendChild(empty);
-        row.append(time,slot); host.appendChild(row);
-      });
-    }
-  }catch(e){console.warn('Horario inicial:',e)}
-
-  // Los otros paneles también quedan dibujados sin bloquear el arranque.
-  try{renderWorkoutDays();}catch(e){console.warn('Días entrenamiento inicial:',e)}
-  try{renderWorkoutList();}catch(e){console.warn('Rutina inicial:',e)}
-  try{renderNutritionDays(); renderMealTabs(); renderNutritionList(); renderNutritionGoals();}catch(e){console.warn('Alimentación inicial:',e)}
-}
-
 async function refreshAll(){
   if(!currentUser || refreshInProgress) return;
   if(document.querySelector('.overlay.show')) return;
-
   refreshInProgress=true;
-  setRefreshStatus('Listo','ok');
-
-  // Pintamos la interfaz inmediatamente, sin esperar red ni Supabase.
-  // Así el horario y el calendario nunca dependen de la carga de eventos compartidos.
+  setRefreshStatus('Actualizando…','updating');
   try{
+    await Promise.all([loadTasks(),loadPersonalDates(),loadSharedEvents(),loadWorkoutExercises(),loadWorkoutLogs(),loadNutritionMeals()]);
     createDays();
-    buildMonthOptions();
     renderSchedule();
+    buildMonthOptions();
+    renderCalendar();
     updateStats();
     renderDashboard();
     renderWorkoutDays();
@@ -1275,45 +1207,15 @@ async function refreshAll(){
     renderNutritionList();
     renderConflicts();
     updateNotice();
-    renderCalendar();
     updateReminderUI();
+    checkReminders();
+    setRefreshStatus('Actualizado '+new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}),'ok');
   }catch(err){
-    console.warn('No se pudo pintar la interfaz inicial:',err);
+    console.error(err);
+    setRefreshStatus('Error al actualizar','');
+  }finally{
+    refreshInProgress=false;
   }
-
-  // Cada fuente se actualiza de manera independiente. Ninguna bloquea a las demás.
-  const safeLoad = async(label, loader, after) => {
-    try{
-      await loader();
-      if(currentUser && typeof after==='function') after();
-    }catch(err){
-      console.warn(`Error cargando ${label}:`,err);
-    }
-  };
-
-  // Datos personales: se muestran apenas llega cada consulta.
-  safeLoad('tareas', loadTasks, ()=>{
-    createDays(); renderSchedule(); updateStats(); renderDashboard(); renderConflicts(); updateReminderUI(); renderSmartDashboard(); renderTodayTimeline();
-  });
-  safeLoad('fechas personales', loadPersonalDates, ()=>{
-    renderCalendar(); updateNotice();
-  });
-  safeLoad('entrenamientos', loadWorkoutExercises, ()=>{
-    renderWorkoutDays(); renderWorkoutList(); renderWorkoutHistory(); renderDashboard(); renderSmartDashboard();
-  });
-  safeLoad('historial de entrenamiento', loadWorkoutLogs, ()=>{
-    renderWorkoutHistory(); renderDashboard(); renderSmartDashboard(); renderInsights?.();
-  });
-  safeLoad('alimentación', loadNutritionMeals, ()=>{
-    renderNutritionDays(); renderMealTabs(); renderNutritionList(); renderNutritionGoals(); renderDashboard(); renderConflicts(); renderSmartDashboard(); renderTodayTimeline();
-  });
-
-  // Feriados/paros: independientes y no bloquean absolutamente nada.
-  safeLoad('feriados y paros', loadSharedEvents, ()=>{
-    renderCalendar(); updateNotice();
-  });
-
-  refreshInProgress=false;
 }
 
 function setRefreshStatus(text,cls=''){
@@ -1415,23 +1317,7 @@ function stopReminderTimer(){if(reminderTimer){clearInterval(reminderTimer);remi
 
 async function loadTasks(){const {data,error}=await sb.from('tasks').select('*').order('hour',{ascending:true}).order('minute',{ascending:true});if(error){console.error(error);tasks=[];}else tasks=data||[];}
 async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
-async function loadSharedEvents(){
-  const controller=new AbortController();
-  const timeout=setTimeout(()=>controller.abort(),5000);
-  try{
-    const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store',signal:controller.signal});
-    if(!res.ok) throw new Error('events.json no disponible');
-    const data=await res.json();
-    sharedEvents=Array.isArray(data)?data:(data.events||[]);
-    $('calendarStatus').textContent='Eventos compartidos cargados.';
-  }catch(e){
-    console.warn('No se pudieron cargar los eventos compartidos:',e);
-    sharedEvents=[];
-    $('calendarStatus').textContent='No se pudieron cargar los eventos compartidos por ahora. La agenda personal sigue disponible.';
-  }finally{
-    clearTimeout(timeout);
-  }
-}
+async function loadSharedEvents(){try{const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('events.json no disponible');const data=await res.json();sharedEvents=Array.isArray(data)?data:(data.events||[]);$('calendarStatus').textContent='Eventos compartidos cargados.';}catch(e){console.warn(e);sharedEvents=[];$('calendarStatus').textContent='No se pudo cargar data/events.json; feriados/paros compartidos pueden no aparecer.';}}
 
 function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;nutritionDay=i;createDays();renderSchedule();updateStats();renderDashboard();renderConflicts();renderWorkoutDays();renderNutritionDays();loadWorkoutExercises().then(()=>{renderWorkoutList();renderWorkoutHistory();});loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();renderNutritionGoals();renderDashboard();});};c.appendChild(b);});}
 function taskSort(a,b){return (Number(a.hour)||0)-(Number(b.hour)||0)||(Number(a.minute)||0)-(Number(b.minute)||0)||String(a.title||'').localeCompare(String(b.title||''));}
@@ -1541,11 +1427,11 @@ document.getElementById('smartOpenNutrition').addEventListener('click',()=>{$('n
 window.addEventListener('beforeinstallprompt',event=>{
   event.preventDefault();
   deferredInstallPrompt=event;
-  $('installAppBtn')?.classList.add('show'); syncSettingsPanel?.();
+  $('installAppBtn')?.classList.add('show');
 });
 window.addEventListener('appinstalled',()=>{
   deferredInstallPrompt=null;
-  $('installAppBtn')?.classList.remove('show'); syncSettingsPanel?.();
+  $('installAppBtn')?.classList.remove('show');
 });
 $('installAppBtn').onclick=async()=>{
   if(!deferredInstallPrompt){
@@ -1555,7 +1441,7 @@ $('installAppBtn').onclick=async()=>{
   deferredInstallPrompt.prompt();
   await deferredInstallPrompt.userChoice;
   deferredInstallPrompt=null;
-  $('installAppBtn')?.classList.remove('show'); syncSettingsPanel?.();
+  $('installAppBtn')?.classList.remove('show');
 };
 
 $('quickAddFab').onclick=()=>{
@@ -1935,7 +1821,75 @@ function enableTooltip(el,title,desc,meta){
 $('taskOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeTaskModal()});$('dateOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeDateModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeTaskModal();closeDateModal();closeGoalsModal();removeTooltip()}});
 window.addEventListener('resize',removeTooltip);window.addEventListener('scroll',removeTooltip,true);
 
-updateReminderUI();
+
+function setImportProgress(text,show=true){const e=$('importProgress');if(!e)return;e.textContent=text;e.classList.toggle('show',show)}
+
+async function importMyData(file){
+  if(!currentUser){alert('Primero iniciá sesión.');return}
+  let parsed;
+  try{parsed=JSON.parse(await file.text());}catch(err){throw new Error('El archivo no contiene un JSON válido.')}
+  const tasksIn=Array.isArray(parsed.tasks)?parsed.tasks:[];
+  const datesIn=Array.isArray(parsed.personal_dates)?parsed.personal_dates:[];
+  const exercisesIn=Array.isArray(parsed.workout_exercises)?parsed.workout_exercises:[];
+  const logsIn=Array.isArray(parsed.workout_logs)?parsed.workout_logs:[];
+  const mealsIn=Array.isArray(parsed.nutrition_meals)?parsed.nutrition_meals:[];
+  const total=tasksIn.length+datesIn.length+exercisesIn.length+logsIn.length+mealsIn.length;
+  if(!total)throw new Error('No encontré tareas, fechas, entrenamientos ni comidas en el archivo.')
+  const replace=confirm('¿Querés REEMPLAZAR los datos actuales de esta cuenta?\n\nAceptar = reemplazar los datos personales actuales.\nCancelar = conservarlos y AGREGAR los importados.')
+  setImportProgress(replace?'Preparando reemplazo…':'Preparando importación…')
+  if(replace){
+    const tables=['workout_logs','workout_exercises','nutrition_meals','tasks','personal_dates'];
+    for(const table of tables){
+      const {error}=await sb.from(table).delete().eq('user_id',currentUser.id);
+      if(error)throw new Error(`No pude limpiar ${table}: ${error.message}`)
+    }
+  }
+  const clean=(obj,drop=[])=>{const c={...obj};drop.forEach(k=>delete c[k]);return c}
+  const taskRows=tasksIn.map(t=>clean(t,['id','user_id','created_at','updated_at']));
+  if(taskRows.length){const rows=taskRows.map(t=>({...t,user_id:currentUser.id}));const {error}=await sb.from('tasks').insert(rows);if(error)throw new Error('Error importando tareas: '+error.message)}
+  setImportProgress(`Tareas importadas: ${taskRows.length}`)
+  const dateRows=datesIn.map(d=>clean(d,['id','user_id','created_at','updated_at']));
+  if(dateRows.length){const rows=dateRows.map(d=>({...d,user_id:currentUser.id}));const {error}=await sb.from('personal_dates').insert(rows);if(error)throw new Error('Error importando fechas: '+error.message)}
+  setImportProgress(`Fechas importadas: ${dateRows.length}`)
+
+  const exerciseMap=new Map();
+  for(const ex of exercisesIn){
+    const row=clean(ex,['id','user_id','created_at','updated_at']);
+    row.user_id=currentUser.id;
+    const {data,error}=await sb.from('workout_exercises').insert(row).select('*').single();
+    if(error)throw new Error('Error importando ejercicio: '+error.message);
+    if(ex.id && data?.id)exerciseMap.set(String(ex.id),data.id);
+  }
+  setImportProgress(`Ejercicios importados: ${exercisesIn.length}`)
+
+  const logRows=[];
+  for(const log of logsIn){
+    const row=clean(log,['id','user_id','created_at','updated_at']);
+    row.user_id=currentUser.id;
+    if(log.exercise_id && exerciseMap.has(String(log.exercise_id)))row.exercise_id=exerciseMap.get(String(log.exercise_id));
+    else delete row.exercise_id;
+    logRows.push(row)
+  }
+  if(logRows.length){const {error}=await sb.from('workout_logs').insert(logRows);if(error)throw new Error('Error importando historial: '+error.message)}
+  setImportProgress(`Historial importado: ${logRows.length}`)
+  const mealRows=mealsIn.map(m=>{const row=clean(m,['id','user_id','created_at','updated_at']);row.user_id=currentUser.id;return row});
+  if(mealRows.length){const {error}=await sb.from('nutrition_meals').insert(mealRows);if(error)throw new Error('Error importando alimentación: '+error.message)}
+  setImportProgress(`Importación completa: ${total} elementos.`)
+  await Promise.all([loadTasks(),loadPersonalDates(),loadWorkoutExercises(),loadWorkoutLogs(),loadNutritionMeals()]);
+  createDays();renderSchedule();updateStats();renderDashboard();renderWorkoutDays();renderWorkoutList();renderWorkoutHistory();renderNutritionDays();renderMealTabs();renderNutritionList();renderNutritionGoals();renderConflicts();updateNotice();updateReminderUI();
+  closeSettings();
+  setTimeout(()=>setImportProgress('',false),2500)
+  alert(`Importación terminada.\n\nTareas: ${taskRows.length}\nFechas: ${dateRows.length}\nEjercicios: ${exercisesIn.length}\nSesiones: ${logRows.length}\nComidas: ${mealRows.length}`)
+}
+
+// El shell visual se dibuja SIEMPRE antes de consultar Supabase o events.json.
+function renderImmediateShell(){
+  try{createDays()}catch(e){console.warn('Días iniciales:',e)}
+  try{buildMonthOptions();renderCalendar()}catch(e){console.warn('Calendario inicial:',e)}
+  try{renderSchedule()}catch(e){console.warn('Horario inicial:',e)}
+}
+renderImmediateShell();
+
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));}
 init();
 setRefreshStatus('Listo');
@@ -1968,11 +1922,9 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
   function exportData(){const payload={exported_at:new Date().toISOString(),account:currentUser?.email||null,tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,nutrition_meals:nutritionMeals};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
-  function syncSettingsPanel(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const f=$v('focusValue');if(f)f.textContent=document.body.classList.contains('focus-mode')?'Activo':'Apagado';const t=$v('themeValue');if(t)t.textContent=document.body.classList.contains('light')?'Claro':'Oscuro';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const inst=$v('settingsInstallStatus');if(inst)inst.textContent=deferredInstallPrompt?'La instalación está disponible en este dispositivo.':'Usá el menú del navegador si la instalación no aparece automáticamente.';}
-function wireV17Settings(){syncSettingsPanel();$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsReminderBtn')?.addEventListener('click',async()=>{closeSettings();const p=$v('reminderPanel');if(p)p.classList.add('open');if(typeof updateReminderUI==='function')updateReminderUI()});$v('settingsInstallBtn')?.addEventListener('click',async()=>{closeSettings();const btn=$v('installAppBtn');if(btn){btn.click();return;}if(typeof deferredInstallPrompt!=='undefined'&&deferredInstallPrompt){deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;}syncSettingsPanel()});$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const file=e.target.files?.[0];e.target.value='';if(!file)return;try{await importMyData(file)}catch(err){console.error(err);alert('No se pudo importar el archivo.\n\n'+(err?.message||err));}});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings)}
-function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsPanel()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsPanel()});$v('v15SearchBtn')?.addEventListener('click',openSearch);$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);wireV17Settings();document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsPanel()},60000)}
+  function syncSettingsExtras(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const s=$v('settingsRefreshStatus');if(s)s.textContent=$v('refreshStatus')?.textContent||'Listo'}
+function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsExtras()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsExtras()});$v('v15SearchBtn')?.addEventListener('click',openSearch);$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;try{await importMyData(f)}catch(err){console.error(err);setImportProgress('',false);alert('No se pudo importar el archivo.\n\n'+(err?.message||err))}});$v('settingsReminderBtn')?.addEventListener('click',()=>{closeSettings();$v('reminderPanel')?.classList.add('open');if(typeof updateReminderUI==='function')updateReminderUI();syncSettingsExtras()});$v('settingsInstallBtn')?.addEventListener('click',()=>{$v('installAppBtn')?.click()});$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch()}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras()},60000)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV16);else initV16();
 })();
-</script>
-</body>
+</script>\n</body>
 </html>
