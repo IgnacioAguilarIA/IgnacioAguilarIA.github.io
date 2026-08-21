@@ -1201,12 +1201,24 @@ async function refreshAll(){
   if(document.querySelector('.overlay.show')) return;
   refreshInProgress=true;
   setRefreshStatus('Actualizando…','updating');
+
   try{
-    await Promise.all([loadTasks(),loadPersonalDates(),loadSharedEvents(),loadWorkoutExercises(),loadWorkoutLogs(),loadNutritionMeals()]);
+    // Cargamos primero los datos personales. Los eventos compartidos no deben
+    // bloquear la agenda si events.json tarda o no responde.
+    const sharedEventsPromise = loadSharedEvents();
+
+    await Promise.allSettled([
+      loadTasks(),
+      loadPersonalDates(),
+      loadWorkoutExercises(),
+      loadWorkoutLogs(),
+      loadNutritionMeals()
+    ]);
+
+    // La agenda personal se pinta inmediatamente.
     createDays();
     renderSchedule();
     buildMonthOptions();
-    renderCalendar();
     updateStats();
     renderDashboard();
     renderWorkoutDays();
@@ -1219,10 +1231,35 @@ async function refreshAll(){
     updateNotice();
     updateReminderUI();
     checkReminders();
-    setRefreshStatus('Actualizado '+new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'}),'ok');
+    renderCalendar();
+
+    setRefreshStatus('Listo','ok');
+
+    // Cuando lleguen feriados/paros, actualizamos solo esa parte.
+    sharedEventsPromise.finally(()=>{
+      if(currentUser){
+        renderCalendar();
+        updateNotice();
+      }
+    });
   }catch(err){
     console.error(err);
-    setRefreshStatus('Error al actualizar','');
+    // Nunca dejamos la agenda en blanco por un fallo secundario.
+    createDays();
+    renderSchedule();
+    buildMonthOptions();
+    updateStats();
+    renderDashboard();
+    renderWorkoutDays();
+    renderWorkoutList();
+    renderWorkoutHistory();
+    renderNutritionDays();
+    renderMealTabs();
+    renderNutritionList();
+    renderConflicts();
+    updateNotice();
+    renderCalendar();
+    setRefreshStatus('Agenda cargada','ok');
   }finally{
     refreshInProgress=false;
   }
@@ -1327,7 +1364,23 @@ function stopReminderTimer(){if(reminderTimer){clearInterval(reminderTimer);remi
 
 async function loadTasks(){const {data,error}=await sb.from('tasks').select('*').order('hour',{ascending:true}).order('minute',{ascending:true});if(error){console.error(error);tasks=[];}else tasks=data||[];}
 async function loadPersonalDates(){const {data,error}=await sb.from('personal_dates').select('*').order('date',{ascending:true});if(error){console.error(error);personalDates=[];}else personalDates=data||[];}
-async function loadSharedEvents(){try{const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('events.json no disponible');const data=await res.json();sharedEvents=Array.isArray(data)?data:(data.events||[]);$('calendarStatus').textContent='Eventos compartidos cargados.';}catch(e){console.warn(e);sharedEvents=[];$('calendarStatus').textContent='No se pudo cargar data/events.json; feriados/paros compartidos pueden no aparecer.';}}
+async function loadSharedEvents(){
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),5000);
+  try{
+    const res=await fetch('./data/events.json?ts='+Date.now(),{cache:'no-store',signal:controller.signal});
+    if(!res.ok) throw new Error('events.json no disponible');
+    const data=await res.json();
+    sharedEvents=Array.isArray(data)?data:(data.events||[]);
+    $('calendarStatus').textContent='Eventos compartidos cargados.';
+  }catch(e){
+    console.warn('No se pudieron cargar los eventos compartidos:',e);
+    sharedEvents=[];
+    $('calendarStatus').textContent='No se pudieron cargar los eventos compartidos por ahora. La agenda personal sigue disponible.';
+  }finally{
+    clearTimeout(timeout);
+  }
+}
 
 function createDays(){const c=$('days');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='day-btn'+(i===selectedDay?' active':'');b.textContent=d;b.onclick=()=>{selectedDay=i;workoutDay=i;nutritionDay=i;createDays();renderSchedule();updateStats();renderDashboard();renderConflicts();renderWorkoutDays();renderNutritionDays();loadWorkoutExercises().then(()=>{renderWorkoutList();renderWorkoutHistory();});loadNutritionMeals().then(()=>{renderMealTabs();renderNutritionList();renderNutritionGoals();renderDashboard();});};c.appendChild(b);});}
 function taskSort(a,b){return (Number(a.hour)||0)-(Number(b.hour)||0)||(Number(a.minute)||0)-(Number(b.minute)||0)||String(a.title||'').localeCompare(String(b.title||''));}
@@ -1842,7 +1895,7 @@ $('goNutritionBtn').onclick=()=>openNutritionPanel();
 $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoalsModal;$('goalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeGoalsModal()});$('saveGoalsBtn').onclick=()=>{nutritionGoals={calories:Number($('goalCalories').value)||0,protein:Number($('goalProtein').value)||0,carbs:Number($('goalCarbs').value)||0,fat:Number($('goalFat').value)||0};saveNutritionGoals();closeGoalsModal();renderNutritionGoals();renderDashboard();};
 
 </script>
-\n<script>
+<script>
 (function(){
   const $v=id=>document.getElementById(id);
   function todayLabel(){try{return new Intl.DateTimeFormat('es-AR',{timeZone:TZ,weekday:'long',day:'2-digit',month:'long'}).format(new Date()).replace(/^./,c=>c.toUpperCase())}catch{return 'Hoy'}}
