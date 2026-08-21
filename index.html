@@ -646,6 +646,80 @@ body.light .v15-search-type{color:#1d4ed8;background:#eff6ff;border-color:#bfdbf
 body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#475569}
 .reminder-panel.open{z-index:140}
 <style id="v22-focus-remove">#focusExitFloating{display:none!important}.focus-mode #focusExitFloating{display:none!important}</style>
+
+<style id="v23-search-professional">
+/* ===== V23 SEARCH: integrated header control ===== */
+.top-search-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  height:40px;
+  padding:0 14px;
+  border:1px solid rgba(96,165,250,.20);
+  border-radius:12px;
+  background:linear-gradient(180deg,rgba(30,41,59,.82),rgba(15,23,42,.86));
+  color:#dbeafe;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 6px 18px rgba(2,6,23,.20);
+  cursor:pointer;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.1px;
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease;
+}
+.top-search-btn::after{
+  content:'Ctrl K';
+  font-size:8px;
+  font-weight:700;
+  color:#94a3b8;
+  padding:3px 5px;
+  border:1px solid rgba(148,163,184,.18);
+  border-radius:6px;
+  background:rgba(255,255,255,.03);
+}
+.top-search-btn:hover{
+  transform:translateY(-1px);
+  border-color:rgba(96,165,250,.55);
+  background:linear-gradient(180deg,rgba(37,99,235,.20),rgba(15,23,42,.92));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 10px 24px rgba(2,6,23,.28);
+}
+.top-search-btn:active{transform:translateY(0)}
+body.light .top-search-btn{
+  background:linear-gradient(180deg,#ffffff,#f8fafc);
+  color:#0f172a;
+  border-color:#dbe3ee;
+  box-shadow:0 6px 16px rgba(15,23,42,.08);
+}
+body.light .top-search-btn::after{
+  color:#64748b;
+  background:#f8fafc;
+  border-color:#cbd5e1;
+}
+body.light .top-search-btn:hover{
+  background:linear-gradient(180deg,#eff6ff,#ffffff);
+  border-color:#93c5fd;
+}
+@media(max-width:700px){
+  .top-search-btn{
+    width:40px;
+    min-width:40px;
+    height:40px;
+    padding:0;
+    justify-content:center;
+    border-radius:12px;
+    font-size:18px;
+  }
+  .top-search-btn span,.top-search-btn::after{display:none}
+}
+
+/* ===== V23 SEARCH MODAL ===== */
+.v15-search-overlay{z-index:260}
+.v15-search-box{width:min(780px,100%);border-radius:20px}
+.v15-search-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px 0}
+.v15-search-toolbar small{font-size:9px;color:#64748b}
+.v15-search-loading{padding:26px 18px;text-align:center;color:#94a3b8;font-size:11px}
+.v15-search-scope{display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid rgba(96,165,250,.15);background:rgba(59,130,246,.06);border-radius:999px;color:#93c5fd;font-size:9px;font-weight:800}
+body.light .v15-search-scope{color:#1d4ed8;background:#eff6ff;border-color:#bfdbfe}
+</style>
 </head>
 <body>
 <section id="authScreen">
@@ -821,7 +895,7 @@ body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#47556
       <input id="v15SearchInput" type="search" placeholder="Buscar tareas, ejercicios, comidas o fechas..." autocomplete="off">
       <button id="v15SearchClose" type="button" aria-label="Cerrar búsqueda">×</button>
     </div>
-    <div class="v15-search-hint">Escribí para buscar. En PC también podés usar <kbd>Ctrl</kbd> + <kbd>K</kbd>.</div>
+    <div class="v15-search-hint">Escribí para buscar. En PC también podés usar <kbd>Ctrl</kbd> + <kbd>K</kbd>.</div><div class="v15-search-toolbar"><small>Busca en todas tus tareas, fechas, rutinas, historial, comidas y eventos cargados.</small><span class="v15-search-scope">● Búsqueda global</span></div>
     <div class="v15-search-results" id="v15SearchResults">
       <div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div>
     </div>
@@ -1239,6 +1313,7 @@ function showConflictSuggestion(c){const title=c.a?.title||'Actividad';const opt
 
 async function refreshAll(){
   if(!currentUser || refreshInProgress) return;
+  if(typeof invalidateGlobalSearchCache==='function') invalidateGlobalSearchCache();
   if(document.querySelector('.overlay.show')) return;
   refreshInProgress=true;
   setRefreshStatus('Actualizando…','updating');
@@ -1961,15 +2036,186 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
   function setFocusButton(){const b=$v('focusValue');if(b)b.textContent=document.body.classList.contains('focus-mode')?'Activo':'Apagado';const i=$v('v15FocusBtn');if(i)i.setAttribute('aria-pressed',document.body.classList.contains('focus-mode')?'true':'false')}
   function toggleFocus(){const on=document.body.classList.toggle('focus-mode');localStorage.setItem('agendaFocusMode',on?'1':'0');setFocusButton()}
   function restoreFocus(){if(localStorage.getItem('agendaFocusMode')==='1')document.body.classList.add('focus-mode');setFocusButton()}
-  function closeSearch(){const o=$v('v15SearchOverlay');if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true')}}
+  function closeSearch(){const o=$v('v15SearchOverlay');if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true')} searchCache=null; searchCacheAt=0;}
   function openSearch(){const o=$v('v15SearchOverlay');if(!o)return;o.classList.add('show');o.setAttribute('aria-hidden','false');const i=$v('v15SearchInput');if(i){i.value='';setTimeout(()=>i.focus(),50)};renderSearch('')}
-  function renderSearch(q){const host=$v('v15SearchResults');if(!host)return; q=String(q||'').trim().toLowerCase(); if(!q){host.innerHTML='<div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div>';return;} const r=[];
-    (tasks||[]).forEach(t=>{const h=`${t.title||''} ${t.description||''}`.toLowerCase();if(h.includes(q))r.push({icon:t.completed?'✅':'📚',title:t.title||'Tarea',meta:`${DAYS[Number(t.day)||0]} · ${String(Number(t.hour)||0).padStart(2,'0')}:${String(Number(t.minute)||0).padStart(2,'0')}`,type:'Tarea',action:()=>{selectedDay=Number(t.day)||0;createDays();renderSchedule();closeSearch();openTaskModal(Number(t.hour)||7,Number(t.minute)||0,t)}})});
-    (workoutExercises||[]).forEach(x=>{const h=`${x.exercise||''} ${x.notes||''}`.toLowerCase();if(h.includes(q))r.push({icon:'🏋️',title:x.exercise||'Ejercicio',meta:`${DAYS[Number(x.day)||0]} · ${x.sets||'-'} series · ${x.reps||'-'} reps`,type:'Entrenamiento',action:()=>{workoutDay=Number(x.day)||0;openWorkoutPanel();Promise.resolve(loadWorkoutExercises()).then(()=>{renderWorkoutList();renderWorkoutHistory();if(typeof renderWorkoutAnalytics==='function')renderWorkoutAnalytics()});closeSearch()}})});
-    (nutritionMeals||[]).forEach(m=>{const h=`${m.title||''} ${m.foods||''} ${m.description||''}`.toLowerCase();if(h.includes(q))r.push({icon:'🍽️',title:m.title||'Comida',meta:`${DAYS[Number(m.day)||0]} · ${typeof mealLabel==='function'?mealLabel(m.meal_type):(m.meal_type||'Comida')}`,type:'Alimentación',action:()=>{nutritionDay=Number(m.day)||0;activeMealType=m.meal_type;openNutritionPanel();Promise.resolve(loadNutritionMeals()).then(()=>{renderMealTabs();renderNutritionList();renderNutritionGoals()});closeSearch()}})});
-    (personalDates||[]).forEach(d=>{const h=`${d.title||''} ${d.description||''}`.toLowerCase();if(h.includes(q))r.push({icon:d.type==='importante'?'⭐':'📌',title:d.title||'Fecha',meta:typeof fmtDate==='function'?fmtDate(d.date):d.date,type:'Fecha',action:()=>{closeSearch();openDateModal(d)}})});
-    const limited=r.slice(0,12); if(!limited.length){host.innerHTML='<div class="v15-search-empty">No encontré nada con ese texto.</div>';return;} host.innerHTML=''; limited.forEach(x=>{const b=document.createElement('button');b.type='button';b.className='v15-search-result';b.innerHTML=`<span class="v15-search-icon">${x.icon}</span><span><div class="v15-search-title">${esc(x.title)}</div><div class="v15-search-meta">${esc(x.meta)}</div></span><span class="v15-search-type">${esc(x.type)}</span>`;b.onclick=x.action;host.appendChild(b)})
+  let searchRequestId = 0;
+  let searchCache = null;
+  let searchCacheAt = 0;
+
+  async function loadGlobalSearchCorpus(){
+    const now = Date.now();
+    if(searchCache && (now-searchCacheAt)<30000) return searchCache;
+
+    const [tasksRes, datesRes, workoutsRes, logsRes, mealsRes] = await Promise.all([
+      sb.from('tasks').select('*').limit(1000),
+      sb.from('personal_dates').select('*').limit(1000),
+      sb.from('workout_exercises').select('*').limit(1000),
+      sb.from('workout_logs').select('*').order('performed_at',{ascending:false}).limit(1000),
+      sb.from('nutrition_meals').select('*').limit(1000)
+    ]);
+
+    const errors=[tasksRes,datesRes,workoutsRes,logsRes,mealsRes].filter(x=>x.error);
+    if(errors.length) throw new Error(errors.map(x=>x.error?.message||'Error de búsqueda').join(' · '));
+
+    let events=Array.isArray(sharedEvents)?sharedEvents:[];
+    if(!events.length){
+      try{
+        const controller=new AbortController();
+        const timer=setTimeout(()=>controller.abort(),5000);
+        const res=await fetch('./data/events.json?search='+Date.now(),{cache:'no-store',signal:controller.signal});
+        clearTimeout(timer);
+        if(res.ok){const data=await res.json();events=Array.isArray(data)?data:(data.events||[]);sharedEvents=events;}
+      }catch(e){ console.warn('No se pudieron cargar eventos para la búsqueda:',e); }
+    }
+
+    searchCache={
+      tasks:tasksRes.data||[],
+      dates:datesRes.data||[],
+      workouts:workoutsRes.data||[],
+      logs:logsRes.data||[],
+      meals:mealsRes.data||[],
+      events
+    };
+    searchCacheAt=now;
+    return searchCache;
   }
+
+  function invalidateGlobalSearchCache(){searchCache=null;searchCacheAt=0}
+
+  async function renderSearch(q){
+    const host=$v('v15SearchResults');
+    if(!host)return;
+    q=String(q||'').trim().toLowerCase();
+    if(!q){host.innerHTML='<div class="v15-search-empty">Escribí algo para buscar en toda tu agenda.</div>';return;}
+
+    const request=++searchRequestId;
+    host.innerHTML='<div class="v15-search-loading">🔎 Buscando en toda tu agenda…</div>';
+
+    try{
+      const corpus=await loadGlobalSearchCorpus();
+      if(request!==searchRequestId)return;
+      const results=[];
+      const contains=(...parts)=>parts.filter(v=>v!==null&&v!==undefined).join(' ').toLowerCase().includes(q);
+
+      corpus.tasks.forEach(t=>{
+        if(!contains(t.title,t.description))return;
+        results.push({
+          icon:t.completed?'✅':'📚',
+          title:t.title||'Tarea',
+          meta:`${DAYS[Number(t.day)||0]} · ${String(Number(t.hour)||0).padStart(2,'0')}:${String(Number(t.minute)||0).padStart(2,'0')}${t.description?' · '+t.description:''}`,
+          type:'Tarea',
+          action:async()=>{
+            selectedDay=Number(t.day)||0;
+            createDays(); renderSchedule(); closeSearch();
+            openTaskModal(Number(t.hour)||7,Number(t.minute)||0,t);
+          }
+        });
+      });
+
+      corpus.workouts.forEach(x=>{
+        if(!contains(x.exercise,x.notes,x.tempo,x.weight))return;
+        results.push({
+          icon:'🏋️',title:x.exercise||'Ejercicio',
+          meta:`${DAYS[Number(x.day)||0]} · ${x.sets||'-'} series · ${x.reps||'-'} reps · RIR ${x.rir??'-'}`,
+          type:'Entrenamiento',
+          action:async()=>{
+            workoutDay=Number(x.day)||0;
+            openWorkoutPanel();
+            await loadWorkoutExercises();
+            renderWorkoutList(); renderWorkoutHistory(); renderWorkoutAnalytics?.();
+            closeSearch();
+          }
+        });
+      });
+
+      corpus.logs.forEach(log=>{
+        if(!contains(log.exercise_name,log.reps,log.weight,log.notes))return;
+        results.push({
+          icon:'📈',title:log.exercise_name||'Registro de entrenamiento',
+          meta:`${fmtDate(log.performed_at)} · ${log.sets_completed||'-'} series · ${log.reps||'-'} reps · ${log.weight||'-'}${log.notes?' · '+log.notes:''}`,
+          type:'Historial',
+          action:async()=>{
+            workoutDay=selectedDay;
+            openWorkoutPanel();
+            await loadWorkoutExercises();
+            await loadWorkoutLogs();
+            renderWorkoutList(); renderWorkoutHistory(); renderWorkoutAnalytics?.();
+            closeSearch();
+          }
+        });
+      });
+
+      corpus.meals.forEach(m=>{
+        if(!contains(m.title,m.foods,m.description,m.meal_type))return;
+        results.push({
+          icon:'🍽️',title:m.title||'Comida',
+          meta:`${DAYS[Number(m.day)||0]} · ${mealLabel(m.meal_type)}${m.meal_time?' · '+m.meal_time:''}${m.foods?' · '+m.foods:''}`,
+          type:'Alimentación',
+          action:async()=>{
+            nutritionDay=Number(m.day)||0;
+            activeMealType=m.meal_type;
+            openNutritionPanel();
+            await loadNutritionMeals();
+            renderMealTabs(); renderNutritionList(); renderNutritionGoals();
+            closeSearch();
+          }
+        });
+      });
+
+      corpus.dates.forEach(d=>{
+        if(!contains(d.title,d.description,d.type,d.date))return;
+        results.push({
+          icon:d.type==='importante'?'⭐':'📌',title:d.title||'Fecha personal',
+          meta:`${fmtDate(d.date)}${d.description?' · '+d.description:''}`,
+          type:'Fecha',
+          action:async()=>{closeSearch();openDateModal(d)}
+        });
+      });
+
+      corpus.events.forEach(e=>{
+        const date=e.date||e.fecha||'';
+        if(!contains(e.title||e.titulo,e.description||e.descripcion,e.type||e.tipo,e.scope||e.alcance,date))return;
+        results.push({
+          icon:(mapKind(e.type||e.tipo)==='holiday'?'🇦🇷 ':mapKind(e.type||e.tipo)==='teacher'?'🟠 ':mapKind(e.type||e.tipo)==='nonteacher'?'🔴 ':mapKind(e.type||e.tipo)==='university'?'🟣 ':'📅'),
+          title:e.title||e.titulo||'Evento',
+          meta:`${date}${e.scope||e.alcance?' · '+(e.scope||e.alcance):''}`,
+          type:'Calendario',
+          action:async()=>{
+            if(date){
+              const parts=String(date).split('-').map(Number);
+              if(parts.length===3&&parts.every(Number.isFinite)){
+                currentYear=parts[0]; currentMonth=parts[1]-1; buildMonthOptions(); renderCalendar();
+              }
+            }
+            closeSearch();
+            try{openCalendarPanel?.()}catch{toggleCalendarPanel?.()}
+          }
+        });
+      });
+
+      results.sort((a,b)=>{
+        const at=a.type==='Tarea'?0:a.type==='Entrenamiento'?1:a.type==='Alimentación'?2:a.type==='Fecha'?3:a.type==='Historial'?4:5;
+        const bt=b.type==='Tarea'?0:b.type==='Entrenamiento'?1:b.type==='Alimentación'?2:b.type==='Fecha'?3:b.type==='Historial'?4:5;
+        return at-bt;
+      });
+
+      const limited=results.slice(0,30);
+      if(!limited.length){host.innerHTML='<div class="v15-search-empty">No encontré coincidencias en tu agenda.</div>';return;}
+      host.innerHTML='';
+      limited.forEach(x=>{
+        const b=document.createElement('button');
+        b.type='button'; b.className='v15-search-result';
+        b.innerHTML=`<span class="v15-search-icon">${x.icon}</span><span><div class="v15-search-title">${esc(x.title)}</div><div class="v15-search-meta">${esc(x.meta)}</div></span><span class="v15-search-type">${esc(x.type)}</span>`;
+        b.onclick=()=>x.action();
+        host.appendChild(b);
+      });
+    }catch(err){
+      if(request!==searchRequestId)return;
+      console.error('Búsqueda global:',err);
+      host.innerHTML=`<div class="v15-search-empty">No pude completar la búsqueda.<br><small>${esc(err?.message||'Error desconocido')}</small></div>`;
+    }
+  }
+
   function exportData(){const payload={exported_at:new Date().toISOString(),account:currentUser?.email||null,tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,nutrition_meals:nutritionMeals};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
