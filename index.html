@@ -724,6 +724,46 @@ body.light .v15-search-scope{color:#1d4ed8;background:#eff6ff;border-color:#bfdb
 <style id="v24-upgrades">
 .mobile-nav,.quick-actions,.import-select-modal{display:none}.mobile-nav{position:fixed;left:10px;right:10px;bottom:10px;height:62px;z-index:155;grid-template-columns:repeat(4,1fr);background:rgba(15,23,42,.93);border:1px solid rgba(148,163,184,.18);border-radius:18px;box-shadow:0 18px 45px rgba(0,0,0,.28);backdrop-filter:blur(14px);padding:5px}.mobile-nav-btn{border:0;background:transparent;color:#94a3b8;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:800}.mobile-nav-btn span{font-size:18px;line-height:1}.mobile-nav-btn small{font-size:8px}.mobile-nav-btn.active{background:rgba(59,130,246,.16);color:#dbeafe}.quick-actions,.import-select-modal{position:fixed;inset:0;z-index:170;align-items:flex-end;justify-content:center;background:rgba(2,6,23,.62);backdrop-filter:blur(9px);padding:16px}.import-select-modal{align-items:center}.quick-actions.show,.import-select-modal.show{display:flex}.quick-actions-card,.import-select-card{width:min(520px,100%);background:rgba(17,24,39,.98);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.42);padding:15px}.quick-actions-head,.import-select-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.quick-actions-head strong,.import-select-head strong{color:#fff;font-size:14px}.quick-actions-head button,.import-select-head button{width:34px;height:34px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:18px}.quick-actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick-actions-grid button{min-height:94px;border:1px solid rgba(148,163,184,.16);border-radius:16px;background:rgba(255,255,255,.05);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:25px;font-weight:800}.quick-actions-grid button span{font-size:10px;color:#cbd5e1}.import-select-head small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.import-select-card label{display:flex;align-items:center;gap:9px;padding:11px;border-radius:12px;margin:6px 0;background:rgba(255,255,255,.04);color:#e2e8f0;font-size:11px}.import-select-card input{width:17px;height:17px;accent-color:#2563eb}.import-select-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.import-select-actions button{padding:10px 14px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#e2e8f0;font-weight:800}.import-select-actions button:last-child{background:#2563eb;color:#fff;border-color:#3b82f6}@media(max-width:700px){body{padding-bottom:82px}.mobile-nav{display:grid}.quick-actions{padding-bottom:82px}}body.light .quick-actions-card,body.light .import-select-card{background:#fff;border-color:#dbe3ee}body.light .quick-actions-head strong,body.light .import-select-head strong{color:#0f172a}body.light .quick-actions-grid button{background:#f8fafc;color:#0f172a;border-color:#dbe3ee}body.light .quick-actions-grid button span{color:#64748b}body.light .import-select-card label{background:#f8fafc;color:#334155}
 </style>
+
+<style id="v25-upgrades-style">
+.v25-goals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+.v25-goal-card{border:1px solid rgba(148,163,184,.16);border-radius:16px;padding:12px;background:rgba(255,255,255,.035)}
+.v25-goal-card h4{margin:0 0 5px;font-size:11px}.v25-goal-value{font-size:18px;font-weight:900}.v25-goal-sub{font-size:9px;color:var(--muted);margin-top:3px}
+.v25-bar{height:8px;background:rgba(148,163,184,.12);border-radius:999px;overflow:hidden;margin-top:9px}.v25-bar>span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#2563eb,#7c3aed)}
+.v25-goal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.v25-btn{border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.045);color:inherit;border-radius:10px;padding:9px 11px;font-size:10px;font-weight:800;cursor:pointer}
+.v25-btn.primary{background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa;color:#fff}
+.v25-btn.danger{background:rgba(239,68,68,.08);color:#fca5a5;border-color:rgba(239,68,68,.2)}
+.v25-offline{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:800}
+.v25-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.13)}
+.v25-dot.off{background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.11)}
+.v25-sheet{position:fixed;inset:0;background:rgba(2,6,23,.62);display:none;align-items:flex-end;justify-content:center;z-index:180;backdrop-filter:blur(8px)}
+.v25-sheet.show{display:flex}
+.v25-sheet-card{width:min(640px,100%);background:var(--card,#111827);border:1px solid var(--line);border-radius:22px 22px 0 0;padding:16px;box-shadow:0 -20px 60px rgba(0,0,0,.35)}
+.v25-sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.v25-sheet-title{font-weight:900}.v25-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v25-grid1{display:grid;grid-template-columns:1fr;gap:10px}
+.v25-field label{display:block;font-size:9px;font-weight:800;color:var(--muted);margin-bottom:5px}.v25-field input,.v25-field select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:inherit;outline:0}
+.v25-reminder-badge{display:inline-flex;align-items:center;gap:5px;margin-left:8px;font-size:8px;font-weight:800;padding:4px 6px;border-radius:999px;background:rgba(59,130,246,.11);color:#93c5fd;border:1px solid rgba(96,165,250,.15)}
+.v25-section-title{font-size:13px;font-weight:900;margin:4px 0}
+body.light .v25-goal-card,body.light .v25-btn{background:#fff;border-color:#dbe3ee}
+body.light .v25-field input,body.light .v25-field select{background:#fff;color:#0f172a;border-color:#cbd5e1}
+body.light .v25-reminder-badge{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+@media(max-width:900px){.v25-goals{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.v25-goals{grid-template-columns:1fr 1fr}.v25-grid2{grid-template-columns:1fr}.v25-sheet-card{padding:14px 14px calc(14px + env(safe-area-inset-bottom))}}
+</style>
+
+
+<style id="v26-mobile-nav-fix">
+.mobile-bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:none;padding:8px 10px calc(8px + env(safe-area-inset-bottom));background:rgba(15,23,42,.97);border-top:1px solid rgba(148,163,184,.18);backdrop-filter:blur(14px)}
+.mobile-nav-inner{width:min(560px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.mobile-bottom-nav button{min-height:54px;border:1px solid rgba(148,163,184,.15);background:rgba(255,255,255,.04);color:#cbd5e1;border-radius:14px;font-size:9px;font-weight:850;cursor:pointer}
+.mobile-bottom-nav button.active{color:#fff;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa}
+.mobile-nav-icon{display:block;font-size:18px;line-height:1;margin-bottom:4px}
+@media(max-width:700px){.bottom-nav,.mobile-nav-legacy,#mobileNavLegacy,#legacyMobileNav,.mobile-bottom-navigation,.mobile-navigation-bar,.mobile-bottom-bar{display:none!important}.mobile-bottom-nav{display:block!important}body{padding-bottom:94px}#quickAddFab{bottom:104px!important}}
+@media(min-width:701px){.mobile-bottom-nav{display:none!important}}
+body.light .mobile-bottom-nav{background:rgba(255,255,255,.97);border-top-color:#dbe3ee}
+body.light .mobile-bottom-nav button{background:#fff;color:#475569;border-color:#dbe3ee}
+body.light .mobile-bottom-nav button.active{color:#fff;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa}
+</style>
 </head>
 <body>
 <section id="authScreen">
@@ -750,6 +790,36 @@ body.light .v15-search-scope{color:#1d4ed8;background:#eff6ff;border-color:#bfdb
   </div>
 
   <div class="days" id="days"></div>
+
+<div class="v25-goals" id="v25Goals">
+  <div class="v25-goal-card">
+    <h4>📚 Tareas</h4>
+    <div class="v25-goal-value" id="v25TaskPct">0%</div>
+    <div class="v25-goal-sub" id="v25TaskSub">0 / 0 completadas</div>
+    <div class="v25-bar"><span id="v25TaskBar" style="width:0%"></span></div>
+  </div>
+  <div class="v25-goal-card">
+    <h4>🏋️ Entrenamiento</h4>
+    <div class="v25-goal-value" id="v25WorkoutValue">0</div>
+    <div class="v25-goal-sub" id="v25WorkoutSub">sesiones hoy</div>
+    <div class="v25-bar"><span id="v25WorkoutBar" style="width:0%"></span></div>
+  </div>
+  <div class="v25-goal-card">
+    <h4>🍽️ Alimentación</h4>
+    <div class="v25-goal-value" id="v25MealValue">0 / 6</div>
+    <div class="v25-goal-sub" id="v25MealSub">comidas cargadas</div>
+    <div class="v25-bar"><span id="v25MealBar" style="width:0%"></span></div>
+  </div>
+  <div class="v25-goal-card">
+    <h4>🔥 Racha</h4>
+    <div class="v25-goal-value" id="v25StreakValue">0 días</div>
+    <div class="v25-goal-sub">actividad consecutiva</div>
+    <div class="v25-goal-actions">
+      <button class="v25-btn primary" id="v25QuickAddBtn" type="button">＋ Rápido</button>
+    </div>
+  </div>
+</div>
+
 
 
   <div class="reminder-panel" id="reminderPanel">
@@ -2245,6 +2315,234 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
   function syncSettingsExtras(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const s=$v('settingsRefreshStatus');if(s)s.textContent=$v('refreshStatus')?.textContent||'Listo'}
 function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras();$v('v15ThemeBtn')?.addEventListener('click',()=>{toggleTheme();syncSettingsExtras()});$v('v15FocusBtn')?.addEventListener('click',()=>{toggleFocus();syncSettingsExtras()});$v('topSearchBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openSearch()});document.getElementById('topSearchBtn')?.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();openSearch()});$v('v15SearchClose')?.addEventListener('click',closeSearch);$v('v15SearchInput')?.addEventListener('input',e=>renderSearch(e.target.value));$v('v15SearchOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeSearch()});$v('v15ExportBtn')?.addEventListener('click',exportData);$v('settingsImportBtn')?.addEventListener('click',()=>{$v('importDataInput')?.click()});$v('importDataInput')?.addEventListener('change',async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;window.__pendingImportFile=f;$v('importSelectModal')?.classList.add('show')});$v('importSelectClose')?.addEventListener('click',()=>{$v('importSelectModal')?.classList.remove('show');window.__pendingImportFile=null});$v('importSelectCancel')?.addEventListener('click',()=>{$v('importSelectModal')?.classList.remove('show');window.__pendingImportFile=null});$v('importSelectConfirm')?.addEventListener('click',async()=>{const f=window.__pendingImportFile;if(!f)return;const selected={tasks:$v('impTasks')?.checked!==false,dates:$v('impDates')?.checked!==false,exercises:$v('impExercises')?.checked!==false,logs:$v('impLogs')?.checked!==false,meals:$v('impMeals')?.checked!==false};$v('importSelectModal')?.classList.remove('show');window.__pendingImportFile=null;try{await importMyData(f,selected)}catch(err){console.error(err);setImportProgress('',false);alert('No se pudo importar el archivo.\n\n'+(err?.message||err))}});$v('settingsReminderBtn')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();closeSettings();const p=$v('reminderPanel');if(p){p.classList.add('open');p.style.zIndex='140';}if(typeof updateReminderUI==='function')updateReminderUI();syncSettingsExtras();});$v('settingsInstallBtn')?.addEventListener('click',()=>{$v('installAppBtn')?.click()});$v('settingsLogoutBtn')?.addEventListener('click',async()=>{closeSettings();await sb.auth.signOut()});$v('settingsTopBtn')?.addEventListener('click',openSettings);$v('settingsClose')?.addEventListener('click',closeSettings);$v('settingsOverlay')?.addEventListener('click',closeSettings);document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openSearch();return}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='q'){e.preventDefault();openQuickActions();return}if(e.key==='Escape'){closeSearch();closeSettings()}});setInterval(()=>{const d=$v('v15DateLabel');if(d)d.textContent=todayLabel();syncSettingsExtras()},60000)}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initV16);else initV16();
+})();
+</script>
+
+<div class="v25-sheet" id="v25QuickSheet">
+  <div class="v25-sheet-card">
+    <div class="v25-sheet-head">
+      <div>
+        <div class="v25-sheet-title">⚡ Acción rápida</div>
+        <div class="v25-goal-sub">Creá algo sin navegar por toda la app.</div>
+      </div>
+      <button class="v25-btn" id="v25QuickClose" type="button">Cerrar</button>
+    </div>
+    <div class="v25-goal-actions">
+      <button class="v25-btn primary" data-v25-action="task" type="button">📚 Tarea</button>
+      <button class="v25-btn primary" data-v25-action="meal" type="button">🍽️ Comida</button>
+      <button class="v25-btn primary" data-v25-action="workout" type="button">🏋️ Ejercicio</button>
+      <button class="v25-btn primary" data-v25-action="date" type="button">📅 Fecha</button>
+    </div>
+  </div>
+</div>
+
+
+<script id="v25-upgrades-script">
+(function(){
+  const q = id => document.getElementById(id);
+
+  function v25TodayIndex(){
+    return typeof getTodayIndex==='function' ? getTodayIndex() : 0;
+  }
+
+  function v25TodayKey(){
+    return typeof todayISO==='function' ? todayISO() : new Date().toISOString().slice(0,10);
+  }
+
+  function v25ComputeStreak(){
+    try{
+      if(typeof computeCurrentStreak==='function') return computeCurrentStreak();
+    }catch(_){}
+    return 0;
+  }
+
+  function v25UpdateDashboard(){
+    try{
+      const day = selectedDay;
+      const dayTasks = (tasks||[]).filter(t=>Number(t.day)===day);
+      const done = dayTasks.filter(t=>t.completed).length;
+      const taskPct = dayTasks.length ? Math.round(done/dayTasks.length*100) : 0;
+      q('v25TaskPct').textContent = taskPct+'%';
+      q('v25TaskSub').textContent = `${done} / ${dayTasks.length} completadas`;
+      q('v25TaskBar').style.width = taskPct+'%';
+
+      const todayLogs = (workoutLogs||[]).filter(l=>String(l.performed_at)===v25TodayKey()).length;
+      q('v25WorkoutValue').textContent = String(todayLogs);
+      q('v25WorkoutSub').textContent = todayLogs===1 ? 'sesión hoy' : 'sesiones hoy';
+      q('v25WorkoutBar').style.width = Math.min(100,todayLogs?100:0)+'%';
+
+      const meals = (nutritionMeals||[]).filter(m=>Number(m.day)===nutritionDay).length;
+      const mealPct = Math.min(100,Math.round(meals/6*100));
+      q('v25MealValue').textContent = `${meals} / 6`;
+      q('v25MealSub').textContent = 'comidas cargadas';
+      q('v25MealBar').style.width = mealPct+'%';
+
+      q('v25StreakValue').textContent = v25ComputeStreak()+' días';
+    }catch(err){console.warn('v25 dashboard',err)}
+  }
+
+  function v25SetOffline(on){
+    const dot=q('v25OfflineDot'), text=q('v25OfflineText');
+    if(!dot||!text)return;
+    dot.classList.toggle('off',!on);
+    text.textContent = on ? 'Conectado' : 'Sin conexión · datos locales';
+  }
+
+  function v25CacheSnapshot(){
+    try{
+      if(!currentUser)return;
+      const key='agendaSnapshot:'+currentUser.id;
+      const snap={
+        saved_at:new Date().toISOString(),
+        tasks:tasks||[],
+        personalDates:personalDates||[],
+        workoutExercises:workoutExercises||[],
+        workoutLogs:workoutLogs||[],
+        nutritionMeals:nutritionMeals||[]
+      };
+      localStorage.setItem(key,JSON.stringify(snap));
+    }catch(err){console.warn('No se pudo guardar caché',err)}
+  }
+
+  function v25LoadSnapshot(){
+    try{
+      if(!currentUser)return false;
+      const raw=localStorage.getItem('agendaSnapshot:'+currentUser.id);
+      if(!raw)return false;
+      const snap=JSON.parse(raw);
+      if(Array.isArray(snap.tasks)) tasks=snap.tasks;
+      if(Array.isArray(snap.personalDates)) personalDates=snap.personalDates;
+      if(Array.isArray(snap.workoutExercises)) workoutExercises=snap.workoutExercises;
+      if(Array.isArray(snap.workoutLogs)) workoutLogs=snap.workoutLogs;
+      if(Array.isArray(snap.nutritionMeals)) nutritionMeals=snap.nutritionMeals;
+      createDays?.(); renderSchedule?.(); updateStats?.(); renderDashboard?.(); renderWorkoutDays?.(); renderWorkoutList?.(); renderWorkoutHistory?.(); renderNutritionDays?.(); renderMealTabs?.(); renderNutritionList?.(); renderNutritionGoals?.(); renderConflicts?.();
+      return true;
+    }catch(err){console.warn('No se pudo leer caché',err);return false}
+  }
+
+  async function v25LoadFresh(){
+    if(!currentUser)return;
+    const loaders=[
+      ['tareas', typeof loadTasks==='function'?loadTasks:null],
+      ['fechas', typeof loadPersonalDates==='function'?loadPersonalDates:null],
+      ['ejercicios', typeof loadWorkoutExercises==='function'?loadWorkoutExercises:null],
+      ['historial', typeof loadWorkoutLogs==='function'?loadWorkoutLogs:null],
+      ['comidas', typeof loadNutritionMeals==='function'?loadNutritionMeals:null],
+    ];
+    for(const [name,fn] of loaders){
+      if(typeof fn!=='function')continue;
+      try{ await fn(); }catch(err){console.warn('v25 '+name,err)}
+      try{
+        createDays?.(); renderSchedule?.(); updateStats?.(); renderDashboard?.();
+        renderWorkoutDays?.(); renderWorkoutList?.(); renderWorkoutHistory?.();
+        renderNutritionDays?.(); renderMealTabs?.(); renderNutritionList?.(); renderNutritionGoals?.();
+        renderConflicts?.(); renderSmartDashboard?.(); renderTodayTimeline?.();
+      }catch(err){console.warn('v25 render '+name,err)}
+    }
+    v25CacheSnapshot();
+    if(typeof loadSharedEvents==='function'){
+      try{ await loadSharedEvents(); renderCalendar?.(); updateNotice?.(); }catch(err){console.warn('v25 events',err)}
+    }
+  }
+
+  function v25OpenQuick(){
+    q('v25QuickSheet')?.classList.add('show');
+  }
+  function v25CloseQuick(){
+    q('v25QuickSheet')?.classList.remove('show');
+  }
+
+  function v25DoQuick(type){
+    v25CloseQuick();
+    if(type==='task' && typeof openTaskModal==='function'){
+      const now = typeof getArgentinaNow==='function' ? getArgentinaNow() : new Date();
+      openTaskModal(Math.max(7,Math.min(22,now.getHours())), Math.max(0,Math.min(59,now.getMinutes())));
+    }else if(type==='meal' && typeof openNutritionModal==='function'){
+      openNutritionPanel?.(); openNutritionModal();
+    }else if(type==='workout' && typeof openExerciseModal==='function'){
+      openWorkoutPanel?.(); openExerciseModal();
+    }else if(type==='date' && typeof openDateModal==='function'){
+      openDateModal(null, v25TodayKey());
+    }
+  }
+
+  function v25EnsureSearch(){
+    const overlay=q('v25SearchOverlay') || q('v15SearchOverlay');
+    const input=q('v25SearchInput') || q('v15SearchInput');
+    if(!overlay || !input){
+      // Search UI is supplied by the existing v23/v24 layer.
+      return;
+    }
+  }
+
+  window.addEventListener('online',()=>{v25SetOffline(true); v25LoadFresh();});
+  window.addEventListener('offline',()=>v25SetOffline(false));
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    const host = document.querySelector('#dashboard') || document.querySelector('.dashboard') || document.querySelector('#app');
+    const anchor = document.querySelector('.stats') || document.querySelector('.dashboard') || document.querySelector('.days');
+    if(anchor && !q('v25Goals')) anchor.insertAdjacentHTML('afterend',extra_html);
+
+    if(!q('v25QuickSheet')) document.body.insertAdjacentHTML('beforeend',sheet_html);
+
+    const topbar = document.querySelector('.topbar .userbar');
+    if(topbar && !q('v25OfflineDot')){
+      const wrap=document.createElement('div');
+      wrap.className='v25-offline';
+      wrap.innerHTML='<span class="v25-dot" id="v25OfflineDot"></span><span id="v25OfflineText">Conectado</span>';
+      topbar.insertBefore(wrap, topbar.firstChild);
+    }
+
+    q('v25QuickAddBtn')?.addEventListener('click',v25OpenQuick);
+    q('v25QuickClose')?.addEventListener('click',v25CloseQuick);
+    q('v25QuickSheet')?.addEventListener('click',e=>{
+      if(e.target===e.currentTarget)v25CloseQuick();
+      const btn=e.target.closest('[data-v25-action]');
+      if(btn)v25DoQuick(btn.dataset.v25Action);
+    });
+
+    v25SetOffline(navigator.onLine);
+    if(currentUser && !navigator.onLine) v25LoadSnapshot();
+    v25UpdateDashboard();
+
+    setInterval(v25UpdateDashboard,30000);
+    setInterval(v25CacheSnapshot,60000);
+    window.addEventListener('focus',v25UpdateDashboard);
+  });
+})();
+</script>
+
+
+<nav class="mobile-bottom-nav" id="v26MobileNav" aria-label="Navegación móvil">
+  <div class="mobile-nav-inner">
+    <button type="button" data-v26-nav="home" class="active"><span class="mobile-nav-icon">⌂</span>Inicio</button>
+    <button type="button" data-v26-nav="agenda"><span class="mobile-nav-icon">🗓️</span>Agenda</button>
+    <button type="button" data-v26-nav="workout"><span class="mobile-nav-icon">🏋️</span>Entreno</button>
+    <button type="button" data-v26-nav="nutrition"><span class="mobile-nav-icon">🍽️</span>Comida</button>
+  </div>
+</nav>
+
+<script id="v26-mobile-nav-fix">
+(function(){
+ function byId(id){return document.getElementById(id)}
+ function setActive(k){document.querySelectorAll('#v26MobileNav [data-v26-nav]').forEach(b=>b.classList.toggle('active',b.dataset.v26Nav===k))}
+ function scrollToEl(el){if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),20)}
+ function openDest(k){
+  if(k==='home'){setActive('home');scrollToEl(byId('dashboard')||document.querySelector('.dashboard')||byId('app'));return}
+  if(k==='agenda'){
+   setActive('agenda');
+   const calendar=byId('calendarPanel');
+   // Agenda is the single destination for schedule/calendar on mobile.
+   // Do not open a second bottom menu.
+   if(calendar && calendar.classList.contains('open')) scrollToEl(calendar); else scrollToEl(byId('schedule'));
+   return
+  }
+  if(k==='workout'){setActive('workout');if(typeof openWorkoutPanel==='function')openWorkoutPanel();scrollToEl(byId('workoutPanel'));return}
+  if(k==='nutrition'){setActive('nutrition');if(typeof openNutritionPanel==='function')openNutritionPanel();scrollToEl(byId('nutritionPanel'))}
+ }
+ function removeLegacy(){['.bottom-nav','.mobile-nav-legacy','#mobileNavLegacy','#legacyMobileNav','.mobile-bottom-navigation','.mobile-navigation-bar','.mobile-bottom-bar'].forEach(s=>document.querySelectorAll(s).forEach(n=>{if(n.id!=='v26MobileNav')n.remove()}))}
+ function init(){removeLegacy();const nav=byId('v26MobileNav');if(!nav)return;nav.querySelectorAll('[data-v26-nav]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();openDest(b.dataset.v26Nav)}))}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 </body>
