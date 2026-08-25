@@ -9,9 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Agenda FICH">
 <link rel="manifest" href="./manifest.webmanifest">
 <title>Agenda FICH</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">setInterval(()=>{if(currentUser&&!document.hidden){renderSmartDashboard();renderTodayTimeline();}},30000);
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#0f172a;--card:#111827;--card2:#1e293b;--line:#334155;--text:#fff;--muted:#94a3b8;--blue:#3b82f6;--blue2:#2563eb;--danger:#ef4444;--yellow:#f59e0b;--green:#22c55e;--orange:#f97316;--purple:#a855f7;--shadow:0 16px 40px rgba(0,0,0,.24)}
 *{box-sizing:border-box;margin:0;padding:0} body{font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#0b1120,#0f172a);color:var(--text);min-height:100vh}
@@ -722,7 +720,7 @@ body.light .v15-search-scope{color:#1d4ed8;background:#eff6ff;border-color:#bfdb
 </style>
 
 <style id="v24-upgrades">
-.mobile-nav,.quick-actions,.import-select-modal{display:none}.mobile-nav{position:fixed;left:10px;right:10px;bottom:10px;height:62px;z-index:155;grid-template-columns:repeat(5,1fr);background:rgba(15,23,42,.93);border:1px solid rgba(148,163,184,.18);border-radius:18px;box-shadow:0 18px 45px rgba(0,0,0,.28);backdrop-filter:blur(14px);padding:5px}.mobile-nav-btn{border:0;background:transparent;color:#94a3b8;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:800}.mobile-nav-btn span{font-size:18px;line-height:1}.mobile-nav-btn small{font-size:8px}.mobile-nav-btn.active{background:rgba(59,130,246,.16);color:#dbeafe}.quick-actions,.import-select-modal{position:fixed;inset:0;z-index:170;align-items:flex-end;justify-content:center;background:rgba(2,6,23,.62);backdrop-filter:blur(9px);padding:16px}.import-select-modal{align-items:center}.quick-actions.show,.import-select-modal.show{display:flex}.quick-actions-card,.import-select-card{width:min(520px,100%);background:rgba(17,24,39,.98);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.42);padding:15px}.quick-actions-head,.import-select-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.quick-actions-head strong,.import-select-head strong{color:#fff;font-size:14px}.quick-actions-head button,.import-select-head button{width:34px;height:34px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:18px}.quick-actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick-actions-grid button{min-height:94px;border:1px solid rgba(148,163,184,.16);border-radius:16px;background:rgba(255,255,255,.05);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:25px;font-weight:800}.quick-actions-grid button span{font-size:10px;color:#cbd5e1}.import-select-head small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.import-select-card label{display:flex;align-items:center;gap:9px;padding:11px;border-radius:12px;margin:6px 0;background:rgba(255,255,255,.04);color:#e2e8f0;font-size:11px}.import-select-card input{width:17px;height:17px;accent-color:#2563eb}.import-select-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.import-select-actions button{padding:10px 14px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#e2e8f0;font-weight:800}.import-select-actions button:last-child{background:#2563eb;color:#fff;border-color:#3b82f6}body{padding-bottom:82px}.mobile-nav{display:grid}.quick-actions{padding-bottom:82px}body.light .quick-actions-card,body.light .import-select-card{background:#fff;border-color:#dbe3ee}body.light .quick-actions-head strong,body.light .import-select-head strong{color:#0f172a}body.light .quick-actions-grid button{background:#f8fafc;color:#0f172a;border-color:#dbe3ee}body.light .quick-actions-grid button span{color:#64748b}body.light .import-select-card label{background:#f8fafc;color:#334155}
+.mobile-nav,.quick-actions,.import-select-modal{display:none}.mobile-nav{position:fixed;left:10px;right:10px;bottom:10px;height:62px;z-index:155;grid-template-columns:repeat(4,1fr);background:rgba(15,23,42,.93);border:1px solid rgba(148,163,184,.18);border-radius:18px;box-shadow:0 18px 45px rgba(0,0,0,.28);backdrop-filter:blur(14px);padding:5px}.mobile-nav-btn{border:0;background:transparent;color:#94a3b8;border-radius:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:800}.mobile-nav-btn span{font-size:18px;line-height:1}.mobile-nav-btn small{font-size:8px}.mobile-nav-btn.active{background:rgba(59,130,246,.16);color:#dbeafe}.quick-actions,.import-select-modal{position:fixed;inset:0;z-index:170;align-items:flex-end;justify-content:center;background:rgba(2,6,23,.62);backdrop-filter:blur(9px);padding:16px}.import-select-modal{align-items:center}.quick-actions.show,.import-select-modal.show{display:flex}.quick-actions-card,.import-select-card{width:min(520px,100%);background:rgba(17,24,39,.98);border:1px solid var(--line);border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.42);padding:15px}.quick-actions-head,.import-select-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}.quick-actions-head strong,.import-select-head strong{color:#fff;font-size:14px}.quick-actions-head button,.import-select-head button{width:34px;height:34px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;font-size:18px}.quick-actions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick-actions-grid button{min-height:94px;border:1px solid rgba(148,163,184,.16);border-radius:16px;background:rgba(255,255,255,.05);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:25px;font-weight:800}.quick-actions-grid button span{font-size:10px;color:#cbd5e1}.import-select-head small{display:block;color:var(--muted);font-size:10px;margin-top:3px}.import-select-card label{display:flex;align-items:center;gap:9px;padding:11px;border-radius:12px;margin:6px 0;background:rgba(255,255,255,.04);color:#e2e8f0;font-size:11px}.import-select-card input{width:17px;height:17px;accent-color:#2563eb}.import-select-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.import-select-actions button{padding:10px 14px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#e2e8f0;font-weight:800}.import-select-actions button:last-child{background:#2563eb;color:#fff;border-color:#3b82f6}@media(max-width:700px){body{padding-bottom:82px}.mobile-nav{display:grid}.quick-actions{padding-bottom:82px}}body.light .quick-actions-card,body.light .import-select-card{background:#fff;border-color:#dbe3ee}body.light .quick-actions-head strong,body.light .import-select-head strong{color:#0f172a}body.light .quick-actions-grid button{background:#f8fafc;color:#0f172a;border-color:#dbe3ee}body.light .quick-actions-grid button span{color:#64748b}body.light .import-select-card label{background:#f8fafc;color:#334155}
 </style>
 
 <style id="v25-upgrades-style">
@@ -754,9 +752,10 @@ body.light .v25-reminder-badge{background:#eff6ff;color:#1d4ed8;border-color:#bf
 
 <style id="v26-final-mobile-fix">
 @media(max-width:700px){
-  /* The floating navigation is now the only section selector. */
-  .section-switcher{display:none!important}
-  .mobile-nav{position:fixed!important;left:10px!important;right:10px!important;bottom:10px!important;z-index:155!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important}
+  /* The old section switcher and the newer mobile nav were both fixed to the bottom.
+     Keep only the newer four-item mobile nav. */
+  .section-switcher{position:static!important;display:grid!important;grid-template-columns:1fr!important;gap:9px!important;margin:0 0 14px!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}
+  .mobile-nav{position:fixed!important;left:10px!important;right:10px!important;bottom:10px!important;z-index:155!important;display:grid!important}
   body{padding-bottom:88px!important}
   #quickAddFab{bottom:88px!important}
 
@@ -770,7 +769,7 @@ body.light .v25-reminder-badge{background:#eff6ff;color:#1d4ed8;border-color:#bf
 }
 @media(max-width:380px){
   .mobile-nav{left:6px!important;right:6px!important;bottom:6px!important}
-  .mobile-nav-btn small{font-size:7px!important}.mobile-nav{grid-template-columns:repeat(5,1fr)!important}
+  .mobile-nav-btn small{font-size:7px!important}
 }
 </style>
 <style id="v27-polish">.topbar .brand{display:none!important}.topbar{justify-content:flex-end!important}@media(max-width:700px){.topbar{min-height:54px;padding:7px 10px!important;align-items:center!important}.userbar{width:100%;justify-content:flex-end!important;margin-left:auto}#topSearchBtn{width:42px!important;min-width:42px!important;height:42px!important;padding:0!important;border-radius:12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;font-size:18px!important;position:relative!important;z-index:90!important}#topSearchBtn span,#topSearchBtn::after{display:none!important}#settingsTopBtn{width:42px!important;min-width:42px!important;height:42px!important;padding:0!important}.days{top:54px!important}}#topSearchBtn{cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.exercise-left-wrap{display:flex;align-items:flex-start;min-width:0}.exercise-order{display:flex;flex-direction:column;align-items:center;gap:4px;margin-right:8px;flex:0 0 auto}.exercise-order-num{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(59,130,246,.12);border:1px solid rgba(96,165,250,.20);color:#bfdbfe;font-size:11px;font-weight:900}.exercise-move{width:26px;height:21px;border-radius:7px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.04);color:#cbd5e1;cursor:pointer;font-size:11px;line-height:1}.exercise-move:disabled{opacity:.28;cursor:default}body.light .exercise-order-num{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}body.light .exercise-move{background:#fff;border-color:#dbe3ee;color:#334155}@media(max-width:600px){.exercise-order{margin-right:6px}.exercise-order-num{width:28px;height:28px}.exercise-move{width:24px;height:20px}}</style>
@@ -824,14 +823,39 @@ body.v32-training-active .progress-controls,
 body.v32-training-active .exercise-progress,
 body.v32-training-active #addExerciseBtn,
 body.v32-training-active #v31TrainingMini{display:none!important}
-.v32-section-nav,.v32-section-btn{display:none!important}
+.v32-section-nav{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 0 16px;padding-bottom:2px}
+.v32-section-nav::-webkit-scrollbar{display:none}
+.v32-section-btn{flex:0 0 auto;min-width:112px;min-height:52px;padding:9px 11px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:#cbd5e1;font-size:10px;font-weight:900;cursor:pointer}
+.v32-section-btn.active{color:#fff;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa}
 .v32-home-pane,.v32-agenda-pane,.v32-calendar-pane,.v32-workout-pane,.v32-nutrition-pane{display:none!important}
 .v32-section-active{display:block!important}
 .v32-section-title{margin:0 0 12px}
 .v32-section-title strong{font-size:18px}.v32-section-title span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
 body.light .v32-section-btn{background:#fff;color:#475569;border-color:#dbe3ee}
 body.light .v32-section-btn.active{color:#fff}
-@media(max-width:700px){.v32-section-title strong{font-size:17px}}
+@media(max-width:700px){.v32-section-btn{min-width:100px}.v32-section-title strong{font-size:17px}}
+</style>
+
+
+<style id="final-single-floating-nav">
+/* Único selector de secciones: la navegación flotante. */
+.section-switcher,#v32SectionNav{display:none!important}
+.mobile-nav{display:grid!important}
+.mobile-nav-btn{min-height:52px;padding:5px 4px}
+.mobile-nav-btn span{font-size:18px;line-height:1}
+.mobile-nav-btn small{font-size:8px;line-height:1.15;text-align:center}
+.mobile-nav-btn .nav-title{font-size:9px;font-weight:900;line-height:1.05}
+.mobile-nav-btn .nav-sub{font-size:7px;color:#94a3b8;font-weight:500;line-height:1.1;margin-top:1px}
+.mobile-nav-btn.active .nav-sub{color:#bfdbfe}
+body.light .mobile-nav-btn .nav-sub{color:#64748b}
+body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
+@media(max-width:700px){
+  .mobile-nav{left:6px!important;right:6px!important;bottom:6px!important;height:auto!important;min-height:64px!important;grid-template-columns:repeat(5,minmax(0,1fr))!important}
+  .mobile-nav-btn{min-height:56px}
+}
+@media(min-width:701px){
+  .mobile-nav{left:18px!important;right:18px!important;bottom:16px!important;height:68px!important}
+}
 </style>
 
 </head>
@@ -860,6 +884,15 @@ body.light .v32-section-btn.active{color:#fff}
   </div>
 
   <div class="days" id="days"></div>
+
+<div class="v32-section-nav" id="v32SectionNav">
+  <button class="v32-section-btn active" data-v32-section="home" type="button">🏠 Inicio</button>
+  <button class="v32-section-btn" data-v32-section="agenda" type="button">🕒 Agenda</button>
+  <button class="v32-section-btn" data-v32-section="calendar" type="button">📅 Calendario</button>
+  <button class="v32-section-btn" data-v32-section="workout" type="button">🏋️ Entrenamiento</button>
+  <button class="v32-section-btn" data-v32-section="nutrition" type="button">🍽️ Alimentación</button>
+</div>
+
 
 <div class="v25-goals" id="v25Goals">
   <div class="v25-goal-card">
@@ -1124,6 +1157,23 @@ body.light .v32-section-btn.active{color:#fff}
   <div class="settings-note">Los cambios visuales se guardan en este dispositivo. Tus tareas, fechas, entrenamientos y comidas continúan guardándose en tu cuenta.</div>
 </aside>
 
+<div class="section-switcher">
+      <button class="toggle section-tab" id="calendarToggle">
+        <span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
+        <span class="toggle-icon" id="calendarIcon">+</span>
+      </button>
+
+      <button class="toggle section-tab" id="workoutToggle">
+        <span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span>
+        <span class="toggle-icon" id="workoutIcon">+</span>
+      </button>
+
+      <button class="toggle section-tab" id="nutritionToggle">
+        <span>🍽️ Alimentación<small>Tu plan semanal personal</small></span>
+        <span class="toggle-icon" id="nutritionIcon">+</span>
+      </button>
+    </div>
+
     <div class="section-stage">
       <div class="v32-section-title v32-calendar-pane"><strong>📅 Calendario</strong><span>Feriados, paros, fechas importantes y eventos compartidos.</span></div><section class="calendar section-view v32-calendar-pane" id="calendarPanel">
         <div class="cal-head">
@@ -1240,11 +1290,21 @@ body.light .v32-section-btn.active{color:#fff}
 
 
 <nav class="mobile-nav" id="mobileNav" aria-label="Navegación principal">
-<button class="mobile-nav-btn active" id="mobileNavHome" data-v32-section="home" type="button"><span>⌂</span><small>Inicio</small></button>
-<button class="mobile-nav-btn" id="mobileNavSchedule" data-v32-section="agenda" type="button"><span>🗓</span><small>Agenda</small></button>
-<button class="mobile-nav-btn" id="mobileNavCalendar" data-v32-section="calendar" type="button"><span>📅</span><small>Calendario</small></button>
-<button class="mobile-nav-btn" id="mobileNavWorkout" data-v32-section="workout" type="button"><span>🏋️</span><small>Entrenamiento</small></button>
-<button class="mobile-nav-btn" id="mobileNavFood" data-v32-section="nutrition" type="button"><span>🍽️</span><small>Alimentación</small></button>
+<button class="mobile-nav-btn active" id="mobileNavHome" data-v32-section="home" type="button">
+  <span>⌂</span><span class="nav-title">Inicio</span><span class="nav-sub">Resumen de hoy</span>
+</button>
+<button class="mobile-nav-btn" id="mobileNavSchedule" data-v32-section="agenda" type="button">
+  <span>🗓</span><span class="nav-title">Agenda</span><span class="nav-sub">Horario y tareas</span>
+</button>
+<button class="mobile-nav-btn" id="mobileNavCalendar" data-v32-section="calendar" type="button">
+  <span>📅</span><span class="nav-title">Calendario</span><span class="nav-sub">Feriados y eventos</span>
+</button>
+<button class="mobile-nav-btn" id="mobileNavWorkout" data-v32-section="workout" type="button">
+  <span>🏋️</span><span class="nav-title">Entrenamiento</span><span class="nav-sub">Rutina semanal</span>
+</button>
+<button class="mobile-nav-btn" id="mobileNavFood" data-v32-section="nutrition" type="button">
+  <span>🍽️</span><span class="nav-title">Alimentación</span><span class="nav-sub">Plan y objetivos</span>
+</button>
 </nav>
 <div class="quick-actions" id="quickActions" aria-hidden="true"><div class="quick-actions-card"><div class="quick-actions-head"><strong>Agregar rápidamente</strong><button id="quickActionsClose" type="button">×</button></div><div class="quick-actions-grid"><button id="quickTaskBtn" type="button">📚<span>Tarea</span></button><button id="quickMealBtn" type="button">🍽️<span>Comida</span></button><button id="quickExerciseBtn" type="button">🏋️<span>Ejercicio</span></button><button id="quickDateBtn" type="button">📅<span>Fecha</span></button></div></div></div>
 <div class="import-select-modal" id="importSelectModal" aria-hidden="true"><div class="import-select-card"><div class="import-select-head"><div><strong>📥 Importar datos</strong><small>Elegí qué partes querés importar</small></div><button id="importSelectClose" type="button">×</button></div><label><input id="impTasks" type="checkbox" checked> 📚 Tareas</label><label><input id="impDates" type="checkbox" checked> 📅 Fechas</label><label><input id="impExercises" type="checkbox" checked> 🏋️ Rutinas y ejercicios</label><label><input id="impLogs" type="checkbox" checked> 📈 Historial</label><label><input id="impMeals" type="checkbox" checked> 🍽️ Alimentación</label><div class="import-select-actions"><button id="importSelectCancel" type="button">Cancelar</button><button id="importSelectConfirm" type="button">Continuar</button></div></div></div>
@@ -1364,7 +1424,31 @@ body.light .v32-section-btn.active{color:#fff}
 <script>
 const SUPABASE_URL='https://lfxqdqtkniqhloonisxu.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_VqXwNNTwwkd_T2sWcTZ3eg_vphUilwA';
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+let sb=null;
+let supabaseReadyPromise=null;
+
+function ensureSupabase(){
+  if(window.supabase?.createClient){
+    if(!sb) sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+    return Promise.resolve(sb);
+  }
+  if(supabaseReadyPromise)return supabaseReadyPromise;
+  supabaseReadyPromise=new Promise((resolve,reject)=>{
+    const script=document.createElement('script');
+    script.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+    script.async=true;
+    script.onload=()=>{
+      try{
+        if(!window.supabase?.createClient)throw new Error('La librería de Supabase no quedó disponible.');
+        sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+        resolve(sb);
+      }catch(err){reject(err)}
+    };
+    script.onerror=()=>reject(new Error('No se pudo cargar la librería de Supabase. Revisá tu conexión a Internet o el bloqueo del CDN.'));
+    document.head.appendChild(script);
+  });
+  return supabaseReadyPromise;
+}
 
 const DAYS=['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
 const HOURS=[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22];
@@ -1411,7 +1495,27 @@ function authMessage(text,type='error'){const el=$('authMsg');el.textContent=tex
 function setAuthMode(mode){authMode=mode;$('loginTab').classList.toggle('active',mode==='login');$('registerTab').classList.toggle('active',mode==='register');$('authSubmit').textContent=mode==='login'?'Entrar':'Crear cuenta';$('authMsg').className='msg';}
 $('loginTab').onclick=()=>setAuthMode('login');
 $('registerTab').onclick=()=>setAuthMode('register');
-$('authForm').onsubmit=async e=>{e.preventDefault();const email=$('authEmail').value.trim();const password=$('authPassword').value;authMessage('Procesando...','ok');if(authMode==='register'){const {data,error}=await sb.auth.signUp({email,password});if(error){authMessage(error.message);return;} if(!data.session){authMessage('Cuenta creada. Revisá tu email si la confirmación está activada.','ok');return;} }else{const {error}=await sb.auth.signInWithPassword({email,password});if(error){authMessage(error.message);return;}}};
+$('authForm').onsubmit=async e=>{
+  e.preventDefault();
+  const email=$('authEmail').value.trim();
+  const password=$('authPassword').value;
+  if(!email||!password){authMessage('Completá email y contraseña.');return;}
+  authMessage('Conectando con Supabase...','ok');
+  try{
+    const client=await ensureSupabase();
+    if(authMode==='register'){
+      const {data,error}=await client.auth.signUp({email,password});
+      if(error){authMessage(error.message);return;}
+      if(!data.session){authMessage('Cuenta creada. Revisá tu email si la confirmación está activada.','ok');return;}
+    }else{
+      const {error}=await client.auth.signInWithPassword({email,password});
+      if(error){authMessage(error.message);return;}
+    }
+  }catch(err){
+    console.error('Supabase Auth:',err);
+    authMessage(err?.message||'No se pudo conectar con Supabase.');
+  }
+};
 $('logoutBtn').onclick=async()=>{await sb.auth.signOut();};
 
 $('reminderBtn').onclick=e=>{e.preventDefault();e.stopPropagation();$('reminderPanel').classList.toggle('open');updateReminderUI();};
@@ -1421,7 +1525,19 @@ $('reminderEnable').onclick=()=>{if(remindersEnabled)disableReminders();else ena
 document.addEventListener('click',e=>{const panel=$('reminderPanel');const btn=$('reminderBtn');const settingsBtn=$('settingsReminderBtn');if(panel?.classList.contains('open')&&!panel.contains(e.target)&&e.target!==btn&&e.target!==settingsBtn)panel.classList.remove('open');});
 
 
-async function init(){const {data:{session}}=await sb.auth.getSession();await handleSession(session);sb.auth.onAuthStateChange(async(_event,session)=>{await handleSession(session);});}
+async function init(){
+  try{
+    const client=await ensureSupabase();
+    const {data:{session}}=await client.auth.getSession();
+    await handleSession(session);
+    client.auth.onAuthStateChange(async(_event,session)=>{try{await handleSession(session)}catch(err){console.error('Cambio de sesión:',err)}});
+  }catch(err){
+    console.error('Inicialización de Supabase:',err);
+    $('authScreen').classList.remove('hidden');
+    $('app').classList.add('hidden');
+    authMessage(err?.message||'No se pudo inicializar Supabase.');
+  }
+}
 async function handleSession(session){
   if(!session){
     currentUser=null;
@@ -1721,7 +1837,7 @@ function setMobileNav(id){document.querySelectorAll('.mobile-nav-btn').forEach(b
 function setupV24Nav(){
  $('quickAddFab')?.addEventListener('click',openQuickActions);$('quickActionsClose')?.addEventListener('click',closeQuickActions);$('quickActions')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeQuickActions()});
  $('quickTaskBtn')?.addEventListener('click',()=>{closeQuickActions();const n=getArgentinaNow();openTaskModal(Math.max(7,Math.min(22,n.getHours())),n.getMinutes())});$('quickMealBtn')?.addEventListener('click',()=>{closeQuickActions();openNutritionPanel();setTimeout(()=>openNutritionModal(),120)});$('quickExerciseBtn')?.addEventListener('click',()=>{closeQuickActions();openWorkoutPanel();setTimeout(()=>openExerciseModal(),120)});$('quickDateBtn')?.addEventListener('click',()=>{closeQuickActions();openDateModal(null,todayISO())});
- $('mobileNavHome')?.addEventListener('click',()=>{setMobileNav('mobileNavHome');window.scrollTo({top:0,behavior:'smooth'})});$('mobileNavSchedule')?.addEventListener('click',()=>{setMobileNav('mobileNavSchedule');$('schedule')?.scrollIntoView({behavior:'smooth',block:'start'})});$('mobileNavWorkout')?.addEventListener('click',()=>{setMobileNav('mobileNavWorkout');openWorkoutPanel()});$('mobileNavFood')?.addEventListener('click',()=>{setMobileNav('mobileNavFood');openNutritionPanel()});
+ // La navegación de secciones es gestionada por V32 (un único menú flotante).
 }
 // quickAddFab handled by setupV24Nav()
 
@@ -2652,14 +2768,13 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
         loadNutritionMeals().then(()=>{renderMealTabs?.();renderNutritionList?.();renderNutritionGoals?.()});
       }
     }
-    document.querySelectorAll('#v32SectionNav [data-v32-section], #mobileNav [data-v32-section]').forEach(b=>b.classList.toggle('active',b.dataset.v32Section===name));
+    document.querySelectorAll('#v32SectionNav [data-v32-section]').forEach(b=>b.classList.toggle('active',b.dataset.v32Section===name));
     localStorage.setItem('agendaV32Section',name);
     window.scrollTo({top:0,behavior:'smooth'});
   }
   function bind(){
-    const topNav=document.querySelectorAll('#v32SectionNav [data-v32-section]');
-    topNav.forEach(b=>b.addEventListener('click',()=>setSection(b.dataset.v32Section)));
-    const map={mobileNavHome:'home',mobileNavSchedule:'agenda',mobileNavCalendar:'calendar',mobileNavWorkout:'workout',mobileNavFood:'nutrition'};
+    document.querySelectorAll('#v32SectionNav [data-v32-section]').forEach(b=>b.addEventListener('click',()=>setSection(b.dataset.v32Section)));
+    const map={mobileNavHome:'home',mobileNavAgenda:'agenda',mobileNavWorkout:'workout',mobileNavNutrition:'nutrition'};
     Object.entries(map).forEach(([id,name])=>document.getElementById(id)?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();setSection(name)},{capture:true}));
     setSection(localStorage.getItem('agendaV32Section')||'home');
   }
