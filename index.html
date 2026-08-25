@@ -2850,7 +2850,7 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
     const open=document.getElementById('v28WorkoutOverlay')?.classList.contains('show');
     document.body.classList.toggle('v32-training-active',!!open);
   }
-  function renderV33(){try{renderV33Plan();renderHabits();renderNotes();setTimeout(decorateTasks,0)}catch(_){} }
+  function renderV33(){try{habits=readJSON('habits',[]);notes=readJSON('notes',[]);priorityMap=readJSON('priorities',{});renderV33Plan();renderHabits();renderNotes();setTimeout(decorateTasks,0)}catch(_){} }
   function init(){
     sync();
     const o=document.getElementById('v28WorkoutOverlay');
@@ -3004,7 +3004,7 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
     if(typeof renderSchedule==='function'&&!renderSchedule.__v33){const old=renderSchedule;const wrapped=function(){const r=old.apply(this,arguments);try{setTimeout(decorateTasks,0);renderV33Plan()}catch(_){}return r};wrapped.__v33=true;window.renderSchedule=wrapped;}
   }
 
-  function renderV33(){try{renderV33Plan();renderHabits();renderNotes();setTimeout(decorateTasks,0)}catch(_){} }
+  function renderV33(){try{habits=readJSON('habits',[]);notes=readJSON('notes',[]);priorityMap=readJSON('priorities',{});renderV33Plan();renderHabits();renderNotes();setTimeout(decorateTasks,0)}catch(_){} }
   function init(){
     try{injectTaskFields();patchTaskModal();patchTaskSave();upgradeQuickActions();ensureV33Tools();keyboard();patchDashboard();renderV33Plan();renderHabits();renderNotes();}catch(err){console.warn('V33 init',err)}
     const mo=new MutationObserver(()=>{try{patchTaskSave();upgradeQuickActions();ensureV33Tools();decorateTasks()}catch(_){}});mo.observe(document.body,{childList:true,subtree:true});
@@ -3014,5 +3014,207 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
 })();
 </script>
 
+
+<div class="overlay v34-modal" id="v34RecurringOverlay" aria-hidden="true">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head"><div><h3>🔁 Tarea recurrente</h3><span>Creá varias ocurrencias semanales de una sola vez.</span></div><button class="close" id="v34RecurringClose" type="button">×</button></div>
+    <div class="field"><label>Título</label><input class="input" id="v34RecurringTitle" placeholder="Ej: Estudiar cálculo"></div>
+    <div class="field"><label>Descripción</label><input class="input" id="v34RecurringDesc" placeholder="Opcional"></div>
+    <div class="field"><label>Días</label><div class="v34-days" id="v34RecurringDays"></div></div>
+    <div class="minute-row"><div class="field"><label>Hora</label><input class="input" id="v34RecurringHour" type="number" min="7" max="22" value="18"></div><div class="field"><label>Minuto</label><select class="input" id="v34RecurringMinute"></select></div></div>
+    <div class="field"><label>Prioridad</label><select class="input" id="v34RecurringPriority"><option value="urgent">🔴 Urgente</option><option value="high">🟠 Alta</option><option value="normal" selected>🔵 Normal</option><option value="low">⚪ Baja</option></select></div>
+    <div class="v34-sub">La tarea quedará guardada en Supabase para cada día seleccionado. Después podés editar o eliminar cada ocurrencia normalmente.</div>
+    <button class="save" id="v34RecurringSave" type="button">Crear tareas recurrentes</button>
+  </div>
+</div>
+
+<style id="v34-upgrades-style">
+.v34-home{margin-top:12px;padding:15px;border-radius:20px;background:linear-gradient(135deg,rgba(59,130,246,.10),rgba(34,197,94,.05));border:1px solid rgba(96,165,250,.16);box-shadow:0 12px 30px rgba(0,0,0,.10)}
+.v34-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:12px}.v34-head h3{font-size:14px}.v34-head p{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+.v34-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:10px}.v34-card{padding:12px;border-radius:15px;background:rgba(15,23,42,.68);border:1px solid rgba(148,163,184,.12);min-width:0}.v34-card h4{font-size:11px;color:#bfdbfe;margin-bottom:8px}.v34-main{font-size:18px;font-weight:900;line-height:1.3}.v34-sub{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.45}.v34-progress{height:8px;margin-top:9px;border-radius:999px;background:#1e293b;overflow:hidden}.v34-progress span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3b82f6,#22c55e);width:0}.v34-list{display:flex;flex-direction:column;gap:6px;max-height:170px;overflow:auto}.v34-row{display:flex;align-items:center;gap:8px;padding:8px 9px;border-radius:11px;background:rgba(255,255,255,.035);border:1px solid rgba(148,163,184,.10)}.v34-row strong{font-size:10px}.v34-row small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.v34-time{font-size:9px;color:#93c5fd;font-weight:900;white-space:nowrap}.v34-chip{display:inline-flex;padding:5px 8px;border-radius:999px;border:1px solid rgba(148,163,184,.14);background:rgba(255,255,255,.045);color:#dbeafe;font-size:9px;font-weight:800}
+.v34-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.v34-btn{padding:8px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer}.v34-btn.primary{background:rgba(59,130,246,.12);border-color:rgba(96,165,250,.22)}.v34-btn:hover{border-color:#60a5fa}
+.v34-filterbar{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}.v34-filter{padding:7px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#cbd5e1;font-size:9px;font-weight:800;cursor:pointer}.v34-filter.active{background:rgba(59,130,246,.12);border-color:#60a5fa;color:#dbeafe}
+.v34-overdue{box-shadow:0 0 0 2px rgba(239,68,68,.18) inset!important}.v34-overdue-label{font-size:9px;color:#fecaca;font-weight:900;margin:4px 0 0 28px}.v34-free{color:#bbf7d0}
+.v34-modal .modal{max-width:680px}.v34-days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.v34-day-check{display:flex;align-items:center;justify-content:center;padding:9px 4px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.04);color:#cbd5e1;font-size:10px;font-weight:800;cursor:pointer}.v34-day-check input{display:none}.v34-day-check.active{background:rgba(59,130,246,.14);border-color:#60a5fa;color:#dbeafe}
+.v34-insight-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}.v34-insight{padding:9px;border-radius:12px;background:rgba(17,24,39,.58);border:1px solid rgba(148,163,184,.10)}.v34-insight strong{display:block;font-size:13px;color:#dbeafe}.v34-insight span{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+body.light .v34-home{background:rgba(255,255,255,.92);border-color:#dbe3ee}body.light .v34-card,body.light .v34-insight,body.light .v34-row{background:#fff;border-color:#dbe3ee;color:#0f172a}body.light .v34-btn,body.light .v34-filter,body.light .v34-day-check{background:#f8fafc;color:#334155;border-color:#dbe3ee}body.light .v34-sub,body.light .v34-row small{color:#64748b}
+@media(max-width:900px){.v34-grid{grid-template-columns:1fr 1fr}.v34-grid .v34-card:first-child{grid-column:1/-1}.v34-insight-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.v34-grid{grid-template-columns:1fr}.v34-grid .v34-card:first-child{grid-column:auto}.v34-insight-grid{grid-template-columns:1fr 1fr}.v34-days{grid-template-columns:repeat(4,1fr)}.v34-home{padding:12px}}
+</style>
+
+<script id="v34-upgrades-script">
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
+  const userKey=name=>`agendaV34:${currentUser?.id||'guest'}:${name}`;
+  const getJSON=(name,fallback)=>{try{const r=localStorage.getItem(userKey(name));return r?JSON.parse(r):fallback}catch(_){return fallback}};
+  const setJSON=(name,v)=>{try{localStorage.setItem(userKey(name),JSON.stringify(v))}catch(_){}};
+  const days=Array.isArray(DAYS)?DAYS:['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  const pad=n=>String(n).padStart(2,'0');
+  function todayIndex(){try{return typeof getTodayIndex==='function'?getTodayIndex():new Date().getDay()===0?6:new Date().getDay()-1}catch(_){return 0}}
+  function todayDate(){try{return typeof todayISO==='function'?todayISO():new Date().toISOString().slice(0,10)}catch(_){return new Date().toISOString().slice(0,10)}}
+  function taskPriority(t){return typeof getPriority==='function'?getPriority(t):'normal'}
+  const rank={urgent:0,high:1,normal:2,low:3};
+  function timeMin(t){return Number(t.hour||0)*60+Number(t.minute||0)}
+  function homeTasks(){const d=todayIndex();return (tasks||[]).filter(t=>Number(t.day)===d).slice().sort((a,b)=>timeMin(a)-timeMin(b)||rank[taskPriority(a)]-rank[taskPriority(b)])}
+  function minutesNow(){const n=typeof getArgentinaNow==='function'?getArgentinaNow():new Date();return n.getHours()*60+n.getMinutes()}
+  function nextTask(list){const now=minutesNow();return list.filter(t=>!t.completed&&timeMin(t)>=now).sort((a,b)=>timeMin(a)-timeMin(b)||rank[taskPriority(a)]-rank[taskPriority(b)])[0]||list.filter(t=>!t.completed).sort((a,b)=>timeMin(a)-timeMin(b)||rank[taskPriority(a)]-rank[taskPriority(b)])[0]||null}
+  function freeSlots(list){const busy=list.map(timeMin).sort((a,b)=>a-b);const slots=[];for(let h=7;h<=21;h++){const s=h*60,e=s+60;if(!busy.some(x=>x>=s&&x<e))slots.push(`${pad(h)}:00`)}return slots.slice(0,4)}
+
+  function buildHome(){
+    if(q('v34Home'))return;
+    const anchor=q('v33Tools')||q('smartPanel')||q('dashboard');if(!anchor)return;
+    const sec=document.createElement('section');sec.id='v34Home';sec.className='v34-home v32-home-pane';sec.dataset.v33Pane='home';sec.dataset.v34Pane='home';
+    sec.innerHTML=`<div class="v34-head"><div><h3>🧠 Asistente de tu día</h3><p id="v34DateLabel">Hoy</p></div><div class="streak-badge" id="v34SmartBadge">Todo tranquilo</div></div><div class="v34-grid"><div class="v34-card"><h4>🎯 Próxima prioridad</h4><div class="v34-main" id="v34NextTitle">Sin tareas pendientes</div><div class="v34-sub" id="v34NextMeta">Tu agenda está libre por ahora.</div><div class="v34-progress"><span id="v34DayProgress"></span></div><div class="v34-actions"><button class="v34-btn primary" id="v34FocusNext" type="button">Enfocar</button><button class="v34-btn" id="v34AddRecurring" type="button">🔁 Recurrente</button></div></div><div class="v34-card"><h4>📊 Estado del día</h4><div id="v34DayStats" class="v34-list"></div></div><div class="v34-card"><h4>🕒 Tiempo libre</h4><div id="v34FreeList" class="v34-list"></div><div class="v34-actions"><button class="v34-btn" id="v34SmartPlanBtn" type="button">🧭 Recalcular plan</button></div></div></div><div class="v34-insight-grid"><div class="v34-insight"><strong id="v34Pending">0</strong><span>pendientes hoy</span></div><div class="v34-insight"><strong id="v34Done">0%</strong><span>tareas completadas</span></div><div class="v34-insight"><strong id="v34Urgent">0</strong><span>urgentes</span></div><div class="v34-insight"><strong id="v34HabitDone">0</strong><span>hábitos de hoy</span></div></div>`;
+    anchor.after(sec);
+    q('v34FocusNext').onclick=()=>typeof focusNextTask==='function'?focusNextTask():v34Focus();
+    q('v34SmartPlanBtn').onclick=renderHome;
+    q('v34AddRecurring').onclick=openRecurring;
+  }
+  function renderHome(){
+    const sec=q('v34Home');if(!sec)return;const list=homeTasks();const done=list.filter(t=>t.completed).length;const pending=list.length-done;const urgent=list.filter(t=>!t.completed&&taskPriority(t)==='urgent').length;const next=nextTask(list);
+    q('v34DateLabel').textContent=`${days[todayIndex()]} · ${todayDate()}`;
+    q('v34NextTitle').textContent=next?next.title:'No hay tareas pendientes';
+    q('v34NextMeta').textContent=next?`${pad(next.hour)}:${pad(next.minute)} · ${taskPriority(next)==='urgent'?'🔴 Urgente':taskPriority(next)==='high'?'🟠 Alta':'Tarea pendiente'}`:'Aprovechá el día para planificar algo importante.';
+    q('v34DayProgress').style.width=(list.length?Math.round(done/list.length*100):0)+'%';
+    q('v34Pending').textContent=String(pending);q('v34Done').textContent=(list.length?Math.round(done/list.length*100):100)+'%';q('v34Urgent').textContent=String(urgent);
+    const hb=(typeof habits!=='undefined'?habits:getJSON('habits',[]))||[];const td=todayDate();q('v34HabitDone').textContent=String(hb.filter(h=>(h.doneDates||[]).includes(td)).length);
+    const badge=q('v34SmartBadge');if(urgent>0){badge.textContent=`⚠️ ${urgent} urgente${urgent>1?'s':''}`;badge.className='streak-badge'}else if(next){badge.textContent='✅ Día organizado'}else{badge.textContent='🌿 Todo tranquilo'}
+    const stats=q('v34DayStats');stats.innerHTML='';[[list.length,'actividades'],[done,'completadas'],[pending,'pendientes'],[urgent,'urgentes']].forEach(([n,l])=>{const r=document.createElement('div');r.className='v34-row';r.innerHTML=`<div><strong>${n}</strong><small>${l}</small></div>`;stats.appendChild(r)});
+    const free=q('v34FreeList');free.innerHTML='';const slots=freeSlots(list);if(!slots.length){free.innerHTML='<div class="v34-row"><div><strong>Agenda bastante ocupada</strong><small>No encontré bloques libres de una hora.</small></div></div>'}else slots.forEach(x=>{const r=document.createElement('div');r.className='v34-row';r.innerHTML=`<span class="v34-time">${x}</span><div><strong class="v34-free">Bloque libre</strong><small>Buen momento para estudiar, descansar o hacer una tarea rápida.</small></div>`;free.appendChild(r)});
+  }
+  function v34Focus(){const list=homeTasks(),next=nextTask(list);if(!next){alert('No tenés tareas pendientes para hoy.');return}if(typeof v32SetSection==='function')v32SetSection('agenda');selectedDay=todayIndex();createDays?.();renderSchedule?.();setTimeout(()=>{const card=[...document.querySelectorAll('.task')].find(el=>el.textContent.includes(next.title)&&el.textContent.includes(`${pad(next.hour)}:${pad(next.minute)}`));card?.scrollIntoView({behavior:'smooth',block:'center'});},180)}
+
+  function buildRecurring(){
+    if(q('v34RecurringDays').children.length)return;
+    q('v34RecurringMinute').innerHTML='';for(let m=0;m<60;m++) {const o=document.createElement('option');o.value=m;o.textContent=pad(m);q('v34RecurringMinute').appendChild(o)}
+    days.forEach((d,i)=>{const lab=document.createElement('label');lab.className='v34-day-check'+(i===todayIndex()?' active':'');lab.innerHTML=`<input type="checkbox" value="${i}" ${i===todayIndex()?'checked':''}><span>${d.slice(0,3)}</span>`;lab.querySelector('input').onchange=e=>lab.classList.toggle('active',e.target.checked);q('v34RecurringDays').appendChild(lab)});
+  }
+  function openRecurring(){buildRecurring();q('v34RecurringOverlay').classList.add('show');q('v34RecurringOverlay').setAttribute('aria-hidden','false');q('v34RecurringTitle').focus()}
+  function closeRecurring(){q('v34RecurringOverlay').classList.remove('show');q('v34RecurringOverlay').setAttribute('aria-hidden','true')}
+  async function saveRecurring(){
+    if(!currentUser?.id){alert('Primero iniciá sesión.');return}
+    const title=q('v34RecurringTitle').value.trim();if(!title){alert('Escribí un título.');return}
+    const selected=[...q('v34RecurringDays').querySelectorAll('input:checked')].map(x=>Number(x.value));if(!selected.length){alert('Elegí al menos un día.');return}
+    const hour=Math.max(7,Math.min(22,Number(q('v34RecurringHour').value)||18));const minute=Math.max(0,Math.min(59,Number(q('v34RecurringMinute').value)||0));const description=q('v34RecurringDesc').value.trim();const priority=q('v34RecurringPriority').value||'normal';
+    const rows=selected.map(day=>({user_id:currentUser.id,title,description,day,hour,minute,completed:false}));
+    const {data,error}=await sb.from('tasks').insert(rows).select('*');if(error){alert(error.message);return}
+    const pkey=`agendaV33:${currentUser.id}:priorities`;try{const pm=JSON.parse(localStorage.getItem(pkey)||'{}');(data||rows).forEach(t=>{if(t?.id)pm[String(t.id)]=priority});localStorage.setItem(pkey,JSON.stringify(pm))}catch(_){}
+    (data||rows).forEach(t=>{if(t?.id&&typeof setPriority==='function')setPriority(t,priority)});
+    closeRecurring();q('v34RecurringTitle').value='';q('v34RecurringDesc').value='';await loadTasks();createDays?.();renderSchedule?.();updateStats?.();renderDashboard?.();renderConflicts?.();renderHome();alert(`Se crearon ${selected.length} tareas recurrentes.`);
+  }
+
+  function addCalendarFilters(){
+    const panel=q('calendarPanel');if(!panel||q('v34CalendarFilters'))return;const h=panel.querySelector('.cal-head');if(!h)return;const bar=document.createElement('div');bar.id='v34CalendarFilters';bar.className='v34-filterbar';bar.innerHTML=`<button class="v34-filter active" data-filter="all" type="button">Todo</button><button class="v34-filter" data-filter="holiday" type="button">🇦🇷 Feriados</button><button class="v34-filter" data-filter="teacher" type="button">🟠 Docentes</button><button class="v34-filter" data-filter="nonteacher" type="button">🔴 No docentes</button><button class="v34-filter" data-filter="university" type="button">🟣 Universidad</button><button class="v34-filter" data-filter="important" type="button">⭐ Importantes</button><button class="v34-filter" data-filter="occupied" type="button">📌 Ocupado</button>`;h.after(bar);bar.onclick=e=>{const b=e.target.closest('[data-filter]');if(!b)return;bar.querySelectorAll('.v34-filter').forEach(x=>x.classList.toggle('active',x===b));applyCalendarFilter(b.dataset.filter)};
+  }
+  function applyCalendarFilter(filter){document.querySelectorAll('#monthGrid .event').forEach(el=>{if(filter==='all'){el.style.display='';return;}const ok=el.classList.contains(filter);el.style.display=ok?'':'none';});}
+  function wrapCalendar(){if(typeof renderCalendar!=='function'||renderCalendar.__v34)return;const old=renderCalendar;const wrapped=function(){const r=old.apply(this,arguments);setTimeout(()=>{addCalendarFilters();applyCalendarFilter(q('v34CalendarFilters')?.querySelector('.active')?.dataset.filter||'all')},0);return r};wrapped.__v34=true;window.renderCalendar=wrapped}
+
+  function enhanceTaskOverdue(){
+    document.querySelectorAll('.task').forEach(card=>{if(card.dataset.v34Checked==='1')return;const title=card.querySelector('h4')?.textContent||'';const tm=card.querySelector('.task-time')?.textContent||'';const m=tm.match(/(\d{1,2}):(\d{2})/);if(!m)return;const t=(tasks||[]).find(x=>String(x.title)===title&&Number(x.day)===Number(selectedDay)&&Number(x.hour)===Number(m[1])&&Number(x.minute)===Number(m[2]));if(!t||t.completed){card.dataset.v34Checked='1';return}if(Number(selectedDay)===todayIndex()&&timeMin(t)<minutesNow()){card.classList.add('v34-overdue');const tag=document.createElement('div');tag.className='v34-overdue-label';tag.textContent='⏰ Pendiente';card.appendChild(tag)}card.dataset.v34Checked='1'});
+  }
+
+  function smartSearch(){
+    const input=q('v15SearchInput');if(!input||input.dataset.v34==='1')return;input.dataset.v34='1';input.setAttribute('autocomplete','off');
+    const hints=document.createElement('div');hints.className='v34-filterbar';hints.style.padding='8px 12px 0';hints.innerHTML=`<button class="v34-filter" data-smart="pending" type="button">Pendientes</button><button class="v34-filter" data-smart="today" type="button">Hoy</button><button class="v34-filter" data-smart="urgent" type="button">Urgentes</button>`;input.parentElement?.parentElement?.appendChild(hints);hints.onclick=e=>{const b=e.target.closest('[data-smart]');if(!b)return;const kind=b.dataset.smart;closeSearch?.();if(typeof v32SetSection==='function')v32SetSection('agenda');selectedDay=todayIndex();createDays?.();renderSchedule?.();setTimeout(()=>{if(kind==='urgent'){const target=[...document.querySelectorAll('.task')].find(el=>el.querySelector('.v33-priority')?.dataset.priority==='urgent'&&!el.classList.contains('completed'));target?.scrollIntoView({behavior:'smooth',block:'center'});}else if(kind==='pending'){const target=[...document.querySelectorAll('.task')].find(el=>!el.classList.contains('completed'));target?.scrollIntoView({behavior:'smooth',block:'center'});}else{document.getElementById('schedule')?.scrollIntoView({behavior:'smooth',block:'start'});}},220)};
+  }
+  function patch(){
+    buildHome();buildRecurring();wrapCalendar();smartSearch();
+    if(q('v34RecurringClose'))q('v34RecurringClose').onclick=closeRecurring;
+    if(q('v34RecurringOverlay'))q('v34RecurringOverlay').onclick=e=>{if(e.target===e.currentTarget)closeRecurring()};
+    if(q('v34RecurringSave'))q('v34RecurringSave').onclick=saveRecurring;
+    const grid=document.querySelector('.quick-actions-grid');if(grid&&!q('v34QuickRecurring')){const b=document.createElement('button');b.id='v34QuickRecurring';b.type='button';b.innerHTML='🔁<span>Recurrente</span>';grid.appendChild(b);b.onclick=()=>{closeQuickActions?.();openRecurring()};}
+    if(typeof renderDashboard==='function'&&!renderDashboard.__v34){const old=renderDashboard;const w=function(){const r=old.apply(this,arguments);setTimeout(renderHome,0);return r};w.__v34=true;window.renderDashboard=w}
+    if(typeof renderSchedule==='function'&&!renderSchedule.__v34){const old=renderSchedule;const w=function(){const r=old.apply(this,arguments);setTimeout(enhanceTaskOverdue,0);return r};w.__v34=true;window.renderSchedule=w}
+    renderHome();setTimeout(enhanceTaskOverdue,0);
+  }
+  function init(){
+    try{patch();document.addEventListener('keydown',e=>{if(e.key==='Escape')closeRecurring();});window.addEventListener('focus',renderHome);setInterval(renderHome,30000)}catch(e){console.warn('V34',e)}
+    const mo=new MutationObserver(()=>{try{buildHome();wrapCalendar();smartSearch();enhanceTaskOverdue()}catch(_){}});mo.observe(document.body,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+<style id="v35-upgrades-style">
+.v35-focus-overlay{position:fixed;inset:0;background:rgba(2,6,23,.72);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;padding:16px;z-index:420}.v35-focus-overlay.show{display:flex}
+.v35-focus-shell{width:min(520px,100%);background:rgba(17,24,39,.985);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 30px 90px rgba(0,0,0,.45)}.v35-focus-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.v35-focus-head h3{font-size:18px}.v35-focus-head p{font-size:10px;color:var(--muted);margin-top:4px}.v35-focus-close{width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.07);color:#fff;cursor:pointer;font-size:18px}.v35-focus-task{margin-top:14px;padding:12px;border-radius:14px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.15)}.v35-focus-task strong{display:block;font-size:13px}.v35-focus-task span{display:block;margin-top:4px;color:var(--muted);font-size:10px}.v35-focus-clock{font-size:56px;font-weight:900;text-align:center;margin:18px 0 12px;letter-spacing:.04em}.v35-focus-mode{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}.v35-focus-mode button,.v35-focus-actions button{padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:#dbeafe;font-size:10px;font-weight:800;cursor:pointer}.v35-focus-mode button.active{background:rgba(59,130,246,.14);border-color:#60a5fa}.v35-focus-actions{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}.v35-focus-actions .primary{width:auto;padding:10px 16px}.v35-focus-tip{text-align:center;color:var(--muted);font-size:9px;margin-top:11px;line-height:1.4}
+.v35-week{margin-top:12px;padding:14px;border-radius:18px;background:rgba(15,23,42,.58);border:1px solid rgba(148,163,184,.12)}.v35-week-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px}.v35-week-head h3{font-size:13px}.v35-week-head p{font-size:9px;color:var(--muted);margin-top:3px}.v35-week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.v35-week-day{padding:8px 6px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(148,163,184,.10);text-align:center}.v35-week-day.today{border-color:rgba(96,165,250,.32);background:rgba(59,130,246,.07)}.v35-week-day strong{display:block;font-size:9px}.v35-week-day span{display:block;font-size:8px;color:var(--muted);margin-top:3px}.v35-week-bar{height:6px;border-radius:999px;background:#1e293b;overflow:hidden;margin-top:6px}.v35-week-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3b82f6,#22c55e);width:0}.v35-week-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}.v35-week-stat{padding:8px 9px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(148,163,184,.10)}.v35-week-stat strong{display:block;font-size:13px;color:#dbeafe}.v35-week-stat span{display:block;font-size:8px;color:var(--muted);margin-top:2px}
+.v35-agenda-tools{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}.v35-agenda-filter{padding:7px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#cbd5e1;font-size:9px;font-weight:800;cursor:pointer}.v35-agenda-filter.active{background:rgba(59,130,246,.12);border-color:#60a5fa;color:#dbeafe}.v35-hidden-task{display:none!important}
+body.light .v35-focus-shell{background:#fff;color:#0f172a;border-color:#dbe3ee}.light .v35-focus-close{background:#f1f5f9;color:#334155}.light .v35-focus-task,.light .v35-focus-mode button,.light .v35-focus-actions button,.light .v35-week,.light .v35-week-day,.light .v35-week-stat,.light .v35-agenda-filter{background:#f8fafc;color:#334155;border-color:#dbe3ee}.light .v35-focus-task span,.light .v35-week-head p,.light .v35-week-day span,.light .v35-week-stat span{color:#64748b}
+@media(max-width:700px){.v35-week-grid{grid-template-columns:repeat(4,1fr)}.v35-week-summary{grid-template-columns:1fr 1fr}.v35-focus-clock{font-size:44px}}
+</style>
+
+<div class="v35-focus-overlay" id="v35FocusOverlay" aria-hidden="true">
+  <div class="v35-focus-shell" onclick="event.stopPropagation()">
+    <div class="v35-focus-head"><div><h3>🎯 Modo concentración</h3><p>Trabajá en una sola tarea y dejá la agenda tranquila mientras te enfocás.</p></div><button class="v35-focus-close" id="v35FocusClose" type="button">×</button></div>
+    <div class="v35-focus-task"><strong id="v35FocusTaskTitle">Sin tarea seleccionada</strong><span id="v35FocusTaskMeta">Elegí una tarea pendiente para empezar.</span></div>
+    <div class="v35-focus-clock" id="v35FocusClock">25:00</div>
+    <div class="v35-focus-mode"><button type="button" data-v35-min="25" class="active">25 min</button><button type="button" data-v35-min="50">50 min</button><button type="button" data-v35-min="5">5 min</button></div>
+    <div class="v35-focus-actions"><button class="primary" id="v35FocusStart" type="button">▶ Iniciar</button><button id="v35FocusPause" type="button">⏸ Pausar</button><button id="v35FocusReset" type="button">↺ Reiniciar</button><button id="v35FocusComplete" type="button">✅ Completar tarea</button></div>
+    <div class="v35-focus-tip">El temporizador se guarda localmente por usuario y continúa mientras la pestaña siga abierta.</div>
+  </div>
+</div>
+
+<script id="v35-upgrades-script">
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const pad=n=>String(n).padStart(2,'0');
+  const days=Array.isArray(DAYS)?DAYS:['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+  const key=n=>`agendaV35:${currentUser?.id||'guest'}:${n}`;
+  const read=(n,f)=>{try{const r=localStorage.getItem(key(n));return r?JSON.parse(r):f}catch(_){return f}};
+  const write=(n,v)=>{try{localStorage.setItem(key(n),JSON.stringify(v))}catch(_){}};
+  function todayIdx(){try{return typeof getTodayIndex==='function'?getTodayIndex():((new Date().getDay()+6)%7)}catch(_){return 0}}
+  function dateForIndex(i){try{if(typeof localDateForDay==='function')return localDateForDay(i);const d=new Date();const diff=i-todayIdx();d.setDate(d.getDate()+diff);return d}catch(_){return new Date()}}
+  function dayKey(i){const d=dateForIndex(i);return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
+  function renderWeeklyReview(){
+    const home=q('v34Home');if(!home||q('v35Week'))return;
+    const week=document.createElement('section');week.id='v35Week';week.className='v35-week v32-home-pane';week.dataset.v33Pane='home';week.innerHTML=`<div class="v35-week-head"><div><h3>📈 Resumen semanal</h3><p>Una vista rápida de cómo viene tu semana.</p></div><span class="streak-badge" id="v35BestDay">—</span></div><div class="v35-week-grid" id="v35WeekGrid"></div><div class="v35-week-summary"><div class="v35-week-stat"><strong id="v35WeekDone">0%</strong><span>tareas completadas</span></div><div class="v35-week-stat"><strong id="v35WeekTotal">0</strong><span>tareas totales</span></div><div class="v35-week-stat"><strong id="v35WeekActive">0/7</strong><span>días activos</span></div><div class="v35-week-stat"><strong id="v35WeekSessions">0</strong><span>sesiones de gym</span></div></div>`;
+    home.after(week);
+    const grid=q('v35WeekGrid');let total=0,done=0,active=0,best={idx:0,pct:-1};
+    for(let i=0;i<7;i++){
+      const items=(tasks||[]).filter(t=>Number(t.day)===i);const d=items.length;const c=items.filter(t=>t.completed).length;const pct=d?Math.round(c/d*100):0;if(d||c)active++;if(pct>best.pct){best={idx:i,pct}}total+=d;done+=c;
+      const el=document.createElement('div');el.className='v35-week-day'+(i===todayIdx()?' today':'');el.innerHTML=`<strong>${days[i].slice(0,3)}</strong><span>${c}/${d}</span><div class="v35-week-bar"><i style="width:${pct}%"></i></div>`;grid.appendChild(el);
+    }
+    q('v35WeekDone').textContent=(total?Math.round(done/total*100):100)+'%';q('v35WeekTotal').textContent=String(total);q('v35WeekActive').textContent=`${active}/7`;
+    const wkLogs=(workoutLogs||[]).filter(l=>{const d=new Date(String(l.performed_at)+'T12:00:00');const today=dateForIndex(todayIdx());const start=new Date(today);start.setDate(start.getDate()-((today.getDay()+6)%7));const end=new Date(start);end.setDate(start.getDate()+7);return d>=start&&d<end}).length;q('v35WeekSessions').textContent=String(wkLogs);
+    q('v35BestDay').textContent=best.pct>0?`⭐ Mejor: ${days[best.idx].slice(0,3)} ${best.pct}%`:'Sin mejor día todavía';
+  }
+
+  let focusMinutes=25,focusRemaining=1500,focusTimer=null,focusRunning=false,focusTaskId=null;
+  function fmt(sec){const s=Math.max(0,Math.floor(sec));return `${pad(Math.floor(s/60))}:${pad(s%60)}`}
+  function pickFocusTask(){const now=typeof getArgentinaNow==='function'?getArgentinaNow():new Date();const min=now.getHours()*60+now.getMinutes();const pending=(tasks||[]).filter(t=>Number(t.day)===todayIdx()&&!t.completed).sort((a,b)=>(Number(a.hour)*60+Number(a.minute)-min)-(Number(b.hour)*60+Number(b.minute)-min));return pending[0]||pending.find(t=>getPriority?.(t)==='urgent')||null}
+  function openFocus(task=null){const t=task||pickFocusTask();focusTaskId=t?.id||null;q('v35FocusTaskTitle').textContent=t?t.title:'Sin tarea seleccionada';q('v35FocusTaskMeta').textContent=t?`${days[Number(t.day)]} · ${pad(t.hour)}:${pad(t.minute)}`:'Podés usarlo como temporizador libre.';q('v35FocusOverlay').classList.add('show');q('v35FocusOverlay').setAttribute('aria-hidden','false')}
+  function closeFocus(){pauseFocus();q('v35FocusOverlay').classList.remove('show');q('v35FocusOverlay').setAttribute('aria-hidden','true')}
+  function paintFocus(){q('v35FocusClock').textContent=fmt(focusRemaining);q('v35FocusStart').textContent=focusRunning?'▶ En curso':'▶ Iniciar'}
+  function startFocus(){if(focusRunning)return;focusRunning=true;focusTimer=setInterval(()=>{focusRemaining--;paintFocus();if(focusRemaining<=0){pauseFocus();if(navigator.vibrate)try{navigator.vibrate([180,80,180])}catch(_){};alert('¡Bloque de concentración terminado!');}},1000);paintFocus()}
+  function pauseFocus(){focusRunning=false;if(focusTimer){clearInterval(focusTimer);focusTimer=null}paintFocus()}
+  function resetFocus(){pauseFocus();focusRemaining=focusMinutes*60;paintFocus()}
+  async function completeFocusTask(){if(!focusTaskId){alert('No hay una tarea seleccionada.');return}const t=(tasks||[]).find(x=>String(x.id)===String(focusTaskId));if(!t)return; if(typeof toggleTaskComplete==='function')await toggleTaskComplete(t); else {const {error}=await sb.from('tasks').update({completed:true}).eq('id',t.id);if(error){alert(error.message);return}await loadTasks()}renderWeeklyReview();closeFocus()}
+
+  function addAgendaFilters(){
+    const target=q('schedule');if(!target||q('v35AgendaTools'))return;const host=document.createElement('div');host.id='v35AgendaTools';host.className='v35-agenda-tools';host.innerHTML=`<button type="button" class="v35-agenda-filter active" data-f35="all">Todas</button><button type="button" class="v35-agenda-filter" data-f35="pending">Pendientes</button><button type="button" class="v35-agenda-filter" data-f35="completed">Completadas</button><button type="button" class="v35-agenda-filter" data-f35="urgent">🔴 Urgentes</button><button type="button" class="v35-agenda-filter" data-f35="high">🟠 Alta</button>`;
+    target.parentNode.insertBefore(host,target);host.addEventListener('click',e=>{const b=e.target.closest('[data-f35]');if(!b)return;host.querySelectorAll('.v35-agenda-filter').forEach(x=>x.classList.toggle('active',x===b));applyAgendaFilter(b.dataset.f35)});
+  }
+  function applyAgendaFilter(mode){document.querySelectorAll('#schedule .task').forEach(card=>{const title=card.querySelector('h4')?.textContent||'';const time=card.querySelector('.task-time')?.textContent||'';const m=time.match(/(\d{1,2}):(\d{2})/);const t=(tasks||[]).find(x=>String(x.title)===title&&Number(x.day)===Number(selectedDay)&&(!m||Number(x.hour)===Number(m[1])));let show=true;if(mode==='pending')show=!!t&&!t.completed;if(mode==='completed')show=!!t&&t.completed;if(mode==='urgent')show=!!t&&!t.completed&&(typeof getPriority==='function'?getPriority(t):'normal')==='urgent';if(mode==='high')show=!!t&&!t.completed&&(typeof getPriority==='function'?getPriority(t):'normal')==='high';card.classList.toggle('v35-hidden-task',!show);});}
+  function wrapSchedule(){if(typeof renderSchedule!=='function'||renderSchedule.__v35)return;const old=renderSchedule;const w=function(){const r=old.apply(this,arguments);setTimeout(()=>{addAgendaFilters();const active=q('v35AgendaTools')?.querySelector('.active')?.dataset.f35||'all';applyAgendaFilter(active)},0);return r};w.__v35=true;window.renderSchedule=w}
+
+  function bind(){
+    addAgendaFilters();wrapSchedule();
+    if(q('v35FocusClose'))q('v35FocusClose').onclick=closeFocus;
+    if(q('v35FocusOverlay'))q('v35FocusOverlay').onclick=e=>{if(e.target===e.currentTarget)closeFocus()};
+    if(q('v35FocusStart'))q('v35FocusStart').onclick=startFocus;q('v35FocusPause').onclick=pauseFocus;q('v35FocusReset').onclick=resetFocus;q('v35FocusComplete').onclick=completeFocusTask;
+    document.querySelectorAll('[data-v35-min]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-v35-min]').forEach(x=>x.classList.toggle('active',x===b));focusMinutes=Number(b.dataset.v35Min)||25;resetFocus()});
+    const actions=q('v34Home')?.querySelector('.v34-actions');if(actions&&!q('v35FocusHomeBtn')){const b=document.createElement('button');b.id='v35FocusHomeBtn';b.className='v34-btn';b.type='button';b.textContent='🎯 Concentración';b.onclick=()=>openFocus();actions.appendChild(b)}
+    renderWeeklyReview();
+    setInterval(()=>{renderWeeklyReview()},60000);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFocus();if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==='f'){e.preventDefault();openFocus()}});
+  }
+  function init(){try{bind()}catch(e){console.warn('V35',e)}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 </body>
 </html>
