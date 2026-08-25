@@ -858,6 +858,11 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
 }
 </style>
 
+<style id="v33-section-isolation">
+[data-v33-pane].v33-section-hidden{display:none!important}
+@media(max-width:700px){body{padding-bottom:84px}}
+</style>
+
 </head>
 <body>
 <section id="authScreen">
@@ -883,7 +888,7 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
     <div class="userbar"><button class="top-search-btn" id="topSearchBtn" type="button" aria-label="Buscar">🔎 <span>Buscar</span></button><button class="install-app ghost topbar-hidden" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden" id="refreshStatus">Listo</span><span class="user-email topbar-hidden" id="userEmail"></span><button class="ghost" id="settingsTopBtn" type="button" aria-label="Abrir ajustes">⚙</button><button class="ghost topbar-hidden" id="logoutBtn">Salir</button></div>
   </div>
 
-  <div class="days" id="days"></div>
+  <div class="days" id="days" data-v33-pane="agenda"></div>
 
 <div class="v32-section-nav" id="v32SectionNav">
   <button class="v32-section-btn active" data-v32-section="home" type="button">🏠 Inicio</button>
@@ -942,15 +947,15 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
   </div>
 
   <main class="container">
-    <div class="notice" id="notice"><strong id="noticeTitle">Aviso</strong><div id="noticeText"></div></div>
+    <div class="notice" id="notice" data-v33-pane="home"><strong id="noticeTitle">Aviso</strong><div id="noticeText"></div></div>
 
-    <div class="stats">
+    <div class="stats" data-v33-pane="home">
       <div class="stat"><div class="stat-number" id="totalTasks">0</div><div class="stat-label">Tareas</div></div>
       <div class="stat"><div class="stat-number" id="todayTasks">0</div><div class="stat-label">Hoy</div></div>
       <div class="stat"><div class="stat-number" id="freeHours">16</div><div class="stat-label">Horas libres</div></div>
     </div>
 
-    <section class="dashboard" id="dashboard">
+    <section class="dashboard" id="dashboard" data-v33-pane="home">
       <div class="dashboard-head">
         <div>
           <h2>Resumen de hoy</h2>
@@ -1011,7 +1016,7 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
         </div>
         <div class="weekly-detail" id="weeklyDetail"></div>
       </div>
-    <div class="today-timeline" id="todayTimeline">
+    <div class="today-timeline" id="todayTimeline" data-v33-pane="home">
       <div class="today-timeline-head">
         <div>
           <h3>🕒 Próximas actividades</h3>
@@ -1024,7 +1029,7 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
 
     </section>
 
-    <section class="smart-panel" id="smartPanel">
+    <section class="smart-panel" id="smartPanel" data-v33-pane="home">
       <div class="smart-head">
         <div><h3>🧠 Centro de control</h3><p>La app resume automáticamente lo más importante de tu día.</p></div>
         <div class="smart-badge" id="smartBadge">Todo tranquilo</div>
@@ -1175,7 +1180,7 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
     </div>
 
     <div class="section-stage">
-      <div class="v32-section-title v32-calendar-pane"><strong>📅 Calendario</strong><span>Feriados, paros, fechas importantes y eventos compartidos.</span></div><section class="calendar section-view v32-calendar-pane" id="calendarPanel">
+      <div class="v32-section-title v32-calendar-pane" data-v33-pane="calendar"><strong>📅 Calendario</strong><span>Feriados, paros, fechas importantes y eventos compartidos.</span></div><section class="calendar section-view v32-calendar-pane" id="calendarPanel" data-v33-pane="calendar">
         <div class="cal-head">
           <div>
             <h2>Calendario</h2>
@@ -1195,7 +1200,7 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
         <div class="cal-status" id="calendarStatus">Cargando eventos...</div>
       </section>
 
-      <div class="v32-section-title v32-workout-pane"><strong>🏋️ Entrenamiento</strong><span>Rutinas, orden y vista de entrenamiento.</span></div><section class="workout-panel section-view v32-workout-pane" id="workoutPanel">
+      <div class="v32-section-title v32-workout-pane" data-v33-pane="workout"><strong>🏋️ Entrenamiento</strong><span>Rutinas, orden y vista de entrenamiento.</span></div><section class="workout-panel section-view v32-workout-pane" id="workoutPanel" data-v33-pane="workout">
         <div class="workout-head">
           <div>
             <h2>Rutina de entrenamiento</h2>
@@ -1243,7 +1248,7 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
         </div>
       </section>
 
-      <section class="nutrition-panel section-view" id="nutritionPanel">
+      <section class="nutrition-panel section-view v32-nutrition-pane" id="nutritionPanel" data-v33-pane="nutrition">
         <div class="nutrition-head">
           <div>
             <h2>Plan de alimentación</h2>
@@ -1263,7 +1268,7 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
       </section>
     </div>
 
-    <section class="conflict-panel" id="conflictPanel">
+    <section class="conflict-panel" id="conflictPanel" data-v33-pane="agenda">
   <div class="conflict-head">
     <div>
       <h3>⚠️ Posibles conflictos</h3>
@@ -1274,7 +1279,7 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
   <div class="conflict-list" id="conflictList"></div>
 </section>
 
-    <div class="v32-section-title v32-agenda-pane"><strong>🕒 Agenda del día</strong><span>Solo horarios y tareas.</span></div><div class="schedule-block v32-agenda-pane">
+    <div class="v32-section-title v32-agenda-pane" data-v33-pane="agenda"><strong>🕒 Agenda del día</strong><span>Solo horarios y tareas.</span></div><div class="schedule-block v32-agenda-pane" data-v33-pane="agenda">
       <div class="schedule-heading">
         <div>
           <h2>Horario del día</h2>
@@ -2740,33 +2745,30 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
 <script id="v32-section-controller">
 (function(){
   const SECTION_NAMES=new Set(['home','agenda','calendar','workout','nutrition']);
-  const paneSelector='.v32-home-pane,.v32-agenda-pane,.v32-calendar-pane,.v32-workout-pane,.v32-nutrition-pane';
+  const DATA_PANE='[data-v33-pane]';
 
   function resetViews(){
-    document.querySelectorAll(paneSelector).forEach(el=>el.classList.remove('v32-section-active'));
+    document.querySelectorAll(DATA_PANE).forEach(el=>el.classList.add('v33-section-hidden'));
+    document.querySelectorAll('.v32-home-pane,.v32-agenda-pane,.v32-calendar-pane,.v32-workout-pane,.v32-nutrition-pane').forEach(el=>el.classList.remove('v32-section-active'));
   }
 
-  function showSection(selector){
-    document.querySelectorAll(selector).forEach(el=>el.classList.add('v32-section-active'));
+  function showPane(name){
+    document.querySelectorAll('[data-v33-pane="'+name+'"],.v32-'+name+'-pane').forEach(el=>{
+      el.classList.remove('v33-section-hidden');
+      if(el.classList.contains('v32-home-pane')||el.classList.contains('v32-agenda-pane')||el.classList.contains('v32-calendar-pane')||el.classList.contains('v32-workout-pane')||el.classList.contains('v32-nutrition-pane')) el.classList.add('v32-section-active');
+    });
   }
 
   function syncNavigation(name){
     document.querySelectorAll('[data-v32-section]').forEach(btn=>{
       const active=btn.dataset.v32Section===name;
       btn.classList.toggle('active',active);
-      if(btn.classList.contains('mobile-nav-btn')){
-        if(active)btn.setAttribute('aria-current','page');
-        else btn.removeAttribute('aria-current');
-      }
+      if(active)btn.setAttribute('aria-current','page'); else btn.removeAttribute('aria-current');
     });
   }
 
   function closeSectionPanels(){
-    const panels=[
-      ['calendarPanel','calendarIcon'],
-      ['workoutPanel','workoutIcon'],
-      ['nutritionPanel','nutritionIcon']
-    ];
+    const panels=[['calendarPanel','calendarIcon'],['workoutPanel','workoutIcon'],['nutritionPanel','nutritionIcon']];
     panels.forEach(([panelId,iconId])=>{
       const panel=document.getElementById(panelId);
       const icon=document.getElementById(iconId);
@@ -2777,76 +2779,67 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
 
   async function setSection(name,options={}){
     if(!SECTION_NAMES.has(name))name='home';
-    const shouldScroll=options.scroll!==false;
-
     resetViews();
     closeSectionPanels();
 
     if(name==='home'){
-      showSection('.v32-home-pane');
+      showPane('home');
     }else if(name==='agenda'){
-      showSection('.v32-agenda-pane');
+      showPane('agenda');
     }else if(name==='calendar'){
-      showSection('.v32-calendar-pane');
+      showPane('calendar');
       document.getElementById('calendarPanel')?.classList.add('open');
-      const icon=document.getElementById('calendarIcon');
-      if(icon)icon.textContent='−';
-      if(typeof loadSharedEvents==='function'){
-        try{await loadSharedEvents();}catch(err){console.warn('Calendario:',err)}
-      }
+      const icon=document.getElementById('calendarIcon'); if(icon)icon.textContent='−';
+      if(typeof loadSharedEvents==='function'){try{await loadSharedEvents();}catch(err){console.warn('Calendario:',err)}}
       if(typeof renderCalendar==='function')renderCalendar();
       if(typeof updateNotice==='function')updateNotice();
     }else if(name==='workout'){
-      showSection('.v32-workout-pane');
+      showPane('workout');
       document.getElementById('workoutPanel')?.classList.add('open');
-      const icon=document.getElementById('workoutIcon');
-      if(icon)icon.textContent='−';
+      const icon=document.getElementById('workoutIcon'); if(icon)icon.textContent='−';
       if(typeof renderWorkoutDays==='function')renderWorkoutDays();
-      if(typeof loadWorkoutExercises==='function'){
-        try{await loadWorkoutExercises();}catch(err){console.warn('Entrenamiento:',err)}
-      }
-      renderWorkoutList?.();
-      renderWorkoutHistory?.();
-      renderWorkoutAnalytics?.();
+      if(typeof loadWorkoutExercises==='function'){try{await loadWorkoutExercises();}catch(err){console.warn('Entrenamiento:',err)}}
+      renderWorkoutList?.(); renderWorkoutHistory?.(); renderWorkoutAnalytics?.();
     }else if(name==='nutrition'){
-      showSection('.v32-nutrition-pane');
+      showPane('nutrition');
       document.getElementById('nutritionPanel')?.classList.add('open');
-      const icon=document.getElementById('nutritionIcon');
-      if(icon)icon.textContent='−';
-      renderNutritionDays?.();
-      renderMealTabs?.();
-      if(typeof loadNutritionMeals==='function'){
-        try{await loadNutritionMeals();}catch(err){console.warn('Alimentación:',err)}
-      }
-      renderNutritionList?.();
-      renderNutritionGoals?.();
+      const icon=document.getElementById('nutritionIcon'); if(icon)icon.textContent='−';
+      renderNutritionDays?.(); renderMealTabs?.();
+      if(typeof loadNutritionMeals==='function'){try{await loadNutritionMeals();}catch(err){console.warn('Alimentación:',err)}}
+      renderNutritionList?.(); renderNutritionGoals?.();
     }
 
     syncNavigation(name);
     localStorage.setItem('agendaV32Section',name);
-    if(shouldScroll)window.scrollTo({top:0,behavior:'smooth'});
+    if(options.scroll!==false)window.scrollTo({top:0,behavior:'smooth'});
   }
 
   function bind(){
     document.querySelectorAll('[data-v32-section]').forEach(btn=>{
       if(btn.dataset.v32Bound==='1')return;
       btn.dataset.v32Bound='1';
-      btn.addEventListener('click',e=>{
-        e.preventDefault();
-        e.stopPropagation();
-        setSection(btn.dataset.v32Section);
-      });
+      btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();setSection(btn.dataset.v32Section)});
     });
-
     const saved=localStorage.getItem('agendaV32Section');
     setSection(SECTION_NAMES.has(saved)?saved:'home',{scroll:false});
   }
 
+  let currentSection='home';
+  const observeDynamicPanes=new MutationObserver(mutations=>{
+    mutations.forEach(m=>m.addedNodes.forEach(node=>{
+      if(node.nodeType!==1)return;
+      if(node.matches?.(DATA_PANE)){node.classList.add('v33-section-hidden');if(node.getAttribute('data-v33-pane')===currentSection)node.classList.remove('v33-section-hidden');}
+      node.querySelectorAll?.(DATA_PANE).forEach(el=>{el.classList.add('v33-section-hidden');if(el.getAttribute('data-v33-pane')===currentSection)el.classList.remove('v33-section-hidden');});
+    }));
+  });
+  observeDynamicPanes.observe(document.body,{childList:true,subtree:true});
+
+  const originalSetSection=setSection;
+  setSection=async function(name,options={}){currentSection=SECTION_NAMES.has(name)?name:'home';return originalSetSection(currentSection,options)};
+
   window.v32SetSection=setSection;
   window.v32GetSection=()=>localStorage.getItem('agendaV32Section')||'home';
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});
-  else bind();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true}); else bind();
 })();
 </script>
 
@@ -2971,7 +2964,7 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
   function ensureV33Tools(){
     if(q('v33Tools'))return;
     const host=q('smartPanel')?.parentElement||q('dashboard')?.parentElement||q('app');if(!host)return;
-    const el=document.createElement('section');el.className='v33-tools v32-home-pane';el.id='v33Tools';
+    const el=document.createElement('section');el.className='v33-tools v32-home-pane';el.setAttribute('data-v33-pane','home');el.id='v33Tools';
     el.innerHTML=`<div class="v33-tools-head"><div><h3>🧭 Organizador personal</h3><p>Plan del día, hábitos y notas rápidas en un mismo lugar.</p></div><div class="streak-badge" id="v33Streak">🔥 0 días</div></div><div class="v33-grid"><div class="v33-card"><h4>🗺 Plan recomendado</h4><div id="v33Plan" class="v33-plan-list"></div><div class="v33-actions"><button class="v33-btn" id="v33RefreshPlan">↻ Actualizar plan</button><button class="v33-btn" id="v33FocusNext">🎯 Enfocar próxima tarea</button></div></div><div class="v33-card"><h4>✅ Hábitos de hoy</h4><div id="v33Habits" class="v33-habit-list"></div><div class="v33-actions"><button class="v33-btn" id="v33AddHabit">＋ Nuevo hábito</button></div></div><div class="v33-card"><h4>📝 Notas rápidas</h4><div id="v33Notes" class="v33-note-list"></div><div class="v33-actions"><button class="v33-btn" id="v33AddNote">＋ Nueva nota</button></div></div></div>`;
     const anchor=q('smartPanel')||q('dashboard');anchor?.after(el);
     q('v33RefreshPlan').onclick=renderV33Plan;q('v33FocusNext').onclick=focusNextTask;q('v33AddHabit').onclick=addHabit;q('v33AddNote').onclick=addNote;
