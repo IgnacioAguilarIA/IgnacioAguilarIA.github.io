@@ -2480,7 +2480,7 @@ $('nutritionGoalBtn').onclick=openGoalsModal;$('goalCloseBtn').onclick=closeGoal
     }
   }
 
-  function exportData(){const payload={exported_at:new Date().toISOString(),account:currentUser?.email||null,tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,nutrition_meals:nutritionMeals};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+  function exportData(){let v33Local={};try{const prefix=`agendaV33:${currentUser?.id||'guest'}:`;v33Local={habits:JSON.parse(localStorage.getItem(prefix+'habits')||'[]'),notes:JSON.parse(localStorage.getItem(prefix+'notes')||'[]'),priorities:JSON.parse(localStorage.getItem(prefix+'priorities')||'{}')};}catch(_){}const payload={exported_at:new Date().toISOString(),account:currentUser?.email||null,tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,nutrition_meals:nutritionMeals,v33_local:v33Local};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
   function syncSettingsExtras(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const s=$v('settingsRefreshStatus');if(s)s.textContent=$v('refreshStatus')?.textContent||'Listo'}
@@ -2857,12 +2857,167 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
     const open=document.getElementById('v28WorkoutOverlay')?.classList.contains('show');
     document.body.classList.toggle('v32-training-active',!!open);
   }
+  function renderV33(){try{renderV33Plan();renderHabits();renderNotes();setTimeout(decorateTasks,0)}catch(_){} }
   function init(){
     sync();
     const o=document.getElementById('v28WorkoutOverlay');
     if(o)new MutationObserver(sync).observe(o,{attributes:true,attributeFilter:['class']});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>
+
+
+<style id="v33-upgrades-style">
+  .v33-tools{margin-top:14px;padding:15px;border-radius:20px;background:rgba(15,23,42,.58);border:1px solid rgba(148,163,184,.14);box-shadow:0 10px 26px rgba(0,0,0,.10)}
+  .v33-tools-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px}.v33-tools-head h3{font-size:14px}.v33-tools-head p{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+  .v33-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:10px}.v33-card{padding:12px;border-radius:15px;background:rgba(17,24,39,.72);border:1px solid rgba(148,163,184,.12);min-width:0}.v33-card h4{font-size:11px;color:#bfdbfe;margin-bottom:8px}.v33-card-main{font-size:15px;font-weight:900;line-height:1.35}.v33-muted{font-size:10px;color:var(--muted);line-height:1.45;margin-top:4px}
+  .v33-plan-list,.v33-habit-list,.v33-note-list{display:flex;flex-direction:column;gap:6px;max-height:170px;overflow:auto}.v33-plan-item,.v33-habit-item,.v33-note-item{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:8px 9px;border-radius:11px;background:rgba(15,23,42,.65);border:1px solid rgba(148,163,184,.10)}
+  .v33-plan-time{font-size:10px;color:#93c5fd;font-weight:900;min-width:40px}.v33-plan-title{font-size:10px;font-weight:800;line-height:1.3}.v33-plan-badge{font-size:8px;padding:4px 6px;border-radius:999px;white-space:nowrap;background:rgba(255,255,255,.06);color:#cbd5e1}.v33-priority-urgent{background:rgba(239,68,68,.14);color:#fecaca;border-color:rgba(239,68,68,.2)}.v33-priority-high{background:rgba(245,158,11,.14);color:#fde68a;border-color:rgba(245,158,11,.2)}.v33-priority-normal{background:rgba(59,130,246,.12);color:#bfdbfe;border-color:rgba(96,165,250,.18)}.v33-priority-low{background:rgba(148,163,184,.10);color:#cbd5e1;border-color:rgba(148,163,184,.15)}
+  .v33-habit-item{align-items:center}.v33-habit-left{display:flex;align-items:center;gap:8px;min-width:0}.v33-habit-check{width:20px;height:20px;border-radius:7px;border:1px solid rgba(96,165,250,.22);background:rgba(255,255,255,.04);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}.v33-habit-check.done{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.28);color:#bbf7d0}.v33-habit-name{font-size:10px;font-weight:800;overflow:hidden;text-overflow:ellipsis}.v33-streak{font-size:8px;color:#fde68a;white-space:nowrap}
+  .v33-note-item{display:block}.v33-note-title{font-size:10px;font-weight:800}.v33-note-body{font-size:9px;color:#cbd5e1;margin-top:3px;white-space:pre-wrap;line-height:1.35;max-height:54px;overflow:hidden}
+  .v33-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.v33-btn{padding:7px 9px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer}.v33-btn:hover{border-color:#60a5fa;background:rgba(59,130,246,.08)}
+  .v33-priority{display:inline-flex;align-items:center;margin:7px 0 0 28px;padding:4px 8px;border-radius:999px;font-size:9px;font-weight:900}
+  .v33-priority[data-priority="urgent"]{background:rgba(239,68,68,.14);color:#fecaca;border:1px solid rgba(239,68,68,.20)}.v33-priority[data-priority="high"]{background:rgba(245,158,11,.14);color:#fde68a;border:1px solid rgba(245,158,11,.20)}.v33-priority[data-priority="normal"]{background:rgba(59,130,246,.12);color:#bfdbfe;border:1px solid rgba(96,165,250,.18)}.v33-priority[data-priority="low"]{background:rgba(148,163,184,.10);color:#cbd5e1;border:1px solid rgba(148,163,184,.15)}
+  .v33-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v33-inline-help{font-size:9px;color:var(--muted);line-height:1.4;margin-top:-5px;margin-bottom:8px}.v33-dialog{width:min(620px,100%)}.v33-dialog textarea{min-height:110px;resize:vertical}.v33-note-row{display:grid;grid-template-columns:1fr auto;gap:8px}.v33-empty{padding:18px;text-align:center;color:var(--muted);font-size:10px;border:1px dashed rgba(148,163,184,.16);border-radius:12px}
+  body.light .v33-tools{background:rgba(255,255,255,.90);border-color:#dbe3ee}body.light .v33-card{background:#f8fafc;border-color:#dbe3ee;color:#0f172a}body.light .v33-plan-item,body.light .v33-habit-item,body.light .v33-note-item{background:#fff;border-color:#e2e8f0}body.light .v33-note-body{color:#475569}
+  @media(max-width:900px){.v33-grid{grid-template-columns:1fr 1fr}.v33-grid .v33-card:first-child{grid-column:1/-1}}
+  @media(max-width:600px){.v33-grid{grid-template-columns:1fr}.v33-grid .v33-card:first-child{grid-column:auto}.v33-modal-grid{grid-template-columns:1fr}}
+</style>
+<script id="v33-upgrades-script">
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const storageKey=name=>`agendaV33:${currentUser?.id||'guest'}:${name}`;
+  const readJSON=(name, fallback)=>{try{const r=localStorage.getItem(storageKey(name));return r?JSON.parse(r):fallback}catch(_){return fallback}};
+  const writeJSON=(name,value)=>{try{localStorage.setItem(storageKey(name),JSON.stringify(value))}catch(_) {}};
+  const escHtml=v=>String(v??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+  const pad=n=>String(n).padStart(2,'0');
+  const dayLabel=i=>Array.isArray(DAYS)?DAYS[i]||'Día':`Día ${i+1}`;
+  const priorityMeta={urgent:['🔴','Urgente'],high:['🟠','Alta'],normal:['🔵','Normal'],low:['⚪','Baja']};
+  let habits=readJSON('habits',[]), notes=readJSON('notes',[]);
+  let priorityMap=readJSON('priorities',{});
+
+  function uid(prefix='id'){return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`}
+  function todayKey(){return typeof todayISO==='function'?todayISO():new Date().toISOString().slice(0,10)}
+  function priorityKey(t){return t?.id?String(t.id):`${t?.day}|${t?.hour}|${t?.minute}|${t?.title}`}
+  function getPriority(t){return priorityMap[priorityKey(t)]||'normal'}
+  function setPriority(t,p){priorityMap[priorityKey(t)]=p;writeJSON('priorities',priorityMap)}
+
+  function prioritySort(a,b){const rank={urgent:0,high:1,normal:2,low:3};return (rank[getPriority(a)]-rank[getPriority(b)])||taskSort(a,b)}
+  function injectTaskFields(){
+    const modal=q('taskOverlay'), title=q('taskTitleInput');
+    if(!modal||!title||q('v33TaskExtras'))return;
+    const box=document.createElement('div');box.id='v33TaskExtras';box.className='v33-modal-grid';
+    box.innerHTML=`<div class="field"><label>Prioridad</label><select class="input" id="v33TaskPriority"><option value="urgent">🔴 Urgente</option><option value="high">🟠 Alta</option><option value="normal">🔵 Normal</option><option value="low">⚪ Baja</option></select></div><div class="field"><label>Frecuencia</label><div class="input" style="display:flex;align-items:center;min-height:48px;color:#bfdbfe">📆 Semanal · según el día elegido</div></div>`;
+    const desc=q('taskDescInput')?.parentElement; desc?.after(box);
+    const help=document.createElement('div');help.className='v33-inline-help';help.textContent='La prioridad se guarda en este dispositivo. Las tareas de la agenda se organizan por día de semana, por lo que la rutina semanal queda disponible automáticamente.';box.after(help);
+  }
+
+  function patchTaskModal(){
+    if(typeof openTaskModal!=='function'||openTaskModal.__v33)return;
+    const original=openTaskModal;
+    function wrapped(hour,minute=0,task=null){
+      injectTaskFields();
+      original(hour,minute,task);
+      const p=q('v33TaskPriority');if(p)p.value=getPriority(task||{});
+      const r=q('v33TaskRepeat');if(r)r.value='none';
+    }
+    wrapped.__v33=true;window.openTaskModal=wrapped;
+  }
+
+  function patchTaskSave(){
+    const b=q('saveTaskBtn');if(!b||b.__v33)return;
+    const original=b.onclick;if(typeof original!=='function')return;
+    b.onclick=async function(){
+      const isEdit=!!editingTaskId, oldId=editingTaskId;
+      const payload={title:q('taskTitleInput')?.value.trim()||'',day:Number(q('taskDayInput')?.value)||selectedDay,hour:Number(q('taskHourInput')?.value)||selectedHour,minute:Number(q('taskMinuteInput')?.value)||0,priority:q('v33TaskPriority')?.value||'normal'};
+      await original.call(this);
+      const match=tasks.filter(t=>String(t.title||'')===payload.title&&Number(t.day)===payload.day&&Number(t.hour)===payload.hour&&Number(t.minute)===payload.minute).sort((a,b)=>String(b.id).localeCompare(String(a.id)))[0];
+      const target=isEdit?(tasks.find(t=>String(t.id)===String(oldId))||match):match;
+      if(target)setPriority(target,payload.priority);
+      renderV33();
+    };
+    b.__v33=true;
+  }
+
+  async function expandRepeatTemplates(){
+    if(!currentUser?.id)return;
+    const arr=readJSON('repeatTemplates',[]);if(!arr.length)return;
+    const today=new Date(todayKey()+'T12:00:00');let changed=false;const next=[];
+    for(const t of arr){
+      let nd=new Date(t.nextDate+'T12:00:00'), rem=Number(t.remaining)||0;
+      while(rem>0&&nd<=today){
+        const exists=tasks.some(x=>x.title===t.title&&x.description===(t.description||'')&&Number(x.day)===Number(t.day)&&Number(x.hour)===Number(t.hour)&&Number(x.minute)===Number(t.minute)&&!x.completed);
+        if(!exists){const {error}=await sb.from('tasks').insert({user_id:currentUser.id,title:t.title,description:t.description||'',day:Number(t.day),hour:Number(t.hour),minute:Number(t.minute),completed:false});if(error)break;}
+        rem--;nd.setDate(nd.getDate()+7);changed=true;
+      }
+      if(rem>0)next.push({...t,remaining:rem,nextDate:nd.toISOString().slice(0,10)});else changed=true;
+    }
+    if(changed){writeJSON('repeatTemplates',next);await loadTasks();createDays();renderSchedule();renderDashboard();renderConflicts();}
+  }
+
+  function decorateTasks(){
+    document.querySelectorAll('.task').forEach(card=>{
+      if(card.dataset.v33Decorated==='1')return;
+      const title=card.querySelector('h4')?.textContent||'';const tm=card.querySelector('.task-time')?.textContent||'';
+      const m=tm.match(/(\d{1,2}):(\d{2})/);const hh=m?Number(m[1]):0,mm=m?Number(m[2]):0;
+      const task=tasks.find(t=>t.title===title&&Number(t.day)===Number(selectedDay)&&Number(t.hour)===hh&&Number(t.minute)===mm);
+      if(!task)return;
+      const p=getPriority(task), meta=priorityMeta[p];const el=document.createElement('div');el.className='v33-priority';el.dataset.priority=p;el.textContent=`${meta[0]} ${meta[1]}`;card.appendChild(el);card.dataset.v33Decorated='1';card.dataset.v33Priority=p;
+    });
+  }
+
+  function ensureV33Tools(){
+    if(q('v33Tools'))return;
+    const host=q('smartPanel')?.parentElement||q('dashboard')?.parentElement||q('app');if(!host)return;
+    const el=document.createElement('section');el.className='v33-tools v32-home-pane';el.id='v33Tools';
+    el.innerHTML=`<div class="v33-tools-head"><div><h3>🧭 Organizador personal</h3><p>Plan del día, hábitos y notas rápidas en un mismo lugar.</p></div><div class="streak-badge" id="v33Streak">🔥 0 días</div></div><div class="v33-grid"><div class="v33-card"><h4>🗺 Plan recomendado</h4><div id="v33Plan" class="v33-plan-list"></div><div class="v33-actions"><button class="v33-btn" id="v33RefreshPlan">↻ Actualizar plan</button><button class="v33-btn" id="v33FocusNext">🎯 Enfocar próxima tarea</button></div></div><div class="v33-card"><h4>✅ Hábitos de hoy</h4><div id="v33Habits" class="v33-habit-list"></div><div class="v33-actions"><button class="v33-btn" id="v33AddHabit">＋ Nuevo hábito</button></div></div><div class="v33-card"><h4>📝 Notas rápidas</h4><div id="v33Notes" class="v33-note-list"></div><div class="v33-actions"><button class="v33-btn" id="v33AddNote">＋ Nueva nota</button></div></div></div>`;
+    const anchor=q('smartPanel')||q('dashboard');anchor?.after(el);
+    q('v33RefreshPlan').onclick=renderV33Plan;q('v33FocusNext').onclick=focusNextTask;q('v33AddHabit').onclick=addHabit;q('v33AddNote').onclick=addNote;
+  }
+
+  function dailyPlanItems(){
+    const items=tasks.filter(t=>Number(t.day)===Number(selectedDay)).sort(prioritySort);
+    const out=[];
+    for(const t of items.slice(0,8))out.push({time:`${pad(t.hour)}:${pad(t.minute)}`,title:t.title,priority:getPriority(t),done:t.completed});
+    if(!out.length)out.push({time:'—',title:'Tu día está libre. Aprovechá para planificar una tarea importante.',priority:'low',done:false});
+    return out;
+  }
+  function renderV33Plan(){const c=q('v33Plan');if(!c)return;c.innerHTML='';dailyPlanItems().forEach(x=>{const row=document.createElement('div');row.className='v33-plan-item';row.innerHTML=`<div class="v33-plan-time">${escHtml(x.time)}</div><div style="flex:1;min-width:0"><div class="v33-plan-title">${escHtml(x.title)}</div></div><span class="v33-plan-badge v33-priority-${x.priority}">${x.done?'✓ Listo':priorityMeta[x.priority][1]}</span>`;c.appendChild(row)});if(q('v33Streak'))q('v33Streak').textContent=`🔥 ${typeof computeCurrentStreak==='function'?computeCurrentStreak():0} días`;}
+
+  function habitStreak(h){let n=0,d=new Date();while(true){const k=d.toISOString().slice(0,10);if(!(h.doneDates||[]).includes(k))break;n++;d.setDate(d.getDate()-1);if(n>365)break;}return n}
+  function renderHabits(){const c=q('v33Habits');if(!c)return;c.innerHTML='';const today=todayKey();if(!habits.length){c.innerHTML='<div class="v33-empty">Todavía no tenés hábitos. Creá uno para empezar.</div>';return;}habits.forEach((h,i)=>{const done=(h.doneDates||[]).includes(today);const row=document.createElement('div');row.className='v33-habit-item';row.innerHTML=`<div class="v33-habit-left"><button class="v33-habit-check ${done?'done':''}" type="button">${done?'✓':''}</button><div class="v33-habit-name">${escHtml(h.title)}</div></div><div class="v33-streak">🔥 ${habitStreak(h)}</div>`;row.querySelector('button').onclick=()=>{h.doneDates=h.doneDates||[];if(done)h.doneDates=h.doneDates.filter(x=>x!==today);else h.doneDates.push(today);habits[i]=h;writeJSON('habits',habits);renderHabits();renderV33Plan()};c.appendChild(row)});}
+  function addHabit(){const title=prompt('Nombre del hábito:');if(!title?.trim())return;habits.push({id:uid('habit'),title:title.trim(),doneDates:[]});writeJSON('habits',habits);renderHabits()}
+
+  function renderNotes(){const c=q('v33Notes');if(!c)return;c.innerHTML='';if(!notes.length){c.innerHTML='<div class="v33-empty">No hay notas rápidas.</div>';return;}notes.slice().reverse().slice(0,6).forEach((n,idx)=>{const row=document.createElement('div');row.className='v33-note-item';row.innerHTML=`<div class="v33-note-title">${escHtml(n.title||'Nota')}</div><div class="v33-note-body">${escHtml(n.body)}</div><div class="v33-actions"><button class="v33-btn" type="button">Editar</button><button class="v33-btn" type="button">Eliminar</button></div>`;const buttons=row.querySelectorAll('button');buttons[0].onclick=()=>editNote(n);buttons[1].onclick=()=>{notes=notes.filter(x=>x.id!==n.id);writeJSON('notes',notes);renderNotes()};c.appendChild(row)});}
+  function addNote(){const title=prompt('Título de la nota:','Nota rápida');if(!title?.trim())return;const body=prompt('Contenido:');if(body===null)return;notes.push({id:uid('note'),title:title.trim(),body:String(body),updated_at:new Date().toISOString()});writeJSON('notes',notes);renderNotes()}
+  function editNote(n){const title=prompt('Título:',n.title||'');if(!title?.trim())return;const body=prompt('Contenido:',n.body||'');if(body===null)return;n.title=title.trim();n.body=String(body);n.updated_at=new Date().toISOString();writeJSON('notes',notes);renderNotes()}
+
+  function focusNextTask(){const all=tasks.filter(t=>Number(t.day)===Number(selectedDay)&&!t.completed).sort(taskSort);const next=all[0];if(!next){alert('No tenés tareas pendientes para este día.');return;}if(typeof v32SetSection==='function')v32SetSection('agenda');setTimeout(()=>{const card=[...document.querySelectorAll('.task')].find(x=>x.querySelector('h4')?.textContent===next.title&&x.querySelector('.task-time')?.textContent===`${pad(next.hour)}:${pad(next.minute)}`);card?.scrollIntoView({behavior:'smooth',block:'center'});card?.animate?.([{transform:'scale(1)'},{transform:'scale(1.03)'},{transform:'scale(1)'}],{duration:500})},250)}
+
+  function upgradeQuickActions(){
+    const grid=document.querySelector('.quick-actions-grid');if(!grid||q('v33QuickExtras'))return;
+    const wrap=document.createElement('div');wrap.id='v33QuickExtras';wrap.style.display='contents';
+    wrap.innerHTML=`<button id="v33QuickHabit" type="button">✅<span>Hábito</span></button><button id="v33QuickNote" type="button">📝<span>Nota</span></button><button id="v33QuickPlan" type="button">🧭<span>Plan del día</span></button>`;
+    grid.appendChild(wrap);
+    q('v33QuickHabit').onclick=()=>{closeQuickActions();addHabit()};q('v33QuickNote').onclick=()=>{closeQuickActions();addNote()};q('v33QuickPlan').onclick=()=>{closeQuickActions();if(typeof v32SetSection==='function')v32SetSection('home');setTimeout(()=>q('v33Tools')?.scrollIntoView({behavior:'smooth',block:'center'}),180)};
+  }
+
+  function keyboard(){document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.shiftKey&&e.key.toLowerCase()==='n'){e.preventDefault();addNote();return;}if(e.altKey&&e.key>='1'&&e.key<='5'){const names=['home','agenda','calendar','workout','nutrition'];if(typeof v32SetSection==='function')v32SetSection(names[Number(e.key)-1]);}})}
+
+  function patchDashboard(){
+    if(typeof renderDashboard==='function'&&!renderDashboard.__v33){const old=renderDashboard;const wrapped=function(){const r=old.apply(this,arguments);try{renderV33Plan();renderHabits();renderNotes()}catch(_){}return r};wrapped.__v33=true;window.renderDashboard=wrapped;}
+    if(typeof renderSchedule==='function'&&!renderSchedule.__v33){const old=renderSchedule;const wrapped=function(){const r=old.apply(this,arguments);try{setTimeout(decorateTasks,0);renderV33Plan()}catch(_){}return r};wrapped.__v33=true;window.renderSchedule=wrapped;}
+  }
+
+  function renderV33(){try{renderV33Plan();renderHabits();renderNotes();setTimeout(decorateTasks,0)}catch(_){} }
+  function init(){
+    try{injectTaskFields();patchTaskModal();patchTaskSave();upgradeQuickActions();ensureV33Tools();keyboard();patchDashboard();renderV33Plan();renderHabits();renderNotes();}catch(err){console.warn('V33 init',err)}
+    const mo=new MutationObserver(()=>{try{patchTaskSave();upgradeQuickActions();ensureV33Tools();decorateTasks()}catch(_){}});mo.observe(document.body,{childList:true,subtree:true});
+    setInterval(()=>{try{expandRepeatTemplates();renderV33Plan();renderHabits();}catch(_){ }},60000);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
 
