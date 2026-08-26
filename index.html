@@ -3529,5 +3529,161 @@ body.light .v39-syncbar{background:rgba(255,255,255,.92);border-color:#dbe3ee;co
 })();
 </script>
 
+
+<style id="v40-smart-style">
+.v40-panel{margin-top:14px;padding:15px;border-radius:20px;background:linear-gradient(135deg,rgba(59,130,246,.09),rgba(168,85,247,.05));border:1px solid rgba(96,165,250,.15);box-shadow:0 10px 28px rgba(0,0,0,.12)}
+.v40-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:11px}.v40-head h3{font-size:14px}.v40-head p{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}.v40-badge{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(59,130,246,.08);border:1px solid rgba(96,165,250,.16);font-size:9px;color:#bfdbfe;font-weight:900;white-space:nowrap}
+.v40-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:9px}.v40-card{padding:12px;border-radius:14px;background:rgba(15,23,42,.58);border:1px solid rgba(148,163,184,.11);min-height:118px}.v40-card h4{font-size:10px;margin-bottom:6px}.v40-main{font-size:15px;font-weight:900;line-height:1.3}.v40-sub{font-size:9px;color:var(--muted);line-height:1.4;margin-top:5px}.v40-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.v40-btn{padding:7px 9px;border-radius:9px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#dbeafe;font-size:9px;font-weight:900;cursor:pointer}.v40-btn:hover{border-color:#60a5fa;background:rgba(59,130,246,.08)}
+.v40-pill{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:5px 7px;border-radius:999px;font-size:8px;font-weight:900;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#cbd5e1}.v40-queue{display:flex;align-items:center;gap:7px;margin-top:10px;padding:8px 9px;border-radius:11px;background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.14);color:#fde68a;font-size:9px}.v40-queue.ok{background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.15);color:#bbf7d0}.v40-dot{width:8px;height:8px;border-radius:50%;background:#f59e0b}.v40-queue.ok .v40-dot{background:#22c55e}
+.v40-overlay{position:fixed;inset:0;z-index:480;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(2,6,23,.70);backdrop-filter:blur(8px)}.v40-overlay.show{display:flex}.v40-modal{width:min(720px,100%);max-height:86vh;overflow:auto;background:rgba(17,24,39,.99);border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:0 30px 90px rgba(0,0,0,.48)}.v40-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}.v40-modal h3{font-size:18px}.v40-modal p{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}.v40-close{width:36px;height:36px;border:0;border-radius:10px;background:rgba(255,255,255,.08);color:#fff;cursor:pointer;font-size:18px}.v40-suggestions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v40-suggest{padding:11px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(148,163,184,.12)}.v40-suggest strong{display:block;font-size:11px}.v40-suggest span{display:block;font-size:9px;color:var(--muted);margin-top:3px;line-height:1.35}.v40-suggest button{margin-top:8px}.v40-steps{margin-top:12px;padding:10px;border-radius:12px;background:rgba(59,130,246,.05);border:1px solid rgba(96,165,250,.12);font-size:9px;color:#cbd5e1;line-height:1.5}.v40-step{margin-top:4px}
+body.light .v40-panel{background:rgba(255,255,255,.92);border-color:#dbe3ee}body.light .v40-card,body.light .v40-suggest{background:#fff;border-color:#dbe3ee}body.light .v40-btn{background:#f8fafc;color:#334155;border-color:#dbe3ee}body.light .v40-modal{background:#fff;color:#0f172a;border-color:#dbe3ee}body.light .v40-sub,body.light .v40-modal p,.light .v40-suggest span{color:#64748b}
+@media(max-width:900px){.v40-grid{grid-template-columns:1fr 1fr}.v40-card:first-child{grid-column:1/-1}.v40-suggestions{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.v40-panel{padding:12px}.v40-grid{grid-template-columns:1fr}.v40-card:first-child{grid-column:auto}.v40-suggestions{grid-template-columns:1fr}.v40-head h3{font-size:13px}}
+</style>
+
+<section class="v40-panel v32-home-pane" id="v40SmartPanel" data-v40-pane="home">
+  <div class="v40-head">
+    <div><h3>🧭 ¿Qué hago ahora?</h3><p>La app elige una acción útil sin modificar tu agenda automáticamente.</p></div>
+    <span class="v40-badge" id="v40SmartBadge">Analizando…</span>
+  </div>
+  <div class="v40-grid">
+    <div class="v40-card"><h4>Próxima mejor acción</h4><div class="v40-main" id="v40NextTitle">—</div><div class="v40-sub" id="v40NextMeta">—</div><div class="v40-actions"><button class="v40-btn" id="v40FocusNow">🎯 Concentrarme</button><button class="v40-btn" id="v40OpenNow">📚 Abrir tarea</button></div></div>
+    <div class="v40-card"><h4>Estado del día</h4><div class="v40-main" id="v40DayState">—</div><div class="v40-sub" id="v40DayMeta">—</div><span class="v40-pill" id="v40FreePill">🟢 Tiempo libre: calculando…</span></div>
+    <div class="v40-card"><h4>Sin conexión</h4><div class="v40-main" id="v40OfflineState">—</div><div class="v40-sub" id="v40OfflineMeta">—</div><div class="v40-actions"><button class="v40-btn" id="v40PlanBtn">🗓️ Ver bloques sugeridos</button></div></div>
+  </div>
+  <div class="v40-queue" id="v40Queue"><span class="v40-dot"></span><span id="v40QueueText">Revisando cambios pendientes…</span></div>
+</section>
+
+<div class="v40-overlay" id="v40PlanOverlay" aria-hidden="true">
+  <div class="v40-modal" onclick="event.stopPropagation()">
+    <div class="v40-modal-head"><div><h3>🗓️ Bloques recomendados</h3><p>Son sugerencias; no cambian tu agenda hasta que vos decidas.</p></div><button class="v40-close" id="v40PlanClose" type="button">×</button></div>
+    <div class="v40-suggestions" id="v40Suggestions"></div>
+    <div class="v40-steps"><strong>Cómo se calcula:</strong><div class="v40-step">1. Prioriza tareas urgentes y atrasadas.</div><div class="v40-step">2. Respeta tu próxima actividad existente.</div><div class="v40-step">3. Busca espacios de 25–60 minutos sin tareas programadas.</div></div>
+  </div>
+</div>
+
+<script id="v40-smart-and-offline">
+(function(){
+  const q=id=>document.getElementById(id);
+  const esc=v=>{const d=document.createElement('div');d.textContent=String(v??'');return d.innerHTML};
+  const pad40=n=>String(Number(n)||0).padStart(2,'0');
+  const tmin40=t=>Number(t?.hour||0)*60+Number(t?.minute||0);
+  const now40=()=>typeof getArgentinaNow==='function'?getArgentinaNow():new Date();
+  const today40=()=>typeof getTodayIndex==='function'?getTodayIndex():0;
+  const pri40=t=>typeof getPriority==='function'?getPriority(t):'normal';
+  const taskId40=t=>String(t?.id??'');
+  let nextTask=null;
+
+  function taskScore(t){
+    if(!t||t.completed)return -1e9;
+    const n=now40(), d=Number(t.day)||0, td=today40();
+    let delta=d-td; if(delta<0)delta+=7;
+    const diff=delta*1440+tmin40(t)-(n.getHours()*60+n.getMinutes());
+    const p=pri40(t); const pScore=p==='urgent'?1000:p==='high'?650:p==='normal'?300:120;
+    const overdue=delta===0&&tmin40(t)<n.getHours()*60+n.getMinutes()?500:0;
+    const near=diff>=0&&diff<=90?220:0;
+    return pScore+overdue+near-Math.max(0,diff)/12;
+  }
+  function pickNext(){return (tasks||[]).filter(t=>!t.completed).slice().sort((a,b)=>taskScore(b)-taskScore(a))[0]||null}
+  function freeSlots40(){
+    const n=now40(), day=today40(), nowMin=n.getHours()*60+n.getMinutes();
+    const occupied=(tasks||[]).filter(t=>Number(t.day)===day&&!t.completed).map(t=>tmin40(t)).sort((a,b)=>a-b);
+    const slots=[]; let cursor=Math.max(7*60,nowMin+5);
+    for(let i=0;i<occupied.length;i++){
+      const start=occupied[i];
+      if(start-cursor>=25)slots.push({start,end:start,length:start-cursor});
+      cursor=Math.max(cursor,start+30);
+    }
+    if(22*60-cursor>=25)slots.push({start:cursor,end:22*60,length:22*60-cursor});
+    return slots.filter(x=>x.length>=25).slice(0,6);
+  }
+  function fmtSlot40(m){return `${pad40(Math.floor(m/60))}:${pad40(m%60)}`}
+  function render40(){
+    if(!q('v40SmartPanel'))return;
+    nextTask=pickNext();
+    if(nextTask){
+      q('v40NextTitle').textContent=nextTask.title||'Tarea';
+      q('v40NextMeta').textContent=`${DAYS?.[Number(nextTask.day)]||'Día'} · ${fmtSlot40(tmin40(nextTask))}${pri40(nextTask)==='urgent'?' · 🔴 Urgente':''}`;
+    }else{q('v40NextTitle').textContent='No hay tareas pendientes';q('v40NextMeta').textContent='Podés descansar, planificar o capturar algo nuevo.'}
+    const today=(tasks||[]).filter(t=>Number(t.day)===today40());
+    const done=today.filter(t=>t.completed).length, pending=today.length-done, urgent=today.filter(t=>!t.completed&&pri40(t)==='urgent').length;
+    q('v40DayState').textContent=urgent?`${urgent} urgente${urgent===1?'':'s'}`:pending?`${pending} pendiente${pending===1?'':'s'}`:'Todo al día 🎉';
+    q('v40DayMeta').textContent=`${done}/${today.length} tareas completadas hoy`;
+    const free=freeSlots40(); const total=free.reduce((s,x)=>s+x.length,0); q('v40FreePill').textContent=`🟢 Tiempo libre: ${Math.floor(total/60)}h ${total%60}m`;
+    const online=navigator.onLine; q('v40OfflineState').textContent=online?'Conectado':'Sin Internet'; q('v40OfflineMeta').textContent=online?'La app puede sincronizar con Supabase.':'Los cambios quedan locales y se sincronizan al volver la conexión.';
+    q('v40SmartBadge').textContent=urgent?'⚠️ Prioridad alta':pending?'🟡 Día en marcha':'✅ Día tranquilo';
+    const pendingCount=document.querySelector('#v39Pending')?.textContent||''; q('v40QueueText').textContent=online?(pendingCount||'Sincronización activa'):'Sin Internet · guardado local'; q('v40Queue').classList.toggle('ok',online&&(!pendingCount||pendingCount.startsWith('0')));
+  }
+  function openPlan(){const o=q('v40PlanOverlay'),c=q('v40Suggestions');if(!o||!c)return;c.innerHTML='';const slots=freeSlots40();if(!slots.length){c.innerHTML='<div class="v40-suggest"><strong>No encontré un bloque libre</strong><span>Podés cambiar la duración de las tareas o revisar tu agenda.</span></div>'}else slots.slice(0,3).forEach((s,i)=>{const m=slots[i]?.length>=50?'50 min':slots[i]?.length>=40?'40 min':'25 min';const div=document.createElement('div');div.className='v40-suggest';div.innerHTML=`<strong>${fmtSlot40(s.start)}–${fmtSlot40(Math.min(s.start+Number(m.split(' ')[0]),s.end))}</strong><span>Bloque ${i+1} · ${m} disponibles para concentrarte.</span><button class="v40-btn" data-v40-focus="${s.start}" type="button">🎯 Usar para foco</button>`;c.appendChild(div)});o.classList.add('show');o.setAttribute('aria-hidden','false')}
+  function closePlan(){q('v40PlanOverlay')?.classList.remove('show');q('v40PlanOverlay')?.setAttribute('aria-hidden','true')}
+  function bind40(){
+    q('v40FocusNow')?.addEventListener('click',()=>{try{openFocus?.(nextTask)}catch(_){}});
+    q('v40OpenNow')?.addEventListener('click',()=>{if(!nextTask)return;try{selectedDay=Number(nextTask.day)||0;createDays?.();renderSchedule?.();v32SetSection?.('agenda');openTaskModal?.(Number(nextTask.hour)||7,Number(nextTask.minute)||0,nextTask)}catch(_){}});
+    q('v40PlanBtn')?.addEventListener('click',openPlan);q('v40PlanClose')?.addEventListener('click',closePlan);q('v40PlanOverlay')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closePlan()});
+    q('v40Suggestions')?.addEventListener('click',e=>{const b=e.target.closest('[data-v40-focus]');if(!b)return;closePlan();try{openFocus?.(nextTask)}catch(_){}});
+    window.addEventListener('online',render40);window.addEventListener('offline',render40);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')setTimeout(render40,100)});
+    setInterval(render40,30000);
+  }
+
+  // Offline-first queue for task CRUD. Existing online code is preserved.
+  const QKEY=()=>`agendaV40:queue:${currentUser?.id||'guest'}`;
+  const MAPKEY=()=>`agendaV40:idmap:${currentUser?.id||'guest'}`;
+  function readQ(){try{const x=localStorage.getItem(QKEY());return x?JSON.parse(x):[]}catch(_){return []}}
+  function writeQ(v){try{localStorage.setItem(QKEY(),JSON.stringify(v))}catch(_){};renderQueueMeta()}
+  function readMap(){try{const x=localStorage.getItem(MAPKEY());return x?JSON.parse(x):{}}catch(_){return {}}}
+  function writeMap(v){try{localStorage.setItem(MAPKEY(),JSON.stringify(v))}catch(_){} }
+  function queueOp(op){const qv=readQ();qv.push({...op,at:new Date().toISOString(),qid:`q-${Date.now()}-${Math.random().toString(36).slice(2,7)}`});writeQ(qv);}
+  function saveLocalSnapshot40(){try{cacheWrite?.('tasks',tasks||[]);localStorage.setItem(`agendaV40:tasks:${currentUser?.id||'guest'}`,JSON.stringify(tasks||[]))}catch(_){} }
+  function renderQueueMeta(){const n=readQ().length;const el=q('v40QueueText');if(el&&navigator.onLine)el.textContent=n?`${n} operación${n===1?'':'es'} esperando sincronización`:'Sincronización activa';const bar=q('v39Pending');if(bar&&n)bar.textContent=`${n} cambios pendientes`}
+  async function flushQueue(){
+    if(!currentUser||!navigator.onLine)return;
+    let qv=readQ();if(!qv.length)return;
+    const map=readMap(); const remain=[];
+    for(const op of qv){
+      try{
+        let id=op.id&&map[op.id]?map[op.id]:op.id;
+        if(op.kind==='create'){
+          const payload={...op.payload,user_id:currentUser.id};delete payload.id;
+          const {data,error}=await sb.from('tasks').insert(payload).select('*').single();if(error)throw error;
+          if(op.id&&data?.id)map[op.id]=data.id;
+        }else if(op.kind==='update'){
+          if(String(id).startsWith('local-')){remain.push(op);continue}
+          const {error}=await sb.from('tasks').update(op.payload).eq('id',id);if(error)throw error;
+        }else if(op.kind==='delete'){
+          if(String(id).startsWith('local-')){delete map[op.id];continue}
+          const {error}=await sb.from('tasks').delete().eq('id',id);if(error)throw error;delete map[op.id]
+        }else if(op.kind==='complete'){
+          if(String(id).startsWith('local-')){remain.push(op);continue}
+          const {error}=await sb.from('tasks').update({completed:!!op.completed}).eq('id',id);if(error)throw error;
+        }
+      }catch(e){remain.push(op);console.warn('V40 queue op',e);break}
+    }
+    writeMap(map);writeQ(remain);saveLocalSnapshot40();
+    if(!remain.length){try{await loadTasks();createDays?.();renderSchedule?.();renderDashboard?.();renderTodayTimeline?.();}catch(_){} if(window.agendaV39SyncNow)window.agendaV39SyncNow()}
+  }
+  function installTaskOfflineHandlers(){
+    const saveBtn=q('saveTaskBtn');
+    if(saveBtn&&!saveBtn.dataset.v40wrapped){
+      const old=saveBtn.onclick; if(typeof old==='function'){
+        saveBtn.onclick=async function(e){
+          if(navigator.onLine){return old.call(this,e)}
+          const title=q('taskTitleInput')?.value.trim()||''; if(!title){alert('Escribí el título.');return}
+          const description=q('taskDescInput')?.value.trim()||''; const day=Math.max(0,Math.min(6,Number(q('taskDayInput')?.value)||selectedDay));const hour=Math.max(7,Math.min(22,Number(q('taskHourInput')?.value)||7));const minute=Math.max(0,Math.min(59,Number(q('taskMinuteInput')?.value)||0));
+          const id=editingTaskId||`local-${Date.now()}-${Math.random().toString(36).slice(2,7)}`; const completed=editingTaskId?!!(tasks.find(t=>String(t.id)===String(editingTaskId))?.completed):false;
+          const payload={title,description,day,hour,minute,completed,user_id:currentUser.id}; if(editingTaskId){const target=tasks.find(t=>String(t.id)===String(editingTaskId));if(target)Object.assign(target,payload);queueOp({kind:'update',id,payload:{title,description,day,hour,minute}})}else{tasks.push({...payload,id,created_at:new Date().toISOString()});queueOp({kind:'create',id,payload})}
+          cacheWrite?.('tasks',tasks);saveLocalSnapshot40();closeTaskModal?.();createDays?.();renderSchedule?.();renderDashboard?.();renderTodayTimeline?.();render40();
+        }
+        saveBtn.dataset.v40wrapped='1';
+      }
+    }
+    const origToggle=window.toggleTaskComplete; if(typeof origToggle==='function'&&!origToggle.__v40){const w=async function(task){if(navigator.onLine)return origToggle.apply(this,arguments);const target=tasks.find(t=>String(t.id)===String(task.id));if(!target)return;target.completed=!target.completed;queueOp({kind:'complete',id:target.id,completed:target.completed});cacheWrite?.('tasks',tasks);saveLocalSnapshot40();renderSchedule?.();renderDashboard?.();renderTodayTimeline?.();render40()};w.__v40=true;window.toggleTaskComplete=w}
+    const origDelete=window.deleteTask; if(typeof origDelete==='function'&&!origDelete.__v40){const w=async function(id){if(navigator.onLine)return origDelete.apply(this,arguments);const idx=tasks.findIndex(t=>String(t.id)===String(id));if(idx<0)return;tasks.splice(idx,1);queueOp({kind:'delete',id});cacheWrite?.('tasks',tasks);saveLocalSnapshot40();renderSchedule?.();renderDashboard?.();renderTodayTimeline?.();render40()};w.__v40=true;window.deleteTask=w}
+  }
+  async function init40(){try{bind40();setTimeout(()=>{installTaskOfflineHandlers();render40();renderQueueMeta()},400);setInterval(()=>{installTaskOfflineHandlers();render40()},30000);window.addEventListener('online',()=>setTimeout(flushQueue,700));if(navigator.onLine)setTimeout(flushQueue,1500)}catch(e){console.warn('V40',e)}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init40,{once:true});else init40();
+  window.agendaV40Flush=flushQueue;
+})();
+</script>
+
 </body>
 </html>
