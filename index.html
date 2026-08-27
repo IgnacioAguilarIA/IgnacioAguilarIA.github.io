@@ -881,6 +881,25 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
 body.light .v54-panel{background:rgba(255,255,255,.84);border-color:#dbe3ee}body.light .v54-template{background:#fff;border-color:#dbe3ee;color:#0f172a}body.light .v54-template span{color:#64748b}body.light .v54-btn{background:#f8fafc;color:#334155;border-color:#dbe3ee}
 @media(max-width:800px){.v54-template-list{grid-template-columns:1fr 1fr}}@media(max-width:520px){.v54-template-list{grid-template-columns:1fr}.v54-panel{padding:12px}}
 </style>
+
+<style id="v57-focus-task-style">
+.v57-focus-taskbar{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin:8px 0 10px}
+.v57-focus-taskbar label{display:block;font-size:9px;font-weight:800;color:var(--muted);margin-bottom:5px}
+.v57-focus-task-select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#0f172a;color:#fff;font-size:10px;outline:none}
+.v57-focus-task-select:focus{border-color:var(--blue)}
+.v57-focus-task-open{padding:8px 10px;border-radius:10px;border:1px solid rgba(96,165,250,.18);background:rgba(59,130,246,.08);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer;white-space:nowrap}
+.v57-focus-task-open:disabled{opacity:.45;cursor:not-allowed}
+.v57-focus-task-meta{font-size:8px;color:var(--muted);margin:-2px 0 8px;line-height:1.35}
+.v57-focus-task-progress{margin-top:9px;padding:9px 10px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(148,163,184,.09)}
+.v57-focus-task-progress strong{font-size:10px}.v57-focus-task-progress span{display:block;font-size:8px;color:var(--muted);margin-top:3px}
+.v57-focus-task-list{margin-top:10px;display:flex;flex-direction:column;gap:6px;max-height:150px;overflow:auto}
+.v57-focus-task-row{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 9px;border-radius:10px;background:rgba(15,23,42,.46);border:1px solid rgba(148,163,184,.08)}
+.v57-focus-task-row-title{font-size:9px;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.v57-focus-task-row-meta{font-size:7px;color:var(--muted);margin-top:2px}
+.v57-focus-task-row-time{font-size:9px;font-weight:900;color:#bfdbfe;white-space:nowrap}
+body.light .v57-focus-task-select{background:#fff;color:#0f172a;border-color:#cbd5e1}body.light .v57-focus-task-open{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}body.light .v57-focus-task-progress,body.light .v57-focus-task-row{background:#f8fafc;border-color:#dbe3ee}
+@media(max-width:600px){.v57-focus-taskbar{grid-template-columns:1fr}.v57-focus-task-open{width:100%}}
+</style>
+
 </head>
 <body>
 <section id="authScreen">
@@ -4594,5 +4613,138 @@ body.light .v53-panel{background:rgba(255,255,255,.82);border-color:#dbe3ee}body
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
 })();
 </script>
+
+<style id="v55-upgrades-style">
+.v55-brief{margin-top:14px;padding:15px;border-radius:20px;background:linear-gradient(135deg,rgba(59,130,246,.10),rgba(168,85,247,.06));border:1px solid rgba(96,165,250,.16);box-shadow:0 10px 28px rgba(0,0,0,.10)}
+.v55-brief-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:11px}.v55-brief-head h3{font-size:14px}.v55-brief-head p{font-size:9px;color:var(--muted);margin-top:3px}.v55-badge{padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.12);font-size:9px;font-weight:800;color:#cbd5e1}
+.v55-brief-grid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:8px}.v55-next{padding:12px;border-radius:14px;background:rgba(15,23,42,.62);border:1px solid rgba(96,165,250,.15);min-height:96px}.v55-next-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:900}.v55-next-title{font-size:14px;font-weight:900;margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v55-next-meta{font-size:9px;color:#cbd5e1;margin-top:4px}.v55-next-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.v55-btn{padding:7px 9px;border-radius:9px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer}.v55-btn:hover{border-color:rgba(96,165,250,.34);background:rgba(59,130,246,.08)}
+.v55-stat{padding:11px;border-radius:14px;background:rgba(15,23,42,.50);border:1px solid rgba(148,163,184,.10)}.v55-stat strong{display:block;font-size:16px;color:#dbeafe}.v55-stat span{display:block;margin-top:3px;font-size:8px;color:var(--muted);line-height:1.35}.v55-progress{height:7px;margin-top:8px;border-radius:999px;background:#1e293b;overflow:hidden}.v55-progress span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#3b82f6,#22c55e);width:0}
+.v55-agenda-tools{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 12px}.v55-agenda-tools .v55-filter{padding:7px 9px;border-radius:999px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.04);color:#cbd5e1;font-size:9px;font-weight:800;cursor:pointer}.v55-agenda-tools .v55-filter.active{background:rgba(59,130,246,.12);border-color:rgba(96,165,250,.24);color:#dbeafe}
+body.light .v55-brief{background:#f8fafc;border-color:#dbe3ee}body.light .v55-next,body.light .v55-stat{background:#fff;border-color:#dbe3ee}body.light .v55-btn,body.light .v55-agenda-tools .v55-filter{background:#f8fafc;color:#334155;border-color:#dbe3ee}body.light .v55-next-meta{color:#475569}
+@media(max-width:900px){.v55-brief-grid{grid-template-columns:1fr 1fr}.v55-next{grid-column:1/-1}}
+@media(max-width:600px){.v55-brief{padding:12px}.v55-brief-grid{grid-template-columns:1fr 1fr}.v55-next{grid-column:1/-1}.v55-next-actions .v55-btn{flex:1}}
+</style>
+
+<script id="v55-planning-upgrades">
+(function(){
+  const q=id=>document.getElementById(id);
+  const today=()=>typeof getTodayIndex==='function'?getTodayIndex():0;
+  const now=()=>typeof getArgentinaNow==='function'?getArgentinaNow():new Date();
+  const pad=n=>String(Number(n)||0).padStart(2,'0');
+  const allTasks=()=>Array.isArray(tasks)?tasks:[];
+  const priority=t=>typeof getPriority==='function'?getPriority(t):String(t?.priority||'normal');
+  const rank=p=>p==='urgent'?0:p==='high'?1:p==='normal'?2:3;
+  function upcoming(){const d=today(),n=now(),cur=n.getHours()*60+n.getMinutes();return allTasks().filter(t=>Number(t.day)===d&&!t.completed).sort((a,b)=>{const ma=(Number(a.hour)||0)*60+(Number(a.minute)||0),mb=(Number(b.hour)||0)*60+(Number(b.minute)||0);const aa=ma<cur?1:0,bb=mb<cur?1:0;return aa-bb||rank(priority(a))-rank(priority(b))||ma-mb})}
+  function stats(){const a=allTasks().filter(t=>Number(t.day)===today());const done=a.filter(t=>t.completed).length;const urgent=a.filter(t=>!t.completed&&priority(t)==='urgent').length;const overdue=a.filter(t=>!t.completed&&typeof overdueTask==='function'&&overdueTask(t)).length;return {total:a.length,done,urgent,overdue,pct:a.length?Math.round(done/a.length*100):100}}
+  function focus(t){try{if(typeof openFocus==='function'){openFocus(t);return}}catch(_){} try{openTaskModal?.(Number(t.hour)||7,Number(t.minute)||0,t)}catch(_){} }
+  function complete(t){if(!t||!currentUser)return;const old=t.completed;t.completed=true;try{if(navigator.onLine){sb.from('tasks').update({completed:true}).eq('id',t.id).then(()=>{loadTasks?.();renderSchedule?.();renderDashboard?.();renderConflicts?.();refresh();})}else{t.completed=false;alert('Sin conexión: volvé a intentarlo cuando tengas Internet.')}}catch(_){t.completed=old}}
+  function refresh(){const box=q('v55Brief');if(!box)return;const s=stats(),u=upcoming()[0];if(q('v55Badge'))q('v55Badge').textContent=s.overdue?'⚠️ '+s.overdue+' atrasada(s)':s.urgent?'🔴 '+s.urgent+' urgente(s)':'✅ Día bajo control';if(q('v55Pct'))q('v55Pct').textContent=s.pct+'%';if(q('v55PctText'))q('v55PctText').textContent=`${s.done} / ${s.total} completadas`;if(q('v55PctBar'))q('v55PctBar').style.width=s.pct+'%';if(q('v55Pending'))q('v55Pending').textContent=String(Math.max(0,s.total-s.done));if(q('v55Urgent'))q('v55Urgent').textContent=String(s.urgent);if(q('v55Overdue'))q('v55Overdue').textContent=String(s.overdue);if(q('v55NextTitle'))q('v55NextTitle').textContent=u?.title||'No hay tareas pendientes';if(q('v55NextMeta'))q('v55NextMeta').textContent=u?`${pad(u.hour)}:${pad(u.minute)} · ${priority(u)}`:'Podés usar este tiempo para planificar o descansar';}
+  function mountHome(){if(q('v55Brief'))return;const anchor=q('v50Top3')||q('v36Control')||q('smartPanel')||q('dashboard');if(!anchor)return;const sec=document.createElement('section');sec.id='v55Brief';sec.className='v55-brief v32-home-pane';sec.dataset.v55Pane='home';sec.innerHTML=`<div class="v55-brief-head"><div><h3>🧭 Panel diario</h3><p>Una lectura rápida para saber cómo viene tu día y qué conviene hacer después.</p></div><span class="v55-badge" id="v55Badge">Calculando…</span></div><div class="v55-brief-grid"><div class="v55-next"><div class="v55-next-label">Próximo paso</div><div class="v55-next-title" id="v55NextTitle">—</div><div class="v55-next-meta" id="v55NextMeta">—</div><div class="v55-next-actions"><button class="v55-btn" id="v55OpenNext">Abrir</button><button class="v55-btn" id="v55FocusNext">🎯 Concentrarme</button><button class="v55-btn" id="v55CompleteNext">✓ Completar</button></div></div><div class="v55-stat"><strong id="v55Pct">0%</strong><span id="v55PctText">0 / 0 completadas</span><div class="v55-progress"><span id="v55PctBar"></span></div></div><div class="v55-stat"><strong id="v55Pending">0</strong><span>pendientes hoy</span></div><div class="v55-stat"><strong id="v55Urgent">0</strong><span>urgentes</span></div><div class="v55-stat"><strong id="v55Overdue">0</strong><span>atrasadas</span></div></div></section>`;anchor.parentNode.insertBefore(sec,anchor.nextSibling);q('v55OpenNext').onclick=()=>{const t=upcoming()[0];if(t)try{openTaskModal?.(Number(t.hour)||7,Number(t.minute)||0,t)}catch(_){} };q('v55FocusNext').onclick=()=>{const t=upcoming()[0];if(t)focus(t)};q('v55CompleteNext').onclick=()=>{const t=upcoming()[0];if(t)complete(t)};refresh()}
+  function patchSection(){if(typeof v32SetSection!=='function'||v32SetSection.__v55)return;const old=v32SetSection;const w=function(name){const r=old.apply(this,arguments);setTimeout(()=>{const b=q('v55Brief');if(b)b.style.display=name==='home'?'block':'none';},20);return r};w.__v55=true;window.v32SetSection=w}
+  function install(){try{mountHome()}catch(e){console.warn('v55 home',e)}try{patchSection()}catch(e){}setInterval(refresh,30000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+})();
+</script>
+
+<style id="v56-focus-insights-style">
+.v56-focus-panel{margin-top:14px;padding:15px;border-radius:20px;background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(168,85,247,.06));border:1px solid rgba(96,165,250,.14);box-shadow:0 10px 26px rgba(0,0,0,.10)}
+.v56-focus-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:11px}.v56-focus-head h3{font-size:14px}.v56-focus-head p{font-size:9px;color:var(--muted);margin-top:3px;line-height:1.4}.v56-focus-badge{padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.12);font-size:9px;font-weight:800;color:#cbd5e1}
+.v56-focus-grid{display:grid;grid-template-columns:1.3fr repeat(3,1fr);gap:8px}.v56-focus-main,.v56-focus-stat{padding:11px;border-radius:14px;background:rgba(15,23,42,.58);border:1px solid rgba(148,163,184,.10)}.v56-focus-main strong{display:block;font-size:14px}.v56-focus-main span,.v56-focus-stat span{display:block;margin-top:3px;font-size:8px;color:var(--muted);line-height:1.35}.v56-focus-timer{font-size:24px;font-weight:900;margin-top:6px;color:#dbeafe;letter-spacing:.04em}.v56-focus-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.v56-focus-btn{padding:7px 9px;border-radius:9px;border:1px solid rgba(96,165,250,.18);background:rgba(59,130,246,.08);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer}.v56-focus-btn:hover{border-color:#60a5fa}.v56-focus-btn.danger{border-color:rgba(239,68,68,.22);background:rgba(239,68,68,.07);color:#fecaca}.v56-focus-stat strong{display:block;font-size:16px;color:#dbeafe}.v56-focus-week{display:flex;align-items:flex-end;gap:7px;height:86px;margin-top:10px;padding:8px 6px 15px;border-radius:12px;background:rgba(2,6,23,.16);border:1px solid rgba(148,163,184,.08)}.v56-focus-bar{flex:1;min-width:7px;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#60a5fa,#7c3aed);position:relative}.v56-focus-bar small{position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);font-size:7px;color:#64748b}.v56-focus-note{margin-top:8px;font-size:8px;color:var(--muted);line-height:1.4}.v56-focus-panel.running{border-color:rgba(34,197,94,.24);background:linear-gradient(135deg,rgba(34,197,94,.07),rgba(59,130,246,.06))}.v56-focus-panel.running .v56-focus-badge{color:#bbf7d0;border-color:rgba(34,197,94,.22);background:rgba(34,197,94,.08)}
+body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .v56-focus-main,body.light .v56-focus-stat{background:#fff;border-color:#dbe3ee}body.light .v56-focus-main strong,body.light .v56-focus-stat strong,.v56-focus-timer{color:#0f172a}body.light .v56-focus-btn{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}body.light .v56-focus-btn.danger{background:#fff1f2;color:#b91c1c;border-color:#fecaca}
+@media(max-width:900px){.v56-focus-grid{grid-template-columns:1fr 1fr}.v56-focus-main{grid-column:1/-1}}
+@media(max-width:600px){.v56-focus-panel{padding:12px}.v56-focus-grid{grid-template-columns:1fr 1fr}.v56-focus-main{grid-column:1/-1}.v56-focus-actions .v56-focus-btn{flex:1}}
+</style>
+
+<section class="v56-focus-panel v32-home-pane" id="v56FocusPanel" data-v56-pane="home">
+  <div class="v56-focus-head">
+    <div><h3>🎯 Sesiones de enfoque</h3><p>Registrá tiempo de concentración y mirá tu constancia sin mezclarla con las tareas.</p></div>
+    <span class="v56-focus-badge" id="v56FocusBadge">Listo</span>
+  </div>
+  <div class="v56-focus-grid">
+    <div class="v56-focus-main">
+      <strong id="v56FocusTask">Elegí una tarea o empezá una sesión libre</strong>
+      <div class="v57-focus-taskbar">
+        <div><label for="v57FocusTaskSelect">Tarea asociada</label><select class="v57-focus-task-select" id="v57FocusTaskSelect"><option value="">Sesión libre (sin tarea)</option></select></div>
+        <button class="v57-focus-task-open" id="v57FocusTaskOpen" type="button" disabled>Abrir tarea</button>
+      </div>
+      <div class="v57-focus-task-meta" id="v57FocusTaskMeta">Podés elegir una tarea para medir cuánto tiempo le dedicás.</div>
+      <span id="v56FocusSub">El contador registra solo el tiempo que dejás correr.</span>
+      <div class="v56-focus-timer" id="v56FocusTimer">25:00</div>
+      <div class="v56-focus-actions">
+        <button class="v56-focus-btn" id="v56Focus25" type="button">▶ 25 min</button>
+        <button class="v56-focus-btn" id="v56Focus50" type="button">▶ 50 min</button>
+        <button class="v56-focus-btn" id="v56FocusPause" type="button">⏸ Pausar</button>
+        <button class="v56-focus-btn danger" id="v56FocusStop" type="button">■ Terminar</button>
+      </div>
+    </div>
+    <div class="v56-focus-stat"><strong id="v56FocusToday">0</strong><span>minutos enfocados hoy</span></div>
+    <div class="v56-focus-stat"><strong id="v56FocusSessions">0</strong><span>sesiones completadas hoy</span></div>
+    <div class="v56-focus-stat"><strong id="v56FocusAvg">0 min</strong><span>promedio por sesión</span></div>
+  </div>
+  <div class="v57-focus-task-progress"><strong id="v57FocusTaskTotal">0 min</strong><span id="v57FocusTaskTotalLabel">Tiempo registrado para la tarea seleccionada</span></div>
+  <div class="v57-focus-task-list" id="v57FocusTaskList"></div>
+  <div class="v56-focus-week" id="v56FocusWeek"></div>
+  <div class="v56-focus-note" id="v56FocusNote">Tip: usá 25 minutos para una tarea concreta y 50 para bloques largos.</div>
+</section>
+
+<script id="v56-focus-insights-script">
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const key=()=>`agendaV56Focus:${currentUser?.id||'guest'}`;
+  const today=()=>typeof todayISO==='function'?todayISO():new Date().toISOString().slice(0,10);
+  const dayName=['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  let state={running:false,remaining:1500,mode:1500,startedAt:null,elapsed:0,timer:null,targetId:null};
+  function read(){try{const x=JSON.parse(localStorage.getItem(key())||'{}');return {days:x.days&&typeof x.days==='object'?x.days:{},sessions:x.sessions&&typeof x.sessions==='object'?x.sessions:{}}}catch{return {days:{},sessions:{}}}}
+  function write(x){try{localStorage.setItem(key(),JSON.stringify(x))}catch{}}
+  function record(minutes){const x=read(),d=today();x.days[d]=(Number(x.days[d])||0)+minutes;x.sessions[d]=(Number(x.sessions[d])||0)+1;const cutoff=new Date();cutoff.setDate(cutoff.getDate()-45);Object.keys(x.days).forEach(k=>{if(k<cutoff.toISOString().slice(0,10))delete x.days[k]});Object.keys(x.sessions).forEach(k=>{if(k<cutoff.toISOString().slice(0,10))delete x.sessions[k]});write(x)}
+  function fmt(sec){sec=Math.max(0,Math.round(sec));return `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`}
+  function renderStats(){const x=read(),d=today(),mins=Number(x.days[d])||0,sess=Number(x.sessions[d])||0;q('v56FocusToday').textContent=String(mins);q('v56FocusSessions').textContent=String(sess);q('v56FocusAvg').textContent=sess?Math.round(mins/sess)+' min':'0 min';const host=q('v56FocusWeek');if(!host)return;host.innerHTML='';const now=new Date();const start=new Date(now);start.setHours(12,0,0,0);start.setDate(start.getDate()-((start.getDay()+6)%7));const vals=[];for(let i=0;i<7;i++){const dt=new Date(start);dt.setDate(start.getDate()+i);const iso=dt.toISOString().slice(0,10);vals.push({iso,mins:Number(x.days[iso])||0,label:dayName[i]})}const max=Math.max(25,...vals.map(v=>v.mins));vals.forEach(v=>{const b=document.createElement('div');b.className='v56-focus-bar';b.style.height=Math.max(8,Math.round(v.mins/max*58))+'px';b.title=`${v.label}: ${v.mins} min`;b.innerHTML=`<small>${v.label}</small>`;host.appendChild(b)})}
+  function update(){q('v56FocusTimer').textContent=fmt(state.remaining);const p=q('v56FocusPanel');p?.classList.toggle('running',state.running);q('v56FocusBadge').textContent=state.running?'En curso':'Listo';const t=state.targetId&&Array.isArray(tasks)?tasks.find(x=>String(x.id)===String(state.targetId)):null;q('v56FocusTask').textContent=t?.title||'Sesión libre';q('v56FocusSub').textContent=state.running?'Concentrate en una sola cosa hasta que termine el bloque.':'El contador registra solo el tiempo que dejás correr.'}
+  function stop(){if(state.timer){clearInterval(state.timer);state.timer=null}state.running=false;state.startedAt=null;state.elapsed=0;state.remaining=state.mode;update();renderStats()}
+  function finish(){const spent=Math.min(state.mode,Math.max(0,state.mode-state.remaining));if(spent>=60){record(Math.max(1,Math.round(spent/60)));}stop();q('v56FocusNote').textContent=spent>=60?`✅ Sesión guardada: ${Math.round(spent/60)} min. Seguí así.`:'Sesión demasiado corta para registrarla.';}
+  function start(mode){if(state.running)return;state.mode=mode;state.remaining=mode;state.running=true;state.startedAt=Date.now();state.targetId=null;state.timer=setInterval(()=>{if(!state.running)return;state.remaining--;if(state.remaining<=0){state.remaining=0;state.running=false;clearInterval(state.timer);state.timer=null;record(Math.round(mode/60));q('v56FocusNote').textContent='🎉 Sesión completa. Buen bloque de concentración.';try{navigator.vibrate?.([120,80,120])}catch{}renderStats()}update()},1000);update()}
+  function bind(){q('v56Focus25')?.addEventListener('click',()=>start(1500));q('v56Focus50')?.addEventListener('click',()=>start(3000));q('v56FocusPause')?.addEventListener('click',()=>{if(state.running){state.running=false;clearInterval(state.timer);state.timer=null;update();q('v56FocusNote').textContent='⏸ Pausado. Retomá cuando quieras.'}else if(state.remaining<state.mode&&state.remaining>0){state.running=true;state.timer=setInterval(()=>{state.remaining--;if(state.remaining<=0){state.remaining=0;state.running=false;clearInterval(state.timer);state.timer=null;record(Math.round(state.mode/60));q('v56FocusNote').textContent='🎉 Sesión completa.'}update()},1000);update()}});q('v56FocusStop')?.addEventListener('click',finish);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')renderStats()});renderStats();update()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
+
+<script id="v57-focus-task-script">
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const key=()=>`agendaV57FocusTask:${currentUser?.id||'guest'}`;
+  let selectedId='';
+  let running=false, remaining=1500, duration=1500, startedAt=null, timer=null;
+  function read(){try{const x=JSON.parse(localStorage.getItem(key())||'{}');return {tasks:x.tasks&&typeof x.tasks==='object'?x.tasks:{},sessions:x.sessions&&Array.isArray(x.sessions)?x.sessions:[]}}catch{return {tasks:{},sessions:[]}}}
+  function write(x){try{localStorage.setItem(key(),JSON.stringify(x))}catch{}}
+  function fmt(sec){sec=Math.max(0,Math.round(sec));return `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`}
+  function taskList(){return Array.isArray(tasks)?tasks.filter(t=>!t.completed).sort((a,b)=>(Number(a.day)-Number(b.day))||((Number(a.hour)||0)*60+(Number(a.minute)||0))-((Number(b.hour)||0)*60+(Number(b.minute)||0))):[]}
+  function renderTaskOptions(){const sel=q('v57FocusTaskSelect');if(!sel)return;const current=selectedId;sel.innerHTML='<option value="">Sesión libre (sin tarea)</option>';taskList().forEach(t=>{const o=document.createElement('option');o.value=String(t.id);o.textContent=`${t.title} · ${String(Number(t.hour)||0).padStart(2,'0')}:${String(Number(t.minute)||0).padStart(2,'0')}`;sel.appendChild(o)});sel.value=taskList().some(t=>String(t.id)===current)?current:'';selectedId=sel.value;renderSelected();renderTotals()}
+  function renderSelected(){const sel=q('v57FocusTaskSelect'),open=q('v57FocusTaskOpen'),meta=q('v57FocusTaskMeta');const t=selectedId&&Array.isArray(tasks)?tasks.find(x=>String(x.id)===selectedId):null;if(sel&&sel.value!==selectedId)sel.value=selectedId;if(open)open.disabled=!t;if(meta)meta.textContent=t?`📚 ${t.title} · ${typeof getPriority==='function'?getPriority(t):'normal'} · ${String(Number(t.hour)||0).padStart(2,'0')}:${String(Number(t.minute)||0).padStart(2,'0')}`:'Sesión libre: el tiempo no queda asociado a una tarea.';q('v56FocusTask').textContent=t?.title||'Sesión libre';q('v56FocusSub').textContent=running&&t?'Concentrate en una sola tarea hasta que termine el bloque.':running?'Concentrate en el bloque actual.':'El contador registra solo el tiempo que dejás correr.'}
+  function renderTotals(){const x=read(),id=selectedId,total=id?Number(x.tasks[id])||0:0;q('v57FocusTaskTotal').textContent=total+' min';q('v57FocusTaskTotalLabel').textContent=id?'Tiempo total registrado para esta tarea':'Seleccioná una tarea para ver su tiempo acumulado';const host=q('v57FocusTaskList');if(!host)return;host.innerHTML='';const entries=Object.entries(x.tasks).sort((a,b)=>Number(b[1])-Number(a[1])).slice(0,8);const map=new Map((Array.isArray(tasks)?tasks:[]).map(t=>[String(t.id),t]));entries.forEach(([id,mins])=>{const t=map.get(String(id));if(!t)return;const row=document.createElement('div');row.className='v57-focus-task-row';row.innerHTML=`<div><div class="v57-focus-task-row-title">${esc(t.title)}</div><div class="v57-focus-task-row-meta">${String(Number(t.hour)||0).padStart(2,'0')}:${String(Number(t.minute)||0).padStart(2,'0')}</div></div><div class="v57-focus-task-row-time">${mins} min</div>`;row.onclick=()=>{selectedId=String(id);renderTaskOptions()};host.appendChild(row)})}
+  function replaceButton(id,handler){const old=q(id);if(!old)return null;const fresh=old.cloneNode(true);old.replaceWith(fresh);fresh.addEventListener('click',handler);return fresh}
+  function clearTimer(){if(timer){clearInterval(timer);timer=null}}
+  function record(spent){const mins=Math.max(1,Math.round(spent/60));const x=read();x.sessions.push({at:new Date().toISOString(),minutes:mins,taskId:selectedId||null});if(selectedId)x.tasks[selectedId]=(Number(x.tasks[selectedId])||0)+mins;while(x.sessions.length>200)x.sessions.shift();write(x);renderTotals()}
+  function update(){q('v56FocusTimer').textContent=fmt(remaining);q('v56FocusBadge').textContent=running?'En curso':'Listo';q('v56FocusPanel')?.classList.toggle('running',running);renderSelected()}
+  function stop(){clearTimer();running=false;startedAt=null;remaining=duration;update()}
+  function finish(){if(!startedAt&&!running&&remaining===duration){q('v56FocusNote').textContent='No hay una sesión en curso.';return}const spent=Math.max(0,duration-remaining);if(spent>=60){record(spent);q('v56FocusNote').textContent=`✅ Registrados ${Math.round(spent/60)} min${selectedId?' para esta tarea.':'.'}`}else{q('v56FocusNote').textContent='Sesión demasiado corta para registrarla.'}stop()}
+  function start(mode){if(running)return;duration=mode;remaining=mode;running=true;startedAt=Date.now();update();clearTimer();timer=setInterval(()=>{remaining--;if(remaining<=0){remaining=0;clearTimer();running=false;record(mode);q('v56FocusNote').textContent=`🎉 Sesión completa. ${selectedId?'Tiempo asociado a la tarea.':''}`;update();return}update()},1000)}
+  function togglePause(){if(running){running=false;clearTimer();update();q('v56FocusNote').textContent='⏸ Pausado. Retomá cuando quieras.'}else if(remaining<duration&&remaining>0){running=true;startedAt=Date.now();timer=setInterval(()=>{remaining--;if(remaining<=0){remaining=0;clearTimer();running=false;record(duration);q('v56FocusNote').textContent='🎉 Sesión completa.'}update()},1000);update()}}
+  function bind(){
+    const b25=replaceButton('v56Focus25',()=>start(1500));
+    const b50=replaceButton('v56Focus50',()=>start(3000));
+    const bp=replaceButton('v56FocusPause',togglePause);
+    const bs=replaceButton('v56FocusStop',finish);
+    q('v57FocusTaskSelect')?.addEventListener('change',e=>{selectedId=e.target.value;renderSelected();renderTotals()});
+    q('v57FocusTaskOpen')?.addEventListener('click',()=>{const t=Array.isArray(tasks)?tasks.find(x=>String(x.id)===selectedId):null;if(t)openTaskModal?.(Number(t.hour)||7,Number(t.minute)||0,t)});
+    renderTaskOptions();update();
+    const observer=setInterval(()=>{if(!currentUser)return;renderTaskOptions();},30000);
+    window.addEventListener('beforeunload',()=>{clearInterval(observer);clearTimer()});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else setTimeout(bind,50);
+})();
+</script>
+
 </body>
 </html>
