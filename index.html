@@ -873,6 +873,14 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
 <style id="v49-training-cancel-comparison">
 .v49-cancel-wrap{margin-top:14px;padding-top:12px;border-top:1px solid rgba(148,163,184,.12);text-align:center}.v49-cancel-btn{width:100%;padding:11px 14px;border-radius:12px;border:1px solid rgba(239,68,68,.28);background:rgba(239,68,68,.08);color:#fecaca;font-size:11px;font-weight:800;cursor:pointer}.v49-cancel-btn:hover{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.42)}.v49-cancel-help{display:block;margin-top:6px;color:#94a3b8;font-size:9px;line-height:1.35}.v49-comparison{margin:14px 0 2px;padding:12px;border-radius:14px;background:rgba(59,130,246,.06);border:1px solid rgba(96,165,250,.14);text-align:left}.v49-comparison-head{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}.v49-comparison-head strong{font-size:11px;color:#dbeafe}.v49-comparison-head span{font-size:9px;color:#94a3b8}.v49-comparison-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-top:1px solid rgba(148,163,184,.08);font-size:9px}.v49-comparison-row span:first-child{font-weight:800;color:#e5e7eb}.v49-comparison-row span:last-child{color:#94a3b8;text-align:right}.v49-comparison-row.up span:last-child{color:#86efac}.v49-comparison-row.down span:last-child{color:#fca5a5}.v49-comparison-row.same span:last-child{color:#cbd5e1}body.light .v49-cancel-btn{background:#fff1f2;color:#b91c1c;border-color:#fecaca}body.light .v49-cancel-help{color:#64748b}body.light .v49-comparison{background:#eff6ff;border-color:#bfdbfe}body.light .v49-comparison-head strong{color:#1e3a8a}body.light .v49-comparison-row span:first-child{color:#0f172a}
 </style>
+
+<style id="v54-template-style">
+.v54-panel{margin-top:14px;padding:15px;border-radius:20px;background:rgba(15,23,42,.62);border:1px solid rgba(148,163,184,.14);box-shadow:0 10px 26px rgba(0,0,0,.10)}
+.v54-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:11px}.v54-head h3{font-size:14px}.v54-head p{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+.v54-template-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v54-template{padding:11px;border-radius:13px;background:rgba(17,24,39,.62);border:1px solid rgba(148,163,184,.11);cursor:pointer;text-align:left;color:#dbeafe}.v54-template:hover{border-color:rgba(96,165,250,.35);background:rgba(59,130,246,.08)}.v54-template strong{display:block;font-size:11px}.v54-template span{display:block;margin-top:4px;font-size:9px;color:var(--muted);line-height:1.35}.v54-template-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.v54-btn{padding:8px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer}.v54-btn:hover{border-color:rgba(96,165,250,.35)}.v54-empty{padding:13px;text-align:center;color:var(--muted);font-size:9px;border:1px dashed rgba(148,163,184,.14);border-radius:12px}
+body.light .v54-panel{background:rgba(255,255,255,.84);border-color:#dbe3ee}body.light .v54-template{background:#fff;border-color:#dbe3ee;color:#0f172a}body.light .v54-template span{color:#64748b}body.light .v54-btn{background:#f8fafc;color:#334155;border-color:#dbe3ee}
+@media(max-width:800px){.v54-template-list{grid-template-columns:1fr 1fr}}@media(max-width:520px){.v54-template-list{grid-template-columns:1fr}.v54-panel{padding:12px}}
+</style>
 </head>
 <body>
 <section id="authScreen">
@@ -1289,7 +1297,13 @@ body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
   <div class="conflict-list" id="conflictList"></div>
 </section>
 
-    <div class="v32-section-title v32-agenda-pane" data-v33-pane="agenda"><strong>🕒 Agenda del día</strong><span>Solo horarios y tareas.</span></div><div class="schedule-block v32-agenda-pane" data-v33-pane="agenda">
+    <section class="v54-panel v32-agenda-pane" id="v54Templates" data-v54-pane="agenda">
+  <div class="v54-head"><div><h3>⚡ Plantillas rápidas</h3><p>Creá tareas frecuentes sin volver a completar todo desde cero.</p></div></div>
+  <div class="v54-template-list" id="v54TemplateList"></div>
+  <div class="v54-template-actions"><button class="v54-btn" id="v54NewTemplate" type="button">＋ Nueva plantilla</button><button class="v54-btn" id="v54ResetTemplates" type="button">↺ Restaurar ejemplos</button></div>
+</section>
+
+<div class="v32-section-title v32-agenda-pane" data-v33-pane="agenda"><strong>🕒 Agenda del día</strong><span>Solo horarios y tareas.</span></div><div class="schedule-block v32-agenda-pane" data-v33-pane="agenda">
       <div class="schedule-heading">
         <div>
           <h2>Horario del día</h2>
@@ -4501,5 +4515,84 @@ body.light .v52-recap{background:#faf5ff;border-color:#e9d5ff}body.light .v52-re
 })();
 </script>
 
+
+<style id="v53-home-planning-style">
+.v53-panel{margin-top:14px;padding:15px;border-radius:20px;background:rgba(15,23,42,.64);border:1px solid rgba(148,163,184,.14);box-shadow:0 10px 26px rgba(0,0,0,.10)}
+.v53-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:11px}.v53-head h3{font-size:14px}.v53-head p{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
+.v53-actions{display:flex;gap:7px;flex-wrap:wrap}.v53-btn{padding:8px 10px;border-radius:10px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#dbeafe;font-size:10px;font-weight:800;cursor:pointer}.v53-btn:hover{border-color:rgba(96,165,250,.35);background:rgba(59,130,246,.08)}
+.v53-goals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v53-goal{padding:11px;border-radius:13px;background:rgba(17,24,39,.66);border:1px solid rgba(148,163,184,.12)}.v53-goal strong{display:block;font-size:15px;color:#dbeafe}.v53-goal span{display:block;font-size:9px;color:var(--muted);margin-top:3px}.v53-bar{height:7px;margin-top:8px;background:#1e293b;border-radius:999px;overflow:hidden}.v53-bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#3b82f6,#22c55e)}
+.v53-events{display:flex;flex-direction:column;gap:7px}.v53-event{display:grid;grid-template-columns:74px 1fr auto;gap:9px;align-items:center;padding:10px 11px;border-radius:12px;background:rgba(17,24,39,.62);border:1px solid rgba(148,163,184,.10)}.v53-event-date{font-size:9px;color:#93c5fd;font-weight:900}.v53-event-title{font-size:10px;font-weight:800}.v53-event-meta{font-size:8px;color:var(--muted);margin-top:3px;line-height:1.3}.v53-type{padding:5px 7px;border-radius:999px;background:rgba(59,130,246,.08);border:1px solid rgba(96,165,250,.12);color:#bfdbfe;font-size:8px;font-weight:800}.v53-empty{padding:16px;text-align:center;color:var(--muted);font-size:10px;border:1px dashed rgba(148,163,184,.14);border-radius:12px}
+.v53-modal{position:fixed;inset:0;z-index:760;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.68);backdrop-filter:blur(8px)}.v53-modal.show{display:flex}.v53-card{width:min(520px,100%);background:rgba(17,24,39,.99);border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:0 30px 90px rgba(0,0,0,.45)}.v53-field{display:grid;gap:5px;margin-bottom:10px}.v53-field label{font-size:9px;color:var(--muted);font-weight:800}.v53-field input{width:100%;padding:10px;border-radius:10px;border:1px solid var(--line);background:#0f172a;color:#fff;outline:none;font-size:11px}.v53-field input:focus{border-color:var(--blue)}.v53-list{display:flex;flex-direction:column;gap:7px;margin-top:8px;max-height:280px;overflow:auto}.v53-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 10px;border-radius:11px;background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.10)}.v53-row strong{display:block;font-size:10px}.v53-row span{display:block;font-size:8px;color:var(--muted);margin-top:3px}.v53-mini{padding:6px 8px;border-radius:9px;border:1px solid rgba(148,163,184,.14);background:rgba(255,255,255,.04);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer}.v53-danger{color:#fecaca;border-color:rgba(239,68,68,.20);background:rgba(239,68,68,.07)}
+body.light .v53-panel{background:rgba(255,255,255,.82);border-color:#dbe3ee}body.light .v53-goal,body.light .v53-event,body.light .v53-row{background:#fff;border-color:#dbe3ee}body.light .v53-goal strong{color:#0f172a}body.light .v53-btn,.light .v53-mini{background:#f8fafc;color:#334155;border-color:#dbe3ee}body.light .v53-bar{background:#e2e8f0}body.light .v53-type{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}body.light .v53-card{background:#fff;color:#0f172a;border-color:#dbe3ee}body.light .v53-field input{background:#fff;color:#0f172a;border-color:#cbd5e1}
+@media(max-width:700px){.v53-goals{grid-template-columns:1fr 1fr}.v53-event{grid-template-columns:62px 1fr}.v53-type{grid-column:2;justify-self:start}.v53-panel{padding:12px}}
+@media(max-width:480px){.v53-goals{grid-template-columns:1fr}.v53-event{grid-template-columns:1fr}.v53-type{grid-column:auto}}
+</style>
+
+<section class="v53-panel v32-home-pane" id="v53HomePlanning" data-v53-pane="home">
+  <div class="v53-head"><div><h3>🎯 Objetivos de la semana</h3><p>Pequeños objetivos medibles para que tu semana tenga dirección.</p></div><div class="v53-actions"><button class="v53-btn" id="v53ManageGoals" type="button">⚙ Configurar</button></div></div>
+  <div class="v53-goals">
+    <div class="v53-goal"><strong id="v53GoalTasks">0%</strong><span>Tareas completadas</span><div class="v53-bar"><i id="v53GoalTasksBar"></i></div></div>
+    <div class="v53-goal"><strong id="v53GoalWorkouts">0 / 0</strong><span>Entrenamientos</span><div class="v53-bar"><i id="v53GoalWorkoutsBar"></i></div></div>
+    <div class="v53-goal"><strong id="v53GoalHabits">0%</strong><span>Hábitos cumplidos</span><div class="v53-bar"><i id="v53GoalHabitsBar"></i></div></div>
+  </div>
+</section>
+
+<section class="v53-panel v32-home-pane" id="v53Upcoming" data-v53-pane="home">
+  <div class="v53-head"><div><h3>📆 Próximos 7 días</h3><p>Una vista rápida de lo que se viene.</p></div></div>
+  <div class="v53-events" id="v53UpcomingList"></div>
+</section>
+
+<div class="v53-modal" id="v53GoalsModal" aria-hidden="true">
+  <div class="v53-card">
+    <div class="v53-head"><div><h3>🎯 Objetivos semanales</h3><p>Estos objetivos se guardan por usuario en este dispositivo.</p></div><button class="v53-mini" id="v53GoalsClose" type="button">×</button></div>
+    <div class="v53-field"><label>Tareas completadas / semana</label><input id="v53TargetTasks" type="number" min="0" step="1" placeholder="20"></div>
+    <div class="v53-field"><label>Entrenamientos / semana</label><input id="v53TargetWorkouts" type="number" min="0" step="1" placeholder="4"></div>
+    <div class="v53-field"><label>Hábitos cumplidos / semana</label><input id="v53TargetHabits" type="number" min="0" step="1" placeholder="20"></div>
+    <div class="v53-actions"><button class="v53-btn" id="v53GoalsCancel" type="button">Cancelar</button><button class="v53-btn" id="v53GoalsSave" type="button">Guardar objetivos</button></div>
+  </div>
+</div>
+
+<script id="v53-planning-script">
+(function(){
+  const q=id=>document.getElementById(id);
+  const key=(name)=>`agendaV53:${currentUser?.id||'guest'}:${name}`;
+  const read=(name,fallback)=>{try{const r=localStorage.getItem(key(name));return r?JSON.parse(r):fallback}catch(_){return fallback}};
+  const write=(name,v)=>{try{localStorage.setItem(key(name),JSON.stringify(v))}catch(_){} };
+  const pad=n=>String(n).padStart(2,'0');
+  const isoDay=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  function monday(){const d=typeof getArgentinaNow==='function'?getArgentinaNow():new Date();d.setHours(0,0,0,0);const dow=(d.getDay()+6)%7;d.setDate(d.getDate()-dow);return d}
+  function weekTasks(){const s=monday();const arr=[];for(const t of (typeof activeTasks==='function'?activeTasks():tasks||[])){const d=Number(t.day);if(d<0||d>6)continue;const x=new Date(s);x.setDate(s.getDate()+d);if(x>=s){arr.push(t)}}return arr}
+  function goals(){return read('goals',{tasks:20,workouts:4,habits:20})}
+  function renderGoals(){try{const g=goals(),ts=weekTasks(),done=ts.filter(t=>t.completed).length;const pct=g.tasks?Math.min(100,Math.round(done/g.tasks*100)):0;const logs=typeof workoutLogs!=='undefined'?workoutLogs:[];const s=monday(),e=new Date(s);e.setDate(s.getDate()+7);const workoutDays=new Set(logs.filter(l=>{const d=new Date(String(l.performed_at)+'T12:00:00');return d>=s&&d<e}).map(l=>l.performed_at));const wPct=g.workouts?Math.min(100,Math.round(workoutDays.size/g.workouts*100)):0;const hs=read('habits',[]);let hc=0;const days=7;for(const h of hs){if(h.doneOn){const hd=new Date(h.doneOn+'T12:00:00');if(hd>=s&&hd<e)hc++}}const hPct=g.habits?Math.min(100,Math.round(hc/g.habits*100)):0;q('v53GoalTasks').textContent=`${done}/${g.tasks||0}`;q('v53GoalTasksBar').style.width=pct+'%';q('v53GoalWorkouts').textContent=`${workoutDays.size}/${g.workouts||0}`;q('v53GoalWorkoutsBar').style.width=wPct+'%';q('v53GoalHabits').textContent=`${hc}/${g.habits||0}`;q('v53GoalHabitsBar').style.width=hPct+'%'}catch(e){console.warn('V53 goals',e)}}
+  function fmtTask(t){const d=Number(t.day),s=monday();s.setDate(s.getDate()+d);return `${s.toLocaleDateString('es-AR',{weekday:'short',day:'2-digit',month:'2-digit'})} · ${pad(Number(t.hour)||0)}:${pad(Number(t.minute)||0)}`}
+  function renderUpcoming(){const host=q('v53UpcomingList');if(!host)return;const today=typeof getTodayIndex==='function'?getTodayIndex():((new Date().getDay()+6)%7);const ts=(typeof activeTasks==='function'?activeTasks():tasks||[]).filter(t=>!t.completed).map(t=>({...t,_score:(Number(t.day)-today+7)%7})).sort((a,b)=>a._score-b._score||((Number(a.hour)||0)*60+(Number(a.minute)||0))-((Number(b.hour)||0)*60+(Number(b.minute)||0)));host.innerHTML='';ts.slice(0,8).forEach(t=>{const row=document.createElement('div');row.className='v53-event';const date=document.createElement('div');date.className='v53-event-date';date.textContent=fmtTask(t);const main=document.createElement('div');main.innerHTML=`<div class="v53-event-title">${esc(t.title||'Tarea')}</div><div class="v53-event-meta">${esc(t.description||'Pendiente')} · ${esc(typeof getPriority==='function'?getPriority(t):(t.priority||'normal'))}</div>`;const b=document.createElement('button');b.className='v53-type';b.textContent='Abrir';b.type='button';b.onclick=()=>{selectedDay=Number(t.day)||0;createDays?.();renderSchedule?.();openTaskModal?.(Number(t.hour)||7,Number(t.minute)||0,t)};row.append(date,main,b);host.appendChild(row)});if(!host.children.length)host.innerHTML='<div class="v53-empty">🎉 No hay tareas pendientes en los próximos días.</div>'}
+  function openGoals(){const g=goals();q('v53TargetTasks').value=g.tasks??20;q('v53TargetWorkouts').value=g.workouts??4;q('v53TargetHabits').value=g.habits??20;q('v53GoalsModal').classList.add('show');q('v53GoalsModal').setAttribute('aria-hidden','false')}
+  function closeGoals(){q('v53GoalsModal').classList.remove('show');q('v53GoalsModal').setAttribute('aria-hidden','true')}
+  function bind(){q('v53ManageGoals')?.addEventListener('click',openGoals);q('v53GoalsClose')?.addEventListener('click',closeGoals);q('v53GoalsCancel')?.addEventListener('click',closeGoals);q('v53GoalsModal')?.addEventListener('click',e=>{if(e.target===e.currentTarget)closeGoals()});q('v53GoalsSave')?.addEventListener('click',()=>{write('goals',{tasks:Number(q('v53TargetTasks').value)||0,workouts:Number(q('v53TargetWorkouts').value)||0,habits:Number(q('v53TargetHabits').value)||0});closeGoals();renderGoals()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeGoals()});renderGoals();renderUpcoming();setInterval(()=>{renderGoals();renderUpcoming()},30000)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
+
+<script id="v54-template-script">
+(function(){
+  const q=id=>document.getElementById(id);
+  const key=()=>`agendaV54:${currentUser?.id||'guest'}:templates`;
+  const defaults=[
+    {id:'study',title:'Estudiar',description:'Bloque de estudio concentrado',priority:'high'},
+    {id:'errand',title:'Trámite / compra',description:'Tarea personal rápida',priority:'normal'},
+    {id:'workout',title:'Entrenamiento',description:'Sesión de entrenamiento',priority:'normal'}
+  ];
+  function escSafe(v){return typeof esc==='function'?esc(String(v||'')):String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+  function read(){try{const x=JSON.parse(localStorage.getItem(key())||'null');return Array.isArray(x)&&x.length?x:defaults.map(x=>({...x}))}catch{return defaults.map(x=>({...x}))}}
+  function write(a){try{localStorage.setItem(key(),JSON.stringify(a))}catch(e){console.warn('V54 storage',e)}}
+  function priorityText(p){return p==='urgent'?'🔴 Urgente':p==='high'?'🟠 Alta':p==='low'?'⚪ Baja':'🔵 Normal'}
+  function render(){const host=q('v54TemplateList');if(!host)return;const arr=read();host.innerHTML='';arr.slice(0,9).forEach(t=>{const b=document.createElement('button');b.type='button';b.className='v54-template';b.innerHTML=`<strong>⚡ ${escSafe(t.title)}</strong><span>${escSafe(t.description||'Sin descripción')} · ${priorityText(t.priority)}</span>`;b.onclick=()=>use(t);host.appendChild(b)});if(!arr.length)host.innerHTML='<div class="v54-empty">Todavía no tenés plantillas.</div>'}
+  function use(t){try{const now=typeof getArgentinaNow==='function'?getArgentinaNow():new Date();selectedDay=typeof getTodayIndex==='function'?getTodayIndex():selectedDay;selectedHour=Math.max(7,Math.min(22,now.getHours()));if(typeof openTaskModal!=='function'){alert('No pude abrir el editor de tareas.');return}openTaskModal(selectedHour,0);setTimeout(()=>{if(q('taskTitleInput'))q('taskTitleInput').value=t.title||'';if(q('taskDescInput'))q('taskDescInput').value=t.description||'';if(q('taskPriorityInput'))q('taskPriorityInput').value=t.priority||'normal'},80)}catch(e){console.warn('V54 template',e)}}
+  function add(){const title=prompt('Nombre de la plantilla:');if(!title?.trim())return;const description=prompt('Descripción opcional:')||'';const raw=prompt('Prioridad: urgent / high / normal / low','normal')||'normal';const priority=['urgent','high','normal','low'].includes(raw)?raw:'normal';const arr=read();arr.push({id:`tpl-${Date.now()}`,title:title.trim(),description:description.trim(),priority});write(arr);render()}
+  function reset(){if(!confirm('¿Restaurar las plantillas de ejemplo?'))return;write(defaults.map(x=>({...x})));render()}
+  function bind(){q('v54NewTemplate')?.addEventListener('click',add);q('v54ResetTemplates')?.addEventListener('click',reset);render()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
 </body>
 </html>
