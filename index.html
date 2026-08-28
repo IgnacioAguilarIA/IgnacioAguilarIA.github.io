@@ -2952,10 +2952,7 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
       btn.addEventListener('click',()=>{
         captureVisibleActuals();
         data.done[i]=!data.done[i];
-        if(data.done[i]&&!data.reps[i]&&ex.reps){
-          const m=String(ex.reps).match(/\d+(?:[.,]\d+)?/);
-          if(m){data.reps[i]=m[0];reps.value=m[0];}
-        }
+        // No completar automáticamente las reps planificadas: solo guardar lo que el usuario hizo/escribió.
         save();
         row.classList.toggle('done',!!data.done[i]);
         btn.classList.toggle('done',!!data.done[i]);
@@ -4482,9 +4479,16 @@ body.light .v51-training-insights{background:#f8fafc;border-color:#dbe3ee}body.l
 (function(){
   'use strict';
   const q=id=>document.getElementById(id);
-  function numWeight(v){const m=String(v??'').replace(',','.').match(/-?\d+(?:\.\d+)?/);return m?Number(m[0]):0}
-  function repsTotal(v){const parts=String(v??'').split('/').map(x=>Number(String(x).replace(',','.').match(/\d+(?:\.\d+)?/)?.[0]||0));return parts.reduce((a,b)=>a+b,0)}
-  function volume(log){const reps=repsTotal(log?.reps);const w=numWeight(log?.weight);if(reps&&w)return reps*w;return 0}
+  function seriesValues(v){
+    const text=String(v??'');const out={};let m;const re=/S(\d+)\s*:\s*([^·|/]+)/g;
+    while((m=re.exec(text))){const n=Number(String(m[2]).replace(',','.').match(/-?\d+(?:\.\d+)?/)?.[0]||0);out[Number(m[1])]=n}
+    if(Object.keys(out).length)return out;
+    const parts=text.split('/').map(x=>Number(String(x).replace(',','.').match(/-?\d+(?:\.\d+)?/)?.[0]||0));
+    parts.forEach((n,i)=>{out[i+1]=n});return out;
+  }
+  function numWeight(v){const vals=Object.values(seriesValues(v));return vals.length?Math.max(...vals):0}
+  function repsTotal(v){return Object.values(seriesValues(v)).reduce((a,b)=>a+(Number.isFinite(b)?b:0),0)}
+  function volume(log){const rs=seriesValues(log?.reps),ws=seriesValues(log?.weight);let total=0;Object.keys(rs).forEach(k=>{const r=Number(rs[k]),w=Number(ws[k]);if(r>0&&w>0)total+=r*w});return total}
   function logsFor(name){return (workoutLogs||[]).filter(l=>String(l.exercise_name||'').trim().toLowerCase()===String(name||'').trim().toLowerCase()).sort((a,b)=>String(b.performed_at||'').localeCompare(String(a.performed_at||''))||String(b.created_at||'').localeCompare(String(a.created_at||'')))}
   function bests(logs){let maxW=0,maxV=0,maxReps=0;logs.forEach(l=>{maxW=Math.max(maxW,numWeight(l.weight));maxV=Math.max(maxV,volume(l));maxReps=Math.max(maxReps,repsTotal(l.reps))});return {maxW,maxV,maxReps}}
   function compare(a,b){
