@@ -5251,5 +5251,79 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
 })();
 </script>
 
+
+<!-- V70 — mejoras conservadoras de estabilidad y experiencia -->
+<style id="v70-stability-style">
+  .v70-connection{position:fixed;left:14px;bottom:92px;z-index:340;display:inline-flex;align-items:center;gap:7px;max-width:min(360px,calc(100vw - 28px));padding:8px 11px;border-radius:999px;border:1px solid rgba(96,165,250,.18);background:rgba(15,23,42,.94);color:#cbd5e1;font-size:10px;font-weight:800;box-shadow:0 12px 30px rgba(0,0,0,.22);backdrop-filter:blur(12px);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+  .v70-connection.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  .v70-connection.offline{border-color:rgba(245,158,11,.28);color:#fde68a;background:rgba(120,53,15,.94)}
+  .v70-connection.online{border-color:rgba(34,197,94,.24);color:#bbf7d0;background:rgba(20,83,45,.94)}
+  .v70-connection .dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;flex:0 0 auto}
+  .v70-connection.offline .dot{background:#f59e0b}
+  .v70-connection.online .dot{background:#22c55e}
+  .v70-connection button{border:0;background:transparent;color:inherit;padding:2px 4px;border-radius:7px;cursor:pointer;font:inherit}
+  .v70-connection button:hover{background:rgba(255,255,255,.08)}
+  :focus-visible{outline:3px solid rgba(96,165,250,.55)!important;outline-offset:2px!important}
+  @media(max-width:600px){.v70-connection{left:9px;right:9px;bottom:91px;justify-content:center;max-width:none}}
+  body.light .v70-connection{background:rgba(255,255,255,.96);color:#334155;border-color:#dbe3ee;box-shadow:0 12px 30px rgba(15,23,42,.14)}
+  body.light .v70-connection.offline{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+  body.light .v70-connection.online{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
+</style>
+
+<div class="v70-connection" id="v70Connection" role="status" aria-live="polite" aria-atomic="true">
+  <span class="dot" aria-hidden="true"></span>
+  <span id="v70ConnectionText">Conectado</span>
+  <button id="v70ConnectionAction" type="button" aria-label="Intentar sincronizar">↻</button>
+</div>
+
+<script id="v70-stability-script">
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  let hideTimer=null;
+  let onlineTimer=null;
+  function show(kind,text,ms){
+    const box=q('v70Connection'),label=q('v70ConnectionText');
+    if(!box||!label)return;
+    box.classList.remove('offline','online');
+    box.classList.add(kind,'show');
+    label.textContent=text;
+    clearTimeout(hideTimer);
+    if(ms){hideTimer=setTimeout(()=>box.classList.remove('show'),ms)}
+  }
+  function paint(){
+    if(navigator.onLine) show('online','🟢 Conexión disponible',1800);
+    else show('offline','📴 Sin conexión · cambios locales');
+  }
+  async function syncNow(){
+    if(!navigator.onLine){show('offline','📴 Sin conexión · no se puede sincronizar');return;}
+    show('online','🔄 Sincronizando…');
+    try{
+      if(typeof window.agendaV40Flush==='function') await window.agendaV40Flush();
+      if(typeof window.agendaV39SyncNow==='function') await window.agendaV39SyncNow();
+    }catch(e){console.warn('V70 sync',e)}
+    try{ if(typeof loadTasks==='function') await loadTasks(); }catch(e){console.warn('V70 tasks',e)}
+    try{ if(typeof loadPersonalDates==='function') await loadPersonalDates(); }catch(e){console.warn('V70 dates',e)}
+    try{ if(typeof loadWorkoutExercises==='function') await loadWorkoutExercises(); }catch(e){console.warn('V70 workout',e)}
+    try{ if(typeof loadWorkoutLogs==='function') await loadWorkoutLogs(); }catch(e){console.warn('V70 logs',e)}
+    try{ if(typeof loadNutritionMeals==='function') await loadNutritionMeals(); }catch(e){console.warn('V70 meals',e)}
+    try{
+      createDays?.(); renderSchedule?.(); renderDashboard?.(); renderTodayTimeline?.();
+      renderWorkoutDays?.(); renderWorkoutList?.(); renderWorkoutHistory?.(); renderWorkoutAnalytics?.();
+      renderNutritionDays?.(); renderMealTabs?.(); renderNutritionList?.(); renderNutritionGoals?.();
+    }catch(e){console.warn('V70 renders',e)}
+    show('online','✅ Sincronización actualizada',1800);
+  }
+  function init(){
+    q('v70ConnectionAction')?.addEventListener('click',syncNow);
+    window.addEventListener('offline',()=>show('offline','📴 Sin conexión · cambios locales'));
+    window.addEventListener('online',()=>{clearTimeout(onlineTimer);onlineTimer=setTimeout(()=>{syncNow()},500)});
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')paint()});
+    paint();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 </body>
 </html>
