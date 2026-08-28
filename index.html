@@ -1054,6 +1054,56 @@ body.light .v57-focus-task-select{background:#fff;color:#0f172a;border-color:#cb
 #v48FinishOverlay .v48-finish-close,#v48FinishOverlay .v48-finish-ok{pointer-events:auto!important}
 #v28WorkoutOverlay #v47SetList .v47-set-check{pointer-events:auto!important;touch-action:manipulation}
 </style>
+<style id="v61-training-series-fix">
+#v28WorkoutOverlay #v47RepsCounter{min-width:72px;text-align:center}
+#v28WorkoutOverlay #v47SetList .v47-set-check.done{background:rgba(34,197,94,.14)!important;border-color:rgba(34,197,94,.34)!important;color:#bbf7d0!important}
+</style>
+<script id="v61-training-series-fix-script">
+(function(){
+  'use strict';
+  function syncSeriesCounter(){
+    try{
+      const overlay=document.getElementById('v28WorkoutOverlay');
+      if(!overlay||!overlay.classList.contains('show'))return;
+      const host=document.getElementById('v47SetList');
+      const counter=document.getElementById('v47RepsCounter');
+      if(!host||!counter)return;
+      const rows=host.querySelectorAll('.v48-set-row');
+      const buttons=host.querySelectorAll('.v47-set-check');
+      const done=[...buttons].filter(b=>b.classList.contains('done')).length;
+      const total=rows.length||buttons.length||0;
+      counter.textContent=done+'/'+total+' series';
+      const panel=document.getElementById('v47RepsPanel');
+      if(panel)panel.classList.toggle('complete',total>0&&done===total);
+    }catch(_){ }
+  }
+  function schedule(){setTimeout(syncSeriesCounter,0);setTimeout(syncSeriesCounter,50)}
+  document.addEventListener('click',function(e){
+    if(e.target?.closest?.('#v28WorkoutOverlay #v47SetList .v47-set-check'))schedule();
+  },true);
+  document.addEventListener('keydown',function(e){
+    if((e.key==='Enter'||e.key===' ')&&e.target?.closest?.('#v28WorkoutOverlay #v47SetList .v47-set-check'))schedule();
+  },true);
+  const overlay=document.getElementById('v28WorkoutOverlay');
+  if(overlay){
+    new MutationObserver(schedule).observe(overlay,{childList:true,subtree:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
+  window.syncTrainingSeriesCounter=syncSeriesCounter;
+})();
+</script>
+
+<style id="v62-productivity-style">
+.v62-load{margin-top:14px;padding:14px;border-radius:18px;background:linear-gradient(135deg,rgba(59,130,246,.07),rgba(168,85,247,.05));border:1px solid rgba(96,165,250,.14)}
+.v62-load-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px}.v62-load-head h3{font-size:13px}.v62-load-head p{margin-top:3px;font-size:9px;color:var(--muted)}
+.v62-load-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.v62-load-card{padding:10px;border-radius:12px;background:rgba(15,23,42,.55);border:1px solid rgba(148,163,184,.10)}.v62-load-card strong{display:block;font-size:15px;color:#dbeafe}.v62-load-card span{display:block;margin-top:3px;font-size:8px;color:var(--muted)}
+.v62-load-bar{height:8px;margin-top:10px;background:#1e293b;border-radius:999px;overflow:hidden}.v62-load-bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#3b82f6,#22c55e)}
+.v62-load-note{margin-top:8px;font-size:9px;color:#cbd5e1;line-height:1.4}
+.v62-compact-toggle{margin-left:auto;display:inline-flex;align-items:center;gap:7px;padding:7px 9px;border-radius:999px;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.05);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer}
+body.v62-compact .hour{min-height:82px}.v62-compact .slot{min-height:82px;padding:8px}.v62-compact .time{min-height:82px;padding-top:12px}.v62-compact .task{padding:9px;margin-bottom:6px}.v62-compact .task h4{font-size:12px}.v62-compact .task p{font-size:10px;max-height:30px;overflow:hidden}.v62-compact .task-time{font-size:8px;padding:3px 6px}.v62-compact .delete-task,.v62-compact .edit-task{transform:scale(.9)}
+body.light .v62-load{background:#f8fafc;border-color:#dbe3ee}body.light .v62-load-card{background:#fff;border-color:#dbe3ee}body.light .v62-load-card strong{color:#0f172a}body.light .v62-load-note{color:#475569}body.light .v62-compact-toggle{background:#f8fafc;color:#334155;border-color:#dbe3ee}
+@media(max-width:900px){.v62-load-grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.v62-load-grid{grid-template-columns:1fr 1fr}.v62-load{padding:12px}}
+</style>
 </head>
 <body>
 <section id="authScreen">
@@ -1486,7 +1536,19 @@ body.light .v57-focus-task-select{background:#fff;color:#0f172a;border-color:#cb
       </div>
       <div class="schedule" id="schedule"></div>
     </div>
-  </main>
+  
+<section class="v62-load v32-home-pane" id="v62DailyLoad" data-v62-pane="home">
+  <div class="v62-load-head"><div><h3>⚖️ Carga de tu día</h3><p>Compara lo que tenés reservado con el tiempo libre y tu concentración registrada.</p></div><button class="v62-compact-toggle" id="v62CompactToggle" type="button">▤ Modo compacto de Agenda</button></div>
+  <div class="v62-load-grid">
+    <div class="v62-load-card"><strong id="v62Reserved">0 min</strong><span>tiempo reservado</span></div>
+    <div class="v62-load-card"><strong id="v62Free">0 min</strong><span>tiempo libre estimado</span></div>
+    <div class="v62-load-card"><strong id="v62Focus">0 min</strong><span>enfoque de hoy</span></div>
+    <div class="v62-load-card"><strong id="v62LoadPct">0%</strong><span>ocupación estimada</span></div>
+  </div>
+  <div class="v62-load-bar"><i id="v62LoadBar"></i></div>
+  <div class="v62-load-note" id="v62LoadNote">Calculando la carga de hoy…</div>
+</section>
+</main>
   <button class="quick-add-fab" id="quickAddFab" aria-label="Agregar tarea">＋</button>
 </section>
 
@@ -4760,7 +4822,7 @@ body.light .v52-recap{background:#faf5ff;border-color:#e9d5ff}body.light .v52-re
   function currentExercise(){return q('v28CurrentName')?.textContent?.trim()}
   function parseActuals(s){return Array.isArray(s?.actuals)?s.actuals:[]}
   function liveExerciseMetrics(){const s=session();const idx=Math.max(0,Number(s?.currentIndex)||0);const ex=Array.isArray(window.workoutExercises)?workoutExercises[idx]:null;const a=parseActuals(s)[idx]||{};const reps=Array.isArray(a.reps)?a.reps:[];const weights=Array.isArray(a.weight)?a.weight:[];const rirs=Array.isArray(a.rir)?a.rir:[];const done=Array.isArray(a.done)?a.done:[];let volume=0,maxW=0,rirSum=0,rirN=0;for(let i=0;i<reps.length;i++){const r=num(reps[i]),w=num(weights[i]);if(done[i]&&r>0&&w>0)volume+=r*w;if(done[i]&&w>maxW)maxW=w;if(done[i]&&rirs[i]!==''&&rirs[i]!=null){const x=num(rirs[i]);rirSum+=x;rirN++}}return {s,idx,ex,sets:Math.max(0,Number(ex?.sets)||reps.length||0),done:done.filter(Boolean).length,volume,maxW,avgRir:rirN?(rirSum/rirN).toFixed(1):'—'}}
-  function updateLiveRecap(){const host=q('v52LiveRecap');if(!host)return;const overlay=q('v28WorkoutOverlay');if(!overlay?.classList.contains('show')){host.style.display='none';return}const m=liveExerciseMetrics();host.style.display='block';q('v52RecapSets').textContent=`${m.done}/${m.sets}`;q('v52RecapVolume').textContent=`${Math.round(m.volume*10)/10} kg`;q('v52RecapMaxWeight').textContent=m.maxW?`${m.maxW} kg`:'—';q('v52RecapRir').textContent=m.avgRir==='—'?'—':m.avgRir;const name=m.ex?.exercise||currentExercise();const ls=logsFor(name);const previous=ls.find(l=>String(l.performed_at||'')!==today());const pv=previous?vol(previous):0;const trend=q('v52RecapTrend');if(!previous){trend.className='v52-recap-trend';trend.textContent='🆕 No hay una sesión anterior para comparar este ejercicio.'}else if(m.volume>pv&&pv>0){trend.className='v52-recap-trend up';trend.textContent=`📈 El volumen actual va ${Math.round((m.volume/pv-1)*100)}% por encima del registro anterior.`}else if(m.volume>0&&m.volume<pv){trend.className='v52-recap-trend down';trend.textContent=`📉 El volumen actual va ${Math.round((1-m.volume/pv)*100)}% por debajo del registro anterior.`}else{trend.className='v52-recap-trend';trend.textContent='➡️ El volumen actual está cerca del registro anterior.'}}
+  function updateLiveRecap(){const host=q('v52LiveRecap');if(!host)return;const overlay=q('v28WorkoutOverlay');if(!overlay?.classList.contains('show')){host.style.display='none';return}const m=liveExerciseMetrics();host.style.display='block';q('v52RecapSets').textContent=`${m.done}/${m.sets}`;q('v52RecapVolume').textContent=`${Math.round(m.volume*10)/10} kg`;q('v52RecapMaxWeight').textContent=m.maxW?`${m.maxW} kg`:'—';q('v52RecapRir').textContent=m.avgRir==='—'?'—':m.avgRir;const name=m.ex?.exercise||currentExercise();const ls=logsFor(name);const previous=ls[0]||null;const pv=previous?vol(previous):0;const trend=q('v52RecapTrend');if(!previous){trend.className='v52-recap-trend';trend.textContent='🆕 No hay una sesión anterior para comparar este ejercicio.'}else if(m.volume>pv&&pv>0){trend.className='v52-recap-trend up';trend.textContent=`📈 El volumen actual va ${Math.round((m.volume/pv-1)*100)}% por encima del registro anterior.`}else if(m.volume>0&&m.volume<pv){trend.className='v52-recap-trend down';trend.textContent=`📉 El volumen actual va ${Math.round((1-m.volume/pv)*100)}% por debajo del registro anterior.`}else{trend.className='v52-recap-trend';trend.textContent='➡️ El volumen actual está cerca del registro anterior.'}}
   function renderDashboard(){const host=q('v52WWBars');if(!host)return;const ls=logs().slice().sort((a,b)=>String(a.performed_at||'').localeCompare(String(b.performed_at||'')));const recent=ls.slice(-8);let total=0,bestW=0;const dates=new Set(),exs=new Set();recent.forEach(l=>{total+=vol(l);bestW=Math.max(bestW,num(l.weight));if(l.performed_at)dates.add(l.performed_at);if(l.exercise_name)exs.add(l.exercise_name)});q('v52WorkoutTotal').textContent=`${recent.length} ${recent.length===1?'registro':'registros'}`;q('v52WWVolume').textContent=`${Math.round(total*10)/10} kg`;q('v52WWBestWeight').textContent=bestW?`${bestW} kg`:'—';q('v52WWSessions').textContent=String(dates.size);q('v52WWExercises').textContent=String(exs.size);const max=Math.max(1,...recent.map(vol));host.innerHTML=recent.map(l=>{const v=vol(l),h=Math.max(8,Math.round(v/max*100));return `<div class="v52-ww-bar" style="height:${h}%" title="${l.performed_at||''} · ${Math.round(v)} kg"><small>${String(l.performed_at||'').slice(5)}</small></div>`}).join('');q('v52WWNote').textContent=recent.length?`Mostrando tus ${recent.length} registros más recientes. El volumen se estima a partir de reps × peso.`:'Todavía no hay historial suficiente para mostrar una evolución.'}
   function bind(){const o=q('v28WorkoutOverlay');if(o)new MutationObserver(updateLiveRecap).observe(o,{attributes:true,attributeFilter:['class']});const n=q('v28CurrentName');if(n)new MutationObserver(()=>setTimeout(updateLiveRecap,0)).observe(n,{childList:true,characterData:true,subtree:true});document.addEventListener('input',e=>{if(e.target?.closest?.('#v47SetList,#v48SetList'))setTimeout(updateLiveRecap,30)});document.addEventListener('click',e=>{if(e.target?.closest?.('#v47SetList,#v48SetList,#v28NextBtn,#v28PrevBtn'))setTimeout(updateLiveRecap,120)});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){updateLiveRecap();renderDashboard()}});setInterval(()=>{updateLiveRecap();renderDashboard()},5000);updateLiveRecap();renderDashboard()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
@@ -4979,5 +5041,25 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
 })();
 </script>
 
+
+<script id="v62-productivity-script">
+(function(){
+  const q=id=>document.getElementById(id);
+  const pad=n=>String(n).padStart(2,'0');
+  const today=()=>typeof getTodayIndex==='function'?getTodayIndex():((new Date().getDay()+6)%7);
+  const dur=t=>{try{const m=localStorage.getItem('agendaV46Durations:'+((typeof currentUser!=='undefined'&&currentUser?.id)||'guest'));const a=m?JSON.parse(m):{};return Number(a[String(t?.id)])||30}catch{return 30}};
+  const focusToday=()=>{try{const id=(typeof currentUser!=='undefined'&&currentUser?.id)||'guest';const raw=localStorage.getItem('agendaV56Focus:'+id);const x=raw?JSON.parse(raw):null;const key=typeof todayISO==='function'?todayISO():new Date().toISOString().slice(0,10);return Number(x?.days?.[key])||0}catch{return 0}};
+  function refresh(){
+    const host=q('v62DailyLoad');if(!host)return;
+    const idx=today();const list=(typeof tasks!=='undefined'&&Array.isArray(tasks)?tasks:[]).filter(t=>Number(t?.day)===idx&&!t.completed);
+    const reserved=list.reduce((a,t)=>a+dur(t),0);const totalWindow=16*60;const free=Math.max(0,totalWindow-reserved);const pct=Math.min(100,Math.round(reserved/totalWindow*100));const focus=focusToday();
+    q('v62Reserved').textContent=reserved+' min';q('v62Free').textContent=free+' min';q('v62Focus').textContent=focus+' min';q('v62LoadPct').textContent=pct+'%';q('v62LoadBar').style.width=pct+'%';
+    const note=pct>=85?'⚠️ Día muy cargado. Conviene priorizar y dejar margen entre bloques.':pct>=65?'🟡 Día bastante ocupado. Todavía tenés margen para una tarea importante.':'🟢 Tenés buen margen hoy. Podés usar parte del tiempo libre para estudiar, descansar o planificar.';q('v62LoadNote').textContent=note;
+  }
+  function setCompact(on){document.body.classList.toggle('v62-compact',on);try{localStorage.setItem('agendaV62Compact:'+((typeof currentUser!=='undefined'&&currentUser?.id)||'guest'),on?'1':'0')}catch{};const b=q('v62CompactToggle');if(b)b.textContent=on?'▤ Modo compacto: activo':'▤ Modo compacto de Agenda';}
+  function bind(){const b=q('v62CompactToggle');if(b){let on=false;try{on=localStorage.getItem('agendaV62Compact:'+((typeof currentUser!=='undefined'&&currentUser?.id)||'guest'))==='1'}catch{};setCompact(on);b.onclick=()=>setCompact(!document.body.classList.contains('v62-compact'));}refresh();setInterval(refresh,30000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
 </body>
 </html>
