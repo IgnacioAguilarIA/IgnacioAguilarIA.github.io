@@ -5162,5 +5162,94 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
 })();
 </script>
 
+
+<style id="v68-mobile-search-navigation-style">
+  #v15SearchOverlay{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:manipulation}
+  #v15SearchOverlay .v15-search-close-mobile{display:none}
+  @media(max-width:700px){
+    #v15SearchOverlay .v15-search-close-mobile{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-top:8px;border:1px solid rgba(148,163,184,.18);border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-size:12px;font-weight:800;cursor:pointer;touch-action:manipulation}
+  }
+  body.light #v15SearchOverlay .v15-search-close-mobile{background:#f8fafc;color:#334155;border-color:#dbe3ee}
+</style>
+<script id="v68-mobile-search-navigation-fix">
+(function(){
+  'use strict';
+  var MARK='agenda-search-overlay';
+  var navigating=false;
+  function overlay(){return document.getElementById('v15SearchOverlay')}
+  function isOpen(){var o=overlay();return !!(o&&o.classList.contains('show'))}
+  function closeVisual(){
+    var o=overlay(); if(!o)return;
+    o.classList.remove('show');
+    o.setAttribute('aria-hidden','true');
+    o.style.display='none';
+    o.style.pointerEvents='none';
+    var i=document.getElementById('v15SearchInput');
+    try{i&&i.blur()}catch(_){ }
+  }
+  function closeSearchHard(fromHistory){
+    navigating=true;
+    closeVisual();
+    try{window.searchCache=null;}catch(_){ }
+    try{window.searchCacheAt=0;}catch(_){ }
+    if(!fromHistory && history.state && history.state[MARK]){
+      history.back();
+    }
+    setTimeout(function(){navigating=false;},50);
+  }
+  function openSearchHard(){
+    var o=overlay(); if(!o)return;
+    if(!history.state || !history.state[MARK]){
+      try{history.pushState(Object.assign({},history.state||{}, {[MARK]:true}), '', location.href)}catch(_){ }
+    }
+    o.classList.add('show');
+    o.setAttribute('aria-hidden','false');
+    o.style.display='flex';
+    o.style.pointerEvents='auto';
+    var i=document.getElementById('v15SearchInput');
+    if(i){i.disabled=false;try{i.focus({preventScroll:true})}catch(_){i.focus()}}
+    if(typeof window.renderSearch==='function')window.renderSearch('');
+  }
+  function ensureCloseButton(){
+    var top=document.querySelector('#v15SearchOverlay .v15-search-top');
+    var box=document.querySelector('#v15SearchOverlay .v15-search-box');
+    if(!top||!box||document.getElementById('v68MobileSearchClose'))return;
+    var b=document.createElement('button');
+    b.type='button';b.id='v68MobileSearchClose';b.className='v15-search-close-mobile';
+    b.textContent='← Volver a la agenda';
+    b.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation()},{capture:true});
+    b.addEventListener('pointerup',function(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();closeSearchHard(false)},{capture:true});
+    box.appendChild(b);
+  }
+  function bind(){
+    var o=overlay(),b=document.getElementById('v15SearchClose');
+    if(!o)return;
+    ensureCloseButton();
+    if(b&&!b.dataset.v68Bound){
+      b.dataset.v68Bound='1';
+      var fire=function(e){if(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation()}closeSearchHard(false)};
+      b.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation()},{capture:true});
+      b.addEventListener('pointerup',fire,{capture:true});
+      b.addEventListener('touchend',fire,{capture:true,passive:false});
+      b.addEventListener('click',fire,{capture:true});
+    }
+    if(!o.dataset.v68OverlayBound){
+      o.dataset.v68OverlayBound='1';
+      o.addEventListener('pointerdown',function(e){
+        if(e.target===o){e.preventDefault();closeSearchHard(false)}
+      },{capture:true});
+    }
+  }
+  window.addEventListener('popstate',function(){
+    if(navigating)return;
+    if(isOpen())closeSearchHard(true);
+  });
+  document.addEventListener('DOMContentLoaded',bind,{once:true});
+  setTimeout(bind,200);setTimeout(bind,800);
+  window.agendaForceCloseSearch=closeSearchHard;
+  window.agendaForceOpenSearch=openSearchHard;
+})();
+</script>
+
 </body>
 </html>
