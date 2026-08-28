@@ -900,6 +900,7 @@ body.light .v57-focus-task-select{background:#fff;color:#0f172a;border-color:#cb
 @media(max-width:600px){.v57-focus-taskbar{grid-template-columns:1fr}.v57-focus-task-open{width:100%}}
 </style>
 
+  <style id="v58-training-input-fix">#v28WorkoutOverlay #v47SetList input.v48-set-input{pointer-events:auto;touch-action:manipulation;caret-color:currentColor}#v28WorkoutOverlay #v47SetList{touch-action:manipulation}</style>
 </head>
 <body>
 <section id="authScreen">
@@ -2757,10 +2758,10 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
   async function wake(){try{if('wakeLock' in navigator)wakeLock=await navigator.wakeLock.request('screen')}catch(_){}}
   async function unwake(){try{if(wakeLock){await wakeLock.release();wakeLock=null}}catch(_){}}
   function pauseTimer(){timerRunning=false;clearInterval(timerInterval);timerInterval=null;save();updateFull()}
-  function startTimer(){if(timerRunning)return;if(timerMode==='countdown'&&timerSeconds<=0)timerSeconds=Math.max(0,Number(list()[index]?.rest_seconds)||0);timerRunning=true;save();timerInterval=setInterval(()=>{if(timerMode==='countdown'){timerSeconds--;if(timerSeconds<=0){timerSeconds=0;pauseTimer();if(navigator.vibrate)try{navigator.vibrate([180,90,180])}catch(_){}}}else timerSeconds++;save();updateFull()},1000)}
+  function startTimer(){if(timerRunning)return;if(timerMode==='countdown'&&timerSeconds<=0)timerSeconds=Math.max(0,Number(list()[index]?.rest_seconds)||0);timerRunning=true;save();updateClocksOnly();timerInterval=setInterval(()=>{if(timerMode==='countdown'){timerSeconds--;if(timerSeconds<=0){timerSeconds=0;pauseTimer();if(navigator.vibrate)try{navigator.vibrate([180,90,180])}catch(_){}}else{save();updateClocksOnly()}}else{timerSeconds++;save();updateClocksOnly()}},1000)}
   function resetTimer(){pauseTimer();timerSeconds=timerMode==='countdown'?Math.max(0,Number(list()[index]?.rest_seconds)||0):0;save();updateFull()}
   function setMode(mode){timerMode=mode;q('v28TimerModeStopwatch').classList.toggle('active',mode==='stopwatch');q('v28TimerModeCountdown').classList.toggle('active',mode==='countdown');resetTimer()}
-  function startClock(){if(sessionInterval)return;if(!sessionStartedAt)sessionStartedAt=Date.now()-sessionSeconds*1000;sessionInterval=setInterval(()=>{sessionSeconds=Math.floor((Date.now()-sessionStartedAt)/1000);save();updateFull()},1000)}
+  function updateClocksOnly(){const timer=q('v28TimerDisplay'),session=q('v28SessionClock');if(timer)timer.textContent=fmt(timerSeconds);if(session)session.textContent=fmt(sessionSeconds);updateMini()} function startClock(){if(sessionInterval)return;if(!sessionStartedAt)sessionStartedAt=Date.now()-sessionSeconds*1000;sessionInterval=setInterval(()=>{sessionSeconds=Math.floor((Date.now()-sessionStartedAt)/1000);save();updateClocksOnly()},1000)}
   function stopClock(){clearInterval(sessionInterval);sessionInterval=null}
   function newSession(){activeSession={id:`training-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,userId:currentUser?.id||null,day:Number(workoutDay)||0,performedAt:today(),startedAt:Date.now(),currentIndex:0,exerciseIds:list().map(x=>x.id).filter(Boolean),sessionSeconds:0,timerMode:'stopwatch',timerSeconds:0,timerRunning:false,loggedIndexes:[],actuals:[]};index=0;sessionSeconds=0;sessionStartedAt=Date.now();timerMode='stopwatch';timerSeconds=0;timerRunning=false;save()}
   function restore(s){activeSession=s;workoutDay=Number(s.day)||workoutDay;index=Math.max(0,Number(s.currentIndex)||0);const elapsed=Math.max(0,Math.floor((Date.now()-Number(s.startedAt||Date.now()))/1000));sessionSeconds=Math.max(Number(s.sessionSeconds)||0,elapsed);sessionStartedAt=Date.now()-sessionSeconds*1000;timerMode=s.timerMode||'stopwatch';timerSeconds=Number(s.timerSeconds)||0;timerRunning=!!s.timerRunning;activeSession.loggedIndexes=Array.isArray(s.loggedIndexes)?s.loggedIndexes:[];activeSession.actuals=Array.isArray(s.actuals)?s.actuals:[];ensureActuals();save()}
