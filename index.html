@@ -1048,6 +1048,12 @@ body.light .v57-focus-task-select{background:#fff;color:#0f172a;border-color:#cb
 })();
 </script>
 
+<style id="v60-training-fixes">
+.v48-finish-overlay{display:none!important}
+.v48-finish-overlay.show{display:flex!important}
+#v48FinishOverlay .v48-finish-close,#v48FinishOverlay .v48-finish-ok{pointer-events:auto!important}
+#v28WorkoutOverlay #v47SetList .v47-set-check{pointer-events:auto!important;touch-action:manipulation}
+</style>
 </head>
 <body>
 <section id="authScreen">
@@ -2949,15 +2955,17 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
       btn.type='button';btn.className='v47-set-check'+(data.done[i]?' done':'');
       btn.textContent=data.done[i]?'✓':'○';
       btn.title=data.done[i]?'Marcar serie como pendiente':'Marcar serie como hecha';
-      btn.addEventListener('click',()=>{
+      btn.addEventListener('click',(ev)=>{
+        ev.preventDefault();
+        ev.stopPropagation();
         captureVisibleActuals();
-        data.done[i]=!data.done[i];
-        // No completar automáticamente las reps planificadas: solo guardar lo que el usuario hizo/escribió.
+        const next=!data.done[i];
+        data.done[i]=next;
         save();
-        row.classList.toggle('done',!!data.done[i]);
-        btn.classList.toggle('done',!!data.done[i]);
-        btn.textContent=data.done[i]?'✓':'○';
-        btn.title=data.done[i]?'Marcar serie como pendiente':'Marcar serie como hecha';
+        row.classList.toggle('done',next);
+        btn.classList.toggle('done',next);
+        btn.textContent=next?'✓':'○';
+        btn.title=next?'Marcar serie como pendiente':'Marcar serie como hecha';
         updateRepStatus();
       });
       row.append(lab,reps,weight,rir,btn);
