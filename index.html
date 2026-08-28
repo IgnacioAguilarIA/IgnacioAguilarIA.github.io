@@ -526,7 +526,7 @@ body.light .input{background:#fff;color:#0f172a}
 body.light .v15-search-box{background:#fff} body.light .v15-search-top input{color:#0f172a} body.light .v15-search-result{color:#0f172a}
 .focus-mode .dashboard,.focus-mode .insights-panel,.focus-mode .smart-panel,.focus-mode .utility-row,.focus-mode .notice,.focus-mode .stats,.focus-mode .conflict-panel,.focus-mode .today-timeline{display:none!important}
 @media(max-width:900px){.v15-toolbar{padding:9px}.v15-toolbar-left,.v15-toolbar-right{width:100%}.v15-toolbar-right{justify-content:flex-end}.v15-tool{flex:1;min-width:0}}
-
+</style>
 
 <style id="v22-top-search-style">
 .top-search-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#dbeafe;cursor:pointer;font-size:11px;font-weight:800;transition:.18s}
@@ -1106,7 +1106,9 @@ body.light .v62-load{background:#f8fafc;border-color:#dbe3ee}body.light .v62-loa
 @media(max-width:900px){.v62-load-grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.v62-load-grid{grid-template-columns:1fr 1fr}.v62-load{padding:12px}}
 </style>
 
+<style id="v63-progress-metric-style">
 .progress-metric-buttons{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px}.progress-metric-btn{padding:7px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#cbd5e1;font-size:9px;font-weight:800;cursor:pointer}.progress-metric-btn.active{background:rgba(59,130,246,.12);border-color:rgba(96,165,250,.28);color:#dbeafe}body.light .progress-metric-btn{background:#f8fafc;color:#475569;border-color:#dbe3ee}body.light .progress-metric-btn.active{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+</style>
 </head>
 <body>
 <section id="authScreen">
@@ -2236,10 +2238,7 @@ $('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const pay
 async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();renderNutritionGoals();renderDashboard();renderConflicts();}}
 
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=async()=>{workoutDay=i;renderWorkoutDays();await loadWorkoutExercises();renderWorkoutList();renderWorkoutHistory();renderWorkoutAnalytics();renderDashboard();};c.appendChild(b)});}
-async function loadWorkoutExercises(){
-  const useCached=()=>{const c=cacheRead('workoutExercisesAll');const cached=Array.isArray(c)?c.filter(x=>Number(x.day)===Number(workoutDay)):[];if(cached.length||!navigator.onLine){workoutExercises=cached;return true}return false};
-  if(!navigator.onLine){useCached();return}
-  try{const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error)throw error;workoutExercises=data||[];let all=cacheRead('workoutExercisesAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==Number(workoutDay));all.push(...workoutExercises);cacheWrite('workoutExercisesAll',all)}catch(error){console.error('Entrenamiento:',error);useCached()}}
+async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);const c=cacheRead('workoutExercisesAll');workoutExercises=Array.isArray(c)?c.filter(x=>Number(x.day)===Number(workoutDay)):[]}else{workoutExercises=data||[];let all=cacheRead('workoutExercisesAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==Number(workoutDay));all.push(...workoutExercises);cacheWrite('workoutExercisesAll',all)}}
 async function loadWorkoutLogs(){const {data,error}=await sb.from('workout_logs').select('*').order('performed_at',{ascending:false}).order('created_at',{ascending:false}).limit(100);if(error){console.error(error);const c=cacheRead('workoutLogs');workoutLogs=Array.isArray(c)?c:[]}else{workoutLogs=data||[];cacheWrite('workoutLogs',workoutLogs)}}
 function renderWorkoutStats(){
   const now=new Date();
@@ -3112,12 +3111,7 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
     try{await loadWorkoutLogs();renderWorkoutHistory();renderWorkoutAnalytics?.();renderDashboard()}catch(_){ }
   }
   function closeView(){save();q('v28WorkoutOverlay')?.classList.remove('show');v32TrainingActive(false);document.body.style.overflow='';updateMini()}
-  function openView(){
-    if(!list().length && !navigator.onLine){const cached=cacheRead('workoutExercisesAll');workoutExercises=Array.isArray(cached)?cached.filter(x=>Number(x.day)===Number(workoutDay)):[];}
-    if(!list().length){alert(`No hay ejercicios cargados para ${DAYS[workoutDay]}.`);return}
-    const s=read();if(s)restore(s);else newSession();
-    q('v28WorkoutOverlay')?.classList.add('show');v32TrainingActive(true);document.body.style.overflow='hidden';updateFull();startClock();if(timerRunning)startTimer();wake();
-  }
+  function openView(){if(!list().length){alert(`No hay ejercicios cargados para ${DAYS[workoutDay]}.`);return}const s=read();if(s)restore(s);else newSession();q('v28WorkoutOverlay')?.classList.add('show');v32TrainingActive(true);document.body.style.overflow='hidden';updateFull();startClock();if(timerRunning)startTimer();wake()}
   function restoreOnLoad(){const s=read();if(!s){v32TrainingActive(false);return}restore(s);v32TrainingActive(false);updateMini();startClock();if(timerRunning)startTimer()}
   function bind(){q('v28WorkoutClose')?.addEventListener('click',closeView);q('v28PrevBtn')?.addEventListener('click',prev);q('v28NextBtn')?.addEventListener('click',next);q('v28FinishBtn')?.addEventListener('click',finish);q('v49CancelWorkout')?.addEventListener('click',cancelWorkout);q('v28TimerModeStopwatch')?.addEventListener('click',()=>setMode('stopwatch'));q('v28TimerModeCountdown')?.addEventListener('click',()=>setMode('countdown'));q('v28TimerStart')?.addEventListener('click',startTimer);q('v28TimerPause')?.addEventListener('click',pauseTimer);q('v28TimerReset')?.addEventListener('click',resetTimer);q('v31MiniOpen')?.addEventListener('click',openView);q('v31MiniFinish')?.addEventListener('click',finish);window.addEventListener('beforeunload',save);window.addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&activeSession)wake()});document.addEventListener('keydown',e=>{if(!q('v28WorkoutOverlay')?.classList.contains('show'))return;if(e.key==='Escape'){closeView()}else if(e.key==='ArrowRight'){next()}else if(e.key==='ArrowLeft'){prev()}else if(e.code==='Space'){e.preventDefault();timerRunning?pauseTimer():startTimer()}});window.openWorkoutMode=openView;restoreOnLoad()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind()
@@ -5126,6 +5120,136 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
     if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   })();
   </script>
+
+
+<style id="v67-mobile-search-close-fix-style">
+  #v15SearchOverlay{touch-action:manipulation}
+  #v15SearchOverlay .v15-search-box,
+  #v15SearchOverlay .v15-search-top,
+  #v15SearchOverlay #v15SearchClose{touch-action:manipulation}
+  #v15SearchOverlay #v15SearchClose{position:relative;z-index:3;pointer-events:auto;-webkit-tap-highlight-color:transparent;user-select:none;cursor:pointer}
+</style>
+<script id="v67-mobile-search-close-fix">
+(function(){
+  'use strict';
+  function close(){
+    var o=document.getElementById('v15SearchOverlay');
+    if(!o)return;
+    o.classList.remove('show');
+    o.setAttribute('aria-hidden','true');
+    try{ o.querySelector('#v15SearchInput')?.blur(); }catch(_){ }
+  }
+  function bind(){
+    var btn=document.getElementById('v15SearchClose');
+    var overlay=document.getElementById('v15SearchOverlay');
+    if(!btn||!overlay||btn.dataset.v67Bound)return;
+    btn.dataset.v67Bound='1';
+    var fire=function(e){
+      if(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();}
+      close();
+    };
+    btn.addEventListener('pointerup',fire,{capture:true});
+    btn.addEventListener('touchend',fire,{capture:true,passive:false});
+    btn.addEventListener('click',fire,{capture:true});
+    btn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){fire(e);}} ,{capture:true});
+    overlay.addEventListener('touchend',function(e){
+      if(e.target===btn || e.target.closest?.('#v15SearchClose'))return;
+      if(e.target===overlay)close();
+    },{passive:false});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+  window.addEventListener('resize',bind,{passive:true});
+})();
+</script>
+
+
+<style id="v68-mobile-search-navigation-style">
+  #v15SearchOverlay{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:manipulation}
+  #v15SearchOverlay .v15-search-close-mobile{display:none}
+  @media(max-width:700px){
+    #v15SearchOverlay .v15-search-close-mobile{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-top:8px;border:1px solid rgba(148,163,184,.18);border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-size:12px;font-weight:800;cursor:pointer;touch-action:manipulation}
+  }
+  body.light #v15SearchOverlay .v15-search-close-mobile{background:#f8fafc;color:#334155;border-color:#dbe3ee}
+</style>
+<script id="v68-mobile-search-navigation-fix">
+(function(){
+  'use strict';
+  var MARK='agenda-search-overlay';
+  var navigating=false;
+  function overlay(){return document.getElementById('v15SearchOverlay')}
+  function isOpen(){var o=overlay();return !!(o&&o.classList.contains('show'))}
+  function closeVisual(){
+    var o=overlay(); if(!o)return;
+    o.classList.remove('show');
+    o.setAttribute('aria-hidden','true');
+    o.style.display='none';
+    o.style.pointerEvents='none';
+    var i=document.getElementById('v15SearchInput');
+    try{i&&i.blur()}catch(_){ }
+  }
+  function closeSearchHard(fromHistory){
+    navigating=true;
+    closeVisual();
+    try{window.searchCache=null;}catch(_){ }
+    try{window.searchCacheAt=0;}catch(_){ }
+    if(!fromHistory && history.state && history.state[MARK]){
+      history.back();
+    }
+    setTimeout(function(){navigating=false;},50);
+  }
+  function openSearchHard(){
+    var o=overlay(); if(!o)return;
+    if(!history.state || !history.state[MARK]){
+      try{history.pushState(Object.assign({},history.state||{}, {[MARK]:true}), '', location.href)}catch(_){ }
+    }
+    o.classList.add('show');
+    o.setAttribute('aria-hidden','false');
+    o.style.display='flex';
+    o.style.pointerEvents='auto';
+    var i=document.getElementById('v15SearchInput');
+    if(i){i.disabled=false;try{i.focus({preventScroll:true})}catch(_){i.focus()}}
+    if(typeof window.renderSearch==='function')window.renderSearch('');
+  }
+  function ensureCloseButton(){
+    var top=document.querySelector('#v15SearchOverlay .v15-search-top');
+    var box=document.querySelector('#v15SearchOverlay .v15-search-box');
+    if(!top||!box||document.getElementById('v68MobileSearchClose'))return;
+    var b=document.createElement('button');
+    b.type='button';b.id='v68MobileSearchClose';b.className='v15-search-close-mobile';
+    b.textContent='← Volver a la agenda';
+    b.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation()},{capture:true});
+    b.addEventListener('pointerup',function(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();closeSearchHard(false)},{capture:true});
+    box.appendChild(b);
+  }
+  function bind(){
+    var o=overlay(),b=document.getElementById('v15SearchClose');
+    if(!o)return;
+    ensureCloseButton();
+    if(b&&!b.dataset.v68Bound){
+      b.dataset.v68Bound='1';
+      var fire=function(e){if(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation()}closeSearchHard(false)};
+      b.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation()},{capture:true});
+      b.addEventListener('pointerup',fire,{capture:true});
+      b.addEventListener('touchend',fire,{capture:true,passive:false});
+      b.addEventListener('click',fire,{capture:true});
+    }
+    if(!o.dataset.v68OverlayBound){
+      o.dataset.v68OverlayBound='1';
+      o.addEventListener('pointerdown',function(e){
+        if(e.target===o){e.preventDefault();closeSearchHard(false)}
+      },{capture:true});
+    }
+  }
+  window.addEventListener('popstate',function(){
+    if(navigating)return;
+    if(isOpen())closeSearchHard(true);
+  });
+  document.addEventListener('DOMContentLoaded',bind,{once:true});
+  setTimeout(bind,200);setTimeout(bind,800);
+  window.agendaForceCloseSearch=closeSearchHard;
+  window.agendaForceOpenSearch=openSearchHard;
+})();
+</script>
 
 </body>
 </html>
