@@ -5123,6 +5123,9 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
             }
           }
         }
+        /* Garantiza IDs únicos en el widget del time-blocking. */
+        const overNodes=document.querySelectorAll('#v46Over');
+        if(overNodes.length>1){for(let i=1;i<overNodes.length;i++)overNodes[i].removeAttribute('id')}
         /* Garantiza que solo exista un grupo de botones de métrica. */
         const groups=document.querySelectorAll('#progressMetricButtons');
         if(groups.length>1){for(let i=1;i<groups.length;i++)groups[i].remove()}
@@ -5437,6 +5440,308 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(applyDoneState,250),{once:true});
   else setTimeout(applyDoneState,250);
 })();
+</script>
+
+<style id="v73-training-isolation-style">
+/* V73: estilos encapsulados para la Vista de entrenamiento */
+.v73-finish-overlay{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.78);backdrop-filter:blur(10px)}
+.v73-finish-overlay.show{display:flex}.v73-finish-card{width:min(520px,100%);padding:20px;border-radius:22px;background:rgba(17,24,39,.99);border:1px solid var(--line);box-shadow:0 30px 90px rgba(0,0,0,.48);color:var(--text)}
+.v73-finish-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.v73-finish-title{font-size:20px;font-weight:900}.v73-finish-sub{margin-top:3px;color:var(--muted);font-size:10px}.v73-finish-close{width:34px;height:34px;border:0;border-radius:9px;background:rgba(255,255,255,.08);color:#fff;font-size:18px;cursor:pointer}.v73-finish-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0}.v73-finish-grid>div{padding:12px 10px;border-radius:13px;background:rgba(15,23,42,.75);border:1px solid rgba(148,163,184,.12)}.v73-finish-grid strong{display:block;font-size:16px;color:#dbeafe}.v73-finish-grid span{display:block;margin-top:3px;font-size:9px;color:var(--muted)}.v73-finish-ok{width:100%;padding:12px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:800;cursor:pointer}.v73-sync-note{padding:9px 10px;margin-bottom:10px;border-radius:10px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.14);font-size:9px;color:#bfdbfe}
+body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}body.light .v73-finish-grid>div{background:#f8fafc;border-color:#dbe3ee}body.light .v73-finish-grid strong{color:#0f172a}body.light .v73-sync-note{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
+@media(max-width:600px){.v73-finish-grid{grid-template-columns:1fr 1fr}.v73-finish-card{padding:16px}}
+</style>
+<script id="v73-training-isolation-script">
+(function(){
+  'use strict';
+
+  /* ==========================================================
+     V73 — MÓDULO AISLADO DE VISTA DE ENTRENAMIENTO
+     - Estado propio por usuario/sesión
+     - No reconstruye inputs al usar cronómetros
+     - Captura controles de entrenamiento antes que listeners legacy
+     - Puente de compatibilidad con agendaTrainingV31
+  ========================================================== */
+  const $=id=>document.getElementById(id);
+  const root=()=>$('v28WorkoutOverlay');
+  const list=()=>{try{return typeof workoutExercises!=='undefined'&&Array.isArray(workoutExercises)?workoutExercises:[]}catch(_){return []}};
+  const userKey=()=>{try{return typeof currentUser!=='undefined'&&currentUser?.id?currentUser.id:'guest'}catch(_){return 'guest'}};
+  const KEY='agendaTrainingV73:';
+  const LEGACY='agendaTrainingV31:';
+  const QUEUE='agendaTrainingV73Queue:';
+  const stateKey=()=>KEY+userKey();
+  const legacyKey=()=>LEGACY+userKey();
+  const queueKey=()=>QUEUE+userKey();
+  let state=null, timerId=null, sessionId=null, restSeconds=0, restMode='stopwatch', summaryOpen=false;
+  let initialized=false;
+
+  const esc=v=>{const d=document.createElement('div');d.textContent=v??'';return d.innerHTML};
+  const today=()=>{try{return typeof todayISO==='function'?todayISO():new Date().toISOString().slice(0,10)}catch(_){return new Date().toISOString().slice(0,10)}};
+  const fmt=s=>{s=Math.max(0,Math.floor(Number(s)||0));const m=Math.floor(s/60),x=s%60;return `${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}`};
+
+  function freshState(exercises){
+    const ids=exercises.map(x=>x?.id).filter(Boolean);
+    return {version:73,id:`training-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,userId:userKey(),day:(typeof workoutDay!=='undefined'?Number(workoutDay):0),performedAt:today(),startedAt:Date.now(),currentIndex:0,currentExerciseId:ids[0]||null,exerciseIds:ids,sessionSeconds:0,restMode:'stopwatch',restSeconds:0,restRunning:false,done:false,actuals:ids.map(()=>({reps:[],weight:[],rir:[],done:[]})),loggedIndexes:[],updatedAt:Date.now()};
+  }
+
+  function normalize(s){
+    if(!s||typeof s!=='object')return null;
+    const exercises=list();
+    let ids=Array.isArray(s.exerciseIds)?s.exerciseIds.filter(Boolean):[];
+    if(!ids.length)ids=exercises.map(x=>x?.id).filter(Boolean);
+    const actuals=Array.isArray(s.actuals)?s.actuals:[];
+    const normalized={...s,version:73,userId:userKey(),exerciseIds:ids,currentIndex:Math.max(0,Number(s.currentIndex)||0),currentExerciseId:s.currentExerciseId||ids[Math.max(0,Number(s.currentIndex)||0)]||null,actuals:actuals.slice(0,ids.length)};
+    while(normalized.actuals.length<ids.length)normalized.actuals.push({reps:[],weight:[],rir:[],done:[]});
+    normalized.actuals=normalized.actuals.map((a,i)=>{
+      const ex=exercises.find(x=>String(x?.id)===String(ids[i]));
+      const n=Math.max(1,Number(ex?.sets)||0);
+      return {reps:Array.from({length:n},(_,j)=>a?.reps?.[j]??''),weight:Array.from({length:n},(_,j)=>a?.weight?.[j]??''),rir:Array.from({length:n},(_,j)=>a?.rir?.[j]??''),done:Array.from({length:n},(_,j)=>!!a?.done?.[j])};
+    });
+    if(normalized.currentIndex>=ids.length)normalized.currentIndex=Math.max(0,ids.length-1);
+    if(!normalized.currentExerciseId)normalized.currentExerciseId=ids[normalized.currentIndex]||null;
+    if(!Array.isArray(normalized.loggedIndexes))normalized.loggedIndexes=[];
+    normalized.updatedAt=Date.now();
+    return normalized;
+  }
+
+  function save(){
+    if(!state)return;
+    state.updatedAt=Date.now();
+    try{localStorage.setItem(stateKey(),JSON.stringify(state));}catch(_){ }
+    mirrorLegacy();
+  }
+
+  function read(){try{const raw=localStorage.getItem(stateKey());return raw?normalize(JSON.parse(raw)):null}catch(_){return null}}
+  function clear(){try{localStorage.removeItem(stateKey())}catch(_){}}
+
+  function readLegacy(){try{const raw=localStorage.getItem(legacyKey());return raw?JSON.parse(raw):null}catch(_){return null}}
+  function migrateLegacy(){
+    const own=read(); if(own)return own;
+    const legacy=readLegacy(); if(!legacy)return null;
+    const migrated=normalize({...legacy,version:73});
+    if(migrated){state=migrated;save();return state}
+    return null;
+  }
+
+  function mirrorLegacy(){
+    if(!state)return;
+    const legacy={...state,version:31,currentIndex:state.currentIndex,sessionSeconds:state.sessionSeconds,timerMode:state.restMode,timerSeconds:state.restSeconds,timerRunning:state.restRunning};
+    try{localStorage.setItem(legacyKey(),JSON.stringify(legacy));}catch(_){ }
+  }
+
+  function currentIndex(){
+    if(!state)return 0;
+    const idx=state.exerciseIds.findIndex(id=>String(id)===String(state.currentExerciseId));
+    if(idx>=0){state.currentIndex=idx;return idx;}
+    state.currentIndex=Math.max(0,Math.min(state.currentIndex||0,state.exerciseIds.length-1));
+    state.currentExerciseId=state.exerciseIds[state.currentIndex]||null;
+    return state.currentIndex;
+  }
+  function currentExercise(){
+    const idx=currentIndex();
+    const id=state?.exerciseIds?.[idx];
+    return list().find(x=>String(x?.id)===String(id))||list()[idx]||null;
+  }
+  function ensureState(){if(state)state=normalize(state);return !!state&&state.exerciseIds.length>0}
+
+  function updateCounters(){
+    if(!state)return;
+    const i=currentIndex(), ex=currentExercise(), a=state.actuals[i]||{done:[]};
+    const rows=Array.isArray(a.done)?a.done:[];
+    const total=Math.max(0,Number(ex?.sets)||rows.length||0);
+    const done=rows.slice(0,total).filter(Boolean).length;
+    const counter=$('v47RepsCounter'); if(counter)counter.textContent=`${done}/${total} series`;
+    const panel=$('v47RepsPanel'); if(panel)panel.classList.toggle('complete',total>0&&done===total);
+    const summary=$('v47RepsSummary');
+    if(summary){let vol=0;for(let j=0;j<total;j++){const rr=Number(a.reps?.[j]),ww=Number(a.weight?.[j]);if(rows[j]&&Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0)vol+=rr*ww;}summary.textContent=done===total&&total>0?`✅ Todas las series hechas · Volumen registrado: ${Math.round(vol*10)/10} kg`:'Reps + peso + RIR por serie. Marcá cada serie al terminarla.';}
+    const rowsDom=document.querySelectorAll('#v47SetList .v48-set-row');
+    rowsDom.forEach((row,j)=>{const is=!!rows[j];row.classList.toggle('done',is);const b=row.querySelector('.v47-set-check');if(b){b.classList.toggle('done',is);b.textContent=is?'✓':'○';b.title=is?'Marcar serie como pendiente':'Marcar serie como hecha';}});
+  }
+
+  function renderRows(){
+    const host=$('v47SetList'), panel=$('v47RepsPanel');
+    if(!host||!panel||!ensureState())return;
+    const ex=currentExercise(), i=currentIndex();
+    if(!ex){panel.style.display='none';return}
+    const data=state.actuals[i];
+    const sets=Math.max(1,Number(ex.sets)||1);
+    state.actuals[i]={reps:Array.from({length:sets},(_,j)=>data?.reps?.[j]??''),weight:Array.from({length:sets},(_,j)=>data?.weight?.[j]??''),rir:Array.from({length:sets},(_,j)=>data?.rir?.[j]??''),done:Array.from({length:sets},(_,j)=>!!data?.done?.[j])};
+    const d=state.actuals[i];
+    host.innerHTML='';
+    for(let j=0;j<sets;j++){
+      const row=document.createElement('div');row.className='v48-set-row'+(d.done[j]?' done':'');row.dataset.v73Row=String(j);
+      const lab=document.createElement('div');lab.className='v48-set-label';lab.textContent=`Serie ${j+1}`;
+      const reps=document.createElement('input');reps.type='number';reps.min='0';reps.inputMode='numeric';reps.className='v48-set-input';reps.placeholder=ex.reps||'Reps';reps.value=d.reps[j]??'';reps.setAttribute('aria-label',`Repeticiones serie ${j+1}`);
+      const weight=document.createElement('input');weight.type='number';weight.min='0';weight.step='0.5';weight.inputMode='decimal';weight.className='v48-set-input';weight.placeholder=ex.weight||'Kg';weight.value=d.weight[j]??'';weight.setAttribute('aria-label',`Peso serie ${j+1}`);
+      const rir=document.createElement('input');rir.type='number';rir.min='0';rir.max='10';rir.step='1';rir.inputMode='numeric';rir.className='v48-set-input';rir.placeholder=ex.rir??'RIR';rir.value=d.rir[j]??'';rir.setAttribute('aria-label',`RIR serie ${j+1}`);
+      const persist=()=>{d.reps[j]=reps.value;d.weight[j]=weight.value;d.rir[j]=rir.value;save();updateCounters()};
+      reps.addEventListener('input',persist);weight.addEventListener('input',persist);rir.addEventListener('input',persist);
+      reps.addEventListener('change',persist);weight.addEventListener('change',persist);rir.addEventListener('change',persist);
+      [reps,weight,rir].forEach(inp=>inp.addEventListener('blur',persist));
+      const btn=document.createElement('button');btn.type='button';btn.className='v47-set-check'+(d.done[j]?' done':'');btn.textContent=d.done[j]?'✓':'○';btn.title=d.done[j]?'Marcar serie como pendiente':'Marcar serie como hecha';btn.dataset.v73Set=j;
+      btn.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();toggleSet(j)});
+      row.append(lab,reps,weight,rir,btn);host.appendChild(row);
+    }
+    panel.style.display='block';
+    save();updateCounters();
+  }
+
+  function updateHeader(){
+    const ex=currentExercise();if(!ex||!state)return;
+    const idx=currentIndex(), count=state.exerciseIds.length;
+    const dayLabel=(typeof DAYS!=='undefined'&&DAYS?.[state.day])||(typeof DAYS!=='undefined'&&DAYS?.[Number(workoutDay)||0])||'Día';
+    if($('v28WorkoutDayLabel'))$('v28WorkoutDayLabel').textContent=`${dayLabel} · ${count} ejercicios`;
+    if($('v28StepLabel'))$('v28StepLabel').textContent=`Ejercicio ${idx+1} de ${count}`;
+    if($('v28CurrentName'))$('v28CurrentName').textContent=ex.exercise||'Ejercicio';
+    const chips=$('v28CurrentChips');if(chips){chips.innerHTML='';[['Series',ex.sets],['Reps',ex.reps],['RIR',ex.rir],['Descanso',ex.rest_seconds?`${ex.rest_seconds}s`:null],['Peso',ex.weight],['Tempo',ex.tempo]].forEach(([k,v])=>{if(v===null||v===undefined||v==='')return;const c=document.createElement('span');c.className='v28-chip';c.textContent=`${k}: ${v}`;chips.appendChild(c)})}
+    if($('v28CurrentNote')){$('v28CurrentNote').textContent=ex.notes||'';$('v28CurrentNote').style.display=ex.notes?'block':'none'}
+    if($('v28PrevBtn'))$('v28PrevBtn').disabled=idx<=0;
+    if($('v28NextBtn'))$('v28NextBtn').disabled=idx>=count-1;
+    if($('v28ProgressBar'))$('v28ProgressBar').style.width=`${count?Math.round((idx+1)/count*100):0}%`;
+    const sl=$('v28SessionList');if(sl){sl.innerHTML='';state.exerciseIds.forEach((id,i)=>{const e=list().find(x=>String(x?.id)===String(id));if(!e)return;const p=document.createElement('div');p.className='v28-session-pill'+(i===idx?' active':'');const done=state.loggedIndexes.includes(i);const setDone=state.actuals?.[i]?.done?.filter(Boolean).length||0;p.textContent=`${i+1}. ${e.exercise||'Ejercicio'}${done?' ✓':''}${setDone&&!done?' · '+setDone:''}`;p.dataset.v73Index=i;p.addEventListener('click',()=>goTo(i));sl.appendChild(p)})}
+    updateTimerDisplay();renderRows();
+  }
+
+  function updateTimerDisplay(){
+    if($('v28TimerDisplay'))$('v28TimerDisplay').textContent=fmt(restSeconds);
+    if($('v28SessionClock'))$('v28SessionClock').textContent=fmt(state?.sessionSeconds||0);
+    if($('v28TimerModeStopwatch'))$('v28TimerModeStopwatch').classList.toggle('active',restMode==='stopwatch');
+    if($('v28TimerModeCountdown'))$('v28TimerModeCountdown').classList.toggle('active',restMode==='countdown');
+  }
+
+  function stopTimer(){if(timerId){clearInterval(timerId);timerId=null}state&&(state.restRunning=false);save();updateTimerDisplay()}
+  function tick(){
+    if(!state)return;
+    state.sessionSeconds=Math.max(0,Math.floor((Date.now()-Number(state.startedAt||Date.now()))/1000));
+    if(restMode==='countdown'){
+      restSeconds=Math.max(0,restSeconds-1);
+      state.restSeconds=restSeconds;
+      if(restSeconds<=0){stopTimer();try{navigator.vibrate?.([180,80,180])}catch(_){} }
+    }else{restSeconds++;state.restSeconds=restSeconds}
+    save();updateTimerDisplay();
+  }
+  function startTimer(){if(timerId)return; if(restMode==='countdown'&&restSeconds<=0)restSeconds=Math.max(0,Number(currentExercise()?.rest_seconds)||0); state.restRunning=true;save();updateTimerDisplay();timerId=setInterval(tick,1000)}
+  function resetTimer(){stopTimer();restSeconds=restMode==='countdown'?Math.max(0,Number(currentExercise()?.rest_seconds)||0):0;state.restSeconds=restSeconds;save();updateTimerDisplay()}
+  function setMode(mode){stopTimer();restMode=mode==='countdown'?'countdown':'stopwatch';state.restMode=restMode;restSeconds=restMode==='countdown'?Math.max(0,Number(currentExercise()?.rest_seconds)||0):0;state.restSeconds=restSeconds;save();updateTimerDisplay()}
+
+  function goTo(i){
+    if(!state||i<0||i>=state.exerciseIds.length)return;
+    persistVisibleInputs();stopTimer();state.currentIndex=i;state.currentExerciseId=state.exerciseIds[i];state.restMode='stopwatch';state.restSeconds=0;state.restRunning=false;restMode='stopwatch';restSeconds=0;save();updateHeader();
+  }
+  function prev(){goTo(currentIndex()-1)}
+  async function next(){
+    if(!state)return;persistVisibleInputs();const i=currentIndex();await logExercise(i);if(i<state.exerciseIds.length-1){const rest=Math.max(0,Number(currentExercise()?.rest_seconds)||0);goTo(i+1);if(rest>0){setMode('countdown');startTimer()}}else await finish();
+  }
+
+  function toggleSet(i){
+    if(!state)return;const d=state.actuals[currentIndex()];d.done[i]=!d.done[i];save();updateCounters();
+    const row=document.querySelector(`#v47SetList .v48-set-row[data-v73-row="${i}"]`);const btn=row?.querySelector('.v47-set-check');if(btn){btn.classList.toggle('done',!!d.done[i]);btn.textContent=d.done[i]?'✓':'○'}
+  }
+
+  function persistVisibleInputs(){
+    if(!state)return;const d=state.actuals[currentIndex()];const rows=[...document.querySelectorAll('#v47SetList .v48-set-row')];rows.forEach((row,i)=>{const inputs=row.querySelectorAll('input');if(inputs[0])d.reps[i]=inputs[0].value;if(inputs[1])d.weight[i]=inputs[1].value;if(inputs[2])d.rir[i]=inputs[2].value;const btn=row.querySelector('.v47-set-check');if(btn)d.done[i]=btn.classList.contains('done')});save();
+  }
+
+  function exerciseStats(i){
+    const ex=list().find(x=>String(x?.id)===String(state?.exerciseIds?.[i]));const d=state?.actuals?.[i]||{};let volume=0,maxWeight=0,totalReps=0,setsDone=0;
+    (d.reps||[]).forEach((v,j)=>{const rr=Number(v),ww=Number(d.weight?.[j]);if(d.done?.[j])setsDone++;if(Number.isFinite(rr)&&rr>0)totalReps+=rr;if(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0){volume+=rr*ww;maxWeight=Math.max(maxWeight,ww)}});
+    return {exercise:ex||null,volume,maxWeight,totalReps,setsDone};
+  }
+
+  function detailFor(i){
+    const d=state?.actuals?.[i]||{};const rows=[];let vol=0;let reps=[];let weights=[];let rirs=[];
+    const n=Math.max(d.reps?.length||0,d.weight?.length||0,d.rir?.length||0,d.done?.length||0);
+    for(let j=0;j<n;j++){const r=String(d.reps?.[j]??'').trim(),w=String(d.weight?.[j]??'').trim(),ri=String(d.rir?.[j]??'').trim();if(r)reps[j]=r;if(w)weights[j]=w;if(ri)rirs[j]=ri;const rr=Number(r),ww=Number(w);if(d.done?.[j]&&rr>0&&ww>0)vol+=rr*ww;rows.push(`S${j+1} ${r||'-'} reps · ${w||'-'} kg · RIR ${ri||'-'}`)}
+    const avgRir=rirs.map(Number).filter(Number.isFinite);const rir=avgRir.length?Math.round(avgRir.reduce((a,b)=>a+b,0)/avgRir.length*10)/10:null;
+    return {repsText:reps.length?reps.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):'',weightText:weights.length?weights.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):'',rir,vol,notes:rows.join(' | ')};
+  }
+
+  async function logExercise(i){
+    if(!state||state.loggedIndexes.includes(i))return true;
+    const ex=list().find(x=>String(x?.id)===String(state.exerciseIds?.[i]));if(!ex?.id||!(typeof currentUser!=='undefined'&&currentUser?.id))return false;
+    const d=detailFor(i), done=(state.actuals?.[i]?.done||[]).filter(Boolean).length;
+    const payload={user_id:(typeof currentUser!=='undefined'&&currentUser?.id)||userKey(),exercise_id:ex.id,exercise_name:ex.exercise,performed_at:state.performedAt,sets_completed:done||Number(ex.sets)||null,reps:d.repsText||String(ex.reps||''),weight:d.weightText||String(ex.weight||''),rir:d.rir??(ex.rir===''||ex.rir==null?null:Number(ex.rir)),notes:(d.notes?`Registro por series: ${d.notes} · Volumen ${Math.round(d.vol*10)/10} kg · Sesión ${state.id}`:`Registro automático de sesión · ${state.id}`)};
+    if(!navigator.onLine){queueLog(payload);state.loggedIndexes.push(i);save();return true}
+    try{const {error}=await sb.from('workout_logs').insert(payload);if(error)throw error;state.loggedIndexes.push(i);save();return true}catch(e){console.warn('V73: no se pudo registrar online, se guardará para sincronizar',e);queueLog(payload);state.loggedIndexes.push(i);save();return true}
+  }
+
+  function readQueue(){try{const raw=localStorage.getItem(queueKey());const q=raw?JSON.parse(raw):[];return Array.isArray(q)?q:[]}catch(_){return []}}
+  function writeQueue(q){try{localStorage.setItem(queueKey(),JSON.stringify(q))}catch(_){}}
+  function queueLog(payload){const q=readQueue();q.push(payload);writeQueue(q)}
+  async function flushQueue(){if(!navigator.onLine||typeof sb==='undefined'||!(typeof currentUser!=='undefined'&&currentUser?.id))return;const q=readQueue();if(!q.length)return;const remain=[];for(const payload of q){try{const {error}=await sb.from('workout_logs').insert(payload);if(error)throw error}catch(e){remain.push(payload)}}writeQueue(remain)}
+
+  function buildSummary(data){
+    let o=$('v73FinishOverlay');
+    if(!o){o=document.createElement('div');o.id='v73FinishOverlay';o.className='v73-finish-overlay';o.innerHTML=`<div class="v73-finish-card"><div class="v73-finish-head"><div><div class="v73-finish-title">🏆 Entrenamiento terminado</div><div class="v73-finish-sub">Resumen de esta sesión</div></div><button class="v73-finish-close" type="button">×</button></div><div class="v73-finish-grid"><div><strong id="v73FinishExercises">0</strong><span>ejercicios</span></div><div><strong id="v73FinishSets">0</strong><span>series hechas</span></div><div><strong id="v73FinishVolume">0</strong><span>kg de volumen</span></div><div><strong id="v73FinishWeight">0</strong><span>peso máximo</span></div></div><div class="v73-sync-note" id="v73SyncNote"></div><button class="v73-finish-ok" type="button">Continuar</button></div>`;document.body.appendChild(o);const close=()=>{o.classList.remove('show');summaryOpen=false};o.querySelector('.v73-finish-close').onclick=close;o.querySelector('.v73-finish-ok').onclick=close;}
+    $('v73FinishExercises').textContent=String(data.count||0);$('v73FinishSets').textContent=String(data.setsDone||0);$('v73FinishVolume').textContent=String(Math.round((data.totalVolume||0)*10)/10);$('v73FinishWeight').textContent=`${Math.round((data.maxWeight||0)*10)/10} kg`;$('v73SyncNote').textContent=readQueue().length?`📴 ${readQueue().length} registro(s) pendiente(s) de sincronización.`:'☁️ Registros guardados.';o.classList.add('show');summaryOpen=true;
+  }
+
+  async function finish(){
+    if(!state)return;persistVisibleInputs();stopTimer();for(let i=0;i<state.exerciseIds.length;i++)await logExercise(i);const snapshot=JSON.parse(JSON.stringify(state));clear();window.removeEventListener('beforeunload',beforeUnload);if(root())root().classList.remove('show');document.body.classList.remove('v32-training-active');document.body.style.overflow='';const count=snapshot.exerciseIds.length;let totalVolume=0,maxWeight=0,setsDone=0;snapshot.actuals.forEach(a=>{(a.reps||[]).forEach((v,j)=>{const rr=Number(v),ww=Number(a.weight?.[j]);if(a.done?.[j])setsDone++;if(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0){totalVolume+=rr*ww;maxWeight=Math.max(maxWeight,ww)}})});state=null;sessionId=null;buildSummary({count,totalVolume,maxWeight,setsDone});await flushQueue();}
+
+  function cancel(){if(!state)return;if(!confirm('¿Cancelar el entrenamiento actual? Se descartarán los datos de esta sesión que todavía no hayas registrado.'))return;stopTimer();clear();state=null;sessionId=null;try{localStorage.removeItem(legacyKey())}catch(_){}if(root())root().classList.remove('show');document.body.classList.remove('v32-training-active');document.body.style.overflow='';if($('v31TrainingMini'))$('v31TrainingMini').classList.remove('show');}
+
+  function open(){
+    if(!list().length){try{const cached=JSON.parse(localStorage.getItem(`agendaCache:workoutExercisesAll:${userKey()}`)||'null');if(Array.isArray(cached))window.workoutExercises=cached.filter(x=>Number(x.day)===Number(window.workoutDay));}catch(_){}}
+    if(!list().length){alert('No hay ejercicios cargados para esta rutina.');return}
+    const existing=read()||migrateLegacy();
+    state=existing||freshState(list());state=normalize(state);sessionId=state.id;restMode=state.restMode||'stopwatch';restSeconds=Number(state.restSeconds)||0;
+    if(state.startedAt&&state.sessionSeconds)state.startedAt=Date.now()-Number(state.sessionSeconds||0)*1000;
+    save();const o=root();if(o){o.classList.add('show');o.setAttribute('aria-hidden','false')}document.body.classList.add('v32-training-active');document.body.style.overflow='hidden';render();flushQueue();}
+  function closeView(){persistVisibleInputs();stopTimer();save();if(root())root().classList.remove('show');document.body.classList.remove('v32-training-active');document.body.style.overflow='';}
+  function render(){currentIndex();updateHeader();updateTimerDisplay();}
+  function beforeUnload(){try{persistVisibleInputs()}catch(_){}
+    if(state)save();
+  }
+
+  function intercept(e){
+    const t=e.target?.closest?.('button,input');if(!t)return;
+    const id=t.id||'';
+    if(t.matches('#v28WorkoutOverlay .v47-set-check')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();toggleSet(Number(t.dataset.v73Set)||0);return;}
+    if(id==='v28NextBtn'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();next();return;}
+    if(id==='v28PrevBtn'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();prev();return;}
+    if(id==='v28FinishBtn'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();finish();return;}
+    if(id==='v28WorkoutClose'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();closeView();return;}
+    if(id==='v49CancelWorkout'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();cancel();return;}
+    if(id==='v28TimerModeStopwatch'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();setMode('stopwatch');return;}
+    if(id==='v28TimerModeCountdown'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();setMode('countdown');return;}
+    if(id==='v28TimerStart'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();startTimer();return;}
+    if(id==='v28TimerPause'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();stopTimer();return;}
+    if(id==='v28TimerReset'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();resetTimer();return;}
+    if(t.matches('#v28SessionList [data-v73-index]')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();goTo(Number(t.dataset.v73Index)||0);return;}
+    if(t.matches('#v31MiniOpen')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();open();return;}
+    if(t.matches('#v31MiniFinish')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();finish();return;}
+  }
+
+  function protectLegacyVisuals(){
+    if(!state||!root()?.classList.contains('show'))return;
+    const i=currentIndex(),d=state.actuals[i]||{};const buttons=[...document.querySelectorAll('#v47SetList .v47-set-check')];buttons.forEach((b,j)=>{const yes=!!d.done?.[j];b.classList.toggle('done',yes);b.textContent=yes?'✓':'○';const row=b.closest('.v48-set-row');if(row)row.classList.toggle('done',yes)});updateCounters();
+  }
+
+  function init(){
+    if(initialized)return;initialized=true;
+    document.addEventListener('click',intercept,true);
+    document.addEventListener('pointerdown',e=>{if(e.target?.closest?.('#v28WorkoutOverlay .v47-set-check')){e.stopImmediatePropagation()}},true);
+    document.addEventListener('keydown',e=>{
+      if(!root()?.classList.contains('show'))return;
+      if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeView()}
+      else if(e.key==='ArrowRight'){e.preventDefault();e.stopImmediatePropagation();next()}
+      else if(e.key==='ArrowLeft'){e.preventDefault();e.stopImmediatePropagation();prev()}
+      else if(e.code==='Space'&&document.activeElement?.tagName!=='INPUT'){e.preventDefault();e.stopImmediatePropagation();timerId?stopTimer():startTimer()}
+    },true);
+    window.addEventListener('beforeunload',beforeUnload);
+    window.addEventListener('pagehide',beforeUnload);
+    window.addEventListener('online',flushQueue);
+    document.addEventListener('visibilitychange',()=>{if(state){persistVisibleInputs();if(document.visibilityState==='visible'){setTimeout(protectLegacyVisuals,80)}}});
+    setInterval(()=>{if(state){state.sessionSeconds=Math.max(0,Math.floor((Date.now()-Number(state.startedAt||Date.now()))/1000));save();updateTimerDisplay();protectLegacyVisuals()}},1000);
+    setInterval(flushQueue,15000);
+    const existing=read()||migrateLegacy();if(existing&&root()?.classList.contains('show')){state=normalize(existing);sessionId=state.id;restMode=state.restMode||'stopwatch';restSeconds=Number(state.restSeconds)||0;render()}
+    window.AgendaTrainingV73={open,close:closeView,cancel,finish,next,prev,toggleSet,save,getState:()=>state};
+    window.openWorkoutMode=open;
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+
 </script>
 
 </body>
