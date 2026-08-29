@@ -5442,6 +5442,24 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
 })();
 </script>
 
+<style id="v74-cancel-confirm-style">
+.v74-cancel-confirm{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.78);backdrop-filter:blur(10px);touch-action:manipulation}
+.v74-cancel-confirm.show{display:flex}
+.v74-cancel-card{width:min(420px,100%);padding:22px;border-radius:22px;background:rgba(17,24,39,.995);border:1px solid rgba(239,68,68,.28);box-shadow:0 30px 90px rgba(0,0,0,.55);color:var(--text);text-align:center}
+.v74-cancel-icon{width:52px;height:52px;margin:0 auto 12px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,.12);font-size:25px}
+.v74-cancel-title{font-size:19px;font-weight:900}
+.v74-cancel-text{margin-top:8px;font-size:11px;line-height:1.55;color:var(--muted)}
+.v74-cancel-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+.v74-cancel-actions button{min-height:44px;border-radius:12px;font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.v74-cancel-no{border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.06);color:#dbeafe}
+.v74-cancel-yes{border:1px solid rgba(239,68,68,.38);background:rgba(239,68,68,.14);color:#fecaca}
+.v74-cancel-no:focus-visible,.v74-cancel-yes:focus-visible{outline:3px solid rgba(96,165,250,.35);outline-offset:2px}
+body.light .v74-cancel-card{background:#fff;border-color:#fecaca;color:#0f172a}
+body.light .v74-cancel-text{color:#64748b}
+body.light .v74-cancel-no{background:#f8fafc;color:#334155;border-color:#dbe3ee}
+body.light .v74-cancel-yes{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
+@media(max-width:520px){.v74-cancel-confirm{padding:12px;align-items:flex-end}.v74-cancel-card{border-radius:20px;padding:18px 15px 15px;width:100%}.v74-cancel-actions{grid-template-columns:1fr}.v74-cancel-yes{order:-1}}
+</style>
 <style id="v73-training-isolation-style">
 /* V73: estilos encapsulados para la Vista de entrenamiento */
 .v73-finish-overlay{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.78);backdrop-filter:blur(10px)}
@@ -5678,26 +5696,66 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
   async function finish(){
     if(!state)return;persistVisibleInputs();stopTimer();for(let i=0;i<state.exerciseIds.length;i++)await logExercise(i);const snapshot=JSON.parse(JSON.stringify(state));clear();window.removeEventListener('beforeunload',beforeUnload);if(root())root().classList.remove('show');document.body.classList.remove('v32-training-active');document.body.style.overflow='';const count=snapshot.exerciseIds.length;let totalVolume=0,maxWeight=0,setsDone=0;snapshot.actuals.forEach(a=>{(a.reps||[]).forEach((v,j)=>{const rr=Number(v),ww=Number(a.weight?.[j]);if(a.done?.[j])setsDone++;if(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0){totalVolume+=rr*ww;maxWeight=Math.max(maxWeight,ww)}})});state=null;sessionId=null;buildSummary({count,totalVolume,maxWeight,setsDone});await flushQueue();}
 
-  function cancel(){
+  function performCancel(){
     if(!state)return;
     const canceledId=state.id;
     stopTimer();
     try{persistVisibleInputs()}catch(_){}
     state=null;sessionId=null;
     try{clear();localStorage.removeItem(legacyKey())}catch(_){}
-    // Sacar de la cola cualquier registro perteneciente a la sesión cancelada.
     try{const q=readQueue();writeQueue(q.filter(x=>!String(x?.notes||'').includes(`Sesión ${canceledId}`)))}catch(_){}
     if(root()){root().classList.remove('show');root().setAttribute('aria-hidden','true')}
     document.body.classList.remove('v32-training-active');document.body.style.overflow='';
     if($('v31TrainingMini'))$('v31TrainingMini').classList.remove('show');
+    closeCancelConfirm();
     window.dispatchEvent(new Event('agenda-training-canceled'));
-    // Si algo ya se sincronizó antes de cancelar, intentar limpiar solo esta sesión.
     if(navigator.onLine&&typeof sb!=='undefined'&&currentUser?.id){
       sb.from('workout_logs').delete().eq('user_id',currentUser.id).like('notes',`%Sesión ${canceledId}%`).then(()=>{}).catch(()=>{});
     }
   }
 
+  function ensureCancelConfirm(){
+    let o=$('v74CancelConfirm');
+    if(o)return o;
+    o=document.createElement('div');
+    o.id='v74CancelConfirm';
+    o.className='v74-cancel-confirm';
+    o.setAttribute('aria-hidden','true');
+    o.innerHTML=`<div class="v74-cancel-card" role="dialog" aria-modal="true" aria-labelledby="v74CancelTitle">
+      <div class="v74-cancel-icon">⚠️</div>
+      <div id="v74CancelTitle" class="v74-cancel-title">¿Cancelar entrenamiento?</div>
+      <div class="v74-cancel-text">Se cerrará la Vista de entrenamiento y se descartará el progreso de esta sesión que todavía no hayas guardado en el historial.</div>
+      <div class="v74-cancel-actions">
+        <button id="v74CancelNo" class="v74-cancel-no" type="button">Seguir entrenando</button>
+        <button id="v74CancelYes" class="v74-cancel-yes" type="button">Sí, cancelar</button>
+      </div>
+    </div>`;
+    document.body.appendChild(o);
+    const close=()=>closeCancelConfirm();
+    $('v74CancelNo')?.addEventListener('click',close);
+    $('v74CancelYes')?.addEventListener('click',()=>performCancel());
+    o.addEventListener('click',e=>{if(e.target===o)close();});
+    return o;
+  }
+
+  function showCancelConfirm(){
+    if(!state)return;
+    const o=ensureCancelConfirm();
+    o.classList.add('show');
+    o.setAttribute('aria-hidden','false');
+    const first=$('v74CancelNo');
+    setTimeout(()=>first?.focus(),30);
+  }
+
+  function closeCancelConfirm(){
+    const o=$('v74CancelConfirm');
+    if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true');}
+  }
+
+  function cancel(){showCancelConfirm();}
+
   function open(){
+    closeCancelConfirm();
     if(!list().length){try{const cached=JSON.parse(localStorage.getItem(`agendaCache:workoutExercisesAll:${userKey()}`)||'null');if(Array.isArray(cached))window.workoutExercises=cached.filter(x=>Number(x.day)===Number(window.workoutDay));}catch(_){}}
     if(!list().length){alert('No hay ejercicios cargados para esta rutina.');return}
     const existing=read()||migrateLegacy();
@@ -5741,7 +5799,7 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
     document.addEventListener('pointerdown',e=>{if(e.target?.closest?.('#v49CancelWorkout')){e.stopImmediatePropagation();} if(e.target?.closest?.('#v28WorkoutOverlay .v47-set-check')){e.stopImmediatePropagation()}},true);
     document.addEventListener('keydown',e=>{
       if(!root()?.classList.contains('show'))return;
-      if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeView()}
+      if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();if($('v74CancelConfirm')?.classList.contains('show'))closeCancelConfirm();else closeView()}
       else if(e.key==='ArrowRight'){e.preventDefault();e.stopImmediatePropagation();next()}
       else if(e.key==='ArrowLeft'){e.preventDefault();e.stopImmediatePropagation();prev()}
       else if(e.code==='Space'&&document.activeElement?.tagName!=='INPUT'){e.preventDefault();e.stopImmediatePropagation();timerId?stopTimer():startTimer()}
@@ -5753,7 +5811,7 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
     setInterval(()=>{if(state){state.sessionSeconds=Math.max(0,Math.floor((Date.now()-Number(state.startedAt||Date.now()))/1000));save();updateTimerDisplay();protectLegacyVisuals()}},1000);
     setInterval(flushQueue,15000);
     const existing=read()||migrateLegacy();if(existing&&root()?.classList.contains('show')){state=normalize(existing);sessionId=state.id;restMode=state.restMode||'stopwatch';restSeconds=Number(state.restSeconds)||0;render()}
-    window.AgendaTrainingV73={open,close:closeView,cancel,finish,next,prev,toggleSet,save,getState:()=>state};
+    window.AgendaTrainingV73={open,close:closeView,cancel,finish,next,prev,toggleSet,save,getState:()=>state,confirmCancel:showCancelConfirm};
     window.openWorkoutMode=open;
   }
 
