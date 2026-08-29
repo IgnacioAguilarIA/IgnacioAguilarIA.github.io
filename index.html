@@ -5346,5 +5346,98 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
 })();
 </script>
 
+
+<style id="v72-series-persistence-style">
+#v28WorkoutOverlay #v47SetList .v47-set-check{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#v28WorkoutOverlay #v47SetList .v47-set-check.done{background:rgba(34,197,94,.14)!important;border-color:rgba(34,197,94,.34)!important;color:#bbf7d0!important}
+</style>
+<script id="v72-series-persistence-script">
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const sessionKey=()=>`agendaTrainingV31:${window.currentUser?.id||'guest'}`;
+  const backupKey=()=>`agendaTrainingV72Done:${window.currentUser?.id||'guest'}`;
+  function readSession(){try{const raw=localStorage.getItem(sessionKey());return raw?JSON.parse(raw):null}catch(_){return null}}
+  function readBackup(){try{const raw=localStorage.getItem(backupKey());return raw?JSON.parse(raw):null}catch(_){return null}}
+  function writeBackup(v){try{localStorage.setItem(backupKey(),JSON.stringify(v))}catch(_){}
+  }
+  function clearBackupIfSessionGone(){try{if(!readSession())localStorage.removeItem(backupKey())}catch(_){}
+  }
+  function ensureBackupForSession(s){
+    if(!s||!s.id)return null;
+    const b=readBackup();
+    if(!b||b.sessionId!==s.id||typeof b.byExercise!=='object'){
+      const nb={sessionId:s.id,byExercise:{}};
+      writeBackup(nb);return nb;
+    }
+    return b;
+  }
+  function currentExerciseIndex(s){return Math.max(0,Number(s?.currentIndex)||0)}
+  function totalSets(){const s=readSession();const ex=Array.isArray(window.workoutExercises)?window.workoutExercises[currentExerciseIndex(s)]:null;return Math.max(0,Number(ex?.sets)||q('v47SetList')?.querySelectorAll('.v48-set-row').length||0)}
+  function domDone(){
+    const host=q('v47SetList');
+    if(!host)return [];
+    return [...host.querySelectorAll('.v47-set-check')].map(b=>b.classList.contains('done'));
+  }
+  function persistVisibleDone(){
+    const s=readSession();const done=domDone();if(!s||!done.length)return;
+    const b=ensureBackupForSession(s);if(!b)return;
+    b.byExercise[String(currentExerciseIndex(s))]=done.slice();
+    writeBackup(b);
+  }
+  function stateDoneForExercise(s,idx){
+    const b=readBackup();
+    const fromBackup=b&&b.sessionId===s?.id?b.byExercise?.[String(idx)]:null;
+    if(Array.isArray(fromBackup))return fromBackup.slice();
+    const fromSession=s?.actuals?.[idx]?.done;
+    return Array.isArray(fromSession)?fromSession.map(Boolean):[];
+  }
+  function applyDoneState(){
+    const overlay=q('v28WorkoutOverlay');if(!overlay?.classList.contains('show')){clearBackupIfSessionGone();return}
+    const host=q('v47SetList');const counter=q('v47RepsCounter');if(!host)return;
+    const s=readSession();if(!s)return;
+    const idx=currentExerciseIndex(s);const buttons=[...host.querySelectorAll('.v47-set-check')];if(!buttons.length)return;
+    const done=stateDoneForExercise(s,idx);
+    buttons.forEach((b,i)=>{
+      const isDone=!!done[i];
+      b.classList.toggle('done',isDone);b.textContent=isDone?'✓':'○';
+      b.title=isDone?'Marcar serie como pendiente':'Marcar serie como hecha';
+      const row=b.closest('.v48-set-row');if(row)row.classList.toggle('done',isDone);
+    });
+    const total=buttons.length||totalSets();
+    if(counter)counter.textContent=`${done.slice(0,total).filter(Boolean).length}/${total} series`;
+    const panel=q('v47RepsPanel');
+    if(panel)panel.classList.toggle('complete',total>0&&done.slice(0,total).filter(Boolean).length===total);
+  }
+  function persistAndApplySoon(){
+    persistVisibleDone();
+    setTimeout(applyDoneState,0);
+    setTimeout(applyDoneState,60);
+    setTimeout(applyDoneState,180);
+  }
+  document.addEventListener('click',function(e){
+    const btn=e.target?.closest?.('#v28WorkoutOverlay #v47SetList .v47-set-check');
+    if(!btn)return;
+    setTimeout(persistAndApplySoon,0);
+  });
+  document.addEventListener('pointerup',function(e){
+    const btn=e.target?.closest?.('#v28WorkoutOverlay #v47SetList .v47-set-check');
+    if(!btn)return;
+    setTimeout(persistAndApplySoon,0);
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')persistVisibleDone();else setTimeout(applyDoneState,80)});
+  window.addEventListener('pagehide',persistVisibleDone);
+  const overlay=q('v28WorkoutOverlay');
+  if(overlay){
+    new MutationObserver(()=>{setTimeout(applyDoneState,0)}).observe(overlay,{childList:true,subtree:true});
+  }
+  q('v28FinishBtn')?.addEventListener('click',()=>setTimeout(clearBackupIfSessionGone,500),true);
+  q('v49CancelWorkout')?.addEventListener('click',()=>setTimeout(clearBackupIfSessionGone,500),true);
+  setInterval(()=>{clearBackupIfSessionGone();if(q('v28WorkoutOverlay')?.classList.contains('show'))applyDoneState()},1200);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(applyDoneState,250),{once:true});
+  else setTimeout(applyDoneState,250);
+})();
+</script>
+
 </body>
 </html>
