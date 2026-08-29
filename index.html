@@ -5678,7 +5678,24 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
   async function finish(){
     if(!state)return;persistVisibleInputs();stopTimer();for(let i=0;i<state.exerciseIds.length;i++)await logExercise(i);const snapshot=JSON.parse(JSON.stringify(state));clear();window.removeEventListener('beforeunload',beforeUnload);if(root())root().classList.remove('show');document.body.classList.remove('v32-training-active');document.body.style.overflow='';const count=snapshot.exerciseIds.length;let totalVolume=0,maxWeight=0,setsDone=0;snapshot.actuals.forEach(a=>{(a.reps||[]).forEach((v,j)=>{const rr=Number(v),ww=Number(a.weight?.[j]);if(a.done?.[j])setsDone++;if(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0){totalVolume+=rr*ww;maxWeight=Math.max(maxWeight,ww)}})});state=null;sessionId=null;buildSummary({count,totalVolume,maxWeight,setsDone});await flushQueue();}
 
-  function cancel(){if(!state)return;if(!confirm('¿Cancelar el entrenamiento actual? Se descartarán los datos de esta sesión que todavía no hayas registrado.'))return;stopTimer();clear();state=null;sessionId=null;try{localStorage.removeItem(legacyKey())}catch(_){}if(root())root().classList.remove('show');document.body.classList.remove('v32-training-active');document.body.style.overflow='';if($('v31TrainingMini'))$('v31TrainingMini').classList.remove('show');}
+  function cancel(){
+    if(!state)return;
+    const canceledId=state.id;
+    stopTimer();
+    try{persistVisibleInputs()}catch(_){}
+    state=null;sessionId=null;
+    try{clear();localStorage.removeItem(legacyKey())}catch(_){}
+    // Sacar de la cola cualquier registro perteneciente a la sesión cancelada.
+    try{const q=readQueue();writeQueue(q.filter(x=>!String(x?.notes||'').includes(`Sesión ${canceledId}`)))}catch(_){}
+    if(root()){root().classList.remove('show');root().setAttribute('aria-hidden','true')}
+    document.body.classList.remove('v32-training-active');document.body.style.overflow='';
+    if($('v31TrainingMini'))$('v31TrainingMini').classList.remove('show');
+    window.dispatchEvent(new Event('agenda-training-canceled'));
+    // Si algo ya se sincronizó antes de cancelar, intentar limpiar solo esta sesión.
+    if(navigator.onLine&&typeof sb!=='undefined'&&currentUser?.id){
+      sb.from('workout_logs').delete().eq('user_id',currentUser.id).like('notes',`%Sesión ${canceledId}%`).then(()=>{}).catch(()=>{});
+    }
+  }
 
   function open(){
     if(!list().length){try{const cached=JSON.parse(localStorage.getItem(`agendaCache:workoutExercisesAll:${userKey()}`)||'null');if(Array.isArray(cached))window.workoutExercises=cached.filter(x=>Number(x.day)===Number(window.workoutDay));}catch(_){}}
@@ -5720,7 +5737,8 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
   function init(){
     if(initialized)return;initialized=true;
     document.addEventListener('click',intercept,true);
-    document.addEventListener('pointerdown',e=>{if(e.target?.closest?.('#v28WorkoutOverlay .v47-set-check')){e.stopImmediatePropagation()}},true);
+    document.addEventListener('pointerup',e=>{if(e.target?.closest?.('#v49CancelWorkout')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();cancel();}},true);
+    document.addEventListener('pointerdown',e=>{if(e.target?.closest?.('#v49CancelWorkout')){e.stopImmediatePropagation();} if(e.target?.closest?.('#v28WorkoutOverlay .v47-set-check')){e.stopImmediatePropagation()}},true);
     document.addEventListener('keydown',e=>{
       if(!root()?.classList.contains('show'))return;
       if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();closeView()}
