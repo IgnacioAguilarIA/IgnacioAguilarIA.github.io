@@ -1,0 +1,27 @@
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  let selectedId=null;
+  const now=()=>typeof getArgentinaNow==='function'?getArgentinaNow():new Date();
+  const today=()=>typeof getTodayIndex==='function'?getTodayIndex():((now().getDay()+6)%7);
+  const min=t=>Number(t?.hour||0)*60+Number(t?.minute||0);
+  const pad=n=>String(Math.max(0,Number(n)||0)).padStart(2,'0');
+  const priority=t=>typeof getPriority==='function'?getPriority(t):String(t?.priority||'normal').toLowerCase();
+  const rank=t=>({urgent:0,high:1,normal:2,low:3}[priority(t)]??2);
+  const durKey=()=>`agendaV45:${currentUser?.id||'guest'}:durations`;
+  function durations(){try{const x=localStorage.getItem(durKey());return x?JSON.parse(x):{}}catch{return {}}}
+  function getDuration(t){const m=durations();return Math.max(5,Number(t?.duration_minutes||m[String(t?.id)]||30)||30)}
+  function setDuration(t,mins){if(!t?.id)return;const m=durations();m[String(t.id)]=mins;try{localStorage.setItem(durKey(),JSON.stringify(m))}catch{};q('v45DurationStatus').textContent=`${t.title} · ${mins} minutos reservados`;renderPlannerSuggestions();window.agendaV43Render?.()}
+  function candidates(){const ti=today(),n=now(),nm=n.getHours()*60+n.getMinutes();return (tasks||[]).filter(t=>Number(t.day)===ti&&!t.completed).sort((a,b)=>{const aa=min(a),bb=min(b),aPast=aa<nm,bPast=bb<nm;return Number(aPast)-Number(bPast)||rank(a)-rank(b)||aa-bb})}
+  function nextTask(){const c=candidates();return c[0]||null}
+  function openTask(t){if(!t)return;try{selectedDay=today();createDays?.();renderSchedule?.();v32SetSection?.('agenda');openTaskModal?.(Number(t.hour)||7,Number(t.minute)||0,t)}catch(_){}}
+  function focusTask(t){if(!t)return;try{selectedDay=today();if(typeof window.openFocus==='function')window.openFocus(t);else if(typeof window.openWorkoutMode==='function'){} }catch(_){} }
+  async function completeTask(t){if(!t)return;if(typeof toggleTaskComplete==='function'){await toggleTaskComplete(t);refresh();}}
+  function refresh(){const t=nextTask();selectedId=t?.id||null;if(!t){q('v45NextTitle').textContent='No hay tareas pendientes';q('v45NextMeta').textContent='Tu agenda de hoy está libre o completa.';q('v45NextProgress').style.width='100%';q('v45FocusBadge').textContent='Todo al día';q('v45DurationStatus').textContent='No hay tarea seleccionada.';document.querySelectorAll('#v45DurationChoices button').forEach(b=>b.classList.remove('active'));renderPlannerSuggestions();return}
+    const n=now(),nm=n.getHours()*60+n.getMinutes(),tm=min(t),delta=tm-nm;let meta=`${pad(t.hour)}:${pad(t.minute)} · ${priority(t)} · ${getDuration(t)} min`;if(delta>0)meta+=` · en ${delta} min`;else if(delta<0)meta+=' · atrasada';else meta+=' · ahora';q('v45NextTitle').textContent=t.title||'Tarea';q('v45NextMeta').textContent=meta;q('v45FocusBadge').textContent=delta<0?'⚠️ Atrasada':delta<=30?'⏰ Próxima':'📌 Siguiente';q('v45NextProgress').style.width=delta<=0?'100%':`${Math.max(8,Math.min(100,100-(delta/180*100)))}%`;const d=getDuration(t);q('v45DurationStatus').textContent=`${t.title} · ${d} minutos reservados`;document.querySelectorAll('#v45DurationChoices button').forEach(b=>b.classList.toggle('active',Number(b.dataset.min)===d));renderPlannerSuggestions();}
+  function renderPlannerSuggestions(){const c=q('v45Suggestions');if(!c)return;const ti=today();const list=(tasks||[]).filter(t=>Number(t.day)===ti&&!t.completed).sort((a,b)=>min(a)-min(b));const start=7*60,end=23*60;let prev=start;const gaps=[];list.forEach(t=>{const st=min(t);if(st>prev)gaps.push([prev,st]);prev=Math.max(prev,min(t)+getDuration(t))});if(prev<end)gaps.push([prev,end]);const free=gaps.filter(g=>g[1]-g[0]>=25);c.innerHTML='';free.slice(0,6).forEach(g=>{const size=g[1]-g[0];const candidate=list.find(t=>getDuration(t)<=size)||null;const row=document.createElement('div');row.className='v45-suggestion';row.innerHTML=`<div><strong>🟢 ${pad(Math.floor(g[0]/60))}:${pad(g[0]%60)}–${pad(Math.floor(g[1]/60))}:${pad(g[1]%60)}</strong><span> · ${size} min libres</span></div><span>${candidate?`Podría entrar: ${esc(candidate.title)}`:'Espacio disponible'}</span>`;c.appendChild(row)});q('v45FreeBadge').textContent=`${free.length} bloque(s) libre(s)`;if(!free.length)c.innerHTML='<div class="v45-suggestion"><div><strong>No hay bloques libres de 25 min o más.</strong></div><span>Tu día está bastante ocupado.</span></div>'}
+  function bind(){q('v45OpenNext')?.addEventListener('click',()=>openTask((tasks||[]).find(t=>String(t.id)===String(selectedId))));q('v45FocusNext')?.addEventListener('click',()=>focusTask((tasks||[]).find(t=>String(t.id)===String(selectedId))));q('v45CompleteNext')?.addEventListener('click',()=>completeTask((tasks||[]).find(t=>String(t.id)===String(selectedId))));q('v45DurationChoices')?.addEventListener('click',e=>{const b=e.target.closest('button[data-min]');if(!b)return;const t=(tasks||[]).find(x=>String(x.id)===String(selectedId));if(t)setDuration(t,Number(b.dataset.min))});window.addEventListener('focus',refresh);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});window.addEventListener('online',refresh)}
+  function init(){if(!q('v45FocusHub'))return;bind();refresh();setInterval(refresh,30000)}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+  window.agendaV45Refresh=refresh;
+})();

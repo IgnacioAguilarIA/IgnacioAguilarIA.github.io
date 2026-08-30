@@ -1,0 +1,20 @@
+@media(max-width:700px){
+  /* The old section switcher and the newer mobile nav were both fixed to the bottom.
+     Keep only the newer four-item mobile nav. */
+  .section-switcher{position:static!important;display:grid!important;grid-template-columns:1fr!important;gap:9px!important;margin:0 0 14px!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}
+  .mobile-nav{position:fixed!important;left:10px!important;right:10px!important;bottom:10px!important;z-index:155!important;display:grid!important}
+  body{padding-bottom:88px!important}
+  #quickAddFab{bottom:88px!important}
+
+  /* Make long nutrition / workout / date modals fully usable on small screens. */
+  .overlay{align-items:flex-start!important;padding:8px 8px calc(8px + env(safe-area-inset-bottom))!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+  .overlay .modal{width:100%!important;max-height:calc(100dvh - 16px)!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;margin:0 auto!important;padding-bottom:96px!important}
+  .overlay .modal-head{position:sticky!important;top:0!important;z-index:8!important;background:inherit!important;padding-bottom:10px!important}
+  .meal-form-actions{position:sticky!important;bottom:-1px!important;z-index:9!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important;padding:12px 0 4px!important;background:linear-gradient(to bottom,rgba(17,24,39,0),rgba(17,24,39,.98) 30%)!important}
+  .meal-form-actions .save,.meal-form-actions .secondary{width:100%!important;margin:0!important}
+  body.light .meal-form-actions{background:linear-gradient(to bottom,rgba(255,255,255,0),rgba(255,255,255,.98) 30%)!important}
+}
+@media(max-width:380px){
+  .mobile-nav{left:6px!important;right:6px!important;bottom:6px!important}
+  .mobile-nav-btn small{font-size:7px!important}
+}

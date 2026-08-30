@@ -1,0 +1,22 @@
+body.v32-training-active #workoutPanel,
+body.v32-training-active #workoutDays,
+body.v32-training-active #workoutList,
+body.v32-training-active .workout-history,
+body.v32-training-active .workout-analytics,
+body.v32-training-active .workout-stats,
+body.v32-training-active .workout-head,
+body.v32-training-active .progress-controls,
+body.v32-training-active .exercise-progress,
+body.v32-training-active #addExerciseBtn,
+body.v32-training-active #v31TrainingMini{display:none!important}
+.v32-section-nav{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 0 16px;padding-bottom:2px}
+.v32-section-nav::-webkit-scrollbar{display:none}
+.v32-section-btn{flex:0 0 auto;min-width:112px;min-height:52px;padding:9px 11px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:#cbd5e1;font-size:10px;font-weight:900;cursor:pointer}
+.v32-section-btn.active{color:#fff;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-color:#60a5fa}
+.v32-home-pane,.v32-agenda-pane,.v32-calendar-pane,.v32-workout-pane,.v32-nutrition-pane{display:none!important}
+.v32-section-active{display:block!important}
+.v32-section-title{margin:0 0 12px}
+.v32-section-title strong{font-size:18px}.v32-section-title span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+body.light .v32-section-btn{background:#fff;color:#475569;border-color:#dbe3ee}
+body.light .v32-section-btn.active{color:#fff}
+@media(max-width:700px){.v32-section-btn{min-width:100px}.v32-section-title strong{font-size:17px}}

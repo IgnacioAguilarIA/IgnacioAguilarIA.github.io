@@ -1,0 +1,1 @@
+(function(){const p=document.getElementById('v47RepsPanel');if(p&&!document.getElementById('v58SaveState')){const s=document.createElement('div');s.id='v58SaveState';s.className='v58-save-state';s.textContent='💾 Seus dados são salvos automaticamente durante o treino.';p.appendChild(s);}})();

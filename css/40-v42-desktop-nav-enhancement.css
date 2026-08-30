@@ -1,0 +1,75 @@
+/* V42 — navegación flotante refinada para escritorio */
+@media(min-width:701px){
+  .mobile-nav{
+    left:50%!important; right:auto!important; transform:translateX(-50%)!important;
+    width:min(820px,calc(100vw - 48px))!important;
+    height:76px!important; min-height:76px!important; bottom:18px!important;
+    padding:7px!important; gap:6px!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    background:rgba(15,23,42,.90)!important;
+    border:1px solid rgba(148,163,184,.18)!important;
+    border-radius:24px!important;
+    box-shadow:0 22px 60px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.05)!important;
+    backdrop-filter:blur(18px) saturate(125%)!important;
+  }
+  .mobile-nav-btn{
+    position:relative!important; min-height:60px!important; padding:7px 10px!important;
+    border-radius:17px!important; gap:3px!important;
+    transition:transform .16s ease, background .16s ease, color .16s ease, box-shadow .16s ease!important;
+  }
+  .mobile-nav-btn:hover{
+    transform:translateY(-2px)!important;
+    background:rgba(255,255,255,.055)!important;
+    color:#e2e8f0!important;
+  }
+  .mobile-nav-btn.active{
+    background:linear-gradient(180deg,rgba(59,130,246,.22),rgba(37,99,235,.10))!important;
+    color:#fff!important;
+    box-shadow:inset 0 0 0 1px rgba(96,165,250,.20),0 8px 20px rgba(37,99,235,.10)!important;
+  }
+  .mobile-nav-btn.active::after{
+    content:""; position:absolute; left:50%; bottom:5px; width:26px; height:3px;
+    transform:translateX(-50%); border-radius:999px; background:#60a5fa;
+  }
+  .mobile-nav-btn > span:first-child{font-size:20px!important; line-height:1!important; filter:saturate(1.05)}
+  .mobile-nav-btn .nav-title{font-size:11px!important; line-height:1.05!important; letter-spacing:.1px}
+  .mobile-nav-btn .nav-sub{font-size:8px!important; line-height:1.1!important; opacity:.82}
+  .mobile-nav-btn.active .nav-sub{opacity:1!important;color:#bfdbfe!important}
+  .mobile-nav-btn .nav-badge{
+    position:absolute; top:7px; right:12px; min-width:18px; height:18px; padding:0 5px;
+    display:none; align-items:center; justify-content:center; border-radius:999px;
+    background:#2563eb; color:#fff; font-size:9px; font-weight:900;
+    box-shadow:0 4px 10px rgba(37,99,235,.25);
+  }
+  .mobile-nav-btn.has-badge .nav-badge{display:flex}
+  body.light .mobile-nav{
+    background:rgba(255,255,255,.92)!important; border-color:#dbe3ee!important;
+    box-shadow:0 20px 50px rgba(15,23,42,.14), inset 0 1px 0 rgba(255,255,255,.8)!important;
+  }
+  body.light .mobile-nav-btn:hover{background:#f8fafc!important;color:#1e293b!important}
+  body.light .mobile-nav-btn.active{background:linear-gradient(180deg,#eff6ff,#f8fbff)!important;color:#0f172a!important;box-shadow:inset 0 0 0 1px #bfdbfe,0 8px 20px rgba(37,99,235,.08)!important}
+  body.light .mobile-nav-btn.active .nav-sub{color:#1d4ed8!important}
+  body.light .mobile-nav-btn .nav-badge{background:#2563eb;color:#fff}
+}
+@media(min-width:701px) and (max-width:980px){
+  .mobile-nav{width:min(720px,calc(100vw - 28px))!important;height:72px!important;min-height:72px!important}
+  .mobile-nav-btn{min-height:58px!important;padding:6px 7px!important}
+  .mobile-nav-btn .nav-title{font-size:10px!important}
+  .mobile-nav-btn .nav-sub{font-size:7px!important}
+}
+@media(max-width:700px){
+  .mobile-nav-btn .nav-badge{display:none!important}
+}
+
+/* Scroll-to-top desktop */
+.v42-top-btn{
+  position:fixed; right:22px; bottom:108px; z-index:145; width:42px; height:42px;
+  border:1px solid rgba(148,163,184,.18); border-radius:13px;
+  background:rgba(15,23,42,.90); color:#dbeafe; font-size:18px; font-weight:900;
+  cursor:pointer; opacity:0; pointer-events:none; transform:translateY(8px);
+  transition:.18s ease; backdrop-filter:blur(14px); box-shadow:0 12px 28px rgba(0,0,0,.24);
+}
+.v42-top-btn.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.v42-top-btn:hover{border-color:#60a5fa;transform:translateY(-2px)}
+body.light .v42-top-btn{background:rgba(255,255,255,.92);color:#334155;border-color:#dbe3ee;box-shadow:0 12px 28px rgba(15,23,42,.12)}
+@media(max-width:700px){.v42-top-btn{display:none}}

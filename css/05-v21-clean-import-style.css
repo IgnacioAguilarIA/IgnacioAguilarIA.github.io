@@ -1,0 +1,5 @@
+.topbar-hidden{display:none!important}
+.import-progress{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.12);color:var(--muted);font-size:10px;line-height:1.45;display:none}
+.import-progress.show{display:block}
+body.light .import-progress{background:#eff6ff;border-color:#bfdbfe;color:#475569}
+.reminder-panel.open{z-index:140}

@@ -1,0 +1,18 @@
+/* Único selector de secciones: la navegación flotante. */
+.section-switcher,#v32SectionNav{display:none!important}
+.mobile-nav{display:grid!important}
+.mobile-nav-btn{min-height:52px;padding:5px 4px}
+.mobile-nav-btn span{font-size:18px;line-height:1}
+.mobile-nav-btn small{font-size:8px;line-height:1.15;text-align:center}
+.mobile-nav-btn .nav-title{font-size:9px;font-weight:900;line-height:1.05}
+.mobile-nav-btn .nav-sub{font-size:7px;color:#94a3b8;font-weight:500;line-height:1.1;margin-top:1px}
+.mobile-nav-btn.active .nav-sub{color:#bfdbfe}
+body.light .mobile-nav-btn .nav-sub{color:#64748b}
+body.light .mobile-nav-btn.active .nav-sub{color:#dbeafe}
+@media(max-width:700px){
+  .mobile-nav{left:6px!important;right:6px!important;bottom:6px!important;height:auto!important;min-height:64px!important;grid-template-columns:repeat(5,minmax(0,1fr))!important}
+  .mobile-nav-btn{min-height:56px}
+}
+@media(min-width:701px){
+  .mobile-nav{left:18px!important;right:18px!important;bottom:16px!important;height:68px!important}
+}

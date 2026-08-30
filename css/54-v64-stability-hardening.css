@@ -1,0 +1,4 @@
+/* V64 — estabilidad: evita que los paneles dinámicos pierdan sus anclajes. */
+    #v46Over{min-width:1ch}
+    #progressMetricButtons{display:flex;align-items:center;flex-wrap:wrap}
+    #v47SetList input.v48-set-input{pointer-events:auto;user-select:text;-webkit-user-select:text}

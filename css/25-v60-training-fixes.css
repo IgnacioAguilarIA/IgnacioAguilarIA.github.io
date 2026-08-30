@@ -1,0 +1,4 @@
+.v48-finish-overlay{display:none!important}
+.v48-finish-overlay.show{display:flex!important}
+#v48FinishOverlay .v48-finish-close,#v48FinishOverlay .v48-finish-ok{pointer-events:auto!important}
+#v28WorkoutOverlay #v47SetList .v47-set-check{pointer-events:auto!important;touch-action:manipulation}
