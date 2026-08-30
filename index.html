@@ -5820,5 +5820,118 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
 
 </script>
 
+
+<style id="v76-cancel-hard-reset-style">
+/* V76: cancelación aislada de entrenamiento. Este botón tiene un único controlador. */
+#v49CancelWorkout.v76-owned-cancel{position:relative;z-index:5;touch-action:manipulation;pointer-events:auto}
+#v76CancelConfirmHard{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.82);backdrop-filter:blur(10px);touch-action:manipulation}
+#v76CancelConfirmHard.show{display:flex}
+#v76CancelConfirmHard .v76-card{width:min(430px,100%);padding:22px;border-radius:22px;background:rgba(17,24,39,.995);border:1px solid rgba(239,68,68,.30);box-shadow:0 30px 100px rgba(0,0,0,.58);color:#fff;text-align:center}
+#v76CancelConfirmHard .v76-icon{width:54px;height:54px;margin:0 auto 12px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,.12);font-size:26px}
+#v76CancelConfirmHard .v76-title{font-size:20px;font-weight:900}
+#v76CancelConfirmHard .v76-text{margin-top:8px;font-size:11px;line-height:1.55;color:#94a3b8}
+#v76CancelConfirmHard .v76-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+#v76CancelConfirmHard button{min-height:46px;border-radius:12px;font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#v76CancelNoHard{border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.06);color:#dbeafe}
+#v76CancelYesHard{border:1px solid rgba(239,68,68,.40);background:rgba(239,68,68,.14);color:#fecaca}
+@media(max-width:520px){#v76CancelConfirmHard{padding:12px;align-items:flex-end}#v76CancelConfirmHard .v76-card{width:100%;padding:18px 15px 15px;border-radius:20px}#v76CancelConfirmHard .v76-actions{grid-template-columns:1fr}#v76CancelYesHard{order:-1}}
+</style>
+<script id="v76-cancel-hard-reset">
+(function(){
+  'use strict';
+  const BID='v49CancelWorkout';
+  const CID='v76CancelConfirmHard';
+  let installed=false;
+  let cancelButton=null;
+
+  function q(id){return document.getElementById(id)}
+  function isTrainingVisible(){const o=q('v28WorkoutOverlay');return !!o&&o.classList.contains('show')}
+
+  function ensureConfirm(){
+    let o=q(CID);
+    if(o)return o;
+    o=document.createElement('div');
+    o.id=CID;
+    o.setAttribute('aria-hidden','true');
+    o.innerHTML='<div class="v76-card" role="dialog" aria-modal="true" aria-labelledby="v76CancelTitle"><div class="v76-icon">⚠️</div><div id="v76CancelTitle" class="v76-title">¿Cancelar entrenamiento?</div><div class="v76-text">Se cerrará la Vista de entrenamiento y se descartará el progreso de esta sesión.</div><div class="v76-actions"><button id="v76CancelNoHard" type="button">Seguir entrenando</button><button id="v76CancelYesHard" type="button">Sí, cancelar</button></div></div>';
+    document.body.appendChild(o);
+    const close=()=>hideConfirm();
+    q('v76CancelNoHard').addEventListener('click',close);
+    q('v76CancelYesHard').addEventListener('click',hardCancel);
+    o.addEventListener('click',e=>{if(e.target===o)close()});
+    return o;
+  }
+
+  function hideConfirm(){const o=q(CID);if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true')}}
+
+  function showConfirm(){
+    if(!isTrainingVisible())return;
+    const o=ensureConfirm();
+    o.classList.add('show');
+    o.setAttribute('aria-hidden','false');
+    setTimeout(()=>q('v76CancelYesHard')?.focus(),30);
+  }
+
+  async function hardCancel(){
+    hideConfirm();
+    let canceledId='';
+    try{canceledId=String(window.AgendaTrainingV73?.getState?.()?.id||'')}catch(_){}
+    // Detener el módulo aislado antes de borrar su estado, para evitar que un timer vuelva a guardarlo.
+    try{window.AgendaTrainingV73?.close?.()}catch(_){}
+    // Cerrar absolutamente todas las capas de entrenamiento.
+    try{q('v28WorkoutOverlay')?.classList.remove('show');q('v28WorkoutOverlay')?.setAttribute('aria-hidden','true')}catch(_){}
+    try{q('v74CancelConfirm')?.classList.remove('show');q('v74CancelConfirm')?.setAttribute('aria-hidden','true')}catch(_){}
+    try{q('v73FinishOverlay')?.classList.remove('show')}catch(_){}
+    try{document.body.classList.remove('v32-training-active')}catch(_){}
+    try{document.body.style.overflow=''}catch(_){}
+    try{q('v31TrainingMini')?.classList.remove('show')}catch(_){}
+    try{
+      const uid=(typeof currentUser!=='undefined'&&currentUser?.id)||'guest';
+      localStorage.removeItem('agendaTrainingV73:'+uid);
+      localStorage.removeItem('agendaTrainingV31:'+uid);
+      const qk='agendaTrainingV73Queue:'+uid;
+      const queued=JSON.parse(localStorage.getItem(qk)||'[]');
+      if(Array.isArray(queued))localStorage.setItem(qk,JSON.stringify(queued.filter(x=>!canceledId||!String(x?.notes||'').includes(canceledId))));
+    }catch(_){}
+    if(canceledId&&navigator.onLine&&typeof sb!=='undefined'&&typeof currentUser!=='undefined'&&currentUser?.id){
+      try{await sb.from('workout_logs').delete().eq('user_id',currentUser.id).like('notes',`%Sesión ${canceledId}%`)}catch(_){}
+    }
+    window.dispatchEvent(new CustomEvent('agenda-v76-training-cancelled',{detail:{sessionId:canceledId}}));
+  }
+
+  function ownButton(){
+    const old=q(BID);
+    if(!old)return null;
+    if(old.dataset.v76Owned==='1')return old;
+    // Clonar elimina de forma fiable los listeners bubble de versiones antiguas.
+    const fresh=old.cloneNode(true);
+    fresh.dataset.v76Owned='1';
+    fresh.classList.add('v76-owned-cancel');
+    old.replaceWith(fresh);
+    cancelButton=fresh;
+    fresh.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();showConfirm()},{capture:true});
+    fresh.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();showConfirm()},{capture:true});
+    fresh.addEventListener('touchend',e=>{e.preventDefault();e.stopPropagation();showConfirm()},{capture:true,passive:false});
+    return fresh;
+  }
+
+  function blockLegacyOnButton(){
+    const b=cancelButton||q(BID);if(!b)return;
+    ['click','pointerup','pointerdown','touchstart','touchend'].forEach(type=>b.addEventListener(type,e=>{e.stopImmediatePropagation()},{capture:true}));
+  }
+
+  function init(){
+    if(installed)return;installed=true;
+    ownButton();
+    blockLegacyOnButton();
+    // Capa final: incluso si un script posterior vuelve a tocar el botón, lo recuperamos.
+    setInterval(()=>{if(!cancelButton||!document.documentElement.contains(cancelButton))ownButton();blockLegacyOnButton()},1500);
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&q(CID)?.classList.contains('show')){e.preventDefault();e.stopImmediatePropagation();hideConfirm()}},true);
+    window.AgendaTrainingCancelV76={show:showConfirm,confirm:showConfirm,close:hideConfirm,cancel:hardCancel};
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 </body>
 </html>
