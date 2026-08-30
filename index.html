@@ -3118,10 +3118,9 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
     const cmp=data.comparison||{rows:[],improved:0,worse:0,same:0};const box=q('v49Comparison');if(box){const top=cmp.improved>cmp.worse?'📈 Mejoraste respecto a tus sesiones anteriores':cmp.worse>cmp.improved?'📉 Algunas marcas bajaron hoy':'➡️ Rendimiento estable';box.innerHTML=`<div class="v49-comparison-head"><strong>${top}</strong><span>${cmp.improved} mejor · ${cmp.same} igual · ${cmp.worse} menor</span></div>${cmp.rows.slice(0,8).map(r=>`<div class="v49-comparison-row ${r.status}"><span>${esc(r.name)}</span><span>${esc(r.text)}</span></div>`).join('')}`}
     o.classList.add('show');
   }
-  async function cancelWorkout(){
+  async function cancelWorkout(skipConfirm=false){
     if(!activeSession)return;
-    const ok=confirm('¿Cancelar este entrenamiento? Se cerrará la Vista de entrenamiento y se eliminarán los registros creados durante esta sesión.');
-    if(!ok)return;
+    if(!skipConfirm){const ok=confirm('¿Cancelar este entrenamiento? Se cerrará la Vista de entrenamiento y se eliminarán los registros creados durante esta sesión.');if(!ok)return;}
     const sessionId=String(activeSession.id||'');
     pauseTimer();stopClock();await unwake();
     try{if(sessionId&&currentUser?.id){const {error}=await sb.from('workout_logs').delete().eq('user_id',currentUser.id).like('notes',`%${sessionId}%`);if(error)console.warn('No se pudieron eliminar todos los registros de la sesión cancelada:',error)}}catch(e){console.warn('Cancelación offline:',e)}
@@ -3131,7 +3130,7 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
   function closeView(){save();q('v28WorkoutOverlay')?.classList.remove('show');v32TrainingActive(false);document.body.style.overflow='';updateMini()}
   function openView(){if(!list().length){alert(`No hay ejercicios cargados para ${DAYS[workoutDay]}.`);return}const s=read();if(s)restore(s);else newSession();q('v28WorkoutOverlay')?.classList.add('show');v32TrainingActive(true);document.body.style.overflow='hidden';updateFull();startClock();if(timerRunning)startTimer();wake()}
   function restoreOnLoad(){const s=read();if(!s){v32TrainingActive(false);return}restore(s);v32TrainingActive(false);updateMini();startClock();if(timerRunning)startTimer()}
-  function bind(){q('v28WorkoutClose')?.addEventListener('click',closeView);q('v28PrevBtn')?.addEventListener('click',prev);q('v28NextBtn')?.addEventListener('click',next);q('v28FinishBtn')?.addEventListener('click',finish);q('v49CancelWorkout')?.addEventListener('click',cancelWorkout);q('v28TimerModeStopwatch')?.addEventListener('click',()=>setMode('stopwatch'));q('v28TimerModeCountdown')?.addEventListener('click',()=>setMode('countdown'));q('v28TimerStart')?.addEventListener('click',startTimer);q('v28TimerPause')?.addEventListener('click',pauseTimer);q('v28TimerReset')?.addEventListener('click',resetTimer);q('v31MiniOpen')?.addEventListener('click',openView);q('v31MiniFinish')?.addEventListener('click',finish);window.addEventListener('beforeunload',persistTrainingState);window.addEventListener('pagehide',persistTrainingState);document.addEventListener('visibilitychange',()=>{if(activeSession){persistTrainingState();if(document.visibilityState==='visible')wake()}});document.addEventListener('keydown',e=>{if(!q('v28WorkoutOverlay')?.classList.contains('show'))return;if(e.key==='Escape'){closeView()}else if(e.key==='ArrowRight'){next()}else if(e.key==='ArrowLeft'){prev()}else if(e.code==='Space'){e.preventDefault();timerRunning?pauseTimer():startTimer()}});window.openWorkoutMode=openView;restoreOnLoad()}
+  function bind(){q('v28WorkoutClose')?.addEventListener('click',closeView);q('v28PrevBtn')?.addEventListener('click',prev);q('v28NextBtn')?.addEventListener('click',next);q('v28FinishBtn')?.addEventListener('click',finish);q('v49CancelWorkout')?.addEventListener('click',cancelWorkout);window.AgendaTrainingV31={cancelNow:()=>cancelWorkout(true),close:closeView,getState:()=>activeSession};q('v28TimerModeStopwatch')?.addEventListener('click',()=>setMode('stopwatch'));q('v28TimerModeCountdown')?.addEventListener('click',()=>setMode('countdown'));q('v28TimerStart')?.addEventListener('click',startTimer);q('v28TimerPause')?.addEventListener('click',pauseTimer);q('v28TimerReset')?.addEventListener('click',resetTimer);q('v31MiniOpen')?.addEventListener('click',openView);q('v31MiniFinish')?.addEventListener('click',finish);window.addEventListener('beforeunload',persistTrainingState);window.addEventListener('pagehide',persistTrainingState);document.addEventListener('visibilitychange',()=>{if(activeSession){persistTrainingState();if(document.visibilityState==='visible')wake()}});document.addEventListener('keydown',e=>{if(!q('v28WorkoutOverlay')?.classList.contains('show'))return;if(e.key==='Escape'){closeView()}else if(e.key==='ArrowRight'){next()}else if(e.key==='ArrowLeft'){prev()}else if(e.code==='Space'){e.preventDefault();timerRunning?pauseTimer():startTimer()}});window.openWorkoutMode=openView;restoreOnLoad()}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind()
 })();
 </script>
@@ -5776,7 +5775,7 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
     if(id==='v28PrevBtn'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();prev();return;}
     if(id==='v28FinishBtn'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();finish();return;}
     if(id==='v28WorkoutClose'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();closeView();return;}
-    if(id==='v49CancelWorkout'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();cancel();return;}
+    if(id==='v49CancelWorkout'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();window.AgendaTrainingCancelV77?.show();return;}
     if(id==='v28TimerModeStopwatch'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();setMode('stopwatch');return;}
     if(id==='v28TimerModeCountdown'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();setMode('countdown');return;}
     if(id==='v28TimerStart'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();startTimer();return;}
@@ -5795,7 +5794,7 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
   function init(){
     if(initialized)return;initialized=true;
     document.addEventListener('click',intercept,true);
-    document.addEventListener('pointerup',e=>{if(e.target?.closest?.('#v49CancelWorkout')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();cancel();}},true);
+    document.addEventListener('pointerup',e=>{if(e.target?.closest?.('#v49CancelWorkout')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();window.AgendaTrainingCancelV77?.show();}},true);
     document.addEventListener('pointerdown',e=>{if(e.target?.closest?.('#v49CancelWorkout')){e.stopImmediatePropagation();} if(e.target?.closest?.('#v28WorkoutOverlay .v47-set-check')){e.stopImmediatePropagation()}},true);
     document.addEventListener('keydown',e=>{
       if(!root()?.classList.contains('show'))return;
@@ -5811,7 +5810,7 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
     setInterval(()=>{if(state){state.sessionSeconds=Math.max(0,Math.floor((Date.now()-Number(state.startedAt||Date.now()))/1000));save();updateTimerDisplay();protectLegacyVisuals()}},1000);
     setInterval(flushQueue,15000);
     const existing=read()||migrateLegacy();if(existing&&root()?.classList.contains('show')){state=normalize(existing);sessionId=state.id;restMode=state.restMode||'stopwatch';restSeconds=Number(state.restSeconds)||0;render()}
-    window.AgendaTrainingV73={open,close:closeView,cancel,finish,next,prev,toggleSet,save,getState:()=>state,confirmCancel:showCancelConfirm};
+    window.AgendaTrainingV73={open,close:closeView,cancel,finish,next,prev,toggleSet,save,getState:()=>state,confirmCancel:showCancelConfirm,cancelNow:performCancel};
     window.openWorkoutMode=open;
   }
 
@@ -5933,5 +5932,78 @@ body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}b
 })();
 </script>
 
+<style id="v77-training-cancel-owner-style">
+#v77TrainingCancelConfirm{position:fixed;inset:0;z-index:120000;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.86);backdrop-filter:blur(12px);touch-action:manipulation}
+#v77TrainingCancelConfirm.show{display:flex}
+#v77TrainingCancelConfirm .v77-card{width:min(430px,100%);padding:22px;border-radius:22px;background:#111827;border:1px solid rgba(239,68,68,.34);box-shadow:0 30px 100px rgba(0,0,0,.6);color:#fff;text-align:center}
+#v77TrainingCancelConfirm .v77-title{font-size:20px;font-weight:900}
+#v77TrainingCancelConfirm .v77-text{margin-top:8px;font-size:11px;line-height:1.5;color:#94a3b8}
+#v77TrainingCancelConfirm .v77-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+#v77TrainingCancelConfirm button{min-height:48px;border-radius:12px;font-weight:900;font-size:11px;border:1px solid rgba(148,163,184,.2);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#v77TrainingCancelNo{background:#1e293b;color:#dbeafe}
+#v77TrainingCancelYes{background:#7f1d1d;color:#fee2e2;border-color:rgba(239,68,68,.45)!important}
+@media(max-width:520px){#v77TrainingCancelConfirm{align-items:flex-end;padding:10px}#v77TrainingCancelConfirm .v77-card{width:100%;border-radius:20px;padding:18px 14px 14px}#v77TrainingCancelConfirm .v77-actions{grid-template-columns:1fr}#v77TrainingCancelYes{order:-1}}
+</style>
+<script id="v77-training-cancel-owner">
+(function(){
+'use strict';
+const BID='v49CancelWorkout',CID='v77TrainingCancelConfirm';
+let busy=false;
+const q=id=>document.getElementById(id);
+function trainingOpen(){return !!q('v28WorkoutOverlay')?.classList.contains('show')}
+function ensureConfirm(){
+  let o=q(CID); if(o)return o;
+  o=document.createElement('div');o.id=CID;o.setAttribute('aria-hidden','true');
+  o.innerHTML='<div class="v77-card" role="dialog" aria-modal="true" aria-labelledby="v77TrainingCancelTitle"><div style="font-size:28px;margin-bottom:10px">⚠️</div><div id="v77TrainingCancelTitle" class="v77-title">¿Cancelar entrenamiento?</div><div class="v77-text">Se cerrará la Vista de entrenamiento y se descartará el progreso de esta sesión.</div><div class="v77-actions"><button id="v77TrainingCancelNo" type="button">Seguir entrenando</button><button id="v77TrainingCancelYes" type="button">Sí, cancelar</button></div></div>';
+  document.body.appendChild(o);
+  q('v77TrainingCancelNo').addEventListener('click',hide);
+  q('v77TrainingCancelYes').addEventListener('click',hardCancel,{capture:true});
+  o.addEventListener('click',e=>{if(e.target===o)hide()});
+  return o;
+}
+function hide(){const o=q(CID);if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true')}}
+function show(){if(!trainingOpen()||busy)return;const o=ensureConfirm();o.classList.add('show');o.setAttribute('aria-hidden','false');setTimeout(()=>q('v77TrainingCancelYes')?.focus(),30)}
+async function hardCancel(){
+  if(busy)return;busy=true;hide();
+  // Use the ORIGINAL V31 cancellation cleanup. This is the code that already
+  // stopped the old timers, cleared its session and removed the old mini-panel.
+  try{await window.AgendaTrainingV31?.cancelNow?.()}catch(e){console.warn('V77 V31 cleanup',e)}
+  // Cancel the isolated V73 state as well, without creating another dialog.
+  try{
+    const api=window.AgendaTrainingV73;
+    if(api?.getState?.()) await api.cancelNow?.();
+  }catch(e){console.warn('V77 V73 cleanup',e)}
+  // Defensive cleanup: every visual/persistent layer used by previous versions.
+  try{q('v28WorkoutOverlay')?.classList.remove('show');q('v28WorkoutOverlay')?.setAttribute('aria-hidden','true')}catch(_){ }
+  try{q('v31TrainingMini')?.classList.remove('show');q('v31TrainingMini')?.style.setProperty('display','none','important')}catch(_){ }
+  try{q('v74CancelConfirm')?.classList.remove('show');q('v74CancelConfirm')?.setAttribute('aria-hidden','true')}catch(_){ }
+  try{q('v76CancelConfirmHard')?.classList.remove('show');q('v76CancelConfirmHard')?.setAttribute('aria-hidden','true')}catch(_){ }
+  try{q('v73FinishOverlay')?.classList.remove('show')}catch(_){ }
+  try{q('v48FinishOverlay')?.classList.remove('show')}catch(_){ }
+  try{document.body.classList.remove('v32-training-active');document.body.style.overflow=''}catch(_){ }
+  try{
+    const uid=(typeof currentUser!=='undefined'&&currentUser?.id)||'guest';
+    localStorage.removeItem('agendaTrainingV31:'+uid);
+    localStorage.removeItem('agendaTrainingV73:'+uid);
+  }catch(_){ }
+  window.dispatchEvent(new CustomEvent('agenda-training-cancelled-final'));
+  busy=false;
+}
+function ownButton(){
+  const b=q(BID);if(!b)return;
+  if(b.dataset.v77Owned==='1')return;
+  const fresh=b.cloneNode(true);fresh.dataset.v77Owned='1';b.replaceWith(fresh);
+  fresh.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();show()},{capture:true});
+  fresh.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();show()},{capture:true});
+  fresh.addEventListener('touchend',e=>{e.preventDefault();e.stopPropagation();show()},{capture:true,passive:false});
+}
+function init(){
+  ownButton();setInterval(ownButton,1000);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&q(CID)?.classList.contains('show')){e.preventDefault();e.stopImmediatePropagation();hide()}},true);
+  window.AgendaTrainingCancelV77={show,confirm:show,close:hide,cancel:hardCancel};
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 </body>
 </html>
