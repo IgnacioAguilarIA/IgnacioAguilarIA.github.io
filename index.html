@@ -526,8 +526,9 @@ body.light .input{background:#fff;color:#0f172a}
 body.light .v15-search-box{background:#fff} body.light .v15-search-top input{color:#0f172a} body.light .v15-search-result{color:#0f172a}
 .focus-mode .dashboard,.focus-mode .insights-panel,.focus-mode .smart-panel,.focus-mode .utility-row,.focus-mode .notice,.focus-mode .stats,.focus-mode .conflict-panel,.focus-mode .today-timeline{display:none!important}
 @media(max-width:900px){.v15-toolbar{padding:9px}.v15-toolbar-left,.v15-toolbar-right{width:100%}.v15-toolbar-right{justify-content:flex-end}.v15-tool{flex:1;min-width:0}}
-</style>
 
+
+</style>
 <style id="v22-top-search-style">
 .top-search-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#dbeafe;cursor:pointer;font-size:11px;font-weight:800;transition:.18s}
 .top-search-btn:hover{border-color:#60a5fa;background:rgba(59,130,246,.09)}
@@ -1106,8 +1107,12 @@ body.light .v62-load{background:#f8fafc;border-color:#dbe3ee}body.light .v62-loa
 @media(max-width:900px){.v62-load-grid{grid-template-columns:1fr 1fr}}@media(max-width:520px){.v62-load-grid{grid-template-columns:1fr 1fr}.v62-load{padding:12px}}
 </style>
 
-<style id="v63-progress-metric-style">
-.progress-metric-buttons{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px}.progress-metric-btn{padding:7px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#cbd5e1;font-size:9px;font-weight:800;cursor:pointer}.progress-metric-btn.active{background:rgba(59,130,246,.12);border-color:rgba(96,165,250,.28);color:#dbeafe}body.light .progress-metric-btn{background:#f8fafc;color:#475569;border-color:#dbe3ee}body.light .progress-metric-btn.active{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+<style id="v63-progress-metric-style">.progress-metric-buttons{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 10px}.progress-metric-btn{padding:7px 9px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#cbd5e1;font-size:9px;font-weight:800;cursor:pointer}.progress-metric-btn.active{background:rgba(59,130,246,.12);border-color:rgba(96,165,250,.28);color:#dbeafe}body.light .progress-metric-btn{background:#f8fafc;color:#475569;border-color:#dbe3ee}body.light .progress-metric-btn.active{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}</style>
+<style id="v78-training-finish-style">.v49-queued-note{margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.22);color:#fde68a;font-size:11px;line-height:1.4}body.light .v49-queued-note{background:#fff7ed;border-color:#fed7aa;color:#9a3412}</style>
+
+<style id="agenda-structure-guard">
+/* Prevent non-visual helper nodes from affecting layout if a legacy module is injected. */
+body > script, body > style { display:none !important; }
 </style>
 </head>
 <body>
@@ -2238,7 +2243,10 @@ $('saveMealBtn').onclick=async()=>{const meal_type=$('mealType').value;const pay
 async function deleteMeal(id){if(!confirm('¿Eliminar esta comida?'))return;const {error}=await sb.from('nutrition_meals').delete().eq('id',id);if(error)alert(error.message);else{await loadNutritionMeals();renderNutritionList();renderNutritionGoals();renderDashboard();renderConflicts();}}
 
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=async()=>{workoutDay=i;renderWorkoutDays();await loadWorkoutExercises();renderWorkoutList();renderWorkoutHistory();renderWorkoutAnalytics();renderDashboard();};c.appendChild(b)});}
-async function loadWorkoutExercises(){const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error){console.error(error);const c=cacheRead('workoutExercisesAll');workoutExercises=Array.isArray(c)?c.filter(x=>Number(x.day)===Number(workoutDay)):[]}else{workoutExercises=data||[];let all=cacheRead('workoutExercisesAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==Number(workoutDay));all.push(...workoutExercises);cacheWrite('workoutExercisesAll',all)}}
+async function loadWorkoutExercises(){
+  const useCached=()=>{const c=cacheRead('workoutExercisesAll');const cached=Array.isArray(c)?c.filter(x=>Number(x.day)===Number(workoutDay)):[];if(cached.length||!navigator.onLine){workoutExercises=cached;return true}return false};
+  if(!navigator.onLine){useCached();return}
+  try{const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error)throw error;workoutExercises=data||[];let all=cacheRead('workoutExercisesAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==Number(workoutDay));all.push(...workoutExercises);cacheWrite('workoutExercisesAll',all)}catch(error){console.error('Entrenamiento:',error);useCached()}}
 async function loadWorkoutLogs(){const {data,error}=await sb.from('workout_logs').select('*').order('performed_at',{ascending:false}).order('created_at',{ascending:false}).limit(100);if(error){console.error(error);const c=cacheRead('workoutLogs');workoutLogs=Array.isArray(c)?c:[]}else{workoutLogs=data||[];cacheWrite('workoutLogs',workoutLogs)}}
 function renderWorkoutStats(){
   const now=new Date();
@@ -2980,11 +2988,9 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
   const skey=()=>`${KEY}:${currentUser?.id||'guest'}`;
   function read(){try{const x=localStorage.getItem(skey());return x?JSON.parse(x):null}catch(_){return null}}
   function save(){if(!activeSession)return;activeSession.currentIndex=index;activeSession.sessionSeconds=sessionSeconds;activeSession.timerMode=timerMode;activeSession.timerSeconds=timerSeconds;activeSession.timerRunning=timerRunning;activeSession.lastSavedAt=Date.now();activeSession.actuals=actualsSnapshot();try{localStorage.setItem(skey(),JSON.stringify(activeSession))}catch(_){}}
-  function clear(){try{localStorage.removeItem(skey())}catch(_){} }
-  function v32TrainingActive(on){document.body.classList.toggle('v32-training-active',!!on)}
-  function persistTrainingState(){try{if(activeSession)save()}catch(_){}}
+  function clear(){try{localStorage.removeItem(skey())}catch(_){} } function v32TrainingActive(on){document.body.classList.toggle('v32-training-active',!!on)}
   function actualsSnapshot(){return Array.isArray(activeSession?.actuals)?activeSession.actuals.map(x=>({reps:Array.isArray(x?.reps)?x.reps.slice():[],weight:Array.isArray(x?.weight)?x.weight.slice():[],rir:Array.isArray(x?.rir)?x.rir.slice():[],done:Array.isArray(x?.done)?x.done.slice():[]})):[]}
-  function ensureActuals(){if(!activeSession)return;const current=list();const len=current.length;activeSession.actuals=Array.isArray(activeSession.actuals)?activeSession.actuals:[];if(!len)return;while(activeSession.actuals.length<len)activeSession.actuals.push({reps:[],weight:[],rir:[],done:[]});if(activeSession.actuals.length>len)activeSession.actuals.length=len;activeSession.actuals.forEach((x,i)=>{x.reps=Array.isArray(x?.reps)?x.reps:[];x.weight=Array.isArray(x?.weight)?x.weight:[];x.rir=Array.isArray(x?.rir)?x.rir:[];x.done=Array.isArray(x?.done)?x.done:[];const n=Math.max(0,Number(current[i]?.sets)||1);x.reps=Array.from({length:n},(_,j)=>x.reps[j]??'');x.weight=Array.from({length:n},(_,j)=>x.weight[j]??'');x.rir=Array.from({length:n},(_,j)=>x.rir[j]??'');x.done=Array.from({length:n},(_,j)=>!!x.done[j])})}
+  function ensureActuals(){if(!activeSession)return;const len=list().length;activeSession.actuals=Array.isArray(activeSession.actuals)?activeSession.actuals:[];while(activeSession.actuals.length<len)activeSession.actuals.push({reps:[],weight:[],rir:[],done:[]});if(activeSession.actuals.length>len)activeSession.actuals.length=len;activeSession.actuals.forEach((x,i)=>{x.reps=Array.isArray(x?.reps)?x.reps:[];x.weight=Array.isArray(x?.weight)?x.weight:[];x.rir=Array.isArray(x?.rir)?x.rir:[];x.done=Array.isArray(x?.done)?x.done:[];const n=Math.max(0,Number(list()[i]?.sets)||1);x.reps=Array.from({length:n},(_,j)=>x.reps[j]??'');x.weight=Array.from({length:n},(_,j)=>x.weight[j]??'');x.rir=Array.from({length:n},(_,j)=>x.rir[j]??'');x.done=Array.from({length:n},(_,j)=>!!x.done[j])})}
   function captureVisibleActuals(){
     if(!activeSession)return;
     const host=q('v47SetList');
@@ -3059,7 +3065,7 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
     summary.textContent=completed===sets&&sets>0?`✅ Todas las series hechas · Volumen registrado: ${Math.round(volume*10)/10} kg`:'Reps + peso + RIR por serie. Marcá cada serie al terminarla.';
   }
   function updateRepStatus(){const panel=q('v47RepsPanel');if(!panel||!activeSession)return;ensureActuals();const ex=list()[index],data=activeSession.actuals[index]||{reps:[],weight:[],rir:[],done:[]};const sets=Math.max(0,Number(ex?.sets)||1);const done=data.done.filter(Boolean).length;let volume=0;data.done.forEach((ok,i)=>{const rr=Number(data.reps[i]),ww=Number(data.weight[i]);if(ok&&Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0)volume+=rr*ww});const counter=q('v47RepsCounter'),summary=q('v47RepsSummary');if(counter)counter.textContent=`${done}/${sets} series`;if(summary)summary.textContent=done===sets&&sets>0?`✅ Todas las series hechas · Volumen registrado: ${Math.round(volume*10)/10} kg`:'Reps + peso + RIR por serie. Marcá cada serie al terminarla.';panel.classList.toggle('complete',done===sets&&sets>0)}
-  function updateMini(){const mini=q('v31TrainingMini');if(!mini)return;if(!activeSession){mini.classList.remove('show');return}mini.classList.add('show');const ex=list()[index];q('v31MiniTitle').textContent=ex?.exercise?`🏋️ ${ex.exercise}`:'🏋️ Entrenamiento en curso';q('v31MiniSub').textContent=`${DAYS?.[activeSession.day]||'Día'} · guardado automático`;q('v31MiniTimer').textContent=fmt(sessionSeconds)}
+  function updateMini(){const mini=q('v31TrainingMini');if(!mini)return;if(!activeSession||finishing||activeSession.finished){mini.classList.remove('show');return}mini.classList.add('show');const ex=list()[index];q('v31MiniTitle').textContent=ex?.exercise?`🏋️ ${ex.exercise}`:'🏋️ Entrenamiento en curso';q('v31MiniSub').textContent=`${DAYS?.[activeSession.day]||'Día'} · guardado automático`;q('v31MiniTimer').textContent=fmt(sessionSeconds)}
   function updateFull(){const a=list();if(!a.length)return;captureVisibleActuals();save();window.__agendaTrainingActuals={fillPrevious:function(log){try{ensureActuals();const data=activeSession.actuals[index];const reps=String(log?.reps||'').split('/').map(x=>x.trim()).filter(Boolean);for(let i=0;i<data.reps.length;i++){if(reps[i])data.reps[i]=reps[i];if(log?.weight)data.weight[i]=String(log.weight);if(log?.rir!==null&&log?.rir!==undefined&&log?.rir!=='')data.rir[i]=String(log.rir);}save();renderRepTracker();updateFull()}catch(_){}}};index=Math.max(0,Math.min(index,a.length-1));const ex=a[index];q('v28WorkoutDayLabel').textContent=`${DAYS[workoutDay]} · ${a.length} ejercicios`;q('v28StepLabel').textContent=`Ejercicio ${index+1} de ${a.length}`;q('v28CurrentName').textContent=ex.exercise||'Ejercicio';const chips=q('v28CurrentChips');chips.innerHTML='';[['Series',ex.sets],['Reps',ex.reps],['RIR',ex.rir],['Descanso',ex.rest_seconds?`${ex.rest_seconds}s`:null],['Peso',ex.weight],['Tempo',ex.tempo]].forEach(([k,v])=>{if(v===null||v===undefined||v==='')return;const c=document.createElement('span');c.className='v28-chip';c.textContent=`${k}: ${v}`;chips.appendChild(c)});q('v28CurrentNote').textContent=ex.notes||'';q('v28CurrentNote').style.display=ex.notes?'block':'none';q('v28PrevBtn').disabled=index===0;q('v28NextBtn').disabled=index===a.length-1;q('v28ProgressBar').style.width=`${Math.round((index+1)/a.length*100)}%`;const s=q('v28SessionList');s.innerHTML='';a.forEach((e,i)=>{const p=document.createElement('div');p.className='v28-session-pill'+(i===index?' active':'');const done=activeSession?.loggedIndexes?.includes(i);p.textContent=`${i+1}. ${e.exercise||'Ejercicio'}${done?' ✓':''}`;p.onclick=()=>{index=i;save();updateFull()};s.appendChild(p)});q('v28TimerDisplay').textContent=fmt(timerSeconds);q('v28SessionClock').textContent=fmt(sessionSeconds);updateMini();renderRepTracker()}
   async function wake(){try{if('wakeLock' in navigator)wakeLock=await navigator.wakeLock.request('screen')}catch(_){}}
   async function unwake(){try{if(wakeLock){await wakeLock.release();wakeLock=null}}catch(_){}}
@@ -3070,27 +3076,17 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
   function updateClocksOnly(){const timer=q('v28TimerDisplay'),session=q('v28SessionClock');if(timer)timer.textContent=fmt(timerSeconds);if(session)session.textContent=fmt(sessionSeconds);updateMini()} function startClock(){if(sessionInterval)return;if(!sessionStartedAt)sessionStartedAt=Date.now()-sessionSeconds*1000;sessionInterval=setInterval(()=>{sessionSeconds=Math.floor((Date.now()-sessionStartedAt)/1000);save();updateClocksOnly()},1000)}
   function stopClock(){clearInterval(sessionInterval);sessionInterval=null}
   function newSession(){activeSession={id:`training-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,userId:currentUser?.id||null,day:Number(workoutDay)||0,performedAt:today(),startedAt:Date.now(),currentIndex:0,exerciseIds:list().map(x=>x.id).filter(Boolean),sessionSeconds:0,timerMode:'stopwatch',timerSeconds:0,timerRunning:false,loggedIndexes:[],actuals:[]};index=0;sessionSeconds=0;sessionStartedAt=Date.now();timerMode='stopwatch';timerSeconds=0;timerRunning=false;save()}
-  function restore(s){
-    if(!s||typeof s!=='object')return;
-    activeSession={...s};
-    workoutDay=Number(s.day)||workoutDay;
-    index=Math.max(0,Number(s.currentIndex)||0);
-    const elapsed=Math.max(0,Math.floor((Date.now()-Number(s.startedAt||Date.now()))/1000));
-    sessionSeconds=Math.max(Number(s.sessionSeconds)||0,elapsed);
-    sessionStartedAt=Date.now()-sessionSeconds*1000;
-    timerMode=s.timerMode||'stopwatch';
-    timerSeconds=Number(s.timerSeconds)||0;
-    timerRunning=!!s.timerRunning;
-    activeSession.loggedIndexes=Array.isArray(s.loggedIndexes)?s.loggedIndexes:[];
-    activeSession.actuals=Array.isArray(s.actuals)?s.actuals:[];
-    // On page reload the workout list can still be empty. Never let that
-    // temporary empty state erase the saved per-series data.
-    if(list().length){ensureActuals();save()}
-  }
-  async function logExercise(i){if(!activeSession||activeSession.loggedIndexes.includes(i))return true;const ex=list()[i];if(!ex?.id||!currentUser?.id)return false;const actual=activeSession.actuals?.[i];const entered=Array.isArray(actual?.reps)?actual.reps.map(v=>String(v??'').trim()):[];const weights=Array.isArray(actual?.weight)?actual.weight.map(v=>String(v??'').trim()):[];const rirs=Array.isArray(actual?.rir)?actual.rir.map(v=>String(v??'').trim()):[];const done=Array.isArray(actual?.done)?actual.done.filter(Boolean).length:0;const repsText=entered.some(Boolean)?entered.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):(ex.reps||'');const weightText=weights.some(Boolean)?weights.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):(ex.weight||'');const numericRirs=rirs.map(Number).filter(Number.isFinite);const rirAvg=numericRirs.length?Math.round(numericRirs.reduce((a,b)=>a+b,0)/numericRirs.length*10)/10:(ex.rir===''||ex.rir===null||ex.rir===undefined?null:Number(ex.rir));const volume=entered.reduce((sum,v,j)=>{const rr=Number(v),ww=Number(weights[j]);return sum+(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0?rr*ww:0)},0);const detail=entered.some(Boolean)||weights.some(Boolean)||rirs.some(Boolean)||done?`Registro por series: ${entered.map((r,j)=>`S${j+1} ${r||'-'} reps · ${weights[j]||'-'} kg · RIR ${rirs[j]||'-'}`).join(' | ')} · Volumen ${Math.round(volume*10)/10} kg · Sesión ${activeSession.id}`:`Registro automático de sesión · ${activeSession.id}`;const payload={user_id:currentUser.id,exercise_id:ex.id,exercise_name:ex.exercise,performed_at:activeSession.performedAt,sets_completed:done||Number(ex.sets)||null,reps:repsText,weight:weightText,rir:rirAvg,notes:detail};try{const {error}=await sb.from('workout_logs').insert(payload);if(error){console.error(error);return false}activeSession.loggedIndexes.push(i);save();return true}catch(e){console.error(e);return false}}
+  function restore(s){activeSession=s;workoutDay=Number(s.day)||workoutDay;index=Math.max(0,Number(s.currentIndex)||0);const elapsed=Math.max(0,Math.floor((Date.now()-Number(s.startedAt||Date.now()))/1000));sessionSeconds=Math.max(Number(s.sessionSeconds)||0,elapsed);sessionStartedAt=Date.now()-sessionSeconds*1000;timerMode=s.timerMode||'stopwatch';timerSeconds=Number(s.timerSeconds)||0;timerRunning=!!s.timerRunning;activeSession.loggedIndexes=Array.isArray(s.loggedIndexes)?s.loggedIndexes:[];activeSession.actuals=Array.isArray(s.actuals)?s.actuals:[];ensureActuals();save()}
+  function buildWorkoutLogPayload(ex,actual,sessionId,performedAt){const entered=Array.isArray(actual?.reps)?actual.reps.map(v=>String(v??'').trim()):[];const weights=Array.isArray(actual?.weight)?actual.weight.map(v=>String(v??'').trim()):[];const rirs=Array.isArray(actual?.rir)?actual.rir.map(v=>String(v??'').trim()):[];const done=Array.isArray(actual?.done)?actual.done.filter(Boolean).length:0;const repsText=entered.some(Boolean)?entered.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):(ex?.reps||'');const weightText=weights.some(Boolean)?weights.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):(ex?.weight||'');const numericRirs=rirs.map(Number).filter(Number.isFinite);const rirAvg=numericRirs.length?Math.round(numericRirs.reduce((a,b)=>a+b,0)/numericRirs.length*10)/10:(ex?.rir===''||ex?.rir===null||ex?.rir===undefined?null:Number(ex?.rir));const volume=entered.reduce((sum,v,j)=>{const rr=Number(v),ww=Number(weights[j]);return sum+(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0?rr*ww:0)},0);const detail=entered.some(Boolean)||weights.some(Boolean)||rirs.some(Boolean)||done?`Registro por series: ${entered.map((r,j)=>`S${j+1} ${r||'-'} reps · ${weights[j]||'-'} kg · RIR ${rirs[j]||'-'}`).join(' | ')} · Volumen ${Math.round(volume*10)/10} kg · Sesión ${sessionId}`:`Registro automático de sesión · ${sessionId}`;return{user_id:currentUser.id,exercise_id:ex.id,exercise_name:ex.exercise,performed_at:performedAt,sets_completed:done||Number(ex.sets)||null,reps:repsText,weight:weightText,rir:rirAvg,notes:detail};}
+  function pendingWorkoutKey(){return `agendaWorkoutPendingLogs:${currentUser?.id||'guest'}`}
+  function readPendingWorkoutLogs(){try{const x=JSON.parse(localStorage.getItem(pendingWorkoutKey())||'[]');return Array.isArray(x)?x:[]}catch(_){return[]}}
+  function writePendingWorkoutLogs(rows){try{localStorage.setItem(pendingWorkoutKey(),JSON.stringify(rows||[]))}catch(_){} }
+  async function persistWorkoutLog(payload){const localKey=String(payload?.__local_key||'');const dbPayload={...(payload||{})};delete dbPayload.__local_key;let lastErr=null;for(let attempt=0;attempt<3;attempt++){try{const {error}=await sb.from('workout_logs').insert(dbPayload);if(!error)return true;lastErr=error}catch(e){lastErr=e}await new Promise(r=>setTimeout(r,350*(attempt+1)));}console.warn('Registro de entrenamiento pendiente:',lastErr);const pending=readPendingWorkoutLogs();if(!pending.some(x=>x._local_key===localKey)){pending.push({_local_key:localKey,...dbPayload,_queued_at:new Date().toISOString()});writePendingWorkoutLogs(pending)}return false}
+  async function flushPendingWorkoutLogs(){if(!currentUser?.id||!navigator.onLine)return;const pending=readPendingWorkoutLogs();if(!pending.length)return;const remain=[];for(const item of pending){const {_local_key,_queued_at,...payload}=item;try{const {error}=await sb.from('workout_logs').insert(payload);if(error)remain.push(item)}catch(_){remain.push(item)}}writePendingWorkoutLogs(remain)}
+  async function logExercise(i){if(!activeSession||activeSession.loggedIndexes.includes(i))return true;const ex=list()[i];if(!ex?.id||!currentUser?.id)return false;const actual=activeSession.actuals?.[i];const payload=buildWorkoutLogPayload(ex,actual,activeSession.id,activeSession.performedAt);payload.__local_key=`${activeSession.id}:${ex.id}`;const saved=await persistWorkoutLog(payload);if(saved){activeSession.loggedIndexes.push(i);save()}return saved}
   async function next(){captureVisibleActuals();save();await logExercise(index);const rest=Math.max(0,Number(list()[index]?.rest_seconds)||0);if(index<list().length-1){index++;save();updateFull();if(rest>0){setMode('countdown');timerSeconds=rest;save();startTimer()}else setMode('stopwatch')}else await finish()}
   async function prev(){if(index>0){index--;save();updateFull();setMode('stopwatch')}}
-  async function finish(){if(finishing||!activeSession)return;captureVisibleActuals();save();finishing=true;const session=activeSession;for(let i=0;i<list().length;i++)await logExercise(i);pauseTimer();stopClock();await unwake();try{await loadWorkoutLogs();renderWorkoutHistory();renderWorkoutAnalytics?.();renderDashboard()}catch(_){}const count=activeSession.loggedIndexes.length;let totalVolume=0,maxWeight=0,setsDone=0;session.actuals?.forEach(a=>{(a?.reps||[]).forEach((rv,j)=>{const rr=Number(rv),ww=Number(a?.weight?.[j]);if(a?.done?.[j])setsDone++;if(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0){totalVolume+=rr*ww;maxWeight=Math.max(maxWeight,ww)}})});clear();activeSession=null;updateMini();q('v28WorkoutOverlay')?.classList.remove('show');v32TrainingActive(false);document.body.style.overflow='';finishing=false;showFinishSummary({count,totalVolume,setsDone,maxWeight,comparison:comparisonForSession()});}
+  async function finish(){if(finishing||!activeSession)return;captureVisibleActuals();save();finishing=true;const session=JSON.parse(JSON.stringify(activeSession));session.finished=true;const exercises=list().map(x=>({...x}));const actuals=Array.isArray(session.actuals)?session.actuals.map(x=>({reps:Array.isArray(x?.reps)?x.reps.slice():[],weight:Array.isArray(x?.weight)?x.weight.slice():[],rir:Array.isArray(x?.rir)?x.rir.slice():[],done:Array.isArray(x?.done)?x.done.slice():[]})):[];const originalLogged=Array.isArray(session.loggedIndexes)?session.loggedIndexes.slice():[];const visibleLogged=new Set(originalLogged);const mini=q('v31TrainingMini');if(mini)mini.classList.remove('show');q('v28WorkoutOverlay')?.classList.remove('show');v32TrainingActive(false);document.body.style.overflow='';const pendingJobs=[];for(let i=0;i<exercises.length;i++){if(visibleLogged.has(i))continue;const ex=exercises[i],actual=actuals[i]||{};const payload=buildWorkoutLogPayload(ex,actual,session.id,session.performedAt);payload.__local_key=`${session.id}:${ex.id}`;pendingJobs.push({i,payload})}let savedCount=visibleLogged.size,queuedCount=0;for(const job of pendingJobs){const ok=await persistWorkoutLog(job.payload);if(ok){visibleLogged.add(job.i);savedCount=visibleLogged.size}else{queuedCount++;visibleLogged.add(job.i);savedCount=visibleLogged.size}}pauseTimer();stopClock();await unwake();await flushPendingWorkoutLogs();try{await loadWorkoutLogs();renderWorkoutHistory();renderWorkoutAnalytics?.();renderDashboard()}catch(_){}let totalVolume=0,maxWeight=0,setsDone=0;actuals.forEach(a=>{(a?.reps||[]).forEach((rv,j)=>{const rr=Number(rv),ww=Number(a?.weight?.[j]);if(a?.done?.[j])setsDone++;if(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0){totalVolume+=rr*ww;maxWeight=Math.max(maxWeight,ww)}})});session.finished=true;clear();activeSession=null;updateMini();q('v28WorkoutOverlay')?.classList.remove('show');v32TrainingActive(false);document.body.style.overflow='';finishing=false;const cmpSession={...session,actuals};const oldActive=activeSession;activeSession=cmpSession;showFinishSummary({count:savedCount,queuedCount,totalVolume,setsDone,maxWeight,comparison:comparisonForSession()});activeSession=oldActive;}
   function parseWorkoutLogDetail(log){
     const reps=[]; const weights=[]; const rirs=[];
     const text=String(log?.notes||'');
@@ -3117,10 +3113,12 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
     q('v48FinishExercises').textContent=String(data.count||0);q('v48FinishSets').textContent=String(data.setsDone||0);q('v48FinishVolume').textContent=`${Math.round((data.totalVolume||0)*10)/10}`;q('v48FinishWeight').textContent=`${Math.round((data.maxWeight||0)*10)/10} kg`;
     const cmp=data.comparison||{rows:[],improved:0,worse:0,same:0};const box=q('v49Comparison');if(box){const top=cmp.improved>cmp.worse?'📈 Mejoraste respecto a tus sesiones anteriores':cmp.worse>cmp.improved?'📉 Algunas marcas bajaron hoy':'➡️ Rendimiento estable';box.innerHTML=`<div class="v49-comparison-head"><strong>${top}</strong><span>${cmp.improved} mejor · ${cmp.same} igual · ${cmp.worse} menor</span></div>${cmp.rows.slice(0,8).map(r=>`<div class="v49-comparison-row ${r.status}"><span>${esc(r.name)}</span><span>${esc(r.text)}</span></div>`).join('')}`}
     o.classList.add('show');
+    o.querySelectorAll('.v49-queued-note').forEach(n=>n.remove());if(Number(data.queuedCount)>0){const note=document.createElement('div');note.className='v49-queued-note';note.textContent=`⚠️ ${data.queuedCount} ejercicio(s) quedaron en cola local y se sincronizarán cuando haya conexión.`;o.querySelector('.v49-comparison')?.after(note);}
   }
-  async function cancelWorkout(skipConfirm=false){
+  async function cancelWorkout(){
     if(!activeSession)return;
-    if(!skipConfirm){const ok=confirm('¿Cancelar este entrenamiento? Se cerrará la Vista de entrenamiento y se eliminarán los registros creados durante esta sesión.');if(!ok)return;}
+    const ok=confirm('¿Cancelar este entrenamiento? Se cerrará la Vista de entrenamiento y se eliminarán los registros creados durante esta sesión.');
+    if(!ok)return;
     const sessionId=String(activeSession.id||'');
     pauseTimer();stopClock();await unwake();
     try{if(sessionId&&currentUser?.id){const {error}=await sb.from('workout_logs').delete().eq('user_id',currentUser.id).like('notes',`%${sessionId}%`);if(error)console.warn('No se pudieron eliminar todos los registros de la sesión cancelada:',error)}}catch(e){console.warn('Cancelación offline:',e)}
@@ -3128,9 +3126,15 @@ function initV16(){restoreTheme();restoreFocus();const d=$v('v15DateLabel');if(d
     try{await loadWorkoutLogs();renderWorkoutHistory();renderWorkoutAnalytics?.();renderDashboard()}catch(_){ }
   }
   function closeView(){save();q('v28WorkoutOverlay')?.classList.remove('show');v32TrainingActive(false);document.body.style.overflow='';updateMini()}
-  function openView(){if(!list().length){alert(`No hay ejercicios cargados para ${DAYS[workoutDay]}.`);return}const s=read();if(s)restore(s);else newSession();q('v28WorkoutOverlay')?.classList.add('show');v32TrainingActive(true);document.body.style.overflow='hidden';updateFull();startClock();if(timerRunning)startTimer();wake()}
+  function openView(){
+    if(!list().length && !navigator.onLine){const cached=cacheRead('workoutExercisesAll');workoutExercises=Array.isArray(cached)?cached.filter(x=>Number(x.day)===Number(workoutDay)):[];}
+    if(!list().length){alert(`No hay ejercicios cargados para ${DAYS[workoutDay]}.`);return}
+    const s=read();if(s)restore(s);else newSession();
+    q('v28WorkoutOverlay')?.classList.add('show');v32TrainingActive(true);document.body.style.overflow='hidden';updateFull();startClock();if(timerRunning)startTimer();wake();
+  }
   function restoreOnLoad(){const s=read();if(!s){v32TrainingActive(false);return}restore(s);v32TrainingActive(false);updateMini();startClock();if(timerRunning)startTimer()}
-  function bind(){q('v28WorkoutClose')?.addEventListener('click',closeView);q('v28PrevBtn')?.addEventListener('click',prev);q('v28NextBtn')?.addEventListener('click',next);q('v28FinishBtn')?.addEventListener('click',finish);q('v49CancelWorkout')?.addEventListener('click',cancelWorkout);window.AgendaTrainingV31={cancelNow:()=>cancelWorkout(true),close:closeView,getState:()=>activeSession};q('v28TimerModeStopwatch')?.addEventListener('click',()=>setMode('stopwatch'));q('v28TimerModeCountdown')?.addEventListener('click',()=>setMode('countdown'));q('v28TimerStart')?.addEventListener('click',startTimer);q('v28TimerPause')?.addEventListener('click',pauseTimer);q('v28TimerReset')?.addEventListener('click',resetTimer);q('v31MiniOpen')?.addEventListener('click',openView);q('v31MiniFinish')?.addEventListener('click',finish);window.addEventListener('beforeunload',persistTrainingState);window.addEventListener('pagehide',persistTrainingState);document.addEventListener('visibilitychange',()=>{if(activeSession){persistTrainingState();if(document.visibilityState==='visible')wake()}});document.addEventListener('keydown',e=>{if(!q('v28WorkoutOverlay')?.classList.contains('show'))return;if(e.key==='Escape'){closeView()}else if(e.key==='ArrowRight'){next()}else if(e.key==='ArrowLeft'){prev()}else if(e.code==='Space'){e.preventDefault();timerRunning?pauseTimer():startTimer()}});window.openWorkoutMode=openView;restoreOnLoad()}
+  function bind(){q('v28WorkoutClose')?.addEventListener('click',closeView);q('v28PrevBtn')?.addEventListener('click',prev);q('v28NextBtn')?.addEventListener('click',next);q('v28FinishBtn')?.addEventListener('click',finish);q('v49CancelWorkout')?.addEventListener('click',cancelWorkout);q('v28TimerModeStopwatch')?.addEventListener('click',()=>setMode('stopwatch'));q('v28TimerModeCountdown')?.addEventListener('click',()=>setMode('countdown'));q('v28TimerStart')?.addEventListener('click',startTimer);q('v28TimerPause')?.addEventListener('click',pauseTimer);q('v28TimerReset')?.addEventListener('click',resetTimer);q('v31MiniOpen')?.addEventListener('click',openView);q('v31MiniFinish')?.addEventListener('click',finish);window.addEventListener('beforeunload',save);window.addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&activeSession)wake()});document.addEventListener('keydown',e=>{if(!q('v28WorkoutOverlay')?.classList.contains('show'))return;if(e.key==='Escape'){closeView()}else if(e.key==='ArrowRight'){next()}else if(e.key==='ArrowLeft'){prev()}else if(e.code==='Space'){e.preventDefault();timerRunning?pauseTimer():startTimer()}});window.openWorkoutMode=openView;restoreOnLoad()}
+  window.addEventListener('online',()=>{flushPendingWorkoutLogs().catch(()=>{})});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind()
 })();
 </script>
@@ -3688,7 +3692,7 @@ body.light .v36-panel{background:rgba(255,255,255,.82);border-color:#dbe3ee}body
 
 
 
-<!-- V37: PRODUCTIVIDAD AVANZADA / SEMANA / SUBTAREAS / METADATOS -->
+
 <style id="v37-advanced-style">
 .v37-panel{margin-top:14px;padding:15px;border-radius:20px;background:rgba(15,23,42,.58);border:1px solid rgba(148,163,184,.14)}
 .v37-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:11px}.v37-head h3{font-size:14px}.v37-head p{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.4}
@@ -5122,9 +5126,6 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
             }
           }
         }
-        /* Garantiza IDs únicos en el widget del time-blocking. */
-        const overNodes=document.querySelectorAll('#v46Over');
-        if(overNodes.length>1){for(let i=1;i<overNodes.length;i++)overNodes[i].removeAttribute('id')}
         /* Garantiza que solo exista un grupo de botones de métrica. */
         const groups=document.querySelectorAll('#progressMetricButtons');
         if(groups.length>1){for(let i=1;i<groups.length;i++)groups[i].remove()}
@@ -5141,869 +5142,5 @@ body.light .v56-focus-panel{background:#f8fafc;border-color:#dbe3ee}body.light .
   })();
   </script>
 
-
-<style id="v67-mobile-search-close-fix-style">
-  #v15SearchOverlay{touch-action:manipulation}
-  #v15SearchOverlay .v15-search-box,
-  #v15SearchOverlay .v15-search-top,
-  #v15SearchOverlay #v15SearchClose{touch-action:manipulation}
-  #v15SearchOverlay #v15SearchClose{position:relative;z-index:3;pointer-events:auto;-webkit-tap-highlight-color:transparent;user-select:none;cursor:pointer}
-</style>
-<script id="v67-mobile-search-close-fix">
-(function(){
-  'use strict';
-  function close(){
-    var o=document.getElementById('v15SearchOverlay');
-    if(!o)return;
-    o.classList.remove('show');
-    o.setAttribute('aria-hidden','true');
-    try{ o.querySelector('#v15SearchInput')?.blur(); }catch(_){ }
-  }
-  function bind(){
-    var btn=document.getElementById('v15SearchClose');
-    var overlay=document.getElementById('v15SearchOverlay');
-    if(!btn||!overlay||btn.dataset.v67Bound)return;
-    btn.dataset.v67Bound='1';
-    var fire=function(e){
-      if(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();}
-      close();
-    };
-    btn.addEventListener('pointerup',fire,{capture:true});
-    btn.addEventListener('touchend',fire,{capture:true,passive:false});
-    btn.addEventListener('click',fire,{capture:true});
-    btn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){fire(e);}} ,{capture:true});
-    overlay.addEventListener('touchend',function(e){
-      if(e.target===btn || e.target.closest?.('#v15SearchClose'))return;
-      if(e.target===overlay)close();
-    },{passive:false});
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-  window.addEventListener('resize',bind,{passive:true});
-})();
-</script>
-
-
-<style id="v68-mobile-search-navigation-style">
-  #v15SearchOverlay{overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:manipulation}
-  #v15SearchOverlay .v15-search-close-mobile{display:none}
-  @media(max-width:700px){
-    #v15SearchOverlay .v15-search-close-mobile{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;margin-top:8px;border:1px solid rgba(148,163,184,.18);border-radius:12px;background:rgba(255,255,255,.06);color:#fff;font-size:12px;font-weight:800;cursor:pointer;touch-action:manipulation}
-  }
-  body.light #v15SearchOverlay .v15-search-close-mobile{background:#f8fafc;color:#334155;border-color:#dbe3ee}
-</style>
-<script id="v68-mobile-search-navigation-fix">
-(function(){
-  'use strict';
-  var MARK='agenda-search-overlay';
-  var navigating=false;
-  function overlay(){return document.getElementById('v15SearchOverlay')}
-  function isOpen(){var o=overlay();return !!(o&&o.classList.contains('show'))}
-  function closeVisual(){
-    var o=overlay(); if(!o)return;
-    o.classList.remove('show');
-    o.setAttribute('aria-hidden','true');
-    o.style.display='none';
-    o.style.pointerEvents='none';
-    var i=document.getElementById('v15SearchInput');
-    try{i&&i.blur()}catch(_){ }
-  }
-  function closeSearchHard(fromHistory){
-    navigating=true;
-    closeVisual();
-    try{window.searchCache=null;}catch(_){ }
-    try{window.searchCacheAt=0;}catch(_){ }
-    if(!fromHistory && history.state && history.state[MARK]){
-      history.back();
-    }
-    setTimeout(function(){navigating=false;},50);
-  }
-  function openSearchHard(){
-    var o=overlay(); if(!o)return;
-    if(!history.state || !history.state[MARK]){
-      try{history.pushState(Object.assign({},history.state||{}, {[MARK]:true}), '', location.href)}catch(_){ }
-    }
-    o.classList.add('show');
-    o.setAttribute('aria-hidden','false');
-    o.style.display='flex';
-    o.style.pointerEvents='auto';
-    var i=document.getElementById('v15SearchInput');
-    if(i){i.disabled=false;try{i.focus({preventScroll:true})}catch(_){i.focus()}}
-    if(typeof window.renderSearch==='function')window.renderSearch('');
-  }
-  function ensureCloseButton(){
-    var top=document.querySelector('#v15SearchOverlay .v15-search-top');
-    var box=document.querySelector('#v15SearchOverlay .v15-search-box');
-    if(!top||!box||document.getElementById('v68MobileSearchClose'))return;
-    var b=document.createElement('button');
-    b.type='button';b.id='v68MobileSearchClose';b.className='v15-search-close-mobile';
-    b.textContent='← Volver a la agenda';
-    b.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation()},{capture:true});
-    b.addEventListener('pointerup',function(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();closeSearchHard(false)},{capture:true});
-    box.appendChild(b);
-  }
-  function bind(){
-    var o=overlay(),b=document.getElementById('v15SearchClose');
-    if(!o)return;
-    ensureCloseButton();
-    if(b&&!b.dataset.v68Bound){
-      b.dataset.v68Bound='1';
-      var fire=function(e){if(e){e.preventDefault();e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation()}closeSearchHard(false)};
-      b.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation()},{capture:true});
-      b.addEventListener('pointerup',fire,{capture:true});
-      b.addEventListener('touchend',fire,{capture:true,passive:false});
-      b.addEventListener('click',fire,{capture:true});
-    }
-    if(!o.dataset.v68OverlayBound){
-      o.dataset.v68OverlayBound='1';
-      o.addEventListener('pointerdown',function(e){
-        if(e.target===o){e.preventDefault();closeSearchHard(false)}
-      },{capture:true});
-    }
-  }
-  window.addEventListener('popstate',function(){
-    if(navigating)return;
-    if(isOpen())closeSearchHard(true);
-  });
-  document.addEventListener('DOMContentLoaded',bind,{once:true});
-  setTimeout(bind,200);setTimeout(bind,800);
-  window.agendaForceCloseSearch=closeSearchHard;
-  window.agendaForceOpenSearch=openSearchHard;
-})();
-</script>
-
-
-<!-- V70 — mejoras conservadoras de estabilidad y experiencia -->
-<style id="v70-stability-style">
-  .v70-connection{position:fixed;left:14px;bottom:92px;z-index:340;display:inline-flex;align-items:center;gap:7px;max-width:min(360px,calc(100vw - 28px));padding:8px 11px;border-radius:999px;border:1px solid rgba(96,165,250,.18);background:rgba(15,23,42,.94);color:#cbd5e1;font-size:10px;font-weight:800;box-shadow:0 12px 30px rgba(0,0,0,.22);backdrop-filter:blur(12px);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
-  .v70-connection.show{opacity:1;transform:translateY(0);pointer-events:auto}
-  .v70-connection.offline{border-color:rgba(245,158,11,.28);color:#fde68a;background:rgba(120,53,15,.94)}
-  .v70-connection.online{border-color:rgba(34,197,94,.24);color:#bbf7d0;background:rgba(20,83,45,.94)}
-  .v70-connection .dot{width:7px;height:7px;border-radius:50%;background:#94a3b8;flex:0 0 auto}
-  .v70-connection.offline .dot{background:#f59e0b}
-  .v70-connection.online .dot{background:#22c55e}
-  .v70-connection button{border:0;background:transparent;color:inherit;padding:2px 4px;border-radius:7px;cursor:pointer;font:inherit}
-  .v70-connection button:hover{background:rgba(255,255,255,.08)}
-  :focus-visible{outline:3px solid rgba(96,165,250,.55)!important;outline-offset:2px!important}
-  @media(max-width:600px){.v70-connection{left:9px;right:9px;bottom:91px;justify-content:center;max-width:none}}
-  body.light .v70-connection{background:rgba(255,255,255,.96);color:#334155;border-color:#dbe3ee;box-shadow:0 12px 30px rgba(15,23,42,.14)}
-  body.light .v70-connection.offline{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
-  body.light .v70-connection.online{background:#f0fdf4;color:#166534;border-color:#bbf7d0}
-</style>
-
-<div class="v70-connection" id="v70Connection" role="status" aria-live="polite" aria-atomic="true">
-  <span class="dot" aria-hidden="true"></span>
-  <span id="v70ConnectionText">Conectado</span>
-  <button id="v70ConnectionAction" type="button" aria-label="Intentar sincronizar">↻</button>
-</div>
-
-<script id="v70-stability-script">
-(function(){
-  'use strict';
-  const q=id=>document.getElementById(id);
-  let hideTimer=null;
-  let onlineTimer=null;
-  function show(kind,text,ms){
-    const box=q('v70Connection'),label=q('v70ConnectionText');
-    if(!box||!label)return;
-    box.classList.remove('offline','online');
-    box.classList.add(kind,'show');
-    label.textContent=text;
-    clearTimeout(hideTimer);
-    if(ms){hideTimer=setTimeout(()=>box.classList.remove('show'),ms)}
-  }
-  function paint(){
-    if(navigator.onLine) show('online','🟢 Conexión disponible',1800);
-    else show('offline','📴 Sin conexión · cambios locales');
-  }
-  async function syncNow(){
-    if(!navigator.onLine){show('offline','📴 Sin conexión · no se puede sincronizar');return;}
-    show('online','🔄 Sincronizando…');
-    try{
-      if(typeof window.agendaV40Flush==='function') await window.agendaV40Flush();
-      if(typeof window.agendaV39SyncNow==='function') await window.agendaV39SyncNow();
-    }catch(e){console.warn('V70 sync',e)}
-    try{ if(typeof loadTasks==='function') await loadTasks(); }catch(e){console.warn('V70 tasks',e)}
-    try{ if(typeof loadPersonalDates==='function') await loadPersonalDates(); }catch(e){console.warn('V70 dates',e)}
-    try{ if(typeof loadWorkoutExercises==='function') await loadWorkoutExercises(); }catch(e){console.warn('V70 workout',e)}
-    try{ if(typeof loadWorkoutLogs==='function') await loadWorkoutLogs(); }catch(e){console.warn('V70 logs',e)}
-    try{ if(typeof loadNutritionMeals==='function') await loadNutritionMeals(); }catch(e){console.warn('V70 meals',e)}
-    try{
-      createDays?.(); renderSchedule?.(); renderDashboard?.(); renderTodayTimeline?.();
-      const trainingOpen=document.getElementById('v28WorkoutOverlay')?.classList.contains('show');
-      if(!trainingOpen){
-        renderWorkoutDays?.(); renderWorkoutList?.(); renderWorkoutHistory?.(); renderWorkoutAnalytics?.();
-      }
-      renderNutritionDays?.(); renderMealTabs?.(); renderNutritionList?.(); renderNutritionGoals?.();
-    }catch(e){console.warn('V70 renders',e)}
-    show('online','✅ Sincronización actualizada',1800);
-  }
-  function init(){
-    q('v70ConnectionAction')?.addEventListener('click',syncNow);
-    window.addEventListener('offline',()=>show('offline','📴 Sin conexión · cambios locales'));
-    window.addEventListener('online',()=>{clearTimeout(onlineTimer);onlineTimer=setTimeout(()=>{syncNow()},500)});
-    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')paint()});
-    paint();
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
-</script>
-
-
-<style id="v72-series-persistence-style">
-#v28WorkoutOverlay #v47SetList .v47-set-check{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-#v28WorkoutOverlay #v47SetList .v47-set-check.done{background:rgba(34,197,94,.14)!important;border-color:rgba(34,197,94,.34)!important;color:#bbf7d0!important}
-</style>
-<script id="v72-series-persistence-script">
-(function(){
-  'use strict';
-  const q=id=>document.getElementById(id);
-  const sessionKey=()=>`agendaTrainingV31:${window.currentUser?.id||'guest'}`;
-  const backupKey=()=>`agendaTrainingV72Done:${window.currentUser?.id||'guest'}`;
-  function readSession(){try{const raw=localStorage.getItem(sessionKey());return raw?JSON.parse(raw):null}catch(_){return null}}
-  function readBackup(){try{const raw=localStorage.getItem(backupKey());return raw?JSON.parse(raw):null}catch(_){return null}}
-  function writeBackup(v){try{localStorage.setItem(backupKey(),JSON.stringify(v))}catch(_){}
-  }
-  function clearBackupIfSessionGone(){try{if(!readSession())localStorage.removeItem(backupKey())}catch(_){}
-  }
-  function ensureBackupForSession(s){
-    if(!s||!s.id)return null;
-    const b=readBackup();
-    if(!b||b.sessionId!==s.id||typeof b.byExercise!=='object'){
-      const nb={sessionId:s.id,byExercise:{}};
-      writeBackup(nb);return nb;
-    }
-    return b;
-  }
-  function currentExerciseIndex(s){return Math.max(0,Number(s?.currentIndex)||0)}
-  function totalSets(){const s=readSession();const ex=Array.isArray(window.workoutExercises)?window.workoutExercises[currentExerciseIndex(s)]:null;return Math.max(0,Number(ex?.sets)||q('v47SetList')?.querySelectorAll('.v48-set-row').length||0)}
-  function domDone(){
-    const host=q('v47SetList');
-    if(!host)return [];
-    return [...host.querySelectorAll('.v47-set-check')].map(b=>b.classList.contains('done'));
-  }
-  function persistVisibleDone(){
-    const s=readSession();const done=domDone();if(!s||!done.length)return;
-    const b=ensureBackupForSession(s);if(!b)return;
-    b.byExercise[String(currentExerciseIndex(s))]=done.slice();
-    writeBackup(b);
-  }
-  function stateDoneForExercise(s,idx){
-    const b=readBackup();
-    const fromBackup=b&&b.sessionId===s?.id?b.byExercise?.[String(idx)]:null;
-    if(Array.isArray(fromBackup))return fromBackup.slice();
-    const fromSession=s?.actuals?.[idx]?.done;
-    return Array.isArray(fromSession)?fromSession.map(Boolean):[];
-  }
-  function applyDoneState(){
-    const overlay=q('v28WorkoutOverlay');if(!overlay?.classList.contains('show')){clearBackupIfSessionGone();return}
-    const host=q('v47SetList');const counter=q('v47RepsCounter');if(!host)return;
-    const s=readSession();if(!s)return;
-    const idx=currentExerciseIndex(s);const buttons=[...host.querySelectorAll('.v47-set-check')];if(!buttons.length)return;
-    const done=stateDoneForExercise(s,idx);
-    buttons.forEach((b,i)=>{
-      const isDone=!!done[i];
-      b.classList.toggle('done',isDone);b.textContent=isDone?'✓':'○';
-      b.title=isDone?'Marcar serie como pendiente':'Marcar serie como hecha';
-      const row=b.closest('.v48-set-row');if(row)row.classList.toggle('done',isDone);
-    });
-    const total=buttons.length||totalSets();
-    if(counter)counter.textContent=`${done.slice(0,total).filter(Boolean).length}/${total} series`;
-    const panel=q('v47RepsPanel');
-    if(panel)panel.classList.toggle('complete',total>0&&done.slice(0,total).filter(Boolean).length===total);
-  }
-  function persistAndApplySoon(){
-    persistVisibleDone();
-    setTimeout(applyDoneState,0);
-    setTimeout(applyDoneState,60);
-    setTimeout(applyDoneState,180);
-  }
-  document.addEventListener('click',function(e){
-    const btn=e.target?.closest?.('#v28WorkoutOverlay #v47SetList .v47-set-check');
-    if(!btn)return;
-    setTimeout(persistAndApplySoon,0);
-  });
-  document.addEventListener('pointerup',function(e){
-    const btn=e.target?.closest?.('#v28WorkoutOverlay #v47SetList .v47-set-check');
-    if(!btn)return;
-    setTimeout(persistAndApplySoon,0);
-  });
-  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')persistVisibleDone();else setTimeout(applyDoneState,80)});
-  window.addEventListener('pagehide',persistVisibleDone);
-  const overlay=q('v28WorkoutOverlay');
-  if(overlay){
-    new MutationObserver(()=>{setTimeout(applyDoneState,0)}).observe(overlay,{childList:true,subtree:true});
-  }
-  q('v28FinishBtn')?.addEventListener('click',()=>setTimeout(clearBackupIfSessionGone,500),true);
-  q('v49CancelWorkout')?.addEventListener('click',()=>setTimeout(clearBackupIfSessionGone,500),true);
-  setInterval(()=>{clearBackupIfSessionGone();if(q('v28WorkoutOverlay')?.classList.contains('show'))applyDoneState()},1200);
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(applyDoneState,250),{once:true});
-  else setTimeout(applyDoneState,250);
-})();
-</script>
-
-<style id="v74-cancel-confirm-style">
-.v74-cancel-confirm{position:fixed;inset:0;z-index:2000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.78);backdrop-filter:blur(10px);touch-action:manipulation}
-.v74-cancel-confirm.show{display:flex}
-.v74-cancel-card{width:min(420px,100%);padding:22px;border-radius:22px;background:rgba(17,24,39,.995);border:1px solid rgba(239,68,68,.28);box-shadow:0 30px 90px rgba(0,0,0,.55);color:var(--text);text-align:center}
-.v74-cancel-icon{width:52px;height:52px;margin:0 auto 12px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,.12);font-size:25px}
-.v74-cancel-title{font-size:19px;font-weight:900}
-.v74-cancel-text{margin-top:8px;font-size:11px;line-height:1.55;color:var(--muted)}
-.v74-cancel-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
-.v74-cancel-actions button{min-height:44px;border-radius:12px;font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.v74-cancel-no{border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.06);color:#dbeafe}
-.v74-cancel-yes{border:1px solid rgba(239,68,68,.38);background:rgba(239,68,68,.14);color:#fecaca}
-.v74-cancel-no:focus-visible,.v74-cancel-yes:focus-visible{outline:3px solid rgba(96,165,250,.35);outline-offset:2px}
-body.light .v74-cancel-card{background:#fff;border-color:#fecaca;color:#0f172a}
-body.light .v74-cancel-text{color:#64748b}
-body.light .v74-cancel-no{background:#f8fafc;color:#334155;border-color:#dbe3ee}
-body.light .v74-cancel-yes{background:#fef2f2;color:#b91c1c;border-color:#fecaca}
-@media(max-width:520px){.v74-cancel-confirm{padding:12px;align-items:flex-end}.v74-cancel-card{border-radius:20px;padding:18px 15px 15px;width:100%}.v74-cancel-actions{grid-template-columns:1fr}.v74-cancel-yes{order:-1}}
-</style>
-<style id="v73-training-isolation-style">
-/* V73: estilos encapsulados para la Vista de entrenamiento */
-.v73-finish-overlay{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.78);backdrop-filter:blur(10px)}
-.v73-finish-overlay.show{display:flex}.v73-finish-card{width:min(520px,100%);padding:20px;border-radius:22px;background:rgba(17,24,39,.99);border:1px solid var(--line);box-shadow:0 30px 90px rgba(0,0,0,.48);color:var(--text)}
-.v73-finish-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.v73-finish-title{font-size:20px;font-weight:900}.v73-finish-sub{margin-top:3px;color:var(--muted);font-size:10px}.v73-finish-close{width:34px;height:34px;border:0;border-radius:9px;background:rgba(255,255,255,.08);color:#fff;font-size:18px;cursor:pointer}.v73-finish-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0}.v73-finish-grid>div{padding:12px 10px;border-radius:13px;background:rgba(15,23,42,.75);border:1px solid rgba(148,163,184,.12)}.v73-finish-grid strong{display:block;font-size:16px;color:#dbeafe}.v73-finish-grid span{display:block;margin-top:3px;font-size:9px;color:var(--muted)}.v73-finish-ok{width:100%;padding:12px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:800;cursor:pointer}.v73-sync-note{padding:9px 10px;margin-bottom:10px;border-radius:10px;background:rgba(59,130,246,.07);border:1px solid rgba(96,165,250,.14);font-size:9px;color:#bfdbfe}
-body.light .v73-finish-card{background:#fff;border-color:#dbe3ee;color:#0f172a}body.light .v73-finish-grid>div{background:#f8fafc;border-color:#dbe3ee}body.light .v73-finish-grid strong{color:#0f172a}body.light .v73-sync-note{background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8}
-@media(max-width:600px){.v73-finish-grid{grid-template-columns:1fr 1fr}.v73-finish-card{padding:16px}}
-</style>
-<script id="v73-training-isolation-script">
-(function(){
-  'use strict';
-
-  /* ==========================================================
-     V73 — MÓDULO AISLADO DE VISTA DE ENTRENAMIENTO
-     - Estado propio por usuario/sesión
-     - No reconstruye inputs al usar cronómetros
-     - Captura controles de entrenamiento antes que listeners legacy
-     - Puente de compatibilidad con agendaTrainingV31
-  ========================================================== */
-  const $=id=>document.getElementById(id);
-  const root=()=>$('v28WorkoutOverlay');
-  const list=()=>{try{return typeof workoutExercises!=='undefined'&&Array.isArray(workoutExercises)?workoutExercises:[]}catch(_){return []}};
-  const userKey=()=>{try{return typeof currentUser!=='undefined'&&currentUser?.id?currentUser.id:'guest'}catch(_){return 'guest'}};
-  const KEY='agendaTrainingV73:';
-  const LEGACY='agendaTrainingV31:';
-  const QUEUE='agendaTrainingV73Queue:';
-  const stateKey=()=>KEY+userKey();
-  const legacyKey=()=>LEGACY+userKey();
-  const queueKey=()=>QUEUE+userKey();
-  let state=null, timerId=null, sessionId=null, restSeconds=0, restMode='stopwatch', summaryOpen=false;
-  let initialized=false;
-
-  const esc=v=>{const d=document.createElement('div');d.textContent=v??'';return d.innerHTML};
-  const today=()=>{try{return typeof todayISO==='function'?todayISO():new Date().toISOString().slice(0,10)}catch(_){return new Date().toISOString().slice(0,10)}};
-  const fmt=s=>{s=Math.max(0,Math.floor(Number(s)||0));const m=Math.floor(s/60),x=s%60;return `${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}`};
-
-  function freshState(exercises){
-    const ids=exercises.map(x=>x?.id).filter(Boolean);
-    return {version:73,id:`training-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,userId:userKey(),day:(typeof workoutDay!=='undefined'?Number(workoutDay):0),performedAt:today(),startedAt:Date.now(),currentIndex:0,currentExerciseId:ids[0]||null,exerciseIds:ids,sessionSeconds:0,restMode:'stopwatch',restSeconds:0,restRunning:false,done:false,actuals:ids.map(()=>({reps:[],weight:[],rir:[],done:[]})),loggedIndexes:[],updatedAt:Date.now()};
-  }
-
-  function normalize(s){
-    if(!s||typeof s!=='object')return null;
-    const exercises=list();
-    let ids=Array.isArray(s.exerciseIds)?s.exerciseIds.filter(Boolean):[];
-    if(!ids.length)ids=exercises.map(x=>x?.id).filter(Boolean);
-    const actuals=Array.isArray(s.actuals)?s.actuals:[];
-    const normalized={...s,version:73,userId:userKey(),exerciseIds:ids,currentIndex:Math.max(0,Number(s.currentIndex)||0),currentExerciseId:s.currentExerciseId||ids[Math.max(0,Number(s.currentIndex)||0)]||null,actuals:actuals.slice(0,ids.length)};
-    while(normalized.actuals.length<ids.length)normalized.actuals.push({reps:[],weight:[],rir:[],done:[]});
-    normalized.actuals=normalized.actuals.map((a,i)=>{
-      const ex=exercises.find(x=>String(x?.id)===String(ids[i]));
-      const n=Math.max(1,Number(ex?.sets)||0);
-      return {reps:Array.from({length:n},(_,j)=>a?.reps?.[j]??''),weight:Array.from({length:n},(_,j)=>a?.weight?.[j]??''),rir:Array.from({length:n},(_,j)=>a?.rir?.[j]??''),done:Array.from({length:n},(_,j)=>!!a?.done?.[j])};
-    });
-    if(normalized.currentIndex>=ids.length)normalized.currentIndex=Math.max(0,ids.length-1);
-    if(!normalized.currentExerciseId)normalized.currentExerciseId=ids[normalized.currentIndex]||null;
-    if(!Array.isArray(normalized.loggedIndexes))normalized.loggedIndexes=[];
-    normalized.updatedAt=Date.now();
-    return normalized;
-  }
-
-  function save(){
-    if(!state)return;
-    state.updatedAt=Date.now();
-    try{localStorage.setItem(stateKey(),JSON.stringify(state));}catch(_){ }
-    mirrorLegacy();
-  }
-
-  function read(){try{const raw=localStorage.getItem(stateKey());return raw?normalize(JSON.parse(raw)):null}catch(_){return null}}
-  function clear(){try{localStorage.removeItem(stateKey())}catch(_){}}
-
-  function readLegacy(){try{const raw=localStorage.getItem(legacyKey());return raw?JSON.parse(raw):null}catch(_){return null}}
-  function migrateLegacy(){
-    const own=read(); if(own)return own;
-    const legacy=readLegacy(); if(!legacy)return null;
-    const migrated=normalize({...legacy,version:73});
-    if(migrated){state=migrated;save();return state}
-    return null;
-  }
-
-  function mirrorLegacy(){
-    if(!state)return;
-    const legacy={...state,version:31,currentIndex:state.currentIndex,sessionSeconds:state.sessionSeconds,timerMode:state.restMode,timerSeconds:state.restSeconds,timerRunning:state.restRunning};
-    try{localStorage.setItem(legacyKey(),JSON.stringify(legacy));}catch(_){ }
-  }
-
-  function currentIndex(){
-    if(!state)return 0;
-    const idx=state.exerciseIds.findIndex(id=>String(id)===String(state.currentExerciseId));
-    if(idx>=0){state.currentIndex=idx;return idx;}
-    state.currentIndex=Math.max(0,Math.min(state.currentIndex||0,state.exerciseIds.length-1));
-    state.currentExerciseId=state.exerciseIds[state.currentIndex]||null;
-    return state.currentIndex;
-  }
-  function currentExercise(){
-    const idx=currentIndex();
-    const id=state?.exerciseIds?.[idx];
-    return list().find(x=>String(x?.id)===String(id))||list()[idx]||null;
-  }
-  function ensureState(){if(state)state=normalize(state);return !!state&&state.exerciseIds.length>0}
-
-  function updateCounters(){
-    if(!state)return;
-    const i=currentIndex(), ex=currentExercise(), a=state.actuals[i]||{done:[]};
-    const rows=Array.isArray(a.done)?a.done:[];
-    const total=Math.max(0,Number(ex?.sets)||rows.length||0);
-    const done=rows.slice(0,total).filter(Boolean).length;
-    const counter=$('v47RepsCounter'); if(counter)counter.textContent=`${done}/${total} series`;
-    const panel=$('v47RepsPanel'); if(panel)panel.classList.toggle('complete',total>0&&done===total);
-    const summary=$('v47RepsSummary');
-    if(summary){let vol=0;for(let j=0;j<total;j++){const rr=Number(a.reps?.[j]),ww=Number(a.weight?.[j]);if(rows[j]&&Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0)vol+=rr*ww;}summary.textContent=done===total&&total>0?`✅ Todas las series hechas · Volumen registrado: ${Math.round(vol*10)/10} kg`:'Reps + peso + RIR por serie. Marcá cada serie al terminarla.';}
-    const rowsDom=document.querySelectorAll('#v47SetList .v48-set-row');
-    rowsDom.forEach((row,j)=>{const is=!!rows[j];row.classList.toggle('done',is);const b=row.querySelector('.v47-set-check');if(b){b.classList.toggle('done',is);b.textContent=is?'✓':'○';b.title=is?'Marcar serie como pendiente':'Marcar serie como hecha';}});
-  }
-
-  function renderRows(){
-    const host=$('v47SetList'), panel=$('v47RepsPanel');
-    if(!host||!panel||!ensureState())return;
-    const ex=currentExercise(), i=currentIndex();
-    if(!ex){panel.style.display='none';return}
-    const data=state.actuals[i];
-    const sets=Math.max(1,Number(ex.sets)||1);
-    state.actuals[i]={reps:Array.from({length:sets},(_,j)=>data?.reps?.[j]??''),weight:Array.from({length:sets},(_,j)=>data?.weight?.[j]??''),rir:Array.from({length:sets},(_,j)=>data?.rir?.[j]??''),done:Array.from({length:sets},(_,j)=>!!data?.done?.[j])};
-    const d=state.actuals[i];
-    host.innerHTML='';
-    for(let j=0;j<sets;j++){
-      const row=document.createElement('div');row.className='v48-set-row'+(d.done[j]?' done':'');row.dataset.v73Row=String(j);
-      const lab=document.createElement('div');lab.className='v48-set-label';lab.textContent=`Serie ${j+1}`;
-      const reps=document.createElement('input');reps.type='number';reps.min='0';reps.inputMode='numeric';reps.className='v48-set-input';reps.placeholder=ex.reps||'Reps';reps.value=d.reps[j]??'';reps.setAttribute('aria-label',`Repeticiones serie ${j+1}`);
-      const weight=document.createElement('input');weight.type='number';weight.min='0';weight.step='0.5';weight.inputMode='decimal';weight.className='v48-set-input';weight.placeholder=ex.weight||'Kg';weight.value=d.weight[j]??'';weight.setAttribute('aria-label',`Peso serie ${j+1}`);
-      const rir=document.createElement('input');rir.type='number';rir.min='0';rir.max='10';rir.step='1';rir.inputMode='numeric';rir.className='v48-set-input';rir.placeholder=ex.rir??'RIR';rir.value=d.rir[j]??'';rir.setAttribute('aria-label',`RIR serie ${j+1}`);
-      const persist=()=>{d.reps[j]=reps.value;d.weight[j]=weight.value;d.rir[j]=rir.value;save();updateCounters()};
-      reps.addEventListener('input',persist);weight.addEventListener('input',persist);rir.addEventListener('input',persist);
-      reps.addEventListener('change',persist);weight.addEventListener('change',persist);rir.addEventListener('change',persist);
-      [reps,weight,rir].forEach(inp=>inp.addEventListener('blur',persist));
-      const btn=document.createElement('button');btn.type='button';btn.className='v47-set-check'+(d.done[j]?' done':'');btn.textContent=d.done[j]?'✓':'○';btn.title=d.done[j]?'Marcar serie como pendiente':'Marcar serie como hecha';btn.dataset.v73Set=j;
-      btn.addEventListener('click',ev=>{ev.preventDefault();ev.stopPropagation();toggleSet(j)});
-      row.append(lab,reps,weight,rir,btn);host.appendChild(row);
-    }
-    panel.style.display='block';
-    save();updateCounters();
-  }
-
-  function updateHeader(){
-    const ex=currentExercise();if(!ex||!state)return;
-    const idx=currentIndex(), count=state.exerciseIds.length;
-    const dayLabel=(typeof DAYS!=='undefined'&&DAYS?.[state.day])||(typeof DAYS!=='undefined'&&DAYS?.[Number(workoutDay)||0])||'Día';
-    if($('v28WorkoutDayLabel'))$('v28WorkoutDayLabel').textContent=`${dayLabel} · ${count} ejercicios`;
-    if($('v28StepLabel'))$('v28StepLabel').textContent=`Ejercicio ${idx+1} de ${count}`;
-    if($('v28CurrentName'))$('v28CurrentName').textContent=ex.exercise||'Ejercicio';
-    const chips=$('v28CurrentChips');if(chips){chips.innerHTML='';[['Series',ex.sets],['Reps',ex.reps],['RIR',ex.rir],['Descanso',ex.rest_seconds?`${ex.rest_seconds}s`:null],['Peso',ex.weight],['Tempo',ex.tempo]].forEach(([k,v])=>{if(v===null||v===undefined||v==='')return;const c=document.createElement('span');c.className='v28-chip';c.textContent=`${k}: ${v}`;chips.appendChild(c)})}
-    if($('v28CurrentNote')){$('v28CurrentNote').textContent=ex.notes||'';$('v28CurrentNote').style.display=ex.notes?'block':'none'}
-    if($('v28PrevBtn'))$('v28PrevBtn').disabled=idx<=0;
-    if($('v28NextBtn'))$('v28NextBtn').disabled=idx>=count-1;
-    if($('v28ProgressBar'))$('v28ProgressBar').style.width=`${count?Math.round((idx+1)/count*100):0}%`;
-    const sl=$('v28SessionList');if(sl){sl.innerHTML='';state.exerciseIds.forEach((id,i)=>{const e=list().find(x=>String(x?.id)===String(id));if(!e)return;const p=document.createElement('div');p.className='v28-session-pill'+(i===idx?' active':'');const done=state.loggedIndexes.includes(i);const setDone=state.actuals?.[i]?.done?.filter(Boolean).length||0;p.textContent=`${i+1}. ${e.exercise||'Ejercicio'}${done?' ✓':''}${setDone&&!done?' · '+setDone:''}`;p.dataset.v73Index=i;p.addEventListener('click',()=>goTo(i));sl.appendChild(p)})}
-    updateTimerDisplay();renderRows();
-  }
-
-  function updateTimerDisplay(){
-    if($('v28TimerDisplay'))$('v28TimerDisplay').textContent=fmt(restSeconds);
-    if($('v28SessionClock'))$('v28SessionClock').textContent=fmt(state?.sessionSeconds||0);
-    if($('v28TimerModeStopwatch'))$('v28TimerModeStopwatch').classList.toggle('active',restMode==='stopwatch');
-    if($('v28TimerModeCountdown'))$('v28TimerModeCountdown').classList.toggle('active',restMode==='countdown');
-  }
-
-  function stopTimer(){if(timerId){clearInterval(timerId);timerId=null}state&&(state.restRunning=false);save();updateTimerDisplay()}
-  function tick(){
-    if(!state)return;
-    state.sessionSeconds=Math.max(0,Math.floor((Date.now()-Number(state.startedAt||Date.now()))/1000));
-    if(restMode==='countdown'){
-      restSeconds=Math.max(0,restSeconds-1);
-      state.restSeconds=restSeconds;
-      if(restSeconds<=0){stopTimer();try{navigator.vibrate?.([180,80,180])}catch(_){} }
-    }else{restSeconds++;state.restSeconds=restSeconds}
-    save();updateTimerDisplay();
-  }
-  function startTimer(){if(timerId)return; if(restMode==='countdown'&&restSeconds<=0)restSeconds=Math.max(0,Number(currentExercise()?.rest_seconds)||0); state.restRunning=true;save();updateTimerDisplay();timerId=setInterval(tick,1000)}
-  function resetTimer(){stopTimer();restSeconds=restMode==='countdown'?Math.max(0,Number(currentExercise()?.rest_seconds)||0):0;state.restSeconds=restSeconds;save();updateTimerDisplay()}
-  function setMode(mode){stopTimer();restMode=mode==='countdown'?'countdown':'stopwatch';state.restMode=restMode;restSeconds=restMode==='countdown'?Math.max(0,Number(currentExercise()?.rest_seconds)||0):0;state.restSeconds=restSeconds;save();updateTimerDisplay()}
-
-  function goTo(i){
-    if(!state||i<0||i>=state.exerciseIds.length)return;
-    persistVisibleInputs();stopTimer();state.currentIndex=i;state.currentExerciseId=state.exerciseIds[i];state.restMode='stopwatch';state.restSeconds=0;state.restRunning=false;restMode='stopwatch';restSeconds=0;save();updateHeader();
-  }
-  function prev(){goTo(currentIndex()-1)}
-  async function next(){
-    if(!state)return;persistVisibleInputs();const i=currentIndex();await logExercise(i);if(i<state.exerciseIds.length-1){const rest=Math.max(0,Number(currentExercise()?.rest_seconds)||0);goTo(i+1);if(rest>0){setMode('countdown');startTimer()}}else await finish();
-  }
-
-  function toggleSet(i){
-    if(!state)return;const d=state.actuals[currentIndex()];d.done[i]=!d.done[i];save();updateCounters();
-    const row=document.querySelector(`#v47SetList .v48-set-row[data-v73-row="${i}"]`);const btn=row?.querySelector('.v47-set-check');if(btn){btn.classList.toggle('done',!!d.done[i]);btn.textContent=d.done[i]?'✓':'○'}
-  }
-
-  function persistVisibleInputs(){
-    if(!state)return;const d=state.actuals[currentIndex()];const rows=[...document.querySelectorAll('#v47SetList .v48-set-row')];rows.forEach((row,i)=>{const inputs=row.querySelectorAll('input');if(inputs[0])d.reps[i]=inputs[0].value;if(inputs[1])d.weight[i]=inputs[1].value;if(inputs[2])d.rir[i]=inputs[2].value;const btn=row.querySelector('.v47-set-check');if(btn)d.done[i]=btn.classList.contains('done')});save();
-  }
-
-  function exerciseStats(i){
-    const ex=list().find(x=>String(x?.id)===String(state?.exerciseIds?.[i]));const d=state?.actuals?.[i]||{};let volume=0,maxWeight=0,totalReps=0,setsDone=0;
-    (d.reps||[]).forEach((v,j)=>{const rr=Number(v),ww=Number(d.weight?.[j]);if(d.done?.[j])setsDone++;if(Number.isFinite(rr)&&rr>0)totalReps+=rr;if(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0){volume+=rr*ww;maxWeight=Math.max(maxWeight,ww)}});
-    return {exercise:ex||null,volume,maxWeight,totalReps,setsDone};
-  }
-
-  function detailFor(i){
-    const d=state?.actuals?.[i]||{};const rows=[];let vol=0;let reps=[];let weights=[];let rirs=[];
-    const n=Math.max(d.reps?.length||0,d.weight?.length||0,d.rir?.length||0,d.done?.length||0);
-    for(let j=0;j<n;j++){const r=String(d.reps?.[j]??'').trim(),w=String(d.weight?.[j]??'').trim(),ri=String(d.rir?.[j]??'').trim();if(r)reps[j]=r;if(w)weights[j]=w;if(ri)rirs[j]=ri;const rr=Number(r),ww=Number(w);if(d.done?.[j]&&rr>0&&ww>0)vol+=rr*ww;rows.push(`S${j+1} ${r||'-'} reps · ${w||'-'} kg · RIR ${ri||'-'}`)}
-    const avgRir=rirs.map(Number).filter(Number.isFinite);const rir=avgRir.length?Math.round(avgRir.reduce((a,b)=>a+b,0)/avgRir.length*10)/10:null;
-    return {repsText:reps.length?reps.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):'',weightText:weights.length?weights.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):'',rir,vol,notes:rows.join(' | ')};
-  }
-
-  async function logExercise(i){
-    if(!state||state.loggedIndexes.includes(i))return true;
-    const ex=list().find(x=>String(x?.id)===String(state.exerciseIds?.[i]));if(!ex?.id||!(typeof currentUser!=='undefined'&&currentUser?.id))return false;
-    const d=detailFor(i), done=(state.actuals?.[i]?.done||[]).filter(Boolean).length;
-    const payload={user_id:(typeof currentUser!=='undefined'&&currentUser?.id)||userKey(),exercise_id:ex.id,exercise_name:ex.exercise,performed_at:state.performedAt,sets_completed:done||Number(ex.sets)||null,reps:d.repsText||String(ex.reps||''),weight:d.weightText||String(ex.weight||''),rir:d.rir??(ex.rir===''||ex.rir==null?null:Number(ex.rir)),notes:(d.notes?`Registro por series: ${d.notes} · Volumen ${Math.round(d.vol*10)/10} kg · Sesión ${state.id}`:`Registro automático de sesión · ${state.id}`)};
-    if(!navigator.onLine){queueLog(payload);state.loggedIndexes.push(i);save();return true}
-    try{const {error}=await sb.from('workout_logs').insert(payload);if(error)throw error;state.loggedIndexes.push(i);save();return true}catch(e){console.warn('V73: no se pudo registrar online, se guardará para sincronizar',e);queueLog(payload);state.loggedIndexes.push(i);save();return true}
-  }
-
-  function readQueue(){try{const raw=localStorage.getItem(queueKey());const q=raw?JSON.parse(raw):[];return Array.isArray(q)?q:[]}catch(_){return []}}
-  function writeQueue(q){try{localStorage.setItem(queueKey(),JSON.stringify(q))}catch(_){}}
-  function queueLog(payload){const q=readQueue();q.push(payload);writeQueue(q)}
-  async function flushQueue(){if(!navigator.onLine||typeof sb==='undefined'||!(typeof currentUser!=='undefined'&&currentUser?.id))return;const q=readQueue();if(!q.length)return;const remain=[];for(const payload of q){try{const {error}=await sb.from('workout_logs').insert(payload);if(error)throw error}catch(e){remain.push(payload)}}writeQueue(remain)}
-
-  function buildSummary(data){
-    let o=$('v73FinishOverlay');
-    if(!o){o=document.createElement('div');o.id='v73FinishOverlay';o.className='v73-finish-overlay';o.innerHTML=`<div class="v73-finish-card"><div class="v73-finish-head"><div><div class="v73-finish-title">🏆 Entrenamiento terminado</div><div class="v73-finish-sub">Resumen de esta sesión</div></div><button class="v73-finish-close" type="button">×</button></div><div class="v73-finish-grid"><div><strong id="v73FinishExercises">0</strong><span>ejercicios</span></div><div><strong id="v73FinishSets">0</strong><span>series hechas</span></div><div><strong id="v73FinishVolume">0</strong><span>kg de volumen</span></div><div><strong id="v73FinishWeight">0</strong><span>peso máximo</span></div></div><div class="v73-sync-note" id="v73SyncNote"></div><button class="v73-finish-ok" type="button">Continuar</button></div>`;document.body.appendChild(o);const close=()=>{o.classList.remove('show');summaryOpen=false};o.querySelector('.v73-finish-close').onclick=close;o.querySelector('.v73-finish-ok').onclick=close;}
-    $('v73FinishExercises').textContent=String(data.count||0);$('v73FinishSets').textContent=String(data.setsDone||0);$('v73FinishVolume').textContent=String(Math.round((data.totalVolume||0)*10)/10);$('v73FinishWeight').textContent=`${Math.round((data.maxWeight||0)*10)/10} kg`;$('v73SyncNote').textContent=readQueue().length?`📴 ${readQueue().length} registro(s) pendiente(s) de sincronización.`:'☁️ Registros guardados.';o.classList.add('show');summaryOpen=true;
-  }
-
-  async function finish(){
-    if(!state)return;persistVisibleInputs();stopTimer();for(let i=0;i<state.exerciseIds.length;i++)await logExercise(i);const snapshot=JSON.parse(JSON.stringify(state));clear();window.removeEventListener('beforeunload',beforeUnload);if(root())root().classList.remove('show');document.body.classList.remove('v32-training-active');document.body.style.overflow='';const count=snapshot.exerciseIds.length;let totalVolume=0,maxWeight=0,setsDone=0;snapshot.actuals.forEach(a=>{(a.reps||[]).forEach((v,j)=>{const rr=Number(v),ww=Number(a.weight?.[j]);if(a.done?.[j])setsDone++;if(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0){totalVolume+=rr*ww;maxWeight=Math.max(maxWeight,ww)}})});state=null;sessionId=null;buildSummary({count,totalVolume,maxWeight,setsDone});await flushQueue();}
-
-  function performCancel(){
-    if(!state)return;
-    const canceledId=state.id;
-    stopTimer();
-    try{persistVisibleInputs()}catch(_){}
-    state=null;sessionId=null;
-    try{clear();localStorage.removeItem(legacyKey())}catch(_){}
-    try{const q=readQueue();writeQueue(q.filter(x=>!String(x?.notes||'').includes(`Sesión ${canceledId}`)))}catch(_){}
-    if(root()){root().classList.remove('show');root().setAttribute('aria-hidden','true')}
-    document.body.classList.remove('v32-training-active');document.body.style.overflow='';
-    if($('v31TrainingMini'))$('v31TrainingMini').classList.remove('show');
-    closeCancelConfirm();
-    window.dispatchEvent(new Event('agenda-training-canceled'));
-    if(navigator.onLine&&typeof sb!=='undefined'&&currentUser?.id){
-      sb.from('workout_logs').delete().eq('user_id',currentUser.id).like('notes',`%Sesión ${canceledId}%`).then(()=>{}).catch(()=>{});
-    }
-  }
-
-  function ensureCancelConfirm(){
-    let o=$('v74CancelConfirm');
-    if(o)return o;
-    o=document.createElement('div');
-    o.id='v74CancelConfirm';
-    o.className='v74-cancel-confirm';
-    o.setAttribute('aria-hidden','true');
-    o.innerHTML=`<div class="v74-cancel-card" role="dialog" aria-modal="true" aria-labelledby="v74CancelTitle">
-      <div class="v74-cancel-icon">⚠️</div>
-      <div id="v74CancelTitle" class="v74-cancel-title">¿Cancelar entrenamiento?</div>
-      <div class="v74-cancel-text">Se cerrará la Vista de entrenamiento y se descartará el progreso de esta sesión que todavía no hayas guardado en el historial.</div>
-      <div class="v74-cancel-actions">
-        <button id="v74CancelNo" class="v74-cancel-no" type="button">Seguir entrenando</button>
-        <button id="v74CancelYes" class="v74-cancel-yes" type="button">Sí, cancelar</button>
-      </div>
-    </div>`;
-    document.body.appendChild(o);
-    const close=()=>closeCancelConfirm();
-    $('v74CancelNo')?.addEventListener('click',close);
-    $('v74CancelYes')?.addEventListener('click',()=>performCancel());
-    o.addEventListener('click',e=>{if(e.target===o)close();});
-    return o;
-  }
-
-  function showCancelConfirm(){
-    if(!state)return;
-    const o=ensureCancelConfirm();
-    o.classList.add('show');
-    o.setAttribute('aria-hidden','false');
-    const first=$('v74CancelNo');
-    setTimeout(()=>first?.focus(),30);
-  }
-
-  function closeCancelConfirm(){
-    const o=$('v74CancelConfirm');
-    if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true');}
-  }
-
-  function cancel(){showCancelConfirm();}
-
-  function open(){
-    closeCancelConfirm();
-    if(!list().length){try{const cached=JSON.parse(localStorage.getItem(`agendaCache:workoutExercisesAll:${userKey()}`)||'null');if(Array.isArray(cached))window.workoutExercises=cached.filter(x=>Number(x.day)===Number(window.workoutDay));}catch(_){}}
-    if(!list().length){alert('No hay ejercicios cargados para esta rutina.');return}
-    const existing=read()||migrateLegacy();
-    state=existing||freshState(list());state=normalize(state);sessionId=state.id;restMode=state.restMode||'stopwatch';restSeconds=Number(state.restSeconds)||0;
-    if(state.startedAt&&state.sessionSeconds)state.startedAt=Date.now()-Number(state.sessionSeconds||0)*1000;
-    save();const o=root();if(o){o.classList.add('show');o.setAttribute('aria-hidden','false')}document.body.classList.add('v32-training-active');document.body.style.overflow='hidden';render();flushQueue();}
-  function closeView(){persistVisibleInputs();stopTimer();save();if(root())root().classList.remove('show');document.body.classList.remove('v32-training-active');document.body.style.overflow='';}
-  function render(){currentIndex();updateHeader();updateTimerDisplay();}
-  function beforeUnload(){try{persistVisibleInputs()}catch(_){}
-    if(state)save();
-  }
-
-  function intercept(e){
-    const t=e.target?.closest?.('button,input');if(!t)return;
-    const id=t.id||'';
-    if(t.matches('#v28WorkoutOverlay .v47-set-check')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();toggleSet(Number(t.dataset.v73Set)||0);return;}
-    if(id==='v28NextBtn'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();next();return;}
-    if(id==='v28PrevBtn'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();prev();return;}
-    if(id==='v28FinishBtn'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();finish();return;}
-    if(id==='v28WorkoutClose'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();closeView();return;}
-    if(id==='v49CancelWorkout'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();window.AgendaTrainingCancelV77?.show();return;}
-    if(id==='v28TimerModeStopwatch'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();setMode('stopwatch');return;}
-    if(id==='v28TimerModeCountdown'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();setMode('countdown');return;}
-    if(id==='v28TimerStart'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();startTimer();return;}
-    if(id==='v28TimerPause'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();stopTimer();return;}
-    if(id==='v28TimerReset'){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();resetTimer();return;}
-    if(t.matches('#v28SessionList [data-v73-index]')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();goTo(Number(t.dataset.v73Index)||0);return;}
-    if(t.matches('#v31MiniOpen')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();open();return;}
-    if(t.matches('#v31MiniFinish')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();finish();return;}
-  }
-
-  function protectLegacyVisuals(){
-    if(!state||!root()?.classList.contains('show'))return;
-    const i=currentIndex(),d=state.actuals[i]||{};const buttons=[...document.querySelectorAll('#v47SetList .v47-set-check')];buttons.forEach((b,j)=>{const yes=!!d.done?.[j];b.classList.toggle('done',yes);b.textContent=yes?'✓':'○';const row=b.closest('.v48-set-row');if(row)row.classList.toggle('done',yes)});updateCounters();
-  }
-
-  function init(){
-    if(initialized)return;initialized=true;
-    document.addEventListener('click',intercept,true);
-    document.addEventListener('pointerup',e=>{if(e.target?.closest?.('#v49CancelWorkout')){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();window.AgendaTrainingCancelV77?.show();}},true);
-    document.addEventListener('pointerdown',e=>{if(e.target?.closest?.('#v49CancelWorkout')){e.stopImmediatePropagation();} if(e.target?.closest?.('#v28WorkoutOverlay .v47-set-check')){e.stopImmediatePropagation()}},true);
-    document.addEventListener('keydown',e=>{
-      if(!root()?.classList.contains('show'))return;
-      if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();if($('v74CancelConfirm')?.classList.contains('show'))closeCancelConfirm();else closeView()}
-      else if(e.key==='ArrowRight'){e.preventDefault();e.stopImmediatePropagation();next()}
-      else if(e.key==='ArrowLeft'){e.preventDefault();e.stopImmediatePropagation();prev()}
-      else if(e.code==='Space'&&document.activeElement?.tagName!=='INPUT'){e.preventDefault();e.stopImmediatePropagation();timerId?stopTimer():startTimer()}
-    },true);
-    window.addEventListener('beforeunload',beforeUnload);
-    window.addEventListener('pagehide',beforeUnload);
-    window.addEventListener('online',flushQueue);
-    document.addEventListener('visibilitychange',()=>{if(state){persistVisibleInputs();if(document.visibilityState==='visible'){setTimeout(protectLegacyVisuals,80)}}});
-    setInterval(()=>{if(state){state.sessionSeconds=Math.max(0,Math.floor((Date.now()-Number(state.startedAt||Date.now()))/1000));save();updateTimerDisplay();protectLegacyVisuals()}},1000);
-    setInterval(flushQueue,15000);
-    const existing=read()||migrateLegacy();if(existing&&root()?.classList.contains('show')){state=normalize(existing);sessionId=state.id;restMode=state.restMode||'stopwatch';restSeconds=Number(state.restSeconds)||0;render()}
-    window.AgendaTrainingV73={open,close:closeView,cancel,finish,next,prev,toggleSet,save,getState:()=>state,confirmCancel:showCancelConfirm,cancelNow:performCancel};
-    window.openWorkoutMode=open;
-  }
-
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
-
-</script>
-
-
-<style id="v76-cancel-hard-reset-style">
-/* V76: cancelación aislada de entrenamiento. Este botón tiene un único controlador. */
-#v49CancelWorkout.v76-owned-cancel{position:relative;z-index:5;touch-action:manipulation;pointer-events:auto}
-#v76CancelConfirmHard{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,23,.82);backdrop-filter:blur(10px);touch-action:manipulation}
-#v76CancelConfirmHard.show{display:flex}
-#v76CancelConfirmHard .v76-card{width:min(430px,100%);padding:22px;border-radius:22px;background:rgba(17,24,39,.995);border:1px solid rgba(239,68,68,.30);box-shadow:0 30px 100px rgba(0,0,0,.58);color:#fff;text-align:center}
-#v76CancelConfirmHard .v76-icon{width:54px;height:54px;margin:0 auto 12px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(245,158,11,.12);font-size:26px}
-#v76CancelConfirmHard .v76-title{font-size:20px;font-weight:900}
-#v76CancelConfirmHard .v76-text{margin-top:8px;font-size:11px;line-height:1.55;color:#94a3b8}
-#v76CancelConfirmHard .v76-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-#v76CancelConfirmHard button{min-height:46px;border-radius:12px;font-size:11px;font-weight:900;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-#v76CancelNoHard{border:1px solid rgba(148,163,184,.18);background:rgba(255,255,255,.06);color:#dbeafe}
-#v76CancelYesHard{border:1px solid rgba(239,68,68,.40);background:rgba(239,68,68,.14);color:#fecaca}
-@media(max-width:520px){#v76CancelConfirmHard{padding:12px;align-items:flex-end}#v76CancelConfirmHard .v76-card{width:100%;padding:18px 15px 15px;border-radius:20px}#v76CancelConfirmHard .v76-actions{grid-template-columns:1fr}#v76CancelYesHard{order:-1}}
-</style>
-<script id="v76-cancel-hard-reset">
-(function(){
-  'use strict';
-  const BID='v49CancelWorkout';
-  const CID='v76CancelConfirmHard';
-  let installed=false;
-  let cancelButton=null;
-
-  function q(id){return document.getElementById(id)}
-  function isTrainingVisible(){const o=q('v28WorkoutOverlay');return !!o&&o.classList.contains('show')}
-
-  function ensureConfirm(){
-    let o=q(CID);
-    if(o)return o;
-    o=document.createElement('div');
-    o.id=CID;
-    o.setAttribute('aria-hidden','true');
-    o.innerHTML='<div class="v76-card" role="dialog" aria-modal="true" aria-labelledby="v76CancelTitle"><div class="v76-icon">⚠️</div><div id="v76CancelTitle" class="v76-title">¿Cancelar entrenamiento?</div><div class="v76-text">Se cerrará la Vista de entrenamiento y se descartará el progreso de esta sesión.</div><div class="v76-actions"><button id="v76CancelNoHard" type="button">Seguir entrenando</button><button id="v76CancelYesHard" type="button">Sí, cancelar</button></div></div>';
-    document.body.appendChild(o);
-    const close=()=>hideConfirm();
-    q('v76CancelNoHard').addEventListener('click',close);
-    q('v76CancelYesHard').addEventListener('click',hardCancel);
-    o.addEventListener('click',e=>{if(e.target===o)close()});
-    return o;
-  }
-
-  function hideConfirm(){const o=q(CID);if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true')}}
-
-  function showConfirm(){
-    if(!isTrainingVisible())return;
-    const o=ensureConfirm();
-    o.classList.add('show');
-    o.setAttribute('aria-hidden','false');
-    setTimeout(()=>q('v76CancelYesHard')?.focus(),30);
-  }
-
-  async function hardCancel(){
-    hideConfirm();
-    let canceledId='';
-    try{canceledId=String(window.AgendaTrainingV73?.getState?.()?.id||'')}catch(_){}
-    // Detener el módulo aislado antes de borrar su estado, para evitar que un timer vuelva a guardarlo.
-    try{window.AgendaTrainingV73?.close?.()}catch(_){}
-    // Cerrar absolutamente todas las capas de entrenamiento.
-    try{q('v28WorkoutOverlay')?.classList.remove('show');q('v28WorkoutOverlay')?.setAttribute('aria-hidden','true')}catch(_){}
-    try{q('v74CancelConfirm')?.classList.remove('show');q('v74CancelConfirm')?.setAttribute('aria-hidden','true')}catch(_){}
-    try{q('v73FinishOverlay')?.classList.remove('show')}catch(_){}
-    try{document.body.classList.remove('v32-training-active')}catch(_){}
-    try{document.body.style.overflow=''}catch(_){}
-    try{q('v31TrainingMini')?.classList.remove('show')}catch(_){}
-    try{
-      const uid=(typeof currentUser!=='undefined'&&currentUser?.id)||'guest';
-      localStorage.removeItem('agendaTrainingV73:'+uid);
-      localStorage.removeItem('agendaTrainingV31:'+uid);
-      const qk='agendaTrainingV73Queue:'+uid;
-      const queued=JSON.parse(localStorage.getItem(qk)||'[]');
-      if(Array.isArray(queued))localStorage.setItem(qk,JSON.stringify(queued.filter(x=>!canceledId||!String(x?.notes||'').includes(canceledId))));
-    }catch(_){}
-    if(canceledId&&navigator.onLine&&typeof sb!=='undefined'&&typeof currentUser!=='undefined'&&currentUser?.id){
-      try{await sb.from('workout_logs').delete().eq('user_id',currentUser.id).like('notes',`%Sesión ${canceledId}%`)}catch(_){}
-    }
-    window.dispatchEvent(new CustomEvent('agenda-v76-training-cancelled',{detail:{sessionId:canceledId}}));
-  }
-
-  function ownButton(){
-    const old=q(BID);
-    if(!old)return null;
-    if(old.dataset.v76Owned==='1')return old;
-    // Clonar elimina de forma fiable los listeners bubble de versiones antiguas.
-    const fresh=old.cloneNode(true);
-    fresh.dataset.v76Owned='1';
-    fresh.classList.add('v76-owned-cancel');
-    old.replaceWith(fresh);
-    cancelButton=fresh;
-    fresh.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();showConfirm()},{capture:true});
-    fresh.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();showConfirm()},{capture:true});
-    fresh.addEventListener('touchend',e=>{e.preventDefault();e.stopPropagation();showConfirm()},{capture:true,passive:false});
-    return fresh;
-  }
-
-  function blockLegacyOnButton(){
-    const b=cancelButton||q(BID);if(!b)return;
-    ['click','pointerup','pointerdown','touchstart','touchend'].forEach(type=>b.addEventListener(type,e=>{e.stopImmediatePropagation()},{capture:true}));
-  }
-
-  function init(){
-    if(installed)return;installed=true;
-    ownButton();
-    blockLegacyOnButton();
-    // Capa final: incluso si un script posterior vuelve a tocar el botón, lo recuperamos.
-    setInterval(()=>{if(!cancelButton||!document.documentElement.contains(cancelButton))ownButton();blockLegacyOnButton()},1500);
-    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&q(CID)?.classList.contains('show')){e.preventDefault();e.stopImmediatePropagation();hideConfirm()}},true);
-    window.AgendaTrainingCancelV76={show:showConfirm,confirm:showConfirm,close:hideConfirm,cancel:hardCancel};
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
-</script>
-
-<style id="v77-training-cancel-owner-style">
-#v77TrainingCancelConfirm{position:fixed;inset:0;z-index:120000;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.86);backdrop-filter:blur(12px);touch-action:manipulation}
-#v77TrainingCancelConfirm.show{display:flex}
-#v77TrainingCancelConfirm .v77-card{width:min(430px,100%);padding:22px;border-radius:22px;background:#111827;border:1px solid rgba(239,68,68,.34);box-shadow:0 30px 100px rgba(0,0,0,.6);color:#fff;text-align:center}
-#v77TrainingCancelConfirm .v77-title{font-size:20px;font-weight:900}
-#v77TrainingCancelConfirm .v77-text{margin-top:8px;font-size:11px;line-height:1.5;color:#94a3b8}
-#v77TrainingCancelConfirm .v77-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-#v77TrainingCancelConfirm button{min-height:48px;border-radius:12px;font-weight:900;font-size:11px;border:1px solid rgba(148,163,184,.2);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-#v77TrainingCancelNo{background:#1e293b;color:#dbeafe}
-#v77TrainingCancelYes{background:#7f1d1d;color:#fee2e2;border-color:rgba(239,68,68,.45)!important}
-@media(max-width:520px){#v77TrainingCancelConfirm{align-items:flex-end;padding:10px}#v77TrainingCancelConfirm .v77-card{width:100%;border-radius:20px;padding:18px 14px 14px}#v77TrainingCancelConfirm .v77-actions{grid-template-columns:1fr}#v77TrainingCancelYes{order:-1}}
-</style>
-<script id="v77-training-cancel-owner">
-(function(){
-'use strict';
-const BID='v49CancelWorkout',CID='v77TrainingCancelConfirm';
-let busy=false;
-const q=id=>document.getElementById(id);
-function trainingOpen(){return !!q('v28WorkoutOverlay')?.classList.contains('show')}
-function ensureConfirm(){
-  let o=q(CID); if(o)return o;
-  o=document.createElement('div');o.id=CID;o.setAttribute('aria-hidden','true');
-  o.innerHTML='<div class="v77-card" role="dialog" aria-modal="true" aria-labelledby="v77TrainingCancelTitle"><div style="font-size:28px;margin-bottom:10px">⚠️</div><div id="v77TrainingCancelTitle" class="v77-title">¿Cancelar entrenamiento?</div><div class="v77-text">Se cerrará la Vista de entrenamiento y se descartará el progreso de esta sesión.</div><div class="v77-actions"><button id="v77TrainingCancelNo" type="button">Seguir entrenando</button><button id="v77TrainingCancelYes" type="button">Sí, cancelar</button></div></div>';
-  document.body.appendChild(o);
-  q('v77TrainingCancelNo').addEventListener('click',hide);
-  q('v77TrainingCancelYes').addEventListener('click',hardCancel,{capture:true});
-  o.addEventListener('click',e=>{if(e.target===o)hide()});
-  return o;
-}
-function hide(){const o=q(CID);if(o){o.classList.remove('show');o.setAttribute('aria-hidden','true')}}
-function show(){if(!trainingOpen()||busy)return;const o=ensureConfirm();o.classList.add('show');o.setAttribute('aria-hidden','false');setTimeout(()=>q('v77TrainingCancelYes')?.focus(),30)}
-async function hardCancel(){
-  if(busy)return;busy=true;hide();
-  // Use the ORIGINAL V31 cancellation cleanup. This is the code that already
-  // stopped the old timers, cleared its session and removed the old mini-panel.
-  try{await window.AgendaTrainingV31?.cancelNow?.()}catch(e){console.warn('V77 V31 cleanup',e)}
-  // Cancel the isolated V73 state as well, without creating another dialog.
-  try{
-    const api=window.AgendaTrainingV73;
-    if(api?.getState?.()) await api.cancelNow?.();
-  }catch(e){console.warn('V77 V73 cleanup',e)}
-  // Defensive cleanup: every visual/persistent layer used by previous versions.
-  try{q('v28WorkoutOverlay')?.classList.remove('show');q('v28WorkoutOverlay')?.setAttribute('aria-hidden','true')}catch(_){ }
-  try{q('v31TrainingMini')?.classList.remove('show');q('v31TrainingMini')?.style.setProperty('display','none','important')}catch(_){ }
-  try{q('v74CancelConfirm')?.classList.remove('show');q('v74CancelConfirm')?.setAttribute('aria-hidden','true')}catch(_){ }
-  try{q('v76CancelConfirmHard')?.classList.remove('show');q('v76CancelConfirmHard')?.setAttribute('aria-hidden','true')}catch(_){ }
-  try{q('v73FinishOverlay')?.classList.remove('show')}catch(_){ }
-  try{q('v48FinishOverlay')?.classList.remove('show')}catch(_){ }
-  try{document.body.classList.remove('v32-training-active');document.body.style.overflow=''}catch(_){ }
-  try{
-    const uid=(typeof currentUser!=='undefined'&&currentUser?.id)||'guest';
-    localStorage.removeItem('agendaTrainingV31:'+uid);
-    localStorage.removeItem('agendaTrainingV73:'+uid);
-  }catch(_){ }
-  window.dispatchEvent(new CustomEvent('agenda-training-cancelled-final'));
-  busy=false;
-}
-function ownButton(){
-  const b=q(BID);if(!b)return;
-  if(b.dataset.v77Owned==='1')return;
-  const fresh=b.cloneNode(true);fresh.dataset.v77Owned='1';b.replaceWith(fresh);
-  fresh.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();show()},{capture:true});
-  fresh.addEventListener('pointerup',e=>{e.preventDefault();e.stopPropagation();show()},{capture:true});
-  fresh.addEventListener('touchend',e=>{e.preventDefault();e.stopPropagation();show()},{capture:true,passive:false});
-}
-function init(){
-  ownButton();setInterval(ownButton,1000);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&q(CID)?.classList.contains('show')){e.preventDefault();e.stopImmediatePropagation();hide()}},true);
-  window.AgendaTrainingCancelV77={show,confirm:show,close:hide,cancel:hardCancel};
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-})();
-</script>
 </body>
 </html>
