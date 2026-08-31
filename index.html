@@ -104,7 +104,8 @@
 
 <!-- split-css:30-agenda-structure-guard.css -->
 <link rel="stylesheet" href="./css/30-agenda-structure-guard.css">
-<link rel="stylesheet" href="./css/55-v85-personal-suite.css">
+<link rel="stylesheet" href="./css/55-v87-personal-suite.css">
+<link rel="stylesheet" href="./css/56-v89-weather.css">
 </head>
 <body>
 <section id="authScreen">
@@ -436,6 +437,23 @@
         <div class="calendar-tools">
           <select class="input" id="calendarMonth"></select>
           <input class="input" id="calendarYear" type="number" min="2000" max="2100">
+        </div>
+
+        <div class="v87-weather-card" id="v87WeatherCard">
+          <div class="v87-weather-head">
+            <div>
+              <div class="v87-weather-kicker">🌦️ Pronóstico</div>
+              <strong id="v87WeatherTitle">Pronóstico del tiempo</strong>
+              <span id="v87WeatherStatus">Elegí tu ubicación para cargar el pronóstico.</span>
+            </div>
+            <div class="v87-weather-actions">
+              <button class="small-btn" id="v87WeatherLocationBtn" type="button">📍 Usar mi ubicación</button>
+              <button class="small-btn" id="v87WeatherRefreshBtn" type="button" disabled>↻ Actualizar</button>
+            </div>
+          </div>
+          <div class="v87-weather-location" id="v87WeatherLocationLabel"></div>
+          <div class="v87-weather-grid" id="v87WeatherGrid"></div>
+          <div class="v87-weather-note">El pronóstico se actualiza desde Open-Meteo. Sin internet se mantiene el último pronóstico guardado, si existe.</div>
         </div>
 
         <div class="month-grid" id="monthGrid"></div>
@@ -1174,6 +1192,7 @@
   <!-- split-js:35-v64-stability-hardening-script.js -->
 <script src="./js/35-v64-stability-hardening-script.js" defer></script>
 
-<script src="./js/36-v85-personal-suite.js" defer></script>
+<script src="./js/36-v87-personal-suite.js" defer></script>
+<script src="./js/37-v89-weather.js" defer></script>
 </body>
 </html>

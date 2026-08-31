@@ -1,0 +1,123 @@
+/* V85 — mejoras integradas de forma aislada. No reemplaza funciones existentes. */
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const escv=v=>typeof esc==='function'?esc(v):String(v??'');
+  const userKey=()=>currentUser?.id||'guest';
+  const focusKey=()=>`agendaV57:${userKey()}:focus`;
+  const durKey=()=>`agendaV46:${userKey()}:durations`;
+  const readJSON=(key,fallback)=>{try{const r=localStorage.getItem(key);return r?JSON.parse(r):fallback}catch{return fallback}};
+  function durationOf(t){const map=readJSON(durKey(),{});return Math.max(5,Number(t?.duration_minutes||t?.estimated_minutes||map[String(t?.id)]||30)||30)}
+  function parseSeries(v){if(v===null||v===undefined||v==='')return[];const s=String(v);const pairs=[...s.matchAll(/S\s*\d+\s*[:=]\s*([0-9]+(?:[.,][0-9]+)?)/gi)].map(m=>Number(m[1].replace(',','.'))).filter(Number.isFinite);if(pairs.length)return pairs;const plain=s.split(/\s*[·|,/]\s*|\s+-\s+/).map(x=>Number(String(x).replace(',','.').replace(/[^0-9.\-]/g,''))).filter(Number.isFinite);return plain.length?plain:[Number(s.replace(',','.').replace(/[^0-9.\-]/g,''))].filter(Number.isFinite)}
+  function volumeOf(log){const reps=parseSeries(log?.reps);const weights=parseSeries(log?.weight);if(!reps.length||!weights.length)return 0;let v=0;reps.forEach((r,i)=>{const w=weights[Math.min(i,weights.length-1)];if(r>0&&w>0)v+=r*w});return v}
+  function repsTotal(log){return parseSeries(log?.reps).reduce((a,b)=>a+b,0)}
+  function rirValue(log){const nums=parseSeries(log?.rir);return nums.length?nums.reduce((a,b)=>a+b,0)/nums.length:null}
+  function dateFromLog(log){const s=String(log?.performed_at||'');const d=new Date(s.includes('T')?s:s+'T12:00:00');return Number.isFinite(d.getTime())?d:null}
+  function latestTwo(name){const logs=(workoutLogs||[]).filter(l=>l.exercise_name===name).slice().sort((a,b)=>String(a.performed_at).localeCompare(String(b.performed_at)));return [logs.at(-1)||null,logs.at(-2)||null]}
+  function exerciseNames(){return [...new Set((workoutLogs||[]).map(x=>x.exercise_name).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'))}
+  function taskPriority(t){const p=typeof getPriority==='function'?getPriority(t):String(t?.priority||'normal');return p==='urgent'?0:p==='high'?1:p==='low'?3:2}
+  function dayIndexToday(){return typeof getTodayIndex==='function'?getTodayIndex():0}
+  function minutes(t){return (Number(t?.hour)||7)*60+(Number(t?.minute)||0)}
+  function focusData(){const d=readJSON(focusKey(),{});return d&&typeof d==='object'?d:{days:{},sessions:{},taskMinutes:{}}}
+  function minutesWeek(){const d=getArgentinaNow?getArgentinaNow():new Date();const monday=new Date(d);monday.setHours(12,0,0,0);const shift=(monday.getDay()+6)%7;monday.setDate(monday.getDate()-shift);return Array.from({length:7},(_,i)=>{const x=new Date(monday);x.setDate(monday.getDate()+i);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`})}
+  function makeCard(id,html,cls='v83-card'){if(q(id))return q(id);const el=document.createElement('section');el.id=id;el.className=cls;el.innerHTML=html;return el}
+  function mountHome(){const host=q('dashboard');if(!host||q('v83HomeSuite'))return;if(!currentUser)return;const sec=makeCard('v83HomeSuite',`<div class="v83-head"><div><h3>🎯 Centro de mando</h3><p>Un vistazo rápido a tu día, tu entrenamiento y tu enfoque.</p></div></div><div class="v83-grid"><div class="v83-stat"><strong id="v83HomeTasks">0%</strong><span>Tareas completadas</span></div><div class="v83-stat"><strong id="v83HomeWorkout">0</strong><span>Ejercicios registrados</span></div><div class="v83-stat"><strong id="v83HomeFocus">0 min</strong><span>Enfoque esta semana</span></div><div class="v83-stat"><strong id="v83HomeLoad">0%</strong><span>Carga del día</span></div></div><div class="v83-actions" style="margin-top:10px"><button class="v83-btn primary" id="v83NowBtn" type="button">¿Qué hago ahora?</button><button class="v83-btn" id="v83WeekBtn" type="button">Ver resumen semanal</button></div><div id="v83HomeDetail" style="margin-top:10px"></div>`);host.appendChild(sec);q('v83NowBtn').onclick=focusNext; q('v83WeekBtn').onclick=renderWeekModal}
+  function renderHome(){const sec=q('v83HomeSuite');if(!sec||!currentUser)return;const today=dayIndexToday();const list=(tasks||[]).filter(t=>Number(t.day)===today);const done=list.filter(t=>t.completed).length;const taskPct=list.length?Math.round(done/list.length*100):0;const todayDate=(typeof todayISO==='function'?todayISO():new Date().toISOString().slice(0,10));const workout=(workoutLogs||[]).filter(l=>String(l.performed_at)===todayDate);const week=minutesWeek();const fd=focusData();const focusWeek=week.reduce((s,k)=>s+(Number(fd.days?.[k])||0),0);const durations=list.filter(t=>!t.completed).reduce((s,t)=>s+durationOf(t),0);const load=Math.min(100,Math.round((durations/600)*100));q('v83HomeTasks').textContent=taskPct+'%';q('v83HomeWorkout').textContent=String(workout.length);q('v83HomeFocus').textContent=`${focusWeek} min`;q('v83HomeLoad').textContent=load+'%';const next=(list.filter(t=>!t.completed).sort((a,b)=>taskPriority(a)-taskPriority(b)||minutes(a)-minutes(b))[0]);q('v83HomeDetail').innerHTML=next?`<div class="v83-row"><div><strong>👉 Siguiente paso</strong><small>${escv(next.title)} · ${String(next.hour).padStart(2,'0')}:${String(next.minute||0).padStart(2,'0')}</small></div><span class="v83-value">${durationOf(next)} min</span></div>`:'<div class="v83-empty">No hay tareas pendientes para hoy. Buen trabajo.</div>'}
+  function focusNext(){if(typeof focusNextTask==='function'){focusNextTask();return}const list=(tasks||[]).filter(t=>Number(t.day)===dayIndexToday()&&!t.completed).sort((a,b)=>taskPriority(a)-taskPriority(b)||minutes(a)-minutes(b));if(!list.length){alert('No tenés tareas pendientes para hoy.');return}if(typeof v32SetSection==='function')v32SetSection('agenda');setTimeout(()=>{const t=list[0];const card=[...document.querySelectorAll('.task')].find(x=>x.querySelector('h4')?.textContent===t.title);card?.scrollIntoView({behavior:'smooth',block:'center'})},250)}
+  function mountAgenda(){const host=document.querySelector('.schedule-block.v32-agenda-pane');if(!host||q('v83AgendaSuite'))return;if(!currentUser)return;const sec=makeCard('v83AgendaSuite',`<div class="v83-head"><div><h3>🧠 Planificador inteligente</h3><p>Te muestra qué conviene priorizar sin mover nada automáticamente.</p></div></div><div id="v83PlannerList" class="v83-list"></div><div class="v83-actions" style="margin-top:10px"><button class="v83-btn primary" id="v83PlanBtn" type="button">✨ Proponer orden de hoy</button></div>`,'v83-suite v32-agenda-pane');host.parentElement?.appendChild(sec);q('v83PlanBtn').onclick=renderPlanner}
+  function renderPlanner(){const c=q('v83PlannerList');if(!c)return;const now=getArgentinaNow?getArgentinaNow():new Date();const nowMin=now.getHours()*60+now.getMinutes();const items=(tasks||[]).filter(t=>Number(t.day)===dayIndexToday()&&!t.completed).sort((a,b)=>taskPriority(a)-taskPriority(b)||Math.abs(minutes(a)-nowMin)-Math.abs(minutes(b)-nowMin));if(!items.length){c.innerHTML='<div class="v83-empty">No hay tareas pendientes hoy.</div>';return}c.innerHTML=items.slice(0,6).map((t,i)=>`<div class="v83-row"><div><strong>${i+1}. ${escv(t.title)}</strong><small>${String(t.hour).padStart(2,'0')}:${String(t.minute||0).padStart(2,'0')} · ${taskPriority(t)===0?'Urgente':taskPriority(t)===1?'Alta':taskPriority(t)===3?'Baja':'Normal'}</small></div><span class="v83-value">${durationOf(t)} min</span></div>`).join('')}
+  function mountWorkout(){const host=q('workoutPanel');if(!host||q('v83WorkoutSuite'))return;if(!currentUser)return;const names=exerciseNames();const sec=makeCard('v83WorkoutSuite',`<div class="v83-head"><div><h3>🏆 Rendimiento y récords</h3><p>Comparación rápida por ejercicio usando tu historial guardado.</p></div></div><div class="v83-two"><div><label style="display:block;font-size:9px;color:var(--muted);margin-bottom:6px">Ejercicio</label><select id="v83WorkoutExercise" class="v83-select"></select></div><div><label style="display:block;font-size:9px;color:var(--muted);margin-bottom:6px">Métrica</label><select id="v83WorkoutMetric" class="v83-select"><option value="volume">Volumen</option><option value="reps">Reps totales</option><option value="weight">Peso</option><option value="rir">RIR</option></select></div></div><div id="v83WorkoutBody" style="margin-top:10px"></div>`);host.appendChild(sec);q('v83WorkoutExercise').innerHTML=names.map(n=>`<option value="${escv(n)}">${escv(n)}</option>`).join('');q('v83WorkoutExercise').addEventListener('change',renderWorkoutInsight);q('v83WorkoutMetric').addEventListener('change',renderWorkoutInsight);renderWorkoutInsight()}
+  function renderWorkoutInsight(){const body=q('v83WorkoutBody');const name=q('v83WorkoutExercise')?.value;if(!body||!name)return;const logs=(workoutLogs||[]).filter(l=>l.exercise_name===name).slice().sort((a,b)=>String(a.performed_at).localeCompare(String(b.performed_at)));if(!logs.length){body.innerHTML='<div class="v83-empty">Todavía no hay registros para este ejercicio.</div>';return}const metric=q('v83WorkoutMetric')?.value||'volume';const values=logs.map(l=>metric==='volume'?volumeOf(l):metric==='reps'?repsTotal(l):metric==='rir'?(rirValue(l)??0):Math.max(...parseSeries(l.weight),0));const latest=values.at(-1);const previous=values.length>1?values.at(-2):null;const delta=previous!==null?latest-previous:null;const best=Math.max(...values);const unit=metric==='volume'?'kg':metric==='weight'?'kg':metric==='rir'?' RIR':' reps';const cls=delta>0?'v83-positive':delta<0?'v83-negative':'v83-neutral';const sign=delta>0?'+':'';body.innerHTML=`<div class="v83-grid"><div class="v83-stat"><strong>${Number(latest.toFixed(1))}${unit}</strong><span>Último</span></div><div class="v83-stat"><strong>${Number(best.toFixed(1))}${unit}</strong><span>Mejor registro</span></div><div class="v83-stat"><strong class="${cls}">${delta===null?'—':sign+Number(delta.toFixed(1))}${delta===null?'':unit}</strong><span>vs. anterior</span></div><div class="v83-stat"><strong>${logs.length}</strong><span>Registros</span></div></div><div class="v83-list" style="margin-top:10px">${logs.slice(-5).reverse().map((l,i)=>{const d=dateFromLog(l);const val=metric==='volume'?volumeOf(l):metric==='reps'?repsTotal(l):metric==='rir'?(rirValue(l)??0):Math.max(...parseSeries(l.weight),0);return `<div class="v83-row"><div><strong>${d?d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit'}):'—'}</strong><small>${l.sets_completed||'-'} series · ${l.reps||'-'} · ${l.weight||'-'} · RIR ${l.rir??'-'}</small></div><span class="v83-value">${Number(val.toFixed(1))}${unit}</span></div>`}).join('')}</div>`}
+  function mountNutrition(){const host=q('nutritionPanel');if(!host||q('v83NutritionSuite'))return;if(!currentUser)return;const sec=makeCard('v83NutritionSuite',`<div class="v83-head"><div><h3>🍽️ Resumen nutricional</h3><p>Balance de lo que registraste hoy frente a tus objetivos.</p></div></div><div class="v83-grid"><div class="v83-stat"><strong id="v83Cal">0</strong><span>kcal</span></div><div class="v83-stat"><strong id="v83Pro">0</strong><span>proteína</span></div><div class="v83-stat"><strong id="v83Car">0</strong><span>carbohidratos</span></div><div class="v83-stat"><strong id="v83Fat">0</strong><span>grasas</span></div></div><div id="v83NutriBars" style="margin-top:10px"></div>`);host.appendChild(sec);renderNutritionInsight()}
+  function renderNutritionInsight(){const sec=q('v83NutritionSuite');if(!sec)return;const meals=(nutritionMeals||[]).filter(m=>Number(m.day)===Number(nutritionDay));const total={calories:0,protein:0,carbs:0,fat:0};meals.forEach(m=>{total.calories+=Number(m.calories)||0;total.protein+=Number(m.protein_g)||0;total.carbs+=Number(m.carbs_g)||0;total.fat+=Number(m.fat_g)||0});q('v83Cal').textContent=Math.round(total.calories);q('v83Pro').textContent=Math.round(total.protein);q('v83Car').textContent=Math.round(total.carbs);q('v83Fat').textContent=Math.round(total.fat);const target=typeof nutritionGoals!=='undefined'?nutritionGoals:{calories:2500,protein:160,carbs:300,fat:70};const rows=[['🔥 Calorías',total.calories,target.calories,'kcal'],['🥩 Proteína',total.protein,target.protein,'g'],['🍚 Carbohidratos',total.carbs,target.carbs,'g'],['🥑 Grasas',total.fat,target.fat,'g']];q('v83NutriBars').innerHTML=rows.map(([l,v,t,u])=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-size:9px"><span>${l}</span><strong>${Math.round(v*10)/10} / ${t} ${u}</strong></div><div class="v83-meter"><span style="width:${t>0?Math.min(100,v/t*100):0}%"></span></div></div>`).join('')}
+  function renderWeekModal(){if(q('v83WeekModal')){q('v83WeekModal').remove();return}const m=document.createElement('div');m.id='v83WeekModal';m.className='v57-overlay';m.innerHTML='<div class="v57-card"><div class="v57-head"><div><strong>📊 Resumen semanal</strong><span>Actividad y constancia de los últimos 7 días.</span></div><button type="button" id="v83WeekClose">×</button></div><div class="v83-week" id="v83WeekBody"></div><div class="v57-note" id="v83WeekNote"></div></div>';document.body.appendChild(m);q('v83WeekClose').onclick=()=>m.remove();const fd=focusData(),keys=minutesWeek();const parts=keys.map(k=>[k,Number(fd.days?.[k])||0,Number(fd.sessions?.[k])||0]);q('v83WeekBody').innerHTML=parts.map(([k,min,s])=>{const d=new Date(k+'T12:00:00');return `<div class="v83-day"><strong>${d.toLocaleDateString('es-AR',{weekday:'short'}).slice(0,3)}</strong><span>${min}</span><small>min · ${s} ses.</small></div>`}).join('');const total=parts.reduce((s,x)=>s+x[1],0);q('v83WeekNote').textContent=`Total de enfoque: ${total} min · promedio: ${Math.round(total/7)} min/día`;}
+  let lastRefreshAt=0;
+  function refresh(){if(!currentUser||q('authScreen')&&!q('authScreen').classList.contains('hidden'))return;if(Date.now()-lastRefreshAt<1500)return;lastRefreshAt=Date.now();mountHome();mountAgenda();mountWorkout();mountNutrition();renderHome();renderPlanner();if(!document.body.classList.contains('v32-training-active'))renderWorkoutInsight();renderNutritionInsight()}
+  function boot(){refresh();setTimeout(refresh,900);setTimeout(refresh,1800);setInterval(()=>{if(!document.hidden)refresh()},15000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refresh()});window.addEventListener('online',refresh);}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+
+/* V85 — mejoras adicionales aisladas: revisión diaria y carga del día. */
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const escv=v=>typeof esc==='function'?esc(v):String(v??'');
+  const mins=t=>(Number(t?.hour)||7)*60+(Number(t?.minute)||0);
+  const dur=t=>Math.max(5,Number(t?.duration_minutes||t?.estimated_minutes||30)||30);
+  function mountDailyReview(){
+    const host=q('dashboard');
+    if(!host||q('v85DailyReview')||!currentUser)return;
+    const sec=document.createElement('section');
+    sec.id='v85DailyReview';sec.className='v85-card';
+    sec.innerHTML=`<div class="v85-head"><div><h3>🧭 Revisión rápida del día</h3><p>Una lectura simple para saber si tu día está equilibrado.</p></div><button class="v85-refresh" id="v85ReviewRefresh" type="button">↻ Actualizar</button></div><div class="v85-review-grid"><div><strong id="v85OpenCount">0</strong><span>pendientes</span></div><div><strong id="v85PlannedMin">0</strong><span>min planificados</span></div><div><strong id="v85FocusMin">0</strong><span>min de enfoque</span></div><div><strong id="v85Status">—</strong><span>estado del día</span></div></div><div class="v85-review-note" id="v85ReviewNote"></div>`;
+    host.appendChild(sec);
+    q('v85ReviewRefresh').onclick=renderDailyReview;
+    renderDailyReview();
+  }
+  function renderDailyReview(){
+    if(!q('v85DailyReview'))return;
+    const idx=typeof getTodayIndex==='function'?getTodayIndex():selectedDay;
+    const dayTasks=(tasks||[]).filter(t=>Number(t.day)===Number(idx));
+    const pending=dayTasks.filter(t=>!t.completed);
+    const totalMin=pending.reduce((s,t)=>s+dur(t),0);
+    let focus=0;
+    try{
+      const key=typeof todayISO==='function'?todayISO():new Date().toISOString().slice(0,10);
+      const raw=localStorage.getItem(`agendaV57:${currentUser?.id||'guest'}:focus`);
+      const d=raw?JSON.parse(raw):{};
+      focus=Number(d?.days?.[key])||0;
+    }catch{}
+    const loadPct=Math.min(100,Math.round(totalMin/600*100));
+    const status=loadPct>=90?'Muy cargado':loadPct>=65?'Cargado':loadPct>=35?'Equilibrado':'Liviano';
+    q('v85OpenCount').textContent=String(pending.length);
+    q('v85PlannedMin').textContent=String(totalMin);
+    q('v85FocusMin').textContent=String(focus);
+    q('v85Status').textContent=status;
+    q('v85ReviewNote').innerHTML=`<span class="v85-dot"></span> ${pending.length?`Tenés ${pending.length} tareas pendientes. `:'No quedan tareas pendientes. '} ${totalMin?`Reservaste aproximadamente ${totalMin} minutos para completarlas.`:'No hay tiempo planificado pendiente.'} ${loadPct>=90?'Conviene dejar margen para imprevistos.':loadPct<35?'Tenés bastante margen para reorganizar el día si aparece algo nuevo.':'La carga parece manejable.'}`;
+  }
+  function bootV85(){
+    const run=()=>{mountDailyReview();renderDailyReview()};
+    if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
+    setInterval(()=>{if(!document.hidden)renderDailyReview()},15000);
+    document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')renderDailyReview()});
+  }
+  bootV85();
+})();
+
+/* V86 — prioridades accionables y resumen de carga. */
+(function(){
+  'use strict';
+  const q=id=>document.getElementById(id);
+  const escv=v=>typeof esc==='function'?esc(v):String(v??'');
+  const mins=t=>(Number(t?.hour)||7)*60+(Number(t?.minute)||0);
+  function pri(t){const p=typeof getPriority==='function'?getPriority(t):String(t?.priority||'normal');return p==='urgent'?0:p==='high'?1:p==='low'?3:2}
+  function duration(t){return Math.max(5,Number(t?.duration_minutes||t?.estimated_minutes||30)||30)}
+  function todayIndex(){return typeof getTodayIndex==='function'?getTodayIndex():Number(selectedDay)||0}
+  function mountPriorities(){
+    const host=q('v85DailyReview');
+    if(!host||q('v86PriorityBlock')||!currentUser)return;
+    const el=document.createElement('div'); el.id='v86PriorityBlock'; el.className='v86-priority-block';
+    el.innerHTML=`<div class="v86-priority-head"><div><strong>🔥 Tus 3 prioridades</strong><small>Las tareas que más conviene resolver hoy.</small></div><button type="button" id="v86PriorityAgenda">Ver agenda</button></div><div id="v86PriorityList" class="v86-priority-list"></div>`;
+    host.appendChild(el);
+    q('v86PriorityAgenda').onclick=()=>{try{v32SetSection?.('agenda')}catch{};setTimeout(()=>q('days')?.scrollIntoView({behavior:'smooth',block:'start'}),100)};
+    renderPriorities();
+  }
+  async function complete(t){
+    if(typeof toggleTaskComplete==='function'){await toggleTaskComplete(t);return;}
+    if(currentUser&&navigator.onLine){const r=await sb.from('tasks').update({completed:true}).eq('id',t.id);if(r.error)throw r.error;t.completed=true;}
+  }
+  function renderPriorities(){
+    const list=q('v86PriorityList'); if(!list)return;
+    const nowMin=new Date().getHours()*60+new Date().getMinutes();const items=(tasks||[]).filter(t=>Number(t.day)===todayIndex()&&!t.completed).sort((a,b)=>pri(a)-pri(b)||Math.abs(mins(a)-nowMin)-Math.abs(mins(b)-nowMin));
+    if(!items.length){list.innerHTML='<div class="v86-empty">🎉 No quedan tareas pendientes para hoy.</div>';return;}
+    list.innerHTML='';
+    items.slice(0,3).forEach((t,i)=>{
+      const row=document.createElement('div'); row.className='v86-priority-row';
+      row.innerHTML=`<div class="v86-priority-num">${i+1}</div><div class="v86-priority-main"><strong>${escv(t.title)}</strong><small>${String(t.hour??7).padStart(2,'0')}:${String(t.minute??0).padStart(2,'0')} · ${duration(t)} min · ${pri(t)===0?'Urgente':pri(t)===1?'Alta':pri(t)===3?'Baja':'Normal'}</small></div><button type="button" class="v86-priority-done" aria-label="Completar ${escv(t.title)}">✓</button>`;
+      row.querySelector('.v86-priority-done').onclick=async()=>{const b=row.querySelector('.v86-priority-done');b.disabled=true;try{await complete(t);renderPriorities();if(typeof renderDailyReview==='function')renderDailyReview();}catch(e){b.disabled=false;alert(e?.message||'No se pudo completar la tarea.')}};
+      list.appendChild(row);
+    });
+  }
+  function bootV86(){const run=()=>{mountPriorities();renderPriorities()};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();setInterval(()=>{if(!document.hidden)renderPriorities()},15000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')renderPriorities()});}
+  bootV86();
+})();
