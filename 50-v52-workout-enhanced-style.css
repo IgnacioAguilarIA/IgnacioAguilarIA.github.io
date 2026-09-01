@@ -1,40 +1,14 @@
-.v52-recap{margin-top:12px;padding:12px;border-radius:15px;background:rgba(168,85,247,.05);border:1px solid rgba(168,85,247,.14)}
-.v52-recap-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;flex-wrap:wrap;margin-bottom:9px}.v52-recap-head strong{font-size:11px}.v52-recap-head span{font-size:9px;color:var(--muted)}
-.v52-recap-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.v52-recap-card{padding:9px;border-radius:11px;background:rgba(15,23,42,.48);border:1px solid rgba(148,163,184,.10)}.v52-recap-card strong{display:block;font-size:14px;color:#dbeafe}.v52-recap-card small{display:block;margin-top:3px;font-size:8px;color:var(--muted)}
-.v52-recap-trend{margin-top:8px;padding:8px 9px;border-radius:10px;background:rgba(59,130,246,.05);border:1px solid rgba(96,165,250,.10);font-size:9px;color:#cbd5e1;line-height:1.4}.v52-recap-trend.up{color:#bbf7d0;background:rgba(34,197,94,.06);border-color:rgba(34,197,94,.14)}.v52-recap-trend.down{color:#fecaca;background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.14)}
-.v52-weekworkout{margin-top:14px;padding:14px;border-radius:18px;background:rgba(15,23,42,.58);border:1px solid rgba(148,163,184,.13)}.v52-ww-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px}.v52-ww-head h3{font-size:13px}.v52-ww-head p{font-size:9px;color:var(--muted);margin-top:3px}.v52-ww-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.v52-ww-card{padding:10px;border-radius:12px;background:rgba(17,24,39,.60);border:1px solid rgba(148,163,184,.10)}.v52-ww-card strong{display:block;font-size:15px;color:#dbeafe}.v52-ww-card span{display:block;margin-top:3px;font-size:8px;color:var(--muted)}.v52-ww-bars{display:flex;align-items:flex-end;gap:6px;height:90px;margin-top:10px;padding:7px 5px 16px;border-radius:12px;background:rgba(2,6,23,.18);border:1px solid rgba(148,163,184,.08)}.v52-ww-bar{flex:1;min-width:8px;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#a78bfa,#7c3aed);position:relative}.v52-ww-bar small{position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);font-size:7px;color:#64748b;white-space:nowrap}.v52-ww-note{margin-top:8px;font-size:8px;color:var(--muted);line-height:1.4}
-body.light .v52-recap{background:#faf5ff;border-color:#e9d5ff}body.light .v52-recap-card,body.light .v52-weekworkout,body.light .v52-ww-card{background:#fff;border-color:#dbe3ee}body.light .v52-recap-card strong,body.light .v52-ww-card strong{color:#0f172a}body.light .v52-recap-trend{background:#eff6ff;border-color:#bfdbfe;color:#475569}body.light .v52-recap-trend.up{background:#f0fdf4;border-color:#bbf7d0;color:#166534}body.light .v52-recap-trend.down{background:#fef2f2;border-color:#fecaca;color:#991b1b}body.light .v52-weekworkout{background:#fff}body.light .v52-ww-bars{background:#f8fafc;border-color:#e2e8f0}
-@media(max-width:700px){.v52-recap-grid,.v52-ww-grid{grid-template-columns:1fr 1fr}.v52-weekworkout{padding:12px}}
 
-/* V97 — feedback táctil para los controles del cronómetro/temporizador */
-#v28TimerStart,
-#v28TimerPause,
-#v28TimerReset{
-  position:relative;
-  transition:transform .12s ease, filter .12s ease, box-shadow .12s ease, opacity .12s ease;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-#v28TimerStart:active,
-#v28TimerPause:active,
-#v28TimerReset:active{
-  transform:scale(.94) translateY(1px);
-  filter:brightness(1.18);
-  box-shadow:0 0 0 3px rgba(255,255,255,.08), 0 6px 18px rgba(0,0,0,.18);
-}
-#v28TimerStart.is-pressed,
-#v28TimerPause.is-pressed,
-#v28TimerReset.is-pressed{
-  animation:v97TimerTap .24s ease;
-}
-@keyframes v97TimerTap{
-  0%{transform:scale(1)}
-  45%{transform:scale(.93) translateY(1px)}
-  100%{transform:scale(1)}
-}
-.v50-copy-done{animation:v97CopyDone .34s ease}
-@keyframes v97CopyDone{
-  0%{transform:scale(1)}
-  50%{transform:scale(1.04)}
-  100%{transform:scale(1)}
-}
+.v50-top3{margin-top:14px;padding:14px;border-radius:18px;background:linear-gradient(135deg,rgba(59,130,246,.08),rgba(34,197,94,.05));border:1px solid rgba(96,165,250,.14)}
+.v50-top3-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap;margin-bottom:10px}.v50-top3-head h3{font-size:14px}.v50-top3-head p{font-size:9px;color:var(--muted);margin-top:3px}
+.v50-top3-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v50-top3-item{padding:10px;border-radius:13px;background:rgba(15,23,42,.60);border:1px solid rgba(148,163,184,.10);cursor:pointer}.v50-top3-item:hover{border-color:rgba(96,165,250,.30)}.v50-top3-rank{font-size:8px;color:#93c5fd;font-weight:900}.v50-top3-title{font-size:10px;font-weight:900;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v50-top3-meta{font-size:8px;color:var(--muted);margin-top:3px;line-height:1.35}.v50-top3-empty{padding:12px;text-align:center;color:var(--muted);font-size:9px;border:1px dashed rgba(148,163,184,.14);border-radius:12px;grid-column:1/-1}
+.v50-prev-perf{margin:10px 0 0;padding:10px 11px;border-radius:12px;background:rgba(255,255,255,.035);border:1px solid rgba(148,163,184,.10);font-size:9px;color:var(--muted);line-height:1.45}.v50-prev-perf strong{color:#dbeafe}.v50-prev-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.v50-prev-btn{padding:7px 9px;border-radius:9px;border:1px solid rgba(96,165,250,.18);background:rgba(59,130,246,.07);color:#bfdbfe;font-size:9px;font-weight:800;cursor:pointer}.v50-prev-btn:hover{border-color:#60a5fa;background:rgba(59,130,246,.12)}
+body.light .v50-top3{background:#f8fafc;border-color:#dbe3ee}body.light .v50-top3-item{background:#fff;border-color:#dbe3ee}body.light .v50-prev-perf{background:#f8fafc;border-color:#dbe3ee}body.light .v50-prev-perf strong{color:#1e3a8a}body.light .v50-prev-btn{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+@media(max-width:700px){.v50-top3-list{grid-template-columns:1fr}.v50-top3-item{padding:11px}}
+
+/* V99: feedback táctil para los controles del cronómetro/temporizador */
+#v28TimerStart,#v28TimerPause,#v28TimerReset{transition:transform .12s ease,box-shadow .16s ease,filter .16s ease;will-change:transform;}
+#v28TimerStart:active,#v28TimerPause:active,#v28TimerReset:active,.v98-timer-press{transform:scale(.94);filter:brightness(1.12);box-shadow:0 0 0 4px rgba(96,165,250,.14),0 8px 20px rgba(0,0,0,.16);}
+@keyframes v99TimerTap{0%{transform:scale(.94)}55%{transform:scale(1.02)}100%{transform:scale(1)}}
+.v98-timer-press{animation:v99TimerTap .24s ease both;}
+@media(prefers-reduced-motion:reduce){#v28TimerStart,#v28TimerPause,#v28TimerReset{transition:none}.v98-timer-press{animation:none;}}

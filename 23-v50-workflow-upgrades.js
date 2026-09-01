@@ -35,60 +35,20 @@
       return log;
     }catch(e){return null}
   }
-  function parseSeriesValues(value){
-    const text=String(value??'').trim();
-    if(!text)return [];
-    // Supports formats such as: S1:8 · S2:10 · S3:9, 8/10/9, 8 · 10 · 9
-    const tagged=[...text.matchAll(/S\s*(\d+)\s*[:=-]\s*(-?\d+(?:[.,]\d+)?)/gi)];
-    if(tagged.length){
-      const out=[];
-      tagged.forEach(m=>{out[Math.max(0,Number(m[1])-1)]=m[2].replace(',', '.')});
-      return out;
-    }
-    return text.split(/\s*[\/|·;,]+\s*/).map(v=>v.trim()).filter(Boolean).map(v=>v.replace(/^S\s*\d+\s*[:=-]?\s*/i,''));
-  }
-
   function copyPrevious(log){
     try{
       const btn=q('v50CopyPrevious');
-      const panel=q('v47SetList');
-      if(!panel)throw new Error('No se encontró el registro actual.');
-      const rows=[...panel.querySelectorAll('.v48-set-row,.v47-set-row')];
-      if(!rows.length)throw new Error('No hay series cargadas para copiar.');
-
-      const reps=parseSeriesValues(log?.reps);
-      const weights=parseSeriesValues(log?.weight);
-      let changed=0;
-      rows.forEach((row,i)=>{
-        const inputs=[...row.querySelectorAll('input')];
-        if(inputs[0] && reps[i]!==undefined){inputs[0].value=String(reps[i]);inputs[0].dispatchEvent(new Event('input',{bubbles:true}));inputs[0].dispatchEvent(new Event('change',{bubbles:true}));changed++;}
-        if(inputs[1] && weights.length){
-          const w=weights[i]!==undefined?weights[i]:weights.length===1?weights[0]:undefined;
-          if(w!==undefined){inputs[1].value=String(w);inputs[1].dispatchEvent(new Event('input',{bubbles:true}));inputs[1].dispatchEvent(new Event('change',{bubbles:true}));}
-        }
-      });
-
-      // Persist through the native training bridge when it exists, without rebuilding the view.
-      try{window.__agendaTrainingActualsState?.save?.();}catch(_){}
-      try{if(typeof window.__agendaTrainingSaveVisible==='function')window.__agendaTrainingSaveVisible();}catch(_){}
-
-      if(!changed)throw new Error('El registro anterior no contiene reps por serie compatibles.');
-      if(btn){btn.textContent='✓ Copiado';btn.classList.add('v50-copy-done');setTimeout(()=>{btn.textContent='↗ Copiar reps/peso al registro actual';btn.classList.remove('v50-copy-done')},1400);}
-    }catch(err){
-      const btn=q('v50CopyPrevious');
-      if(btn){btn.textContent='⚠ No se pudo copiar';setTimeout(()=>{btn.textContent='↗ Copiar reps/peso al registro actual'},1600);}
-      console.warn('Agenda FICH: no se pudo copiar el registro anterior:',err);
-    }
+      const actual=window.__agendaTrainingActuals;
+      // Prefer the native session data exposed below; fall back to inputs.
+      if(actual&&typeof actual.fillPrevious==='function'){actual.fillPrevious(log);if(btn)btn.textContent='✓ Copiado';setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1400);return;}
+      const panel=q('v47SetList');if(!panel)return;
+      const rows=[...panel.querySelectorAll('.v48-set-row,.v47-set-row')];const reps=(String(log.reps||'').split('/').map(x=>x.trim()).filter(Boolean));const weight=String(log.weight||'').trim();
+      rows.forEach((row,i)=>{const inputs=[...row.querySelectorAll('input')];if(inputs[0]&&!inputs[0].value&&reps[i])inputs[0].value=reps[i];if(inputs[1]&&!inputs[1].value&&weight)inputs[1].value=weight;inputs.forEach(x=>x.dispatchEvent(new Event('input',{bubbles:true})))});
+      if(btn)btn.textContent='✓ Copiado';setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1400);
+    }catch(_){ }
   }
   function bind(){
     top3();setInterval(top3,30000);window.addEventListener('focus',top3);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')top3()});window.addEventListener('online',top3);
-    ['v28TimerStart','v28TimerPause','v28TimerReset'].forEach(id=>{
-      const b=q(id);
-      if(!b)return;
-      const press=()=>{b.classList.remove('is-pressed');void b.offsetWidth;b.classList.add('is-pressed')};
-      b.addEventListener('pointerdown',press,{passive:true});
-      b.addEventListener('animationend',()=>b.classList.remove('is-pressed'));
-    });
     const original=document.getElementById('v28CurrentName');
     if(original){new MutationObserver(()=>setTimeout(currentTrainingState,0)).observe(original,{childList:true,characterData:true,subtree:true});}
     setInterval(()=>{if(document.getElementById('v28WorkoutOverlay')?.classList.contains('show'))currentTrainingState()},2000);
