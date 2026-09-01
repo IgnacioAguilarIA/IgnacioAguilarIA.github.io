@@ -39,14 +39,31 @@
     try{
       const btn=q('v50CopyPrevious');
       const actual=window.__agendaTrainingActuals;
-      // Prefer the native session data exposed below; fall back to inputs.
-      if(actual&&typeof actual.fillPrevious==='function'){actual.fillPrevious(log);if(btn)btn.textContent='✓ Copiado';setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1400);return;}
-      const panel=q('v47SetList');if(!panel)return;
-      const rows=[...panel.querySelectorAll('.v48-set-row,.v47-set-row')];const reps=(String(log.reps||'').split('/').map(x=>x.trim()).filter(Boolean));const weight=String(log.weight||'').trim();
-      rows.forEach((row,i)=>{const inputs=[...row.querySelectorAll('input')];if(inputs[0]&&!inputs[0].value&&reps[i])inputs[0].value=reps[i];if(inputs[1]&&!inputs[1].value&&weight)inputs[1].value=weight;inputs.forEach(x=>x.dispatchEvent(new Event('input',{bubbles:true})))});
-      if(btn)btn.textContent='✓ Copiado';setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1400);
-    }catch(_){ }
+      if(actual&&typeof actual.fillPrevious==='function'){
+        actual.fillPrevious(log);
+        if(btn){btn.textContent='✓ Pegado en Registro de lo que hiciste';setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1600);}
+        return;
+      }
+      const panel=q('v47SetList');
+      if(!panel){if(btn)btn.textContent='⚠️ Abrí el registro actual primero';return;}
+      const parseSeries=(value)=>{
+        const out=[]; const text=String(value??'').trim(); if(!text)return out;
+        text.split('·').forEach(part=>{const m=part.match(/S\s*(\d+)\s*:\s*(.*)/i);if(m){const n=Number(m[1])-1;if(n>=0)out[n]=m[2].trim()}else if(part.trim())out.push(part.trim())});
+        if(out.length===1&&text.includes('/')) text.split('/').forEach((v,i)=>{if(v.trim())out[i]=v.trim()});
+        return out;
+      };
+      const reps=parseSeries(log?.reps),weights=parseSeries(log?.weight);
+      const rows=[...panel.querySelectorAll('.v48-set-row,.v47-set-row')];
+      rows.forEach((row,i)=>{
+        const inputs=[...row.querySelectorAll('input')];
+        if(inputs[0]&&reps[i]!==undefined&&reps[i]!=='-') inputs[0].value=reps[i];
+        if(inputs[1]){const w=weights[i]??(weights.length===1?weights[0]:'');if(w&&w!=='-')inputs[1].value=w;}
+        inputs.forEach(input=>input.dispatchEvent(new Event('input',{bubbles:true})));
+      });
+      if(btn){btn.textContent='✓ Pegado en Registro de lo que hiciste';setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1600);}
+    }catch(err){console.warn('No se pudieron copiar los datos anteriores:',err);const btn=q('v50CopyPrevious');if(btn)btn.textContent='⚠️ No se pudo copiar';}
   }
+
   function bind(){
     top3();setInterval(top3,30000);window.addEventListener('focus',top3);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')top3()});window.addEventListener('online',top3);
     const original=document.getElementById('v28CurrentName');
