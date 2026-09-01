@@ -98,109 +98,47 @@
   function updateFull(){const a=list();if(!a.length)return;captureVisibleActuals();save();window.__agendaTrainingActuals={fillPrevious:function(log){try{ensureActuals();const data=activeSession.actuals[index];const reps=String(log?.reps||'').split('/').map(x=>x.trim()).filter(Boolean);for(let i=0;i<data.reps.length;i++){if(reps[i])data.reps[i]=reps[i];if(log?.weight)data.weight[i]=String(log.weight);if(log?.rir!==null&&log?.rir!==undefined&&log?.rir!=='')data.rir[i]=String(log.rir);}save();renderRepTracker();updateFull()}catch(_){}}};index=Math.max(0,Math.min(index,a.length-1));const ex=a[index];q('v28WorkoutDayLabel').textContent=`${DAYS[workoutDay]} · ${a.length} ejercicios`;q('v28StepLabel').textContent=`Ejercicio ${index+1} de ${a.length}`;q('v28CurrentName').textContent=ex.exercise||'Ejercicio';const chips=q('v28CurrentChips');chips.innerHTML='';[['Series',ex.sets],['Reps',ex.reps],['RIR',ex.rir],['Descanso',ex.rest_seconds?`${ex.rest_seconds}s`:null],['Peso',ex.weight],['Tempo',ex.tempo]].forEach(([k,v])=>{if(v===null||v===undefined||v==='')return;const c=document.createElement('span');c.className='v28-chip';c.textContent=`${k}: ${v}`;chips.appendChild(c)});q('v28CurrentNote').textContent=ex.notes||'';q('v28CurrentNote').style.display=ex.notes?'block':'none';q('v28PrevBtn').disabled=index===0;q('v28NextBtn').disabled=index===a.length-1;q('v28ProgressBar').style.width=`${Math.round((index+1)/a.length*100)}%`;const s=q('v28SessionList');s.innerHTML='';a.forEach((e,i)=>{const p=document.createElement('div');p.className='v28-session-pill'+(i===index?' active':'');const done=activeSession?.loggedIndexes?.includes(i);p.textContent=`${i+1}. ${e.exercise||'Ejercicio'}${done?' ✓':''}`;p.onclick=()=>{index=i;save();updateFull()};s.appendChild(p)});q('v28TimerDisplay').textContent=fmt(timerSeconds);q('v28SessionClock').textContent=fmt(sessionSeconds);updateMini();renderRepTracker()}
   async function wake(){try{if('wakeLock' in navigator)wakeLock=await navigator.wakeLock.request('screen')}catch(_){}}
   async function unwake(){try{if(wakeLock){await wakeLock.release();wakeLock=null}}catch(_){}}
-  let timerFrame=null;
-  let sessionFrame=null;
-  function renderClocksOnly(){
-    const timer=q('v28TimerDisplay'),session=q('v28SessionClock');
-    if(timer)timer.textContent=fmt(timerSeconds);
-    if(session)session.textContent=fmt(sessionSeconds);
-    updateMini();
-  }
-  function stopTimerLoop(){
-    if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
-    if(timerFrame){cancelAnimationFrame(timerFrame);timerFrame=null;}
-  }
-  function scheduleTimerLoop(){
-    stopTimerLoop();
-    const tick=()=>{
-      syncTimer(Date.now());
-      if(timerRunning){
-        timerFrame=requestAnimationFrame(tick);
-      }
-    };
-    timerFrame=requestAnimationFrame(tick);
-    timerInterval=setInterval(()=>{if(timerRunning)syncTimer(Date.now())},1000);
-  }
+  function renderClocksOnly(){const timer=q('v28TimerDisplay'),session=q('v28SessionClock');if(timer)timer.textContent=fmt(timerSeconds);if(session)session.textContent=fmt(sessionSeconds);updateMini()}
   function syncTimer(now=Date.now()){
-    if(!timerRunning){renderClocksOnly();return false;}
-    const started=Number(timerStartedAt);
-    const elapsed=Number.isFinite(started)&&started>0?Math.max(0,Math.floor((now-started)/1000)):0;
-    if(timerMode==='countdown'){
-      const next=Math.max(0,Math.floor(Number(timerBaseSeconds||0)-elapsed));
-      timerSeconds=next;
-      if(next<=0){
-        timerSeconds=0;
-        timerRunning=false;
-        stopTimerLoop();
-        timerStartedAt=null;
-        timerBaseSeconds=0;
-        save();
-        renderClocksOnly();
-        if(navigator.vibrate)try{navigator.vibrate([180,90,180])}catch(_){}
-        return false;
-      }
-    }else{
-      timerSeconds=Math.max(0,Math.floor(Number(timerBaseSeconds||0)+elapsed));
+    if(!timerRunning){renderClocksOnly();return false}
+    const elapsed=Math.max(0,Math.floor((now-Number(timerStartedAt||now))/1000));
+    let next=timerMode==='countdown'?Number(timerBaseSeconds||0)-elapsed:Number(timerBaseSeconds||0)+elapsed;
+    if(timerMode==='countdown' && next<=0){
+      timerSeconds=0;timerRunning=false;clearInterval(timerInterval);timerInterval=null;timerStartedAt=null;timerBaseSeconds=0;
+      save();renderClocksOnly();
+      if(navigator.vibrate)try{navigator.vibrate([180,90,180])}catch(_){}
+      return false
     }
+    timerSeconds=Math.max(0,Math.floor(next));
     renderClocksOnly();
-    return true;
+    return true
   }
   function pauseTimer(){
-    if(timerRunning)syncTimer(Date.now());
-    timerRunning=false;
-    stopTimerLoop();
-    timerStartedAt=null;
-    timerBaseSeconds=timerSeconds;
-    save();
-    renderClocksOnly();
+    if(timerRunning)syncTimer();
+    timerRunning=false;clearInterval(timerInterval);timerInterval=null;timerStartedAt=null;timerBaseSeconds=timerSeconds;save();renderClocksOnly()
   }
   function startTimer(){
-    if(timerRunning){syncTimer(Date.now());return;}
-    if(timerMode==='countdown'&&timerSeconds<=0){
-      const configured=Math.max(0,Number(list()[index]?.rest_seconds)||0);
-      timerSeconds=configured>0?configured:60;
-    }
+    if(timerRunning)return;
+    if(timerMode==='countdown'&&timerSeconds<=0)timerSeconds=Math.max(0,Number(list()[index]?.rest_seconds)||0);
     timerBaseSeconds=Math.max(0,Math.floor(Number(timerSeconds)||0));
-    timerStartedAt=Date.now();
-    timerRunning=true;
-    save();
-    scheduleTimerLoop();
-    syncTimer(Date.now());
+    timerStartedAt=Date.now();timerRunning=true;save();
+    clearInterval(timerInterval);
+    timerInterval=setInterval(()=>syncTimer(),250);
+    syncTimer();
   }
   function resetTimer(){
-    stopTimerLoop();
-    timerRunning=false;
-    timerStartedAt=null;
-    timerSeconds=timerMode==='countdown'?Math.max(0,Number(list()[index]?.rest_seconds)||60):0;
-    timerBaseSeconds=timerSeconds;
-    save();
-    renderClocksOnly();
+    clearInterval(timerInterval);timerInterval=null;timerRunning=false;timerStartedAt=null;
+    timerSeconds=timerMode==='countdown'?Math.max(0,Number(list()[index]?.rest_seconds)||0):0;
+    timerBaseSeconds=timerSeconds;save();renderClocksOnly();
   }
-  function setMode(mode){
-    timerMode=mode;
-    q('v28TimerModeStopwatch')?.classList.toggle('active',mode==='stopwatch');
-    q('v28TimerModeCountdown')?.classList.toggle('active',mode==='countdown');
-    resetTimer();
-  }
+  function setMode(mode){timerMode=mode;q('v28TimerModeStopwatch').classList.toggle('active',mode==='stopwatch');q('v28TimerModeCountdown').classList.toggle('active',mode==='countdown');resetTimer()}
   function startClock(){
     if(sessionInterval)return;
     if(!sessionStartedAt)sessionStartedAt=Date.now()-sessionSeconds*1000;
-    const tick=()=>{
-      if(!activeSession){stopClock();return;}
-      sessionSeconds=Math.max(0,Math.floor((Date.now()-sessionStartedAt)/1000));
-      save();
-      renderClocksOnly();
-      sessionFrame=requestAnimationFrame(tick);
-    };
-    sessionFrame=requestAnimationFrame(tick);
-    sessionInterval=setInterval(()=>{
-      if(activeSession){sessionSeconds=Math.max(0,Math.floor((Date.now()-sessionStartedAt)/1000));save();renderClocksOnly();}
-    },1000);
+    const tick=()=>{sessionSeconds=Math.max(0,Math.floor((Date.now()-sessionStartedAt)/1000));save();renderClocksOnly()};
+    sessionInterval=setInterval(tick,250);tick();
   }
-  function stopClock(){
-    clearInterval(sessionInterval);sessionInterval=null;
-    if(sessionFrame){cancelAnimationFrame(sessionFrame);sessionFrame=null;}
-  }
+  function stopClock(){clearInterval(sessionInterval);sessionInterval=null}
   function newSession(){activeSession={id:`training-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,userId:currentUser?.id||null,day:Number(workoutDay)||0,performedAt:today(),startedAt:Date.now(),currentIndex:0,exerciseIds:list().map(x=>x.id).filter(Boolean),sessionSeconds:0,timerMode:'stopwatch',timerSeconds:0,timerRunning:false,timerStartedAt:null,timerBaseSeconds:0,loggedIndexes:[],actuals:[]};index=0;sessionSeconds=0;sessionStartedAt=Date.now();timerMode='stopwatch';timerSeconds=0;timerRunning=false;timerStartedAt=null;timerBaseSeconds=0;save()}
   function restore(s){activeSession=s;workoutDay=Number(s.day)||workoutDay;index=Math.max(0,Number(s.currentIndex)||0);const elapsed=Math.max(0,Math.floor((Date.now()-Number(s.startedAt||Date.now()))/1000));sessionSeconds=Math.max(Number(s.sessionSeconds)||0,elapsed);sessionStartedAt=Date.now()-sessionSeconds*1000;timerMode=s.timerMode||'stopwatch';timerRunning=!!s.timerRunning;timerBaseSeconds=Math.max(0,Math.floor(Number(s.timerBaseSeconds ?? s.timerSeconds ?? 0)));timerStartedAt=timerRunning?Number(s.timerStartedAt)||Date.now():null;timerSeconds=timerRunning&&timerStartedAt?(timerMode==='countdown'?Math.max(0,timerBaseSeconds-Math.floor((Date.now()-timerStartedAt)/1000)):timerBaseSeconds+Math.floor((Date.now()-timerStartedAt)/1000)):Number(s.timerSeconds)||0;activeSession.loggedIndexes=Array.isArray(s.loggedIndexes)?s.loggedIndexes:[];activeSession.actuals=Array.isArray(s.actuals)?s.actuals:[];ensureActuals();restoreSeriesDone();save()}
   function buildWorkoutLogPayload(ex,actual,sessionId,performedAt){const entered=Array.isArray(actual?.reps)?actual.reps.map(v=>String(v??'').trim()):[];const weights=Array.isArray(actual?.weight)?actual.weight.map(v=>String(v??'').trim()):[];const rirs=Array.isArray(actual?.rir)?actual.rir.map(v=>String(v??'').trim()):[];const done=Array.isArray(actual?.done)?actual.done.filter(Boolean).length:0;const repsText=entered.some(Boolean)?entered.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):(ex?.reps||'');const weightText=weights.some(Boolean)?weights.map((v,j)=>`S${j+1}:${v||'-'}`).join(' · '):(ex?.weight||'');const numericRirs=rirs.map(Number).filter(Number.isFinite);const rirAvg=numericRirs.length?Math.round(numericRirs.reduce((a,b)=>a+b,0)/numericRirs.length*10)/10:(ex?.rir===''||ex?.rir===null||ex?.rir===undefined?null:Number(ex?.rir));const volume=entered.reduce((sum,v,j)=>{const rr=Number(v),ww=Number(weights[j]);return sum+(Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0?rr*ww:0)},0);const detail=entered.some(Boolean)||weights.some(Boolean)||rirs.some(Boolean)||done?`Registro por series: ${entered.map((r,j)=>`S${j+1} ${r||'-'} reps · ${weights[j]||'-'} kg · RIR ${rirs[j]||'-'}`).join(' | ')} · Volumen ${Math.round(volume*10)/10} kg · Sesión ${sessionId}`:`Registro automático de sesión · ${sessionId}`;return{user_id:currentUser.id,exercise_id:ex.id,exercise_name:ex.exercise,performed_at:performedAt,sets_completed:done||Number(ex.sets)||null,reps:repsText,weight:weightText,rir:rirAvg,notes:detail};}

@@ -1,1008 +1,1204 @@
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<meta content="#0f172a" name="theme-color"/>
-<meta content="yes" name="apple-mobile-web-app-capable"/>
-<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
-<meta content="Agenda FICH" name="apple-mobile-web-app-title"/>
-<link href="./manifest.webmanifest" rel="manifest"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Agenda FICH">
+<link rel="manifest" href="./manifest.webmanifest">
 <title>Agenda FICH</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <!-- split-css:00-inline-style-00.css -->
-<link href="./css/00-inline-style-00.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/00-inline-style-00.css">
 <!-- split-css:01-v22-top-search-style.css -->
-<link href="./css/01-v22-top-search-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/01-v22-top-search-style.css">
 <!-- split-css:02-v16-settings-style.css -->
-<link href="./css/02-v16-settings-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/02-v16-settings-style.css">
 <!-- split-css:03-v15-final-fixes.css -->
-<link href="./css/03-v15-final-fixes.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/03-v15-final-fixes.css">
+
+
 <!-- split-css:04-v22-search-fix.css -->
-<link href="./css/04-v22-search-fix.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/04-v22-search-fix.css">
 <!-- split-css:05-v21-clean-import-style.css -->
-<link href="./css/05-v21-clean-import-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/05-v21-clean-import-style.css">
 <!-- split-css:06-v22-focus-remove.css -->
-<link href="./css/06-v22-focus-remove.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/06-v22-focus-remove.css">
+
 <!-- split-css:07-v23-search-professional.css -->
-<link href="./css/07-v23-search-professional.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/07-v23-search-professional.css">
+
 <!-- split-css:08-v24-upgrades.css -->
-<link href="./css/08-v24-upgrades.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/08-v24-upgrades.css">
+
 <!-- split-css:09-v25-upgrades-style.css -->
-<link href="./css/09-v25-upgrades-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/09-v25-upgrades-style.css">
+
+
 <!-- split-css:10-v26-final-mobile-fix.css -->
-<link href="./css/10-v26-final-mobile-fix.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/10-v26-final-mobile-fix.css">
 <!-- split-css:11-v27-polish.css -->
-<link href="./css/11-v27-polish.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/11-v27-polish.css">
 <!-- split-css:12-v28-workout-mode-style.css -->
-<link href="./css/12-v28-workout-mode-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/12-v28-workout-mode-style.css">
+
 <!-- split-css:13-v31-persistent-training-css.css -->
-<link href="./css/13-v31-persistent-training-css.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/13-v31-persistent-training-css.css">
+
+
 <!-- split-css:14-v32-final-layout.css -->
-<link href="./css/14-v32-final-layout.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/14-v32-final-layout.css">
+
+
 <!-- split-css:15-final-single-floating-nav.css -->
-<link href="./css/15-final-single-floating-nav.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/15-final-single-floating-nav.css">
+
 <!-- split-css:16-v33-section-isolation.css -->
-<link href="./css/16-v33-section-isolation.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/16-v33-section-isolation.css">
+
+
 <!-- split-css:17-v44-home-only-fix.css -->
-<link href="./css/17-v44-home-only-fix.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/17-v44-home-only-fix.css">
+
 <!-- split-css:18-v48-training-actuals-style.css -->
-<link href="./css/18-v48-training-actuals-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/18-v48-training-actuals-style.css">
 <!-- split-css:19-v49-training-cancel-comparison.css -->
-<link href="./css/19-v49-training-cancel-comparison.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/19-v49-training-cancel-comparison.css">
+
 <!-- split-css:20-v54-template-style.css -->
-<link href="./css/20-v54-template-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/20-v54-template-style.css">
+
 <!-- split-css:21-v57-focus-task-style.css -->
-<link href="./css/21-v57-focus-task-style.css" rel="stylesheet"/>
-<!-- split-css:22-v58-training-input-fix.css -->
-<link href="./css/22-v58-training-input-fix.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/21-v57-focus-task-style.css">
+
+  <!-- split-css:22-v58-training-input-fix.css -->
+<link rel="stylesheet" href="./css/22-v58-training-input-fix.css">
+
 <!-- split-css:23-v58-persistence-fix-style.css -->
-<link href="./css/23-v58-persistence-fix-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/23-v58-persistence-fix-style.css">
 <!-- split-js:00-v58-persistence-fix-note.js -->
-<script src="./js/00-v58-persistence-fix-note.js"></script>
+<script src="./js/00-v58-persistence-fix-note.js" defer></script>
+
+
 <!-- split-css:24-v59-training-editor-style.css -->
-<link href="./css/24-v59-training-editor-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/24-v59-training-editor-style.css">
 <!-- split-js:01-v59-training-editor-fix.js -->
-<script src="./js/01-v59-training-editor-fix.js"></script>
+<script src="./js/01-v59-training-editor-fix.js" defer></script>
+
 <!-- split-css:25-v60-training-fixes.css -->
-<link href="./css/25-v60-training-fixes.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/25-v60-training-fixes.css">
 <!-- split-css:26-v61-training-series-fix.css -->
-<link href="./css/26-v61-training-series-fix.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/26-v61-training-series-fix.css">
 <!-- split-js:02-v61-training-series-fix-script.js -->
-<script src="./js/02-v61-training-series-fix-script.js"></script>
+<script src="./js/02-v61-training-series-fix-script.js" defer></script>
+
 <!-- split-css:27-v62-productivity-style.css -->
-<link href="./css/27-v62-productivity-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/27-v62-productivity-style.css">
+
 <!-- split-css:28-v63-progress-metric-style.css -->
-<link href="./css/28-v63-progress-metric-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/28-v63-progress-metric-style.css">
 <!-- split-css:29-v78-training-finish-style.css -->
-<link href="./css/29-v78-training-finish-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/29-v78-training-finish-style.css">
+
 <!-- split-css:30-agenda-structure-guard.css -->
-<link href="./css/30-agenda-structure-guard.css" rel="stylesheet"/>
-<link href="./css/55-v87-personal-suite.css" rel="stylesheet"/>
-<link href="./css/56-v89-weather.css" rel="stylesheet"/>
-<link href="./css/57-v93-training-insights.css" rel="stylesheet"/>
-<link href="./css/58-v94-rest-tracking.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/30-agenda-structure-guard.css">
+<link rel="stylesheet" href="./css/55-v87-personal-suite.css">
+<link rel="stylesheet" href="./css/56-v89-weather.css">
+<link rel="stylesheet" href="./css/57-v93-training-insights.css">
+<link rel="stylesheet" href="./css/58-v94-rest-tracking.css">
 </head>
 <body>
 <section id="authScreen">
-<div class="auth-card">
-<h1>📅 Agenda FICH</h1>
-<p>Iniciá sesión para guardar tus tareas y fechas personales en la nube.</p>
-<div class="auth-tabs">
-<button class="auth-tab active" id="loginTab">Iniciar sesión</button>
-<button class="auth-tab" id="registerTab">Crear cuenta</button>
-</div>
-<form id="authForm">
-<div class="field"><label>Email</label><input class="input" id="authEmail" required="" type="email"/></div>
-<div class="field"><label>Contraseña</label><input class="input" id="authPassword" minlength="6" required="" type="password"/></div>
-<button class="primary" id="authSubmit">Entrar</button>
-</form>
-<div class="msg" id="authMsg"></div>
-</div>
+  <div class="auth-card">
+    <h1>📅 Agenda FICH</h1>
+    <p>Iniciá sesión para guardar tus tareas y fechas personales en la nube.</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="loginTab">Iniciar sesión</button>
+      <button class="auth-tab" id="registerTab">Crear cuenta</button>
+    </div>
+    <form id="authForm">
+      <div class="field"><label>Email</label><input class="input" id="authEmail" type="email" required></div>
+      <div class="field"><label>Contraseña</label><input class="input" id="authPassword" type="password" minlength="6" required></div>
+      <button class="primary" id="authSubmit">Entrar</button>
+    </form>
+    <div class="msg" id="authMsg"></div>
+  </div>
 </section>
-<section class="hidden" id="app">
-<div class="topbar">
-<div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
-<div class="userbar"><button aria-label="Buscar" class="top-search-btn" id="topSearchBtn" type="button">🔎 <span>Buscar</span></button><button class="install-app ghost topbar-hidden" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden" id="refreshStatus">Listo</span><span class="user-email topbar-hidden" id="userEmail"></span><button aria-label="Abrir ajustes" class="ghost" id="settingsTopBtn" type="button">⚙</button><button class="ghost topbar-hidden" id="logoutBtn">Salir</button></div>
-</div>
-<div class="days" data-v33-pane="agenda" id="days"></div>
+
+<section id="app" class="hidden">
+  <div class="topbar">
+    <div class="brand">Agenda FICH<small>Tu agenda personal + calendario compartido</small></div>
+    <div class="userbar"><button class="top-search-btn" id="topSearchBtn" type="button" aria-label="Buscar">🔎 <span>Buscar</span></button><button class="install-app ghost topbar-hidden" id="installAppBtn">📲 Instalar</button><button class="reminder-btn topbar-hidden" id="reminderBtn">🔔 Recordatorios</button><span class="refresh-status topbar-hidden" id="refreshStatus">Listo</span><span class="user-email topbar-hidden" id="userEmail"></span><button class="ghost" id="settingsTopBtn" type="button" aria-label="Abrir ajustes">⚙</button><button class="ghost topbar-hidden" id="logoutBtn">Salir</button></div>
+  </div>
+
+  <div class="days" id="days" data-v33-pane="agenda"></div>
+
 <div class="v32-section-nav" id="v32SectionNav">
-<button class="v32-section-btn active" data-v32-section="home" type="button">🏠 Inicio</button>
-<button class="v32-section-btn" data-v32-section="agenda" type="button">🕒 Agenda</button>
-<button class="v32-section-btn" data-v32-section="calendar" type="button">📅 Calendario</button>
-<button class="v32-section-btn" data-v32-section="workout" type="button">🏋️ Entrenamiento</button>
-<button class="v32-section-btn" data-v32-section="nutrition" type="button">🍽️ Alimentación</button>
+  <button class="v32-section-btn active" data-v32-section="home" type="button">🏠 Inicio</button>
+  <button class="v32-section-btn" data-v32-section="agenda" type="button">🕒 Agenda</button>
+  <button class="v32-section-btn" data-v32-section="calendar" type="button">📅 Calendario</button>
+  <button class="v32-section-btn" data-v32-section="workout" type="button">🏋️ Entrenamiento</button>
+  <button class="v32-section-btn" data-v32-section="nutrition" type="button">🍽️ Alimentación</button>
 </div>
+
+
 <div class="v25-goals" id="v25Goals">
-<div class="v25-goal-card">
-<h4>📚 Tareas</h4>
-<div class="v25-goal-value" id="v25TaskPct">0%</div>
-<div class="v25-goal-sub" id="v25TaskSub">0 / 0 completadas</div>
-<div class="v25-bar"><span id="v25TaskBar" style="width:0%"></span></div>
+  <div class="v25-goal-card">
+    <h4>📚 Tareas</h4>
+    <div class="v25-goal-value" id="v25TaskPct">0%</div>
+    <div class="v25-goal-sub" id="v25TaskSub">0 / 0 completadas</div>
+    <div class="v25-bar"><span id="v25TaskBar" style="width:0%"></span></div>
+  </div>
+  <div class="v25-goal-card">
+    <h4>🏋️ Entrenamiento</h4>
+    <div class="v25-goal-value" id="v25WorkoutValue">0</div>
+    <div class="v25-goal-sub" id="v25WorkoutSub">sesiones hoy</div>
+    <div class="v25-bar"><span id="v25WorkoutBar" style="width:0%"></span></div>
+  </div>
+  <div class="v25-goal-card">
+    <h4>🍽️ Alimentación</h4>
+    <div class="v25-goal-value" id="v25MealValue">0 / 6</div>
+    <div class="v25-goal-sub" id="v25MealSub">comidas cargadas</div>
+    <div class="v25-bar"><span id="v25MealBar" style="width:0%"></span></div>
+  </div>
+  <div class="v25-goal-card">
+    <h4>🔥 Racha</h4>
+    <div class="v25-goal-value" id="v25StreakValue">0 días</div>
+    <div class="v25-goal-sub">actividad consecutiva</div>
+    <div class="v25-goal-actions">
+      <button class="v25-btn primary" id="v25QuickAddBtn" type="button">＋ Rápido</button>
+    </div>
+  </div>
 </div>
-<div class="v25-goal-card">
-<h4>🏋️ Entrenamiento</h4>
-<div class="v25-goal-value" id="v25WorkoutValue">0</div>
-<div class="v25-goal-sub" id="v25WorkoutSub">sesiones hoy</div>
-<div class="v25-bar"><span id="v25WorkoutBar" style="width:0%"></span></div>
-</div>
-<div class="v25-goal-card">
-<h4>🍽️ Alimentación</h4>
-<div class="v25-goal-value" id="v25MealValue">0 / 6</div>
-<div class="v25-goal-sub" id="v25MealSub">comidas cargadas</div>
-<div class="v25-bar"><span id="v25MealBar" style="width:0%"></span></div>
-</div>
-<div class="v25-goal-card">
-<h4>🔥 Racha</h4>
-<div class="v25-goal-value" id="v25StreakValue">0 días</div>
-<div class="v25-goal-sub">actividad consecutiva</div>
-<div class="v25-goal-actions">
-<button class="v25-btn primary" id="v25QuickAddBtn" type="button">＋ Rápido</button>
-</div>
-</div>
-</div>
-<div class="reminder-panel" id="reminderPanel">
-<div class="reminder-head">
-<div><h3>🔔 Recordatorios</h3><p>Recibí avisos de tus próximas tareas y comidas. Necesitás dejar esta página abierta para recibirlos.</p></div>
-<button class="reminder-close" id="reminderClose">×</button>
-</div>
-<div class="reminder-card">
-<div class="reminder-row">
-<div><div class="reminder-label">Avisar con anticipación</div><div class="reminder-sub">Antes del horario de la tarea o comida.</div></div>
-<select class="reminder-select" id="reminderLead"><option value="0">A la hora</option><option value="5">5 min</option><option selected="" value="10">10 min</option><option value="15">15 min</option><option value="30">30 min</option></select>
-</div>
-</div>
-<button class="reminder-enable" id="reminderEnable">Activar recordatorios</button>
-<div class="next-reminder" id="nextReminder">No hay próximos recordatorios.</div>
-<div class="reminder-note">En algunos navegadores las notificaciones requieren permiso. El navegador también puede bloquearlas si la página no está abierta.</div>
-</div>
-<main class="container">
-<div class="notice" data-v33-pane="home" id="notice"><strong id="noticeTitle">Aviso</strong><div id="noticeText"></div></div>
-<div class="stats" data-v33-pane="home">
-<div class="stat"><div class="stat-number" id="totalTasks">0</div><div class="stat-label">Tareas</div></div>
-<div class="stat"><div class="stat-number" id="todayTasks">0</div><div class="stat-label">Hoy</div></div>
-<div class="stat"><div class="stat-number" id="freeHours">16</div><div class="stat-label">Horas libres</div></div>
-</div>
-<section class="dashboard" data-v33-pane="home" id="dashboard">
-<div class="dashboard-head">
-<div>
-<h2>Resumen de hoy</h2>
-<p>Una vista rápida de tus tareas, entrenamiento y alimentación.</p>
-</div>
-<div class="dashboard-date" id="dashboardDate">Hoy</div>
-</div>
-<div class="dashboard-grid">
-<div class="dashboard-card">
-<h3>📚 Próxima tarea</h3>
-<div class="dashboard-main" id="dashNextTask">Sin tareas</div>
-<div class="dashboard-sub" id="dashNextTaskMeta">Tu agenda está libre por ahora.</div>
-</div>
-<div class="dashboard-card">
-<h3>🏋️ Entrenamiento</h3>
-<div class="dashboard-main" id="dashWorkout">Sin rutina cargada</div>
-<div class="dashboard-sub" id="dashWorkoutMeta">Podés cargar tu rutina desde Entrenamientos.</div>
-<div class="dashboard-chip" id="dashWorkoutChip">0 ejercicios</div>
-</div>
-<div class="dashboard-card">
-<h3>🍽️ Alimentación</h3>
-<div class="dashboard-main" id="dashMeals">0 comidas</div>
-<div class="dashboard-sub" id="dashMealMeta">Todavía no cargaste comidas para hoy.</div>
-<div class="dashboard-progress"><span id="dashMealProgress"></span></div>
-</div>
-<div class="dashboard-card">
-<h3>📈 Estado del día</h3>
-<div class="dashboard-main" id="dashTaskCount">0 tareas</div>
-<div class="dashboard-sub" id="dashTaskMeta">0 de 16 bloques horarios ocupados</div>
-<div class="dashboard-progress"><span id="dashTaskProgress"></span></div>
-<div class="dashboard-sub" id="dashTaskProgressText">0% completado</div>
-<div class="dashboard-actions">
-<button class="dashboard-btn" id="goCalendarBtn">📅 Calendario</button>
-<button class="dashboard-btn" id="goWorkoutBtn">🏋️ Entrenamiento</button>
-<button class="dashboard-btn" id="goNutritionBtn">🍽️ Alimentación</button>
-</div>
-</div>
-</div>
-<div class="insights-panel" id="insightsPanel">
-<div class="insights-head">
-<div>
-<h3>📊 Resumen semanal</h3>
-<p>Una vista rápida de cómo viene tu semana.</p>
-</div>
-<div class="streak-badge" id="streakBadge">🔥 0 días</div>
-</div>
-<div class="insights-week" id="insightsWeek"></div>
-<div class="insight-summary">
-<div class="insight-stat"><strong id="weekTasksPct">0%</strong><span>Tareas completadas</span></div>
-<div class="insight-stat"><strong id="weekWorkoutCount">0</strong><span>Sesiones de entrenamiento</span></div>
-<div class="insight-stat"><strong id="weekMealCount">0</strong><span>Comidas cargadas</span></div>
-<div class="insight-stat"><strong id="weekActiveDays">0/7</strong><span>Días activos</span></div>
-</div>
-<div class="weekly-detail" id="weeklyDetail"></div>
-</div>
-<div class="today-timeline" data-v33-pane="home" id="todayTimeline">
-<div class="today-timeline-head">
-<div>
-<h3>🕒 Próximas actividades</h3>
-<p>Una vista rápida de lo que viene en tu día.</p>
-</div>
-<div class="today-now-badge" id="todayNowBadge">Ahora</div>
-</div>
-<div class="today-timeline-list" id="todayTimelineList"></div>
-</div>
-</section>
-<section class="smart-panel" data-v33-pane="home" id="smartPanel">
-<div class="smart-head">
-<div><h3>🧠 Centro de control</h3><p>La app resume automáticamente lo más importante de tu día.</p></div>
-<div class="smart-badge" id="smartBadge">Todo tranquilo</div>
-</div>
-<div class="smart-grid">
-<div class="smart-primary">
-<div class="label">Ahora / próxima actividad</div>
-<div class="big" id="smartNowTitle">Sin actividad próxima</div>
-<div class="sub" id="smartNowMeta">Tu agenda está libre por ahora.</div>
-<div class="smart-bar"><span id="smartNowBar"></span></div>
-</div>
-<div class="smart-side"><div class="icon">✅</div><strong id="smartTasksDone">0%</strong><span>tareas del día completadas</span></div>
-<div class="smart-side"><div class="icon">🏋️</div><strong id="smartWorkoutState">—</strong><span>estado del entrenamiento</span></div>
-<div class="smart-side"><div class="icon">🍽️</div><strong id="smartNutritionState">—</strong><span>progreso de alimentación</span></div>
-</div>
-<div class="quick-summary">
-<div class="quick-summary-card"><strong id="smartNextCount">0</strong><span>actividades pendientes</span></div>
-<div class="quick-summary-card"><strong id="smartCompletedCount">0</strong><span>tareas terminadas</span></div>
-<div class="quick-summary-card"><strong id="smartConflictCount">0</strong><span>conflictos activos</span></div>
-<div class="quick-summary-card"><strong id="smartStreak">0 días</strong><span>racha actual</span></div>
-</div>
-<div class="smart-actions">
-<button class="smart-action" id="smartCompleteNext">✅ Completar próxima</button>
-<button class="smart-action" id="smartOpenSchedule">🕒 Ver horario</button>
-<button class="smart-action" id="smartOpenWorkout">🏋️ Ver entrenamiento</button>
-<button class="smart-action" id="smartOpenNutrition">🍽️ Ver alimentación</button>
-</div>
-</section>
+
+
+
+  <div class="reminder-panel" id="reminderPanel">
+    <div class="reminder-head">
+      <div><h3>🔔 Recordatorios</h3><p>Recibí avisos de tus próximas tareas y comidas. Necesitás dejar esta página abierta para recibirlos.</p></div>
+      <button class="reminder-close" id="reminderClose">×</button>
+    </div>
+    <div class="reminder-card">
+      <div class="reminder-row">
+        <div><div class="reminder-label">Avisar con anticipación</div><div class="reminder-sub">Antes del horario de la tarea o comida.</div></div>
+        <select class="reminder-select" id="reminderLead"><option value="0">A la hora</option><option value="5">5 min</option><option value="10" selected>10 min</option><option value="15">15 min</option><option value="30">30 min</option></select>
+      </div>
+    </div>
+    <button class="reminder-enable" id="reminderEnable">Activar recordatorios</button>
+    <div class="next-reminder" id="nextReminder">No hay próximos recordatorios.</div>
+    <div class="reminder-note">En algunos navegadores las notificaciones requieren permiso. El navegador también puede bloquearlas si la página no está abierta.</div>
+  </div>
+
+  <main class="container">
+    <div class="notice" id="notice" data-v33-pane="home"><strong id="noticeTitle">Aviso</strong><div id="noticeText"></div></div>
+
+    <div class="stats" data-v33-pane="home">
+      <div class="stat"><div class="stat-number" id="totalTasks">0</div><div class="stat-label">Tareas</div></div>
+      <div class="stat"><div class="stat-number" id="todayTasks">0</div><div class="stat-label">Hoy</div></div>
+      <div class="stat"><div class="stat-number" id="freeHours">16</div><div class="stat-label">Horas libres</div></div>
+    </div>
+
+    <section class="dashboard" id="dashboard" data-v33-pane="home">
+      <div class="dashboard-head">
+        <div>
+          <h2>Resumen de hoy</h2>
+          <p>Una vista rápida de tus tareas, entrenamiento y alimentación.</p>
+        </div>
+        <div class="dashboard-date" id="dashboardDate">Hoy</div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <h3>📚 Próxima tarea</h3>
+          <div class="dashboard-main" id="dashNextTask">Sin tareas</div>
+          <div class="dashboard-sub" id="dashNextTaskMeta">Tu agenda está libre por ahora.</div>
+        </div>
+
+        <div class="dashboard-card">
+          <h3>🏋️ Entrenamiento</h3>
+          <div class="dashboard-main" id="dashWorkout">Sin rutina cargada</div>
+          <div class="dashboard-sub" id="dashWorkoutMeta">Podés cargar tu rutina desde Entrenamientos.</div>
+          <div class="dashboard-chip" id="dashWorkoutChip">0 ejercicios</div>
+        </div>
+
+        <div class="dashboard-card">
+          <h3>🍽️ Alimentación</h3>
+          <div class="dashboard-main" id="dashMeals">0 comidas</div>
+          <div class="dashboard-sub" id="dashMealMeta">Todavía no cargaste comidas para hoy.</div>
+          <div class="dashboard-progress"><span id="dashMealProgress"></span></div>
+        </div>
+
+        <div class="dashboard-card">
+          <h3>📈 Estado del día</h3>
+          <div class="dashboard-main" id="dashTaskCount">0 tareas</div>
+          <div class="dashboard-sub" id="dashTaskMeta">0 de 16 bloques horarios ocupados</div>
+          <div class="dashboard-progress"><span id="dashTaskProgress"></span></div>
+          <div class="dashboard-sub" id="dashTaskProgressText">0% completado</div>
+          <div class="dashboard-actions">
+            <button class="dashboard-btn" id="goCalendarBtn">📅 Calendario</button>
+            <button class="dashboard-btn" id="goWorkoutBtn">🏋️ Entrenamiento</button>
+            <button class="dashboard-btn" id="goNutritionBtn">🍽️ Alimentación</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="insights-panel" id="insightsPanel">
+        <div class="insights-head">
+          <div>
+            <h3>📊 Resumen semanal</h3>
+            <p>Una vista rápida de cómo viene tu semana.</p>
+          </div>
+          <div class="streak-badge" id="streakBadge">🔥 0 días</div>
+        </div>
+        <div class="insights-week" id="insightsWeek"></div>
+        <div class="insight-summary">
+          <div class="insight-stat"><strong id="weekTasksPct">0%</strong><span>Tareas completadas</span></div>
+          <div class="insight-stat"><strong id="weekWorkoutCount">0</strong><span>Sesiones de entrenamiento</span></div>
+          <div class="insight-stat"><strong id="weekMealCount">0</strong><span>Comidas cargadas</span></div>
+          <div class="insight-stat"><strong id="weekActiveDays">0/7</strong><span>Días activos</span></div>
+        </div>
+        <div class="weekly-detail" id="weeklyDetail"></div>
+      </div>
+    <div class="today-timeline" id="todayTimeline" data-v33-pane="home">
+      <div class="today-timeline-head">
+        <div>
+          <h3>🕒 Próximas actividades</h3>
+          <p>Una vista rápida de lo que viene en tu día.</p>
+        </div>
+        <div class="today-now-badge" id="todayNowBadge">Ahora</div>
+      </div>
+      <div class="today-timeline-list" id="todayTimelineList"></div>
+    </div>
+
+    </section>
+
+    <section class="smart-panel" id="smartPanel" data-v33-pane="home">
+      <div class="smart-head">
+        <div><h3>🧠 Centro de control</h3><p>La app resume automáticamente lo más importante de tu día.</p></div>
+        <div class="smart-badge" id="smartBadge">Todo tranquilo</div>
+      </div>
+      <div class="smart-grid">
+        <div class="smart-primary">
+          <div class="label">Ahora / próxima actividad</div>
+          <div class="big" id="smartNowTitle">Sin actividad próxima</div>
+          <div class="sub" id="smartNowMeta">Tu agenda está libre por ahora.</div>
+          <div class="smart-bar"><span id="smartNowBar"></span></div>
+        </div>
+        <div class="smart-side"><div class="icon">✅</div><strong id="smartTasksDone">0%</strong><span>tareas del día completadas</span></div>
+        <div class="smart-side"><div class="icon">🏋️</div><strong id="smartWorkoutState">—</strong><span>estado del entrenamiento</span></div>
+        <div class="smart-side"><div class="icon">🍽️</div><strong id="smartNutritionState">—</strong><span>progreso de alimentación</span></div>
+      </div>
+      <div class="quick-summary">
+        <div class="quick-summary-card"><strong id="smartNextCount">0</strong><span>actividades pendientes</span></div>
+        <div class="quick-summary-card"><strong id="smartCompletedCount">0</strong><span>tareas terminadas</span></div>
+        <div class="quick-summary-card"><strong id="smartConflictCount">0</strong><span>conflictos activos</span></div>
+        <div class="quick-summary-card"><strong id="smartStreak">0 días</strong><span>racha actual</span></div>
+      </div>
+      <div class="smart-actions">
+        <button class="smart-action" id="smartCompleteNext">✅ Completar próxima</button>
+        <button class="smart-action" id="smartOpenSchedule">🕒 Ver horario</button>
+        <button class="smart-action" id="smartOpenWorkout">🏋️ Ver entrenamiento</button>
+        <button class="smart-action" id="smartOpenNutrition">🍽️ Ver alimentación</button>
+      </div>
+    </section>
+
+    
 <div class="utility-row" id="utilityRow">
-<div class="utility-left">
-<span class="v15-date" id="v15DateLabel">Hoy</span>
+  <div class="utility-left">
+    <span class="v15-date" id="v15DateLabel">Hoy</span>
+    
+  </div>
+  <div class="utility-right">
+  </div>
 </div>
-<div class="utility-right">
+
+
+<div class="v15-search-overlay" id="v15SearchOverlay" aria-hidden="true">
+  <div class="v15-search-box" role="dialog" aria-modal="true" aria-label="Buscar">
+    <div class="v15-search-top">
+      <span class="v15-search-glass">🔎</span>
+      <input id="v15SearchInput" type="search" placeholder="Buscar tareas, ejercicios, comidas o fechas..." autocomplete="off">
+      <button id="v15SearchClose" type="button" aria-label="Cerrar búsqueda">×</button>
+    </div>
+    <div class="v15-search-hint">Escribí para buscar. En PC también podés usar <kbd>Ctrl</kbd> + <kbd>K</kbd>.</div><div class="v15-search-toolbar"><small>Busca en todas tus tareas, fechas, rutinas, historial, comidas y eventos cargados.</small><span class="v15-search-scope">● Búsqueda global</span></div>
+    <div class="v15-search-results" id="v15SearchResults">
+      <div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div>
+    </div>
+  </div>
 </div>
-</div>
-<div aria-hidden="true" class="v15-search-overlay" id="v15SearchOverlay">
-<div aria-label="Buscar" aria-modal="true" class="v15-search-box" role="dialog">
-<div class="v15-search-top">
-<span class="v15-search-glass">🔎</span>
-<input autocomplete="off" id="v15SearchInput" placeholder="Buscar tareas, ejercicios, comidas o fechas..." type="search"/>
-<button aria-label="Cerrar búsqueda" id="v15SearchClose" type="button">×</button>
-</div>
-<div class="v15-search-hint">Escribí para buscar. En PC también podés usar <kbd>Ctrl</kbd> + <kbd>K</kbd>.</div><div class="v15-search-toolbar"><small>Busca en todas tus tareas, fechas, rutinas, historial, comidas y eventos cargados.</small><span class="v15-search-scope">● Búsqueda global</span></div>
-<div class="v15-search-results" id="v15SearchResults">
-<div class="v15-search-empty">Escribí algo para buscar en tu agenda.</div>
-</div>
-</div>
-</div>
+
 <div class="settings-overlay" id="settingsOverlay"></div>
-<aside aria-hidden="true" class="settings-drawer" id="settingsDrawer">
-<div class="settings-head">
-<div>
-<div class="settings-title">⚙ Ajustes</div>
-<div class="settings-sub">Personalizá la app sin llenar la pantalla principal.</div>
-</div>
-<button aria-label="Cerrar ajustes" class="settings-close" id="settingsClose" type="button">×</button>
-</div>
-<div class="settings-section">
-<div class="settings-section-title">Apariencia</div>
-<button class="settings-option" id="v15ThemeBtn" type="button">
-<span class="settings-option-icon">🌙</span>
-<span><strong>Tema</strong><small>Claro u oscuro</small></span>
-<span class="settings-value" id="themeValue">Oscuro</span>
-</button>
-</div>
-<div class="settings-section">
-<div class="settings-section-title">Concentración</div>
-<button class="settings-option" id="v15FocusBtn" type="button">
-<span class="settings-option-icon">🎯</span>
-<span><strong>Modo enfoque</strong><small>Oculta paneles secundarios</small></span>
-<span class="settings-value" id="focusValue">Apagado</span>
-</button>
-</div>
-<div class="settings-section">
-<div class="settings-section-title">Datos</div>
-<button class="settings-option" id="v15ExportBtn" type="button">
-<span class="settings-option-icon">📤</span>
-<span><strong>Exportar datos</strong><small>Descargar una copia JSON</small></span>
-<span class="settings-arrow">›</span>
-</button>
-<button class="settings-option" id="settingsImportBtn" type="button">
-<span class="settings-option-icon">📥</span>
-<span><strong>Importar datos</strong><small>Importar una copia exportada desde otra cuenta</small></span>
-<span class="settings-arrow">›</span>
-</button>
-<input accept="application/json,.json" hidden="" id="importDataInput" type="file"/>
-<div class="import-progress" id="importProgress"></div>
-</div>
-<div class="settings-section">
-<div class="settings-section-title">Recordatorios</div>
-<button class="settings-option" id="settingsReminderBtn" type="button">
-<span class="settings-option-icon">🔔</span>
-<span><strong>Recordatorios</strong><small>Configurar avisos de tareas y comidas</small></span>
-<span class="settings-value" id="settingsReminderValue">Apagados</span>
-</button>
-</div>
-<div class="settings-section">
-<div class="settings-section-title">Aplicación</div>
-<button class="settings-option" id="settingsInstallBtn" type="button">
-<span class="settings-option-icon">📲</span>
-<span><strong>Instalar aplicación</strong><small>Agregar Agenda FICH a la pantalla de inicio</small></span>
-<span class="settings-arrow">›</span>
-</button>
-</div>
-<div class="settings-section">
-<div class="settings-section-title">Cuenta</div>
-<div class="settings-account-row">
-<div class="settings-account-email"><strong id="settingsUserEmail">Tu cuenta</strong><small>Sesión actual</small></div>
-<button class="settings-inline-btn danger" id="settingsLogoutBtn" type="button">Salir</button>
-</div>
-</div>
-<div class="settings-section">
-<div class="settings-section-title">Sincronización</div>
-<div class="settings-status" id="settingsRefreshStatus">Listo</div>
-</div>
-<div class="settings-note">Los cambios visuales se guardan en este dispositivo. Tus tareas, fechas, entrenamientos y comidas continúan guardándose en tu cuenta.</div>
+<aside class="settings-drawer" id="settingsDrawer" aria-hidden="true">
+  <div class="settings-head">
+    <div>
+      <div class="settings-title">⚙ Ajustes</div>
+      <div class="settings-sub">Personalizá la app sin llenar la pantalla principal.</div>
+    </div>
+    <button class="settings-close" id="settingsClose" type="button" aria-label="Cerrar ajustes">×</button>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Apariencia</div>
+    <button class="settings-option" id="v15ThemeBtn" type="button">
+      <span class="settings-option-icon">🌙</span>
+      <span><strong>Tema</strong><small>Claro u oscuro</small></span>
+      <span class="settings-value" id="themeValue">Oscuro</span>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Concentración</div>
+    <button class="settings-option" id="v15FocusBtn" type="button">
+      <span class="settings-option-icon">🎯</span>
+      <span><strong>Modo enfoque</strong><small>Oculta paneles secundarios</small></span>
+      <span class="settings-value" id="focusValue">Apagado</span>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Datos</div>
+    <button class="settings-option" id="v15ExportBtn" type="button">
+      <span class="settings-option-icon">📤</span>
+      <span><strong>Exportar datos</strong><small>Descargar una copia JSON</small></span>
+      <span class="settings-arrow">›</span>
+    </button>
+    <button class="settings-option" id="settingsImportBtn" type="button">
+      <span class="settings-option-icon">📥</span>
+      <span><strong>Importar datos</strong><small>Importar una copia exportada desde otra cuenta</small></span>
+      <span class="settings-arrow">›</span>
+    </button>
+    <input id="importDataInput" type="file" accept="application/json,.json" hidden>
+    <div class="import-progress" id="importProgress"></div>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Recordatorios</div>
+    <button class="settings-option" id="settingsReminderBtn" type="button">
+      <span class="settings-option-icon">🔔</span>
+      <span><strong>Recordatorios</strong><small>Configurar avisos de tareas y comidas</small></span>
+      <span class="settings-value" id="settingsReminderValue">Apagados</span>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Aplicación</div>
+    <button class="settings-option" id="settingsInstallBtn" type="button">
+      <span class="settings-option-icon">📲</span>
+      <span><strong>Instalar aplicación</strong><small>Agregar Agenda FICH a la pantalla de inicio</small></span>
+      <span class="settings-arrow">›</span>
+    </button>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Cuenta</div>
+    <div class="settings-account-row">
+      <div class="settings-account-email"><strong id="settingsUserEmail">Tu cuenta</strong><small>Sesión actual</small></div>
+      <button class="settings-inline-btn danger" id="settingsLogoutBtn" type="button">Salir</button>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-section-title">Sincronización</div>
+    <div class="settings-status" id="settingsRefreshStatus">Listo</div>
+  </div>
+
+  <div class="settings-note">Los cambios visuales se guardan en este dispositivo. Tus tareas, fechas, entrenamientos y comidas continúan guardándose en tu cuenta.</div>
 </aside>
+
 <div class="section-switcher">
-<button class="toggle section-tab" id="calendarToggle">
-<span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
-<span class="toggle-icon" id="calendarIcon">+</span>
-</button>
-<button class="toggle section-tab" id="workoutToggle">
-<span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span>
-<span class="toggle-icon" id="workoutIcon">+</span>
-</button>
-<button class="toggle section-tab" id="nutritionToggle">
-<span>🍽️ Alimentación<small>Tu plan semanal personal</small></span>
-<span class="toggle-icon" id="nutritionIcon">+</span>
-</button>
-</div>
-<div class="section-stage">
-<div class="v32-section-title v32-calendar-pane" data-v33-pane="calendar"><strong>📅 Calendario</strong><span>Feriados, paros, fechas importantes y eventos compartidos.</span></div><section class="calendar section-view v32-calendar-pane" data-v33-pane="calendar" id="calendarPanel">
-<div class="cal-head">
-<div>
-<h2>Calendario</h2>
-<p>Feriados y eventos compartidos desde <code>data/events.json</code>. Tus fechas personales también aparecen aquí.</p>
-</div>
-<div class="cal-actions">
-<button class="small-btn" id="addDateBtn">＋ Agregar fecha</button>
-</div>
-</div>
-<div class="calendar-tools">
-<select class="input" id="calendarMonth"></select>
-<input class="input" id="calendarYear" max="2100" min="2000" type="number"/>
-</div>
-<div class="v87-weather-card" id="v87WeatherCard">
-<div class="v87-weather-head">
-<div>
-<div class="v87-weather-kicker">🌦️ Pronóstico</div>
-<strong id="v87WeatherTitle">Pronóstico del tiempo</strong>
-<span id="v87WeatherStatus">Elegí tu ubicación para cargar el pronóstico.</span>
-</div>
-<div class="v87-weather-actions">
-<button class="small-btn" id="v87WeatherLocationBtn" type="button">📍 Usar mi ubicación</button>
-<button class="small-btn" disabled="" id="v87WeatherRefreshBtn" type="button">↻ Actualizar</button>
-</div>
-</div>
-<div class="v87-weather-location" id="v87WeatherLocationLabel"></div>
-<div class="v87-weather-grid" id="v87WeatherGrid"></div>
-<div class="v87-weather-note">El pronóstico se actualiza desde Open-Meteo. Sin internet se mantiene el último pronóstico guardado, si existe.</div>
-</div>
-<div class="month-grid" id="monthGrid"></div>
-<div class="cal-status" id="calendarStatus">Cargando eventos...</div>
+      <button class="toggle section-tab" id="calendarToggle">
+        <span>📅 Calendario / feriados / paros<small>Información compartida</small></span>
+        <span class="toggle-icon" id="calendarIcon">+</span>
+      </button>
+
+      <button class="toggle section-tab" id="workoutToggle">
+        <span>🏋️ Entrenamientos<small>Tu rutina semanal personal</small></span>
+        <span class="toggle-icon" id="workoutIcon">+</span>
+      </button>
+
+      <button class="toggle section-tab" id="nutritionToggle">
+        <span>🍽️ Alimentación<small>Tu plan semanal personal</small></span>
+        <span class="toggle-icon" id="nutritionIcon">+</span>
+      </button>
+    </div>
+
+    <div class="section-stage">
+      <div class="v32-section-title v32-calendar-pane" data-v33-pane="calendar"><strong>📅 Calendario</strong><span>Feriados, paros, fechas importantes y eventos compartidos.</span></div><section class="calendar section-view v32-calendar-pane" id="calendarPanel" data-v33-pane="calendar">
+        <div class="cal-head">
+          <div>
+            <h2>Calendario</h2>
+            <p>Feriados y eventos compartidos desde <code>data/events.json</code>. Tus fechas personales también aparecen aquí.</p>
+          </div>
+          <div class="cal-actions">
+            <button class="small-btn" id="addDateBtn">＋ Agregar fecha</button>
+          </div>
+        </div>
+
+        <div class="calendar-tools">
+          <select class="input" id="calendarMonth"></select>
+          <input class="input" id="calendarYear" type="number" min="2000" max="2100">
+        </div>
+
+        <div class="v87-weather-card" id="v87WeatherCard">
+          <div class="v87-weather-head">
+            <div>
+              <div class="v87-weather-kicker">🌦️ Pronóstico</div>
+              <strong id="v87WeatherTitle">Pronóstico del tiempo</strong>
+              <span id="v87WeatherStatus">Elegí tu ubicación para cargar el pronóstico.</span>
+            </div>
+            <div class="v87-weather-actions">
+              <button class="small-btn" id="v87WeatherLocationBtn" type="button">📍 Usar mi ubicación</button>
+              <button class="small-btn" id="v87WeatherRefreshBtn" type="button" disabled>↻ Actualizar</button>
+            </div>
+          </div>
+          <div class="v87-weather-location" id="v87WeatherLocationLabel"></div>
+          <div class="v87-weather-grid" id="v87WeatherGrid"></div>
+          <div class="v87-weather-note">El pronóstico se actualiza desde Open-Meteo. Sin internet se mantiene el último pronóstico guardado, si existe.</div>
+        </div>
+
+        <div class="month-grid" id="monthGrid"></div>
+        <div class="cal-status" id="calendarStatus">Cargando eventos...</div>
+      </section>
+
+      <div class="v32-section-title v32-workout-pane" data-v33-pane="workout"><strong>🏋️ Entrenamiento</strong><span>Rutinas, orden y vista de entrenamiento.</span></div><section class="workout-panel section-view v32-workout-pane" id="workoutPanel" data-v33-pane="workout">
+        <div class="workout-head">
+          <div>
+            <h2>Rutina de entrenamiento</h2>
+            <p>Cargá cada ejercicio con series, repeticiones, RIR y las demás especificaciones. Queda guardado en tu cuenta.</p>
+          </div>
+          <button class="small-btn" id="addExerciseBtn">＋ Agregar ejercicio</button>
+        </div>
+
+        <div class="workout-days" id="workoutDays"></div>
+        <div class="workout-stats">
+          <div class="workout-stat"><strong id="workoutStatSessions">0</strong><span>Sesiones en 30 días</span></div>
+          <div class="workout-stat"><strong id="workoutStatSets">0</strong><span>Series registradas</span></div>
+          <div class="workout-stat"><strong id="workoutStatExercises">0</strong><span>Ejercicios en rutina</span></div>
+          <div class="workout-stat"><strong id="workoutStatLast">—</strong><span>Última sesión</span></div>
+        </div>
+        <div class="workout-analytics">
+          <div class="analytics-card">
+            <div class="analytics-head"><div><h3>📈 Actividad semanal</h3><p>Sesiones registradas durante las últimas 4 semanas.</p></div><span class="analytics-badge" id="analyticsSummary">0 sesiones</span></div>
+            <div class="weekly-bars" id="weeklyBars"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="analytics-head"><div><h3>🏋️ Ejercicio destacado</h3><p>El ejercicio con más registros recientes.</p></div></div>
+            <div class="highlight-exercise" id="highlightExercise">Todavía no hay registros suficientes.</div>
+          </div>
+        </div>
+        <div class="analytics-card exercise-progress">
+          <div class="analytics-head">
+            <div>
+              <h3>📊 Progreso por ejercicio</h3>
+              <p>Elegí un ejercicio para ver cómo evolucionaron peso, repeticiones y RIR.</p>
+            </div>
+          </div>
+          <div class="progress-controls">
+            <select id="progressExerciseSelect" class="progress-select"></select>
+            <span id="progressMetricLabel" class="progress-metric">Mostrando carga registrada</span>
+          </div>
+          <div id="progressSummary" class="progress-summary"></div>
+          <div id="progressChartWrap" class="progress-chart-wrap"></div>
+          <div id="progressLegend" class="progress-legend"></div>
+        </div>
+        <div class="workout-list" id="workoutList"></div>
+        <div class="workout-history">
+          <div class="workout-history-head"><div><h3>Historial reciente</h3><p>Últimos registros de entrenamiento guardados.</p></div></div>
+          <div class="history-list" id="workoutHistoryList"></div>
+        </div>
+      </section>
+
+      <section class="nutrition-panel section-view v32-nutrition-pane" id="nutritionPanel" data-v33-pane="nutrition">
+        <div class="nutrition-head">
+          <div>
+            <h2>Plan de alimentación</h2>
+            <p>Organizá de lunes a domingo tus comidas en el orden: pre entrenamiento, post entrenamiento, almuerzo, merienda, cena y antes de dormir. Queda guardado en tu cuenta.</p>
+          </div>
+          <div class="nutrition-actions">
+            <button class="nutrition-goal-btn" id="nutritionGoalBtn">⚙ Objetivos</button>
+            <button class="small-btn" id="addMealBtn">＋ Agregar comida</button>
+          </div>
+        </div>
+
+        <div class="workout-days" id="nutritionDays"></div>
+        <div class="goal-grid" id="nutritionGoals"></div>
+        <div class="goal-settings" id="nutritionGoalSummary">Definí tus objetivos diarios para ver el progreso.</div>
+        <div class="meal-tabs" id="mealTabs"></div>
+        <div class="meal-list" id="mealList"></div>
+      </section>
+    </div>
+
+    <section class="conflict-panel" id="conflictPanel" data-v33-pane="agenda">
+  <div class="conflict-head">
+    <div>
+      <h3>⚠️ Posibles conflictos</h3>
+      <p>Detectamos actividades a la misma hora o muy próximas. Como todavía no definimos duraciones, se muestran como posibles conflictos.</p>
+    </div>
+    <div class="conflict-count" id="conflictCount">0</div>
+  </div>
+  <div class="conflict-list" id="conflictList"></div>
 </section>
-<div class="v32-section-title v32-workout-pane" data-v33-pane="workout"><strong>🏋️ Entrenamiento</strong><span>Rutinas, orden y vista de entrenamiento.</span></div><section class="workout-panel section-view v32-workout-pane" data-v33-pane="workout" id="workoutPanel">
-<div class="workout-head">
-<div>
-<h2>Rutina de entrenamiento</h2>
-<p>Cargá cada ejercicio con series, repeticiones, RIR y las demás especificaciones. Queda guardado en tu cuenta.</p>
-</div>
-<button class="small-btn" id="addExerciseBtn">＋ Agregar ejercicio</button>
-</div>
-<div class="workout-days" id="workoutDays"></div>
-<div class="workout-stats">
-<div class="workout-stat"><strong id="workoutStatSessions">0</strong><span>Sesiones en 30 días</span></div>
-<div class="workout-stat"><strong id="workoutStatSets">0</strong><span>Series registradas</span></div>
-<div class="workout-stat"><strong id="workoutStatExercises">0</strong><span>Ejercicios en rutina</span></div>
-<div class="workout-stat"><strong id="workoutStatLast">—</strong><span>Última sesión</span></div>
-</div>
-<div class="workout-analytics">
-<div class="analytics-card">
-<div class="analytics-head"><div><h3>📈 Actividad semanal</h3><p>Sesiones registradas durante las últimas 4 semanas.</p></div><span class="analytics-badge" id="analyticsSummary">0 sesiones</span></div>
-<div class="weekly-bars" id="weeklyBars"></div>
-</div>
-<div class="analytics-card">
-<div class="analytics-head"><div><h3>🏋️ Ejercicio destacado</h3><p>El ejercicio con más registros recientes.</p></div></div>
-<div class="highlight-exercise" id="highlightExercise">Todavía no hay registros suficientes.</div>
-</div>
-</div>
-<div class="analytics-card exercise-progress">
-<div class="analytics-head">
-<div>
-<h3>📊 Progreso por ejercicio</h3>
-<p>Elegí un ejercicio para ver cómo evolucionaron peso, repeticiones y RIR.</p>
-</div>
-</div>
-<div class="progress-controls">
-<select class="progress-select" id="progressExerciseSelect"></select>
-<span class="progress-metric" id="progressMetricLabel">Mostrando carga registrada</span>
-</div>
-<div class="progress-summary" id="progressSummary"></div>
-<div class="progress-chart-wrap" id="progressChartWrap"></div>
-<div class="progress-legend" id="progressLegend"></div>
-</div>
-<div class="workout-list" id="workoutList"></div>
-<div class="workout-history">
-<div class="workout-history-head"><div><h3>Historial reciente</h3><p>Últimos registros de entrenamiento guardados.</p></div></div>
-<div class="history-list" id="workoutHistoryList"></div>
-</div>
+
+    <section class="v54-panel v32-agenda-pane" id="v54Templates" data-v54-pane="agenda">
+  <div class="v54-head"><div><h3>⚡ Plantillas rápidas</h3><p>Creá tareas frecuentes sin volver a completar todo desde cero.</p></div></div>
+  <div class="v54-template-list" id="v54TemplateList"></div>
+  <div class="v54-template-actions"><button class="v54-btn" id="v54NewTemplate" type="button">＋ Nueva plantilla</button><button class="v54-btn" id="v54ResetTemplates" type="button">↺ Restaurar ejemplos</button></div>
 </section>
-<section class="nutrition-panel section-view v32-nutrition-pane" data-v33-pane="nutrition" id="nutritionPanel">
-<div class="nutrition-head">
-<div>
-<h2>Plan de alimentación</h2>
-<p>Organizá de lunes a domingo tus comidas en el orden: pre entrenamiento, post entrenamiento, almuerzo, merienda, cena y antes de dormir. Queda guardado en tu cuenta.</p>
-</div>
-<div class="nutrition-actions">
-<button class="nutrition-goal-btn" id="nutritionGoalBtn">⚙ Objetivos</button>
-<button class="small-btn" id="addMealBtn">＋ Agregar comida</button>
-</div>
-</div>
-<div class="workout-days" id="nutritionDays"></div>
-<div class="goal-grid" id="nutritionGoals"></div>
-<div class="goal-settings" id="nutritionGoalSummary">Definí tus objetivos diarios para ver el progreso.</div>
-<div class="meal-tabs" id="mealTabs"></div>
-<div class="meal-list" id="mealList"></div>
-</section>
-</div>
-<section class="conflict-panel" data-v33-pane="agenda" id="conflictPanel">
-<div class="conflict-head">
-<div>
-<h3>⚠️ Posibles conflictos</h3>
-<p>Detectamos actividades a la misma hora o muy próximas. Como todavía no definimos duraciones, se muestran como posibles conflictos.</p>
-</div>
-<div class="conflict-count" id="conflictCount">0</div>
-</div>
-<div class="conflict-list" id="conflictList"></div>
-</section>
-<section class="v54-panel v32-agenda-pane" data-v54-pane="agenda" id="v54Templates">
-<div class="v54-head"><div><h3>⚡ Plantillas rápidas</h3><p>Creá tareas frecuentes sin volver a completar todo desde cero.</p></div></div>
-<div class="v54-template-list" id="v54TemplateList"></div>
-<div class="v54-template-actions"><button class="v54-btn" id="v54NewTemplate" type="button">＋ Nueva plantilla</button><button class="v54-btn" id="v54ResetTemplates" type="button">↺ Restaurar ejemplos</button></div>
-</section>
+
 <div class="v32-section-title v32-agenda-pane" data-v33-pane="agenda"><strong>🕒 Agenda del día</strong><span>Solo horarios y tareas.</span></div><div class="schedule-block v32-agenda-pane" data-v33-pane="agenda">
-<div class="schedule-heading">
-<div>
-<h2>Horario del día</h2>
-<p>Organizá tus tareas de 07:00 a 22:00.</p>
-</div>
-<div class="schedule-badge">16 bloques · revisión de conflictos</div>
-</div>
-<div class="schedule" id="schedule"></div>
-</div>
-<section class="v62-load v32-home-pane" data-v62-pane="home" id="v62DailyLoad">
-<div class="v62-load-head"><div><h3>⚖️ Carga de tu día</h3><p>Compara lo que tenés reservado con el tiempo libre y tu concentración registrada.</p></div><button class="v62-compact-toggle" id="v62CompactToggle" type="button">▤ Modo compacto de Agenda</button></div>
-<div class="v62-load-grid">
-<div class="v62-load-card"><strong id="v62Reserved">0 min</strong><span>tiempo reservado</span></div>
-<div class="v62-load-card"><strong id="v62Free">0 min</strong><span>tiempo libre estimado</span></div>
-<div class="v62-load-card"><strong id="v62Focus">0 min</strong><span>enfoque de hoy</span></div>
-<div class="v62-load-card"><strong id="v62LoadPct">0%</strong><span>ocupación estimada</span></div>
-</div>
-<div class="v62-load-bar"><i id="v62LoadBar"></i></div>
-<div class="v62-load-note" id="v62LoadNote">Calculando la carga de hoy…</div>
+      <div class="schedule-heading">
+        <div>
+          <h2>Horario del día</h2>
+          <p>Organizá tus tareas de 07:00 a 22:00.</p>
+        </div>
+        <div class="schedule-badge">16 bloques · revisión de conflictos</div>
+      </div>
+      <div class="schedule" id="schedule"></div>
+    </div>
+  
+<section class="v62-load v32-home-pane" id="v62DailyLoad" data-v62-pane="home">
+  <div class="v62-load-head"><div><h3>⚖️ Carga de tu día</h3><p>Compara lo que tenés reservado con el tiempo libre y tu concentración registrada.</p></div><button class="v62-compact-toggle" id="v62CompactToggle" type="button">▤ Modo compacto de Agenda</button></div>
+  <div class="v62-load-grid">
+    <div class="v62-load-card"><strong id="v62Reserved">0 min</strong><span>tiempo reservado</span></div>
+    <div class="v62-load-card"><strong id="v62Free">0 min</strong><span>tiempo libre estimado</span></div>
+    <div class="v62-load-card"><strong id="v62Focus">0 min</strong><span>enfoque de hoy</span></div>
+    <div class="v62-load-card"><strong id="v62LoadPct">0%</strong><span>ocupación estimada</span></div>
+  </div>
+  <div class="v62-load-bar"><i id="v62LoadBar"></i></div>
+  <div class="v62-load-note" id="v62LoadNote">Calculando la carga de hoy…</div>
 </section>
 </main>
-<button aria-label="Agregar tarea" class="quick-add-fab" id="quickAddFab">＋</button>
+  <button class="quick-add-fab" id="quickAddFab" aria-label="Agregar tarea">＋</button>
 </section>
-<nav aria-label="Navegación principal" class="mobile-nav" id="mobileNav">
-<button class="mobile-nav-btn active" data-v32-section="home" id="mobileNavHome" type="button">
-<span>⌂</span><span class="nav-title">Inicio</span><span class="nav-sub">Resumen de hoy</span>
+
+
+<nav class="mobile-nav" id="mobileNav" aria-label="Navegación principal">
+<button class="mobile-nav-btn active" id="mobileNavHome" data-v32-section="home" type="button">
+  <span>⌂</span><span class="nav-title">Inicio</span><span class="nav-sub">Resumen de hoy</span>
 </button>
-<button class="mobile-nav-btn" data-v32-section="agenda" id="mobileNavSchedule" type="button">
-<span>🗓</span><span class="nav-title">Agenda</span><span class="nav-sub">Horario y tareas</span>
+<button class="mobile-nav-btn" id="mobileNavSchedule" data-v32-section="agenda" type="button">
+  <span>🗓</span><span class="nav-title">Agenda</span><span class="nav-sub">Horario y tareas</span>
 </button>
-<button class="mobile-nav-btn" data-v32-section="calendar" id="mobileNavCalendar" type="button">
-<span>📅</span><span class="nav-title">Calendario</span><span class="nav-sub">Feriados y eventos</span>
+<button class="mobile-nav-btn" id="mobileNavCalendar" data-v32-section="calendar" type="button">
+  <span>📅</span><span class="nav-title">Calendario</span><span class="nav-sub">Feriados y eventos</span>
 </button>
-<button class="mobile-nav-btn" data-v32-section="workout" id="mobileNavWorkout" type="button">
-<span>🏋️</span><span class="nav-title">Entrenamiento</span><span class="nav-sub">Rutina semanal</span>
+<button class="mobile-nav-btn" id="mobileNavWorkout" data-v32-section="workout" type="button">
+  <span>🏋️</span><span class="nav-title">Entrenamiento</span><span class="nav-sub">Rutina semanal</span>
 </button>
-<button class="mobile-nav-btn" data-v32-section="nutrition" id="mobileNavFood" type="button">
-<span>🍽️</span><span class="nav-title">Alimentación</span><span class="nav-sub">Plan y objetivos</span>
+<button class="mobile-nav-btn" id="mobileNavFood" data-v32-section="nutrition" type="button">
+  <span>🍽️</span><span class="nav-title">Alimentación</span><span class="nav-sub">Plan y objetivos</span>
 </button>
 </nav>
-<div aria-hidden="true" class="quick-actions" id="quickActions"><div class="quick-actions-card"><div class="quick-actions-head"><strong>Agregar rápidamente</strong><button id="quickActionsClose" type="button">×</button></div><div class="quick-actions-grid"><button id="quickTaskBtn" type="button">📚<span>Tarea</span></button><button id="quickMealBtn" type="button">🍽️<span>Comida</span></button><button id="quickExerciseBtn" type="button">🏋️<span>Ejercicio</span></button><button id="quickDateBtn" type="button">📅<span>Fecha</span></button></div></div></div>
-<div aria-hidden="true" class="import-select-modal" id="importSelectModal"><div class="import-select-card"><div class="import-select-head"><div><strong>📥 Importar datos</strong><small>Elegí qué partes querés importar</small></div><button id="importSelectClose" type="button">×</button></div><label><input checked="" id="impTasks" type="checkbox"/> 📚 Tareas</label><label><input checked="" id="impDates" type="checkbox"/> 📅 Fechas</label><label><input checked="" id="impExercises" type="checkbox"/> 🏋️ Rutinas y ejercicios</label><label><input checked="" id="impLogs" type="checkbox"/> 📈 Historial</label><label><input checked="" id="impMeals" type="checkbox"/> 🍽️ Alimentación</label><div class="import-select-actions"><button id="importSelectCancel" type="button">Cancelar</button><button id="importSelectConfirm" type="button">Continuar</button></div></div></div>
-<div class="overlay" id="taskOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="taskModalTitle">➕ Agregar tarea</h3><span id="taskModalInfo"></span></div><button class="close" onclick="closeTaskModal()">×</button></div><div class="field"><label>Día</label><select class="input" id="taskDayInput"></select></div><div class="minute-row"><div class="field"><label>Hora</label><input class="input" id="taskHourInput" max="22" min="7" step="1" type="number"/></div><div class="field"><label>Minuto</label><select class="input" id="taskMinuteInput"></select></div></div><div class="minute-help">Podés elegir cualquier minuto: 08:00, 08:07, 08:30, 08:47, etc.</div><div class="field"><label>Título</label><input class="input" id="taskTitleInput"/></div><div class="field"><label>Descripción</label><input class="input" id="taskDescInput"/></div><button class="save" id="saveTaskBtn">Guardar tarea</button></div></div>
+<div class="quick-actions" id="quickActions" aria-hidden="true"><div class="quick-actions-card"><div class="quick-actions-head"><strong>Agregar rápidamente</strong><button id="quickActionsClose" type="button">×</button></div><div class="quick-actions-grid"><button id="quickTaskBtn" type="button">📚<span>Tarea</span></button><button id="quickMealBtn" type="button">🍽️<span>Comida</span></button><button id="quickExerciseBtn" type="button">🏋️<span>Ejercicio</span></button><button id="quickDateBtn" type="button">📅<span>Fecha</span></button></div></div></div>
+<div class="import-select-modal" id="importSelectModal" aria-hidden="true"><div class="import-select-card"><div class="import-select-head"><div><strong>📥 Importar datos</strong><small>Elegí qué partes querés importar</small></div><button id="importSelectClose" type="button">×</button></div><label><input id="impTasks" type="checkbox" checked> 📚 Tareas</label><label><input id="impDates" type="checkbox" checked> 📅 Fechas</label><label><input id="impExercises" type="checkbox" checked> 🏋️ Rutinas y ejercicios</label><label><input id="impLogs" type="checkbox" checked> 📈 Historial</label><label><input id="impMeals" type="checkbox" checked> 🍽️ Alimentación</label><div class="import-select-actions"><button id="importSelectCancel" type="button">Cancelar</button><button id="importSelectConfirm" type="button">Continuar</button></div></div></div>
+
+<div class="overlay" id="taskOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="taskModalTitle">➕ Agregar tarea</h3><span id="taskModalInfo"></span></div><button class="close" onclick="closeTaskModal()">×</button></div><div class="field"><label>Día</label><select class="input" id="taskDayInput"></select></div><div class="minute-row"><div class="field"><label>Hora</label><input class="input" id="taskHourInput" type="number" min="7" max="22" step="1"></div><div class="field"><label>Minuto</label><select class="input" id="taskMinuteInput"></select></div></div><div class="minute-help">Podés elegir cualquier minuto: 08:00, 08:07, 08:30, 08:47, etc.</div><div class="field"><label>Título</label><input class="input" id="taskTitleInput"></div><div class="field"><label>Descripción</label><input class="input" id="taskDescInput"></div><button class="save" id="saveTaskBtn">Guardar tarea</button></div></div>
+
+
 <div class="overlay" id="workoutOverlay">
-<div class="modal" onclick="event.stopPropagation()">
-<div class="modal-head">
-<div><h3 id="workoutModalTitle">＋ Agregar ejercicio</h3><span id="workoutModalInfo"></span></div>
-<button class="close" id="workoutCloseBtn">×</button>
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div><h3 id="workoutModalTitle">＋ Agregar ejercicio</h3><span id="workoutModalInfo"></span></div>
+      <button class="close" id="workoutCloseBtn">×</button>
+    </div>
+
+    <div class="field"><label>Ejercicio</label><input class="input" id="exerciseName" placeholder="Ej: Press banca plano"></div>
+
+    <div class="workout-form-grid">
+      <div class="field"><label>Series</label><input class="input" id="exerciseSets" type="number" min="1" step="1" placeholder="4"></div>
+      <div class="field"><label>Repeticiones</label><input class="input" id="exerciseReps" placeholder="8-10"></div>
+      <div class="field"><label>RIR</label><input class="input" id="exerciseRir" type="number" min="0" step="1" placeholder="2"></div>
+      <div class="field"><label>Descanso (seg)</label><input class="input" id="exerciseRest" type="number" min="0" step="15" placeholder="120"></div>
+    </div>
+
+    <div class="workout-form-grid two">
+      <div class="field"><label>Peso / carga</label><input class="input" id="exerciseWeight" placeholder="Ej: 80 kg"></div>
+      <div class="field"><label>Tempo</label><input class="input" id="exerciseTempo" placeholder="Ej: 3-1-1-0"></div>
+    </div>
+
+    <div class="field"><label>Notas / técnica</label><input class="input" id="exerciseNotes" placeholder="Ej: Pausa 1s abajo, agarre medio..."></div>
+
+    <div class="workout-form-actions">
+      <button class="save" id="saveExerciseBtn">Guardar ejercicio</button>
+      <button class="secondary hidden" id="cancelExerciseBtn">Cancelar edición</button>
+    </div>
+  </div>
 </div>
-<div class="field"><label>Ejercicio</label><input class="input" id="exerciseName" placeholder="Ej: Press banca plano"/></div>
-<div class="workout-form-grid">
-<div class="field"><label>Series</label><input class="input" id="exerciseSets" min="1" placeholder="4" step="1" type="number"/></div>
-<div class="field"><label>Repeticiones</label><input class="input" id="exerciseReps" placeholder="8-10"/></div>
-<div class="field"><label>RIR</label><input class="input" id="exerciseRir" min="0" placeholder="2" step="1" type="number"/></div>
-<div class="field"><label>Descanso (seg)</label><input class="input" id="exerciseRest" min="0" placeholder="120" step="15" type="number"/></div>
-</div>
-<div class="workout-form-grid two">
-<div class="field"><label>Peso / carga</label><input class="input" id="exerciseWeight" placeholder="Ej: 80 kg"/></div>
-<div class="field"><label>Tempo</label><input class="input" id="exerciseTempo" placeholder="Ej: 3-1-1-0"/></div>
-</div>
-<div class="field"><label>Notas / técnica</label><input class="input" id="exerciseNotes" placeholder="Ej: Pausa 1s abajo, agarre medio..."/></div>
-<div class="workout-form-actions">
-<button class="save" id="saveExerciseBtn">Guardar ejercicio</button>
-<button class="secondary hidden" id="cancelExerciseBtn">Cancelar edición</button>
-</div>
-</div>
-</div>
+
+
 <div class="overlay" id="workoutLogOverlay">
-<div class="modal" onclick="event.stopPropagation()">
-<div class="modal-head">
-<div><h3 id="logModalTitle">＋ Registrar sesión</h3><span id="logModalInfo"></span></div>
-<button class="close" id="workoutLogCloseBtn">×</button>
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div><h3 id="logModalTitle">＋ Registrar sesión</h3><span id="logModalInfo"></span></div>
+      <button class="close" id="workoutLogCloseBtn">×</button>
+    </div>
+    <div class="field"><label>Fecha</label><input class="input" id="logDate" type="date"></div>
+    <div class="workout-form-grid two">
+      <div class="field"><label>Series realizadas</label><input class="input" id="logSets" type="number" min="1" step="1" placeholder="4"></div>
+      <div class="field"><label>Repeticiones</label><input class="input" id="logReps" placeholder="8-10"></div>
+      <div class="field"><label>Peso / carga</label><input class="input" id="logWeight" placeholder="80 kg"></div>
+      <div class="field"><label>RIR</label><input class="input" id="logRir" type="number" min="0" step="1" placeholder="2"></div>
+    </div>
+    <div class="field"><label>Notas</label><input class="input" id="logNotes" placeholder="Sensaciones, técnica, etc."></div>
+    <div class="workout-form-actions">
+      <button class="save" id="saveWorkoutLogBtn">Guardar sesión</button>
+    </div>
+  </div>
 </div>
-<div class="field"><label>Fecha</label><input class="input" id="logDate" type="date"/></div>
-<div class="workout-form-grid two">
-<div class="field"><label>Series realizadas</label><input class="input" id="logSets" min="1" placeholder="4" step="1" type="number"/></div>
-<div class="field"><label>Repeticiones</label><input class="input" id="logReps" placeholder="8-10"/></div>
-<div class="field"><label>Peso / carga</label><input class="input" id="logWeight" placeholder="80 kg"/></div>
-<div class="field"><label>RIR</label><input class="input" id="logRir" min="0" placeholder="2" step="1" type="number"/></div>
-</div>
-<div class="field"><label>Notas</label><input class="input" id="logNotes" placeholder="Sensaciones, técnica, etc."/></div>
-<div class="workout-form-actions">
-<button class="save" id="saveWorkoutLogBtn">Guardar sesión</button>
-</div>
-</div>
-</div>
+
 <div class="overlay" id="nutritionOverlay">
-<div class="modal" onclick="event.stopPropagation()">
-<div class="modal-head">
-<div><h3 id="nutritionModalTitle">＋ Agregar comida</h3><span id="nutritionModalInfo"></span></div>
-<button class="close" id="nutritionCloseBtn">×</button>
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div><h3 id="nutritionModalTitle">＋ Agregar comida</h3><span id="nutritionModalInfo"></span></div>
+      <button class="close" id="nutritionCloseBtn">×</button>
+    </div>
+
+    <div class="field"><label>Comida</label><select class="input" id="mealType">
+      <option value="pre">Pre entrenamiento</option>
+      <option value="post">Post entrenamiento</option>
+      <option value="lunch">Almuerzo</option>
+      <option value="snack">Merienda</option>
+      <option value="dinner">Cena</option>
+      <option value="sleep">Antes de dormir</option>
+    </select></div>
+
+    <div class="field"><label>Título</label><input class="input" id="mealTitle" placeholder="Ej: Avena con banana y yogur"></div>
+    <div class="field"><label>Alimentos / cantidades</label><input class="input" id="mealFoods" placeholder="Ej: 80 g avena, 1 banana, 200 g yogur"></div>
+
+    <div class="meal-form-grid three">
+      <div class="field"><label>Calorías</label><input class="input" id="mealCalories" type="number" min="0" placeholder="500"></div>
+      <div class="field"><label>Proteínas (g)</label><input class="input" id="mealProtein" type="number" min="0" step="0.1" placeholder="30"></div>
+      <div class="field"><label>Carbohidratos (g)</label><input class="input" id="mealCarbs" type="number" min="0" step="0.1" placeholder="60"></div>
+    </div>
+
+    <div class="meal-form-grid three">
+      <div class="field"><label>Grasas (g)</label><input class="input" id="mealFat" type="number" min="0" step="0.1" placeholder="15"></div>
+      <div class="field"><label>Horario</label><input class="input" id="mealTime" type="time"></div>
+      <div class="field"><label>Descripción</label><input class="input" id="mealDescription" placeholder="Notas, preparación, etc."></div>
+    </div>
+
+    <div class="meal-form-actions">
+      <button class="save" id="saveMealBtn">Guardar comida</button>
+      <button class="secondary hidden" id="cancelMealBtn">Cancelar edición</button>
+    </div>
+    <div class="meal-help">La comida queda asociada al día seleccionado y a tu cuenta.</div>
+  </div>
 </div>
-<div class="field"><label>Comida</label><select class="input" id="mealType">
-<option value="pre">Pre entrenamiento</option>
-<option value="post">Post entrenamiento</option>
-<option value="lunch">Almuerzo</option>
-<option value="snack">Merienda</option>
-<option value="dinner">Cena</option>
-<option value="sleep">Antes de dormir</option>
-</select></div>
-<div class="field"><label>Título</label><input class="input" id="mealTitle" placeholder="Ej: Avena con banana y yogur"/></div>
-<div class="field"><label>Alimentos / cantidades</label><input class="input" id="mealFoods" placeholder="Ej: 80 g avena, 1 banana, 200 g yogur"/></div>
-<div class="meal-form-grid three">
-<div class="field"><label>Calorías</label><input class="input" id="mealCalories" min="0" placeholder="500" type="number"/></div>
-<div class="field"><label>Proteínas (g)</label><input class="input" id="mealProtein" min="0" placeholder="30" step="0.1" type="number"/></div>
-<div class="field"><label>Carbohidratos (g)</label><input class="input" id="mealCarbs" min="0" placeholder="60" step="0.1" type="number"/></div>
-</div>
-<div class="meal-form-grid three">
-<div class="field"><label>Grasas (g)</label><input class="input" id="mealFat" min="0" placeholder="15" step="0.1" type="number"/></div>
-<div class="field"><label>Horario</label><input class="input" id="mealTime" type="time"/></div>
-<div class="field"><label>Descripción</label><input class="input" id="mealDescription" placeholder="Notas, preparación, etc."/></div>
-</div>
-<div class="meal-form-actions">
-<button class="save" id="saveMealBtn">Guardar comida</button>
-<button class="secondary hidden" id="cancelMealBtn">Cancelar edición</button>
-</div>
-<div class="meal-help">La comida queda asociada al día seleccionado y a tu cuenta.</div>
-</div>
-</div>
+
+
 <div class="overlay" id="goalOverlay">
-<div class="modal" onclick="event.stopPropagation()">
-<div class="modal-head">
-<div><h3>⚙ Objetivos de alimentación</h3><span>Se guardan en este navegador para tu usuario.</span></div>
-<button class="close" id="goalCloseBtn">×</button>
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <div><h3>⚙ Objetivos de alimentación</h3><span>Se guardan en este navegador para tu usuario.</span></div>
+      <button class="close" id="goalCloseBtn">×</button>
+    </div>
+    <div class="goal-modal-grid">
+      <div class="field"><label>Calorías / día</label><input class="input" id="goalCalories" type="number" min="0" step="10" placeholder="2500"></div>
+      <div class="field"><label>Proteínas (g)</label><input class="input" id="goalProtein" type="number" min="0" step="1" placeholder="160"></div>
+      <div class="field"><label>Carbohidratos (g)</label><input class="input" id="goalCarbs" type="number" min="0" step="1" placeholder="300"></div>
+      <div class="field"><label>Grasas (g)</label><input class="input" id="goalFat" type="number" min="0" step="1" placeholder="70"></div>
+    </div>
+    <button class="save" id="saveGoalsBtn">Guardar objetivos</button>
+  </div>
 </div>
-<div class="goal-modal-grid">
-<div class="field"><label>Calorías / día</label><input class="input" id="goalCalories" min="0" placeholder="2500" step="10" type="number"/></div>
-<div class="field"><label>Proteínas (g)</label><input class="input" id="goalProtein" min="0" placeholder="160" step="1" type="number"/></div>
-<div class="field"><label>Carbohidratos (g)</label><input class="input" id="goalCarbs" min="0" placeholder="300" step="1" type="number"/></div>
-<div class="field"><label>Grasas (g)</label><input class="input" id="goalFat" min="0" placeholder="70" step="1" type="number"/></div>
-</div>
-<button class="save" id="saveGoalsBtn">Guardar objetivos</button>
-</div>
-</div>
-<div class="overlay" id="dateOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="dateModalTitle">＋ Agregar fecha</h3><span id="dateModalInfo">Fecha personal</span></div><button class="close" onclick="closeDateModal()">×</button></div><div class="field"><label>Fecha</label><input class="input" id="dateInput" type="date"/></div><div class="field"><label>Tipo</label><select class="input" id="dateType"><option value="ocupado">📌 Día ocupado</option><option value="importante">⭐ Día importante</option></select></div><div class="field"><label>Título</label><input class="input" id="dateTitle"/></div><div class="field"><label>Descripción</label><input class="input" id="dateDescription"/></div><button class="save" id="saveDateBtn">Guardar fecha</button><button class="danger hidden" id="deleteDateBtn">🗑️ Eliminar fecha</button></div></div>
+
+<div class="overlay" id="dateOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="dateModalTitle">＋ Agregar fecha</h3><span id="dateModalInfo">Fecha personal</span></div><button class="close" onclick="closeDateModal()">×</button></div><div class="field"><label>Fecha</label><input class="input" id="dateInput" type="date"></div><div class="field"><label>Tipo</label><select class="input" id="dateType"><option value="ocupado">📌 Día ocupado</option><option value="importante">⭐ Día importante</option></select></div><div class="field"><label>Título</label><input class="input" id="dateTitle"></div><div class="field"><label>Descripción</label><input class="input" id="dateDescription"></div><button class="save" id="saveDateBtn">Guardar fecha</button><button class="danger hidden" id="deleteDateBtn">🗑️ Eliminar fecha</button></div></div>
+
 <!-- split-js:03-inline-script-03.js -->
-<script src="./js/03-inline-script-03.js"></script>
+<script src="./js/03-inline-script-03.js" defer></script>
 <!-- split-js:04-inline-script-04.js -->
-<script src="./js/04-inline-script-04.js"></script>
+<script src="./js/04-inline-script-04.js" defer></script>
+
 <div class="v25-sheet" id="v25QuickSheet">
-<div class="v25-sheet-card">
-<div class="v25-sheet-head">
-<div>
-<div class="v25-sheet-title">⚡ Acción rápida</div>
-<div class="v25-goal-sub">Creá algo sin navegar por toda la app.</div>
+  <div class="v25-sheet-card">
+    <div class="v25-sheet-head">
+      <div>
+        <div class="v25-sheet-title">⚡ Acción rápida</div>
+        <div class="v25-goal-sub">Creá algo sin navegar por toda la app.</div>
+      </div>
+      <button class="v25-btn" id="v25QuickClose" type="button">Cerrar</button>
+    </div>
+    <div class="v25-goal-actions">
+      <button class="v25-btn primary" data-v25-action="task" type="button">📚 Tarea</button>
+      <button class="v25-btn primary" data-v25-action="meal" type="button">🍽️ Comida</button>
+      <button class="v25-btn primary" data-v25-action="workout" type="button">🏋️ Ejercicio</button>
+      <button class="v25-btn primary" data-v25-action="date" type="button">📅 Fecha</button>
+    </div>
+  </div>
 </div>
-<button class="v25-btn" id="v25QuickClose" type="button">Cerrar</button>
-</div>
-<div class="v25-goal-actions">
-<button class="v25-btn primary" data-v25-action="task" type="button">📚 Tarea</button>
-<button class="v25-btn primary" data-v25-action="meal" type="button">🍽️ Comida</button>
-<button class="v25-btn primary" data-v25-action="workout" type="button">🏋️ Ejercicio</button>
-<button class="v25-btn primary" data-v25-action="date" type="button">📅 Fecha</button>
-</div>
-</div>
-</div>
+
+
 <!-- split-js:05-v25-upgrades-script.js -->
-<script src="./js/05-v25-upgrades-script.js"></script>
+<script src="./js/05-v25-upgrades-script.js" defer></script>
+
 <!-- split-js:06-v27-search-portrait-fix.js -->
-<script src="./js/06-v27-search-portrait-fix.js"></script>
+<script src="./js/06-v27-search-portrait-fix.js" defer></script>
 <div class="v28-workout-overlay" id="v28WorkoutOverlay"><div class="v28-workout-shell"><div class="v28-workout-top"><div><div class="v28-workout-title">🏋️ Vista de entrenamiento</div><div class="v28-workout-sub" id="v28WorkoutDayLabel">Rutina</div></div><button class="v28-workout-close" id="v28WorkoutClose" type="button">×</button></div><div class="v28-workout-progress"><span id="v28ProgressBar"></span></div><div class="v28-workout-card"><div class="v28-step" id="v28StepLabel">Ejercicio 1 de 1</div><div class="v28-current-name" id="v28CurrentName">—</div><div class="v28-chips" id="v28CurrentChips"></div><div class="v28-note" id="v28CurrentNote"></div><div class="v50-prev-perf" id="v50PrevPerf" style="display:none"></div>
 <div class="v47-reps-panel" id="v47RepsPanel"><div class="v47-reps-head"><div><strong>📊 Registrar lo que hiciste</strong><span>Las repeticiones reales se guardan en tu historial.</span></div><div class="v47-reps-counter" id="v47RepsCounter">0/0 series</div></div><div class="v47-set-list" id="v47SetList"></div><div class="v47-reps-summary" id="v47RepsSummary">Completá cada serie con las reps que hiciste.</div></div><div class="v28-actions"><button class="v28-btn" id="v28PrevBtn" type="button">← Anterior</button><button class="v28-btn primary" id="v28NextBtn" type="button">Siguiente →</button><button class="v28-btn success" id="v28FinishBtn" type="button">✓ Terminar entrenamiento</button></div></div><div class="v28-utility"><div class="v28-tool-card"><div class="v28-tool-label">Cronómetro / temporizador</div><div class="v28-timer-mode"><button class="v28-mode active" id="v28TimerModeStopwatch" type="button">⏱ Cronómetro</button><button class="v28-mode" id="v28TimerModeCountdown" type="button">⏳ Temporizador</button></div><div class="v28-timer" id="v28TimerDisplay">00:00</div><div class="v28-timer-actions"><button id="v28TimerStart" type="button">Iniciar</button><button id="v28TimerPause" type="button">Pausar</button><button id="v28TimerReset" type="button">Reiniciar</button></div></div><div class="v28-tool-card"><div class="v28-tool-label">Sesión</div><div class="v28-timer" id="v28SessionClock">00:00</div><div class="v28-mini">Tiempo total desde que comenzaste.</div><div class="v28-session-list" id="v28SessionList"></div></div></div><div class="v49-cancel-wrap"><button class="v49-cancel-btn" id="v49CancelWorkout" type="button">✕ Cancelar entrenamiento</button><small class="v49-cancel-help">Cancela esta sesión y descarta los registros realizados durante ella. También podés salir con Esc sin confirmar el cierre.</small></div></div></div>
+
 <!-- split-js:07-v31-training-persistence.js -->
-<script src="./js/07-v31-training-persistence.js"></script>
+<script src="./js/07-v31-training-persistence.js" defer></script>
+
+
 <div class="v31-training-mini" id="v31TrainingMini">
-<div class="v31-mini-main">
-<div class="v31-mini-title" id="v31MiniTitle">🏋️ Entrenamiento en curso</div>
-<div class="v31-mini-sub" id="v31MiniSub">Sesión guardada automáticamente</div>
+  <div class="v31-mini-main">
+    <div class="v31-mini-title" id="v31MiniTitle">🏋️ Entrenamiento en curso</div>
+    <div class="v31-mini-sub" id="v31MiniSub">Sesión guardada automáticamente</div>
+  </div>
+  <div class="v31-mini-timer" id="v31MiniTimer">00:00</div>
+  <div class="v31-mini-actions">
+    <button class="v31-mini-btn primary" id="v31MiniOpen" type="button">Abrir</button>
+    <button class="v31-mini-btn" id="v31MiniFinish" type="button">Terminar</button>
+  </div>
 </div>
-<div class="v31-mini-timer" id="v31MiniTimer">00:00</div>
-<div class="v31-mini-actions">
-<button class="v31-mini-btn primary" id="v31MiniOpen" type="button">Abrir</button>
-<button class="v31-mini-btn" id="v31MiniFinish" type="button">Terminar</button>
-</div>
-</div>
+
+
 <!-- split-js:08-v32-section-controller.js -->
-<script src="./js/08-v32-section-controller.js"></script>
+<script src="./js/08-v32-section-controller.js" defer></script>
+
+
 <!-- split-js:09-v32-training-guard.js -->
-<script src="./js/09-v32-training-guard.js"></script>
+<script src="./js/09-v32-training-guard.js" defer></script>
+
+
 <!-- split-css:31-v33-upgrades-style.css -->
-<link href="./css/31-v33-upgrades-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/31-v33-upgrades-style.css">
 <!-- split-js:10-v33-upgrades-script.js -->
-<script src="./js/10-v33-upgrades-script.js"></script>
-<div aria-hidden="true" class="overlay v34-modal" id="v34RecurringOverlay">
-<div class="modal" onclick="event.stopPropagation()">
-<div class="modal-head"><div><h3>🔁 Tarea recurrente</h3><span>Creá varias ocurrencias semanales de una sola vez.</span></div><button class="close" id="v34RecurringClose" type="button">×</button></div>
-<div class="field"><label>Título</label><input class="input" id="v34RecurringTitle" placeholder="Ej: Estudiar cálculo"/></div>
-<div class="field"><label>Descripción</label><input class="input" id="v34RecurringDesc" placeholder="Opcional"/></div>
-<div class="field"><label>Días</label><div class="v34-days" id="v34RecurringDays"></div></div>
-<div class="minute-row"><div class="field"><label>Hora</label><input class="input" id="v34RecurringHour" max="22" min="7" type="number" value="18"/></div><div class="field"><label>Minuto</label><select class="input" id="v34RecurringMinute"></select></div></div>
-<div class="field"><label>Prioridad</label><select class="input" id="v34RecurringPriority"><option value="urgent">🔴 Urgente</option><option value="high">🟠 Alta</option><option selected="" value="normal">🔵 Normal</option><option value="low">⚪ Baja</option></select></div>
-<div class="v34-sub">La tarea quedará guardada en Supabase para cada día seleccionado. Después podés editar o eliminar cada ocurrencia normalmente.</div>
-<button class="save" id="v34RecurringSave" type="button">Crear tareas recurrentes</button>
+<script src="./js/10-v33-upgrades-script.js" defer></script>
+
+
+<div class="overlay v34-modal" id="v34RecurringOverlay" aria-hidden="true">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head"><div><h3>🔁 Tarea recurrente</h3><span>Creá varias ocurrencias semanales de una sola vez.</span></div><button class="close" id="v34RecurringClose" type="button">×</button></div>
+    <div class="field"><label>Título</label><input class="input" id="v34RecurringTitle" placeholder="Ej: Estudiar cálculo"></div>
+    <div class="field"><label>Descripción</label><input class="input" id="v34RecurringDesc" placeholder="Opcional"></div>
+    <div class="field"><label>Días</label><div class="v34-days" id="v34RecurringDays"></div></div>
+    <div class="minute-row"><div class="field"><label>Hora</label><input class="input" id="v34RecurringHour" type="number" min="7" max="22" value="18"></div><div class="field"><label>Minuto</label><select class="input" id="v34RecurringMinute"></select></div></div>
+    <div class="field"><label>Prioridad</label><select class="input" id="v34RecurringPriority"><option value="urgent">🔴 Urgente</option><option value="high">🟠 Alta</option><option value="normal" selected>🔵 Normal</option><option value="low">⚪ Baja</option></select></div>
+    <div class="v34-sub">La tarea quedará guardada en Supabase para cada día seleccionado. Después podés editar o eliminar cada ocurrencia normalmente.</div>
+    <button class="save" id="v34RecurringSave" type="button">Crear tareas recurrentes</button>
+  </div>
 </div>
-</div>
+
 <!-- split-css:32-v34-upgrades-style.css -->
-<link href="./css/32-v34-upgrades-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/32-v34-upgrades-style.css">
+
 <!-- split-js:11-v34-upgrades-script.js -->
-<script src="./js/11-v34-upgrades-script.js"></script>
+<script src="./js/11-v34-upgrades-script.js" defer></script>
+
 <!-- split-css:33-v35-upgrades-style.css -->
-<link href="./css/33-v35-upgrades-style.css" rel="stylesheet"/>
-<div aria-hidden="true" class="v35-focus-overlay" id="v35FocusOverlay">
-<div class="v35-focus-shell" onclick="event.stopPropagation()">
-<div class="v35-focus-head"><div><h3>🎯 Modo concentración</h3><p>Trabajá en una sola tarea y dejá la agenda tranquila mientras te enfocás.</p></div><button class="v35-focus-close" id="v35FocusClose" type="button">×</button></div>
-<div class="v35-focus-task"><strong id="v35FocusTaskTitle">Sin tarea seleccionada</strong><span id="v35FocusTaskMeta">Elegí una tarea pendiente para empezar.</span></div>
-<div class="v35-focus-clock" id="v35FocusClock">25:00</div>
-<div class="v35-focus-mode"><button class="active" data-v35-min="25" type="button">25 min</button><button data-v35-min="50" type="button">50 min</button><button data-v35-min="5" type="button">5 min</button></div>
-<div class="v35-focus-actions"><button class="primary" id="v35FocusStart" type="button">▶ Iniciar</button><button id="v35FocusPause" type="button">⏸ Pausar</button><button id="v35FocusReset" type="button">↺ Reiniciar</button><button id="v35FocusComplete" type="button">✅ Completar tarea</button></div>
-<div class="v35-focus-tip">El temporizador se guarda localmente por usuario y continúa mientras la pestaña siga abierta.</div>
+<link rel="stylesheet" href="./css/33-v35-upgrades-style.css">
+
+<div class="v35-focus-overlay" id="v35FocusOverlay" aria-hidden="true">
+  <div class="v35-focus-shell" onclick="event.stopPropagation()">
+    <div class="v35-focus-head"><div><h3>🎯 Modo concentración</h3><p>Trabajá en una sola tarea y dejá la agenda tranquila mientras te enfocás.</p></div><button class="v35-focus-close" id="v35FocusClose" type="button">×</button></div>
+    <div class="v35-focus-task"><strong id="v35FocusTaskTitle">Sin tarea seleccionada</strong><span id="v35FocusTaskMeta">Elegí una tarea pendiente para empezar.</span></div>
+    <div class="v35-focus-clock" id="v35FocusClock">25:00</div>
+    <div class="v35-focus-mode"><button type="button" data-v35-min="25" class="active">25 min</button><button type="button" data-v35-min="50">50 min</button><button type="button" data-v35-min="5">5 min</button></div>
+    <div class="v35-focus-actions"><button class="primary" id="v35FocusStart" type="button">▶ Iniciar</button><button id="v35FocusPause" type="button">⏸ Pausar</button><button id="v35FocusReset" type="button">↺ Reiniciar</button><button id="v35FocusComplete" type="button">✅ Completar tarea</button></div>
+    <div class="v35-focus-tip">El temporizador se guarda localmente por usuario y continúa mientras la pestaña siga abierta.</div>
+  </div>
 </div>
-</div>
+
 <!-- split-js:12-v35-upgrades-script.js -->
-<script src="./js/12-v35-upgrades-script.js"></script>
+<script src="./js/12-v35-upgrades-script.js" defer></script>
 <!-- split-css:34-v36-enhancements-style.css -->
-<link href="./css/34-v36-enhancements-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/34-v36-enhancements-style.css">
+
 <!-- split-js:13-v36-enhancements-script.js -->
-<script src="./js/13-v36-enhancements-script.js"></script>
+<script src="./js/13-v36-enhancements-script.js" defer></script>
+
+
+
+
 <!-- split-css:35-v37-advanced-style.css -->
-<link href="./css/35-v37-advanced-style.css" rel="stylesheet"/>
-<div aria-hidden="true" class="v37-overlay" id="v37SubtaskOverlay">
-<div class="v37-sheet">
-<div class="v37-sheet-head"><div><h3 id="v37SubtaskTitle">Subtareas</h3><p>Dividí una tarea grande en pasos pequeños.</p></div><button class="v37-close" id="v37SubtaskClose" type="button">×</button></div>
-<div id="v37SubtaskBody"></div>
+<link rel="stylesheet" href="./css/35-v37-advanced-style.css">
+
+<div class="v37-overlay" id="v37SubtaskOverlay" aria-hidden="true">
+  <div class="v37-sheet">
+    <div class="v37-sheet-head"><div><h3 id="v37SubtaskTitle">Subtareas</h3><p>Dividí una tarea grande en pasos pequeños.</p></div><button class="v37-close" id="v37SubtaskClose" type="button">×</button></div>
+    <div id="v37SubtaskBody"></div>
+  </div>
 </div>
-</div>
+
 <!-- split-js:14-v37-advanced-script.js -->
-<script src="./js/14-v37-advanced-script.js"></script>
+<script src="./js/14-v37-advanced-script.js" defer></script>
+
+
 <!-- split-css:36-v38-productivity-style.css -->
-<link href="./css/36-v38-productivity-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/36-v38-productivity-style.css">
+
 <!-- split-js:15-v38-productivity-script.js -->
-<script src="./js/15-v38-productivity-script.js"></script>
+<script src="./js/15-v38-productivity-script.js" defer></script>
+
 <!-- split-css:37-v39-sync-style.css -->
-<link href="./css/37-v39-sync-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/37-v39-sync-style.css">
+
 <!-- split-js:16-v39-real-sync.js -->
-<script src="./js/16-v39-real-sync.js"></script>
+<script src="./js/16-v39-real-sync.js" defer></script>
+
+
 <!-- split-css:38-v40-smart-style.css -->
-<link href="./css/38-v40-smart-style.css" rel="stylesheet"/>
-<section class="v40-panel v32-home-pane" data-v40-pane="home" id="v40SmartPanel">
-<div class="v40-head">
-<div><h3>🧭 ¿Qué hago ahora?</h3><p>La app elige una acción útil sin modificar tu agenda automáticamente.</p></div>
-<span class="v40-badge" id="v40SmartBadge">Analizando…</span>
-</div>
-<div class="v40-grid">
-<div class="v40-card"><h4>Próxima mejor acción</h4><div class="v40-main" id="v40NextTitle">—</div><div class="v40-sub" id="v40NextMeta">—</div><div class="v40-actions"><button class="v40-btn" id="v40FocusNow">🎯 Concentrarme</button><button class="v40-btn" id="v40OpenNow">📚 Abrir tarea</button></div></div>
-<div class="v40-card"><h4>Estado del día</h4><div class="v40-main" id="v40DayState">—</div><div class="v40-sub" id="v40DayMeta">—</div><span class="v40-pill" id="v40FreePill">🟢 Tiempo libre: calculando…</span></div>
-<div class="v40-card"><h4>Sin conexión</h4><div class="v40-main" id="v40OfflineState">—</div><div class="v40-sub" id="v40OfflineMeta">—</div><div class="v40-actions"><button class="v40-btn" id="v40PlanBtn">🗓️ Ver bloques sugeridos</button></div></div>
-</div>
-<div class="v40-queue" id="v40Queue"><span class="v40-dot"></span><span id="v40QueueText">Revisando cambios pendientes…</span></div>
+<link rel="stylesheet" href="./css/38-v40-smart-style.css">
+
+<section class="v40-panel v32-home-pane" id="v40SmartPanel" data-v40-pane="home">
+  <div class="v40-head">
+    <div><h3>🧭 ¿Qué hago ahora?</h3><p>La app elige una acción útil sin modificar tu agenda automáticamente.</p></div>
+    <span class="v40-badge" id="v40SmartBadge">Analizando…</span>
+  </div>
+  <div class="v40-grid">
+    <div class="v40-card"><h4>Próxima mejor acción</h4><div class="v40-main" id="v40NextTitle">—</div><div class="v40-sub" id="v40NextMeta">—</div><div class="v40-actions"><button class="v40-btn" id="v40FocusNow">🎯 Concentrarme</button><button class="v40-btn" id="v40OpenNow">📚 Abrir tarea</button></div></div>
+    <div class="v40-card"><h4>Estado del día</h4><div class="v40-main" id="v40DayState">—</div><div class="v40-sub" id="v40DayMeta">—</div><span class="v40-pill" id="v40FreePill">🟢 Tiempo libre: calculando…</span></div>
+    <div class="v40-card"><h4>Sin conexión</h4><div class="v40-main" id="v40OfflineState">—</div><div class="v40-sub" id="v40OfflineMeta">—</div><div class="v40-actions"><button class="v40-btn" id="v40PlanBtn">🗓️ Ver bloques sugeridos</button></div></div>
+  </div>
+  <div class="v40-queue" id="v40Queue"><span class="v40-dot"></span><span id="v40QueueText">Revisando cambios pendientes…</span></div>
 </section>
-<div aria-hidden="true" class="v40-overlay" id="v40PlanOverlay">
-<div class="v40-modal" onclick="event.stopPropagation()">
-<div class="v40-modal-head"><div><h3>🗓️ Bloques recomendados</h3><p>Son sugerencias; no cambian tu agenda hasta que vos decidas.</p></div><button class="v40-close" id="v40PlanClose" type="button">×</button></div>
-<div class="v40-suggestions" id="v40Suggestions"></div>
-<div class="v40-steps"><strong>Cómo se calcula:</strong><div class="v40-step">1. Prioriza tareas urgentes y atrasadas.</div><div class="v40-step">2. Respeta tu próxima actividad existente.</div><div class="v40-step">3. Busca espacios de 25–60 minutos sin tareas programadas.</div></div>
+
+<div class="v40-overlay" id="v40PlanOverlay" aria-hidden="true">
+  <div class="v40-modal" onclick="event.stopPropagation()">
+    <div class="v40-modal-head"><div><h3>🗓️ Bloques recomendados</h3><p>Son sugerencias; no cambian tu agenda hasta que vos decidas.</p></div><button class="v40-close" id="v40PlanClose" type="button">×</button></div>
+    <div class="v40-suggestions" id="v40Suggestions"></div>
+    <div class="v40-steps"><strong>Cómo se calcula:</strong><div class="v40-step">1. Prioriza tareas urgentes y atrasadas.</div><div class="v40-step">2. Respeta tu próxima actividad existente.</div><div class="v40-step">3. Busca espacios de 25–60 minutos sin tareas programadas.</div></div>
+  </div>
 </div>
-</div>
+
 <!-- split-js:17-v40-smart-and-offline.js -->
-<script src="./js/17-v40-smart-and-offline.js"></script>
+<script src="./js/17-v40-smart-and-offline.js" defer></script>
+
+
 <!-- split-css:39-v41-productivity-style.css -->
-<link href="./css/39-v41-productivity-style.css" rel="stylesheet"/>
-<section class="v41-panel v32-home-pane" data-v41-pane="home" id="v41ActionPanel">
-<div class="v41-head">
-<div><h3>🎯 Centro de acción</h3><p>Te muestra qué hacer ahora y permite posponer o completar la próxima tarea sin abrir el editor.</p></div>
-<div class="v41-clock" id="v41Clock">--:--</div>
-</div>
-<div class="v41-grid">
-<div class="v41-card">
-<h4>Próxima tarea</h4><div class="v41-main" id="v41TaskTitle">Sin tareas pendientes</div><div class="v41-sub" id="v41TaskMeta">—</div>
-<div class="v41-actions"><button class="v41-btn success" id="v41CompleteBtn" type="button">✓ Completar</button><button class="v41-btn" id="v41FocusBtn" type="button">🎯 Foco</button><button class="v41-btn" id="v41OpenBtn" type="button">📚 Abrir</button></div>
-</div>
-<div class="v41-card"><h4>Posponer</h4><div class="v41-main" id="v41Countdown">—</div><div class="v41-sub">Mueve la próxima tarea sin perder su prioridad.</div><div class="v41-actions"><button class="v41-btn warn" data-v41-snooze="15">+15 min</button><button class="v41-btn warn" data-v41-snooze="30">+30 min</button><button class="v41-btn warn" data-v41-snooze="60">+1 h</button></div></div>
-<div class="v41-card"><h4>Atajos</h4><div class="v41-main">Teclado</div><div class="v41-sub">Usá atajos para capturar y moverte más rápido.</div><div class="v41-kbd"><kbd>Alt N</kbd> nueva tarea · <kbd>Alt I</kbd> inbox</div><div class="v41-actions"><button class="v41-btn" id="v41ShortcutsBtn" type="button">⌨ Ver atajos</button></div></div>
-</div>
+<link rel="stylesheet" href="./css/39-v41-productivity-style.css">
+
+<section class="v41-panel v32-home-pane" id="v41ActionPanel" data-v41-pane="home">
+  <div class="v41-head">
+    <div><h3>🎯 Centro de acción</h3><p>Te muestra qué hacer ahora y permite posponer o completar la próxima tarea sin abrir el editor.</p></div>
+    <div class="v41-clock" id="v41Clock">--:--</div>
+  </div>
+  <div class="v41-grid">
+    <div class="v41-card">
+      <h4>Próxima tarea</h4><div class="v41-main" id="v41TaskTitle">Sin tareas pendientes</div><div class="v41-sub" id="v41TaskMeta">—</div>
+      <div class="v41-actions"><button class="v41-btn success" id="v41CompleteBtn" type="button">✓ Completar</button><button class="v41-btn" id="v41FocusBtn" type="button">🎯 Foco</button><button class="v41-btn" id="v41OpenBtn" type="button">📚 Abrir</button></div>
+    </div>
+    <div class="v41-card"><h4>Posponer</h4><div class="v41-main" id="v41Countdown">—</div><div class="v41-sub">Mueve la próxima tarea sin perder su prioridad.</div><div class="v41-actions"><button class="v41-btn warn" data-v41-snooze="15">+15 min</button><button class="v41-btn warn" data-v41-snooze="30">+30 min</button><button class="v41-btn warn" data-v41-snooze="60">+1 h</button></div></div>
+    <div class="v41-card"><h4>Atajos</h4><div class="v41-main">Teclado</div><div class="v41-sub">Usá atajos para capturar y moverte más rápido.</div><div class="v41-kbd"><kbd>Alt N</kbd> nueva tarea · <kbd>Alt I</kbd> inbox</div><div class="v41-actions"><button class="v41-btn" id="v41ShortcutsBtn" type="button">⌨ Ver atajos</button></div></div>
+  </div>
 </section>
-<div aria-hidden="true" class="v41-overlay" id="v41ShortcutsOverlay">
-<div class="v41-modal" onclick="event.stopPropagation()">
-<div class="v41-modal-head"><div><h3>⌨ Atajos de teclado</h3><p>Funcionan cuando no estás escribiendo dentro de un campo.</p></div><button class="v41-close" id="v41ShortcutsClose" type="button">×</button></div>
-<div class="v41-shortcuts">
-<div class="v41-shortcut"><span>Nueva tarea</span><kbd>Alt + N</kbd></div>
-<div class="v41-shortcut"><span>Ir a inbox</span><kbd>Alt + I</kbd></div>
-<div class="v41-shortcut"><span>Abrir búsqueda</span><kbd>Ctrl + K</kbd></div>
-<div class="v41-shortcut"><span>Acciones rápidas</span><kbd>Ctrl + Q</kbd></div>
-<div class="v41-shortcut"><span>Modo foco</span><kbd>Ctrl + Shift + F</kbd></div>
-<div class="v41-shortcut"><span>Cerrar ventanas</span><kbd>Esc</kbd></div>
+
+<div class="v41-overlay" id="v41ShortcutsOverlay" aria-hidden="true">
+  <div class="v41-modal" onclick="event.stopPropagation()">
+    <div class="v41-modal-head"><div><h3>⌨ Atajos de teclado</h3><p>Funcionan cuando no estás escribiendo dentro de un campo.</p></div><button class="v41-close" id="v41ShortcutsClose" type="button">×</button></div>
+    <div class="v41-shortcuts">
+      <div class="v41-shortcut"><span>Nueva tarea</span><kbd>Alt + N</kbd></div>
+      <div class="v41-shortcut"><span>Ir a inbox</span><kbd>Alt + I</kbd></div>
+      <div class="v41-shortcut"><span>Abrir búsqueda</span><kbd>Ctrl + K</kbd></div>
+      <div class="v41-shortcut"><span>Acciones rápidas</span><kbd>Ctrl + Q</kbd></div>
+      <div class="v41-shortcut"><span>Modo foco</span><kbd>Ctrl + Shift + F</kbd></div>
+      <div class="v41-shortcut"><span>Cerrar ventanas</span><kbd>Esc</kbd></div>
+    </div>
+  </div>
 </div>
-</div>
-</div>
+
 <!-- split-js:18-v41-action-center.js -->
-<script src="./js/18-v41-action-center.js"></script>
+<script src="./js/18-v41-action-center.js" defer></script>
+
+
 <!-- split-css:40-v42-desktop-nav-enhancement.css -->
-<link href="./css/40-v42-desktop-nav-enhancement.css" rel="stylesheet"/>
-<button aria-label="Volver arriba" class="v42-top-btn" id="v42TopBtn" type="button">↑</button>
+<link rel="stylesheet" href="./css/40-v42-desktop-nav-enhancement.css">
+
+<button class="v42-top-btn" id="v42TopBtn" type="button" aria-label="Volver arriba">↑</button>
+
 <!-- split-js:19-v42-desktop-nav-script.js -->
-<script src="./js/19-v42-desktop-nav-script.js"></script>
+<script src="./js/19-v42-desktop-nav-script.js" defer></script>
+
 <!-- split-css:41-v44-suite-style.css -->
-<link href="./css/41-v44-suite-style.css" rel="stylesheet"/>
-<section class="v44-panel v32-agenda-pane" data-v44-pane="agenda" id="v44WeekPanel">
-<div class="v44-head">
-<div><h3>🗓 Vista semanal</h3><p>Una visión rápida de toda tu semana, con progreso y prioridades.</p></div>
-<span class="v44-badge" id="v44WeekBadge">Esta semana</span>
-</div>
-<div class="v44-tools">
-<button class="v44-btn active" data-v44-filter="all" type="button">Todo</button>
-<button class="v44-btn" data-v44-filter="pending" type="button">Pendientes</button>
-<button class="v44-btn" data-v44-filter="urgent" type="button">🔴 Urgentes</button>
-<button class="v44-btn" data-v44-filter="done" type="button">Completadas</button>
-<input autocomplete="off" class="v44-search" id="v44WeekSearch" placeholder="Filtrar por título…"/>
-</div>
-<div class="v44-week" id="v44Week"></div>
-<div class="v44-stats">
-<div class="v44-stat"><strong id="v44Total">0</strong><span>tareas esta semana</span></div>
-<div class="v44-stat"><strong id="v44Done">0%</strong><span>completadas</span></div>
-<div class="v44-stat"><strong id="v44Urgent">0</strong><span>urgentes pendientes</span></div>
-<div class="v44-stat"><strong id="v44BusyDay">—</strong><span>día más cargado</span></div>
-</div>
-<div class="v44-meta">La vista semanal es informativa: no cambia tus tareas ni horarios automáticamente.</div>
+<link rel="stylesheet" href="./css/41-v44-suite-style.css">
+
+<section class="v44-panel v32-agenda-pane" id="v44WeekPanel" data-v44-pane="agenda">
+  <div class="v44-head">
+    <div><h3>🗓 Vista semanal</h3><p>Una visión rápida de toda tu semana, con progreso y prioridades.</p></div>
+    <span class="v44-badge" id="v44WeekBadge">Esta semana</span>
+  </div>
+  <div class="v44-tools">
+    <button class="v44-btn active" data-v44-filter="all" type="button">Todo</button>
+    <button class="v44-btn" data-v44-filter="pending" type="button">Pendientes</button>
+    <button class="v44-btn" data-v44-filter="urgent" type="button">🔴 Urgentes</button>
+    <button class="v44-btn" data-v44-filter="done" type="button">Completadas</button>
+    <input class="v44-search" id="v44WeekSearch" placeholder="Filtrar por título…" autocomplete="off">
+  </div>
+  <div class="v44-week" id="v44Week"></div>
+  <div class="v44-stats">
+    <div class="v44-stat"><strong id="v44Total">0</strong><span>tareas esta semana</span></div>
+    <div class="v44-stat"><strong id="v44Done">0%</strong><span>completadas</span></div>
+    <div class="v44-stat"><strong id="v44Urgent">0</strong><span>urgentes pendientes</span></div>
+    <div class="v44-stat"><strong id="v44BusyDay">—</strong><span>día más cargado</span></div>
+  </div>
+  <div class="v44-meta">La vista semanal es informativa: no cambia tus tareas ni horarios automáticamente.</div>
 </section>
-<section class="v44-panel v32-home-pane" data-v44-pane="home" id="v44HomePulse">
-<div class="v44-head">
-<div><h3>📡 Pulso de la semana</h3><p>Detecta en qué día estás más cargado y dónde tenés margen.</p></div>
-<span class="v44-badge" id="v44PulseBadge">Calculando…</span>
-</div>
-<div class="v44-stats">
-<div class="v44-stat"><strong id="v44PulseBest">—</strong><span>mejor día</span></div>
-<div class="v44-stat"><strong id="v44PulseWorst">—</strong><span>más cargado</span></div>
-<div class="v44-stat"><strong id="v44PulseFree">0 min</strong><span>margen estimado hoy</span></div>
-<div class="v44-stat"><strong id="v44PulseRate">0%</strong><span>ritmo semanal</span></div>
-</div>
+
+<section class="v44-panel v32-home-pane" id="v44HomePulse" data-v44-pane="home">
+  <div class="v44-head">
+    <div><h3>📡 Pulso de la semana</h3><p>Detecta en qué día estás más cargado y dónde tenés margen.</p></div>
+    <span class="v44-badge" id="v44PulseBadge">Calculando…</span>
+  </div>
+  <div class="v44-stats">
+    <div class="v44-stat"><strong id="v44PulseBest">—</strong><span>mejor día</span></div>
+    <div class="v44-stat"><strong id="v44PulseWorst">—</strong><span>más cargado</span></div>
+    <div class="v44-stat"><strong id="v44PulseFree">0 min</strong><span>margen estimado hoy</span></div>
+    <div class="v44-stat"><strong id="v44PulseRate">0%</strong><span>ritmo semanal</span></div>
+  </div>
 </section>
+
 <!-- split-js:20-v44-suite-script.js -->
-<script src="./js/20-v44-suite-script.js"></script>
+<script src="./js/20-v44-suite-script.js" defer></script>
+
+
 <!-- split-css:42-v45-productivity-style.css -->
-<link href="./css/42-v45-productivity-style.css" rel="stylesheet"/>
-<section class="v45-panel v32-home-pane" data-v45-pane="home" id="v45FocusHub">
-<div class="v45-head"><div><h3>🎯 Próximo paso</h3><p>La app elige una acción concreta para que no tengas que decidir qué hacer primero.</p></div><span class="v45-badge" id="v45FocusBadge">Analizando…</span></div>
-<div class="v45-grid">
-<div class="v45-card"><h4>Recomendación</h4><div class="v45-main" id="v45NextTitle">Sin recomendación</div><div class="v45-sub" id="v45NextMeta">No hay tareas pendientes inmediatas.</div><div class="v45-progress"><span id="v45NextProgress"></span></div><div class="v45-actions"><button class="v45-btn" id="v45OpenNext" type="button">Abrir tarea</button><button class="v45-btn" id="v45FocusNext" type="button">🎯 Concentrarme</button><button class="v45-btn" id="v45CompleteNext" type="button">✅ Completar</button></div></div>
-<div class="v45-card"><h4>Duración estimada</h4><div class="v45-sub">Elegí cuánto querés reservar para esta tarea. Se usa también en el planificador visual.</div><div class="v45-duration" id="v45DurationChoices"><button data-min="15" type="button">15 min</button><button data-min="25" type="button">25 min</button><button data-min="30" type="button">30 min</button><button data-min="45" type="button">45 min</button><button data-min="60" type="button">60 min</button><button data-min="90" type="button">90 min</button></div><div class="v45-sub" id="v45DurationStatus">Seleccioná una tarea para editar su duración.</div></div>
-</div>
+<link rel="stylesheet" href="./css/42-v45-productivity-style.css">
+
+<section class="v45-panel v32-home-pane" id="v45FocusHub" data-v45-pane="home">
+  <div class="v45-head"><div><h3>🎯 Próximo paso</h3><p>La app elige una acción concreta para que no tengas que decidir qué hacer primero.</p></div><span class="v45-badge" id="v45FocusBadge">Analizando…</span></div>
+  <div class="v45-grid">
+    <div class="v45-card"><h4>Recomendación</h4><div class="v45-main" id="v45NextTitle">Sin recomendación</div><div class="v45-sub" id="v45NextMeta">No hay tareas pendientes inmediatas.</div><div class="v45-progress"><span id="v45NextProgress"></span></div><div class="v45-actions"><button class="v45-btn" id="v45OpenNext" type="button">Abrir tarea</button><button class="v45-btn" id="v45FocusNext" type="button">🎯 Concentrarme</button><button class="v45-btn" id="v45CompleteNext" type="button">✅ Completar</button></div></div>
+    <div class="v45-card"><h4>Duración estimada</h4><div class="v45-sub">Elegí cuánto querés reservar para esta tarea. Se usa también en el planificador visual.</div><div class="v45-duration" id="v45DurationChoices"><button data-min="15" type="button">15 min</button><button data-min="25" type="button">25 min</button><button data-min="30" type="button">30 min</button><button data-min="45" type="button">45 min</button><button data-min="60" type="button">60 min</button><button data-min="90" type="button">90 min</button></div><div class="v45-sub" id="v45DurationStatus">Seleccioná una tarea para editar su duración.</div></div>
+  </div>
 </section>
-<section class="v45-panel v32-agenda-pane" data-v45-pane="agenda" id="v45FreeBlocks">
-<div class="v45-head"><div><h3>🧩 Sugerencias de bloques</h3><p>Espacios libres de hoy y tareas que podrían encajar ahí, sin mover nada automáticamente.</p></div><span class="v45-badge" id="v45FreeBadge">Calculando…</span></div>
-<div class="v45-suggestions" id="v45Suggestions"></div>
+
+<section class="v45-panel v32-agenda-pane" id="v45FreeBlocks" data-v45-pane="agenda">
+  <div class="v45-head"><div><h3>🧩 Sugerencias de bloques</h3><p>Espacios libres de hoy y tareas que podrían encajar ahí, sin mover nada automáticamente.</p></div><span class="v45-badge" id="v45FreeBadge">Calculando…</span></div>
+  <div class="v45-suggestions" id="v45Suggestions"></div>
 </section>
+
 <!-- split-js:21-v45-productivity-script.js -->
-<script src="./js/21-v45-productivity-script.js"></script>
+<script src="./js/21-v45-productivity-script.js" defer></script>
+
 <!-- split-css:43-v46-timeblock-style.css -->
-<link href="./css/43-v46-timeblock-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/43-v46-timeblock-style.css">
+
 <!-- split-js:22-v46-timeblock-script.js -->
-<script src="./js/22-v46-timeblock-script.js"></script>
+<script src="./js/22-v46-timeblock-script.js" defer></script>
+
 <!-- split-css:44-v47-training-reps-style.css -->
-<link href="./css/44-v47-training-reps-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/44-v47-training-reps-style.css">
+
+
 <!-- split-css:45-v50-upgrades-style.css -->
-<link href="./css/45-v50-upgrades-style.css" rel="stylesheet"/>
-<section class="v50-top3 v32-home-pane" data-v50-pane="home" id="v50Top3">
-<div class="v50-top3-head"><div><h3>🎯 Tus 3 prioridades</h3><p>Las tres tareas que más conviene atender primero hoy.</p></div><span class="v45-badge" id="v50Top3Badge">Calculando…</span></div>
-<div class="v50-top3-list" id="v50Top3List"></div>
+<link rel="stylesheet" href="./css/45-v50-upgrades-style.css">
+
+
+<section class="v50-top3 v32-home-pane" id="v50Top3" data-v50-pane="home">
+  <div class="v50-top3-head"><div><h3>🎯 Tus 3 prioridades</h3><p>Las tres tareas que más conviene atender primero hoy.</p></div><span class="v45-badge" id="v50Top3Badge">Calculando…</span></div>
+  <div class="v50-top3-list" id="v50Top3List"></div>
 </section>
+
+
 <!-- split-js:23-v50-workflow-upgrades.js -->
-<script src="./js/23-v50-workflow-upgrades.js"></script>
+<script src="./js/23-v50-workflow-upgrades.js" defer></script>
+
+
 <!-- split-css:46-v51-training-insights-style.css -->
-<link href="./css/46-v51-training-insights-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/46-v51-training-insights-style.css">
 <!-- split-js:24-v51-training-insights-script.js -->
-<script src="./js/24-v51-training-insights-script.js"></script>
+<script src="./js/24-v51-training-insights-script.js" defer></script>
+
+
 <!-- split-css:47-v52-training-progress-style.css -->
-<link href="./css/47-v52-training-progress-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/47-v52-training-progress-style.css">
 <section class="v52-progress" id="v52TrainingProgress" style="display:none">
-<div class="v52-head"><div><strong>📊 Rendimiento y progreso</strong><span>Tu evolución reciente en este ejercicio.</span></div><div class="v52-badges"><span class="v52-badge" id="v52TrendBadge">—</span><span class="v52-badge pr" id="v52PRBadge" style="display:none">🏆 Récord</span></div></div>
-<div class="v52-grid">
-<div class="v52-card"><strong id="v52BestWeight">—</strong><span>Mejor peso</span></div>
-<div class="v52-card"><strong id="v52BestVolume">—</strong><span>Mejor volumen</span></div>
-<div class="v52-card"><strong id="v52BestReps">—</strong><span>Más reps</span></div>
-<div class="v52-card"><strong id="v52AvgRir">—</strong><span>RIR promedio</span></div>
-</div>
-<div class="v52-trend" id="v52TrendChart"></div>
-<div class="v52-chart-label">Últimos registros · volumen estimado por sesión</div>
-<div class="v52-live" id="v52LiveStatus">Cargando progreso…</div>
+  <div class="v52-head"><div><strong>📊 Rendimiento y progreso</strong><span>Tu evolución reciente en este ejercicio.</span></div><div class="v52-badges"><span class="v52-badge" id="v52TrendBadge">—</span><span class="v52-badge pr" id="v52PRBadge" style="display:none">🏆 Récord</span></div></div>
+  <div class="v52-grid">
+    <div class="v52-card"><strong id="v52BestWeight">—</strong><span>Mejor peso</span></div>
+    <div class="v52-card"><strong id="v52BestVolume">—</strong><span>Mejor volumen</span></div>
+    <div class="v52-card"><strong id="v52BestReps">—</strong><span>Más reps</span></div>
+    <div class="v52-card"><strong id="v52AvgRir">—</strong><span>RIR promedio</span></div>
+  </div>
+  <div class="v52-trend" id="v52TrendChart"></div>
+  <div class="v52-chart-label">Últimos registros · volumen estimado por sesión</div>
+  <div class="v52-live" id="v52LiveStatus">Cargando progreso…</div>
 </section>
+
 <!-- split-js:25-v52-training-progress-script.js -->
-<script src="./js/25-v52-training-progress-script.js"></script>
+<script src="./js/25-v52-training-progress-script.js" defer></script>
+
 <!-- split-css:48-v52-dashboard-style.css -->
-<link href="./css/48-v52-dashboard-style.css" rel="stylesheet"/>
-<section class="v52-week-panel v32-home-pane" data-v52-pane="home" id="v52WeekTraining">
-<div class="v52-week-head"><div><h3>🏋️ Resumen semanal de entrenamiento</h3><p>Tu actividad reciente, de un vistazo.</p></div><span class="v45-badge" id="v52WeekTotal">0 sesiones</span></div>
-<div class="v52-week-grid" id="v52WeekGrid"></div>
+<link rel="stylesheet" href="./css/48-v52-dashboard-style.css">
+
+<section class="v52-week-panel v32-home-pane" id="v52WeekTraining" data-v52-pane="home">
+  <div class="v52-week-head"><div><h3>🏋️ Resumen semanal de entrenamiento</h3><p>Tu actividad reciente, de un vistazo.</p></div><span class="v45-badge" id="v52WeekTotal">0 sesiones</span></div>
+  <div class="v52-week-grid" id="v52WeekGrid"></div>
 </section>
+
 <!-- split-js:26-v52-dashboard-script.js -->
-<script src="./js/26-v52-dashboard-script.js"></script>
+<script src="./js/26-v52-dashboard-script.js" defer></script>
+
+
+
 <!-- split-css:49-v43-planner-style.css -->
-<link href="./css/49-v43-planner-style.css" rel="stylesheet"/>
-<section class="v43-planner v32-agenda-pane" data-v43-pane="agenda" id="v43PlannerPanel">
-<div class="v43-head">
-<div><h3>🧱 Planificador visual</h3><p>Distribuí mentalmente tu día y detectá sobrecarga o espacios libres antes de cambiar nada.</p></div>
-<div class="v43-badge" id="v43PlannerBadge">Plan de hoy</div>
-</div>
-<div class="v43-summary">
-<div class="v43-stat"><strong id="v43Planned">0 min</strong><span>tiempo planificado</span></div>
-<div class="v43-stat"><strong id="v43Free">0 min</strong><span>tiempo libre estimado</span></div>
-<div class="v43-stat"><strong id="v43Pending">0</strong><span>tareas pendientes</span></div>
-<div class="v43-stat"><strong id="v43Load">0%</strong><span>ocupación de agenda</span></div>
-</div>
-<div class="v43-toolbar">
-<button class="v43-btn active" data-v43-day="today" type="button">Hoy</button>
-<button class="v43-btn" data-v43-day="tomorrow" type="button">Mañana</button>
-<button class="v43-btn" id="v43ResetView" type="button">↻ Recalcular</button>
-</div>
-<div class="v43-timeline" id="v43Timeline">
-<div class="v43-hours" id="v43Hours"></div>
-<div class="v43-track" id="v43Track"></div>
-</div>
-<div class="v43-load ok" id="v43LoadHint">Agenda equilibrada.</div>
-<div class="v43-help">La duración estimada usa 30 minutos como valor predeterminado. Este planificador es visual y no modifica tus tareas automáticamente.</div>
+<link rel="stylesheet" href="./css/49-v43-planner-style.css">
+
+<section class="v43-planner v32-agenda-pane" id="v43PlannerPanel" data-v43-pane="agenda">
+  <div class="v43-head">
+    <div><h3>🧱 Planificador visual</h3><p>Distribuí mentalmente tu día y detectá sobrecarga o espacios libres antes de cambiar nada.</p></div>
+    <div class="v43-badge" id="v43PlannerBadge">Plan de hoy</div>
+  </div>
+  <div class="v43-summary">
+    <div class="v43-stat"><strong id="v43Planned">0 min</strong><span>tiempo planificado</span></div>
+    <div class="v43-stat"><strong id="v43Free">0 min</strong><span>tiempo libre estimado</span></div>
+    <div class="v43-stat"><strong id="v43Pending">0</strong><span>tareas pendientes</span></div>
+    <div class="v43-stat"><strong id="v43Load">0%</strong><span>ocupación de agenda</span></div>
+  </div>
+  <div class="v43-toolbar">
+    <button class="v43-btn active" data-v43-day="today" type="button">Hoy</button>
+    <button class="v43-btn" data-v43-day="tomorrow" type="button">Mañana</button>
+    <button class="v43-btn" id="v43ResetView" type="button">↻ Recalcular</button>
+  </div>
+  <div class="v43-timeline" id="v43Timeline">
+    <div class="v43-hours" id="v43Hours"></div>
+    <div class="v43-track" id="v43Track"></div>
+  </div>
+  <div class="v43-load ok" id="v43LoadHint">Agenda equilibrada.</div>
+  <div class="v43-help">La duración estimada usa 30 minutos como valor predeterminado. Este planificador es visual y no modifica tus tareas automáticamente.</div>
 </section>
-<section class="v43-planner v32-home-pane" data-v43-pane="home" id="v43HomeInsights">
-<div class="v43-head"><div><h3>📊 Salud de tu rutina</h3><p>Una lectura simple para saber si hoy estás liviano, equilibrado o sobrecargado.</p></div><div class="v43-badge" id="v43HealthBadge">Calculando…</div></div>
-<div class="v43-summary">
-<div class="v43-stat"><strong id="v43WeekDone">0%</strong><span>tareas completadas esta semana</span></div>
-<div class="v43-stat"><strong id="v43ActiveDays">0/7</strong><span>días activos</span></div>
-<div class="v43-stat"><strong id="v43Overdue">0</strong><span>tareas atrasadas</span></div>
-<div class="v43-stat"><strong id="v43CurrentStreak">0</strong><span>racha actual</span></div>
-</div>
+
+<section class="v43-planner v32-home-pane" id="v43HomeInsights" data-v43-pane="home">
+  <div class="v43-head"><div><h3>📊 Salud de tu rutina</h3><p>Una lectura simple para saber si hoy estás liviano, equilibrado o sobrecargado.</p></div><div class="v43-badge" id="v43HealthBadge">Calculando…</div></div>
+  <div class="v43-summary">
+    <div class="v43-stat"><strong id="v43WeekDone">0%</strong><span>tareas completadas esta semana</span></div>
+    <div class="v43-stat"><strong id="v43ActiveDays">0/7</strong><span>días activos</span></div>
+    <div class="v43-stat"><strong id="v43Overdue">0</strong><span>tareas atrasadas</span></div>
+    <div class="v43-stat"><strong id="v43CurrentStreak">0</strong><span>racha actual</span></div>
+  </div>
 </section>
+
 <!-- split-js:27-v43-planner-script.js -->
-<script src="./js/27-v43-planner-script.js"></script>
+<script src="./js/27-v43-planner-script.js" defer></script>
+
+
 <!-- split-css:50-v52-workout-enhanced-style.css -->
-<link href="./css/50-v52-workout-enhanced-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/50-v52-workout-enhanced-style.css">
+
 <div class="v52-recap" id="v52LiveRecap" style="display:none">
-<div class="v52-recap-head"><div><strong>📋 Resumen de la sesión</strong><span>Se actualiza mientras cargás tus series.</span></div></div>
-<div class="v52-recap-grid">
-<div class="v52-recap-card"><strong id="v52RecapSets">0/0</strong><small>series hechas</small></div>
-<div class="v52-recap-card"><strong id="v52RecapVolume">0 kg</strong><small>volumen registrado</small></div>
-<div class="v52-recap-card"><strong id="v52RecapMaxWeight">—</strong><small>peso máximo</small></div>
-<div class="v52-recap-card"><strong id="v52RecapRir">—</strong><small>RIR promedio</small></div>
+  <div class="v52-recap-head"><div><strong>📋 Resumen de la sesión</strong><span>Se actualiza mientras cargás tus series.</span></div></div>
+  <div class="v52-recap-grid">
+    <div class="v52-recap-card"><strong id="v52RecapSets">0/0</strong><small>series hechas</small></div>
+    <div class="v52-recap-card"><strong id="v52RecapVolume">0 kg</strong><small>volumen registrado</small></div>
+    <div class="v52-recap-card"><strong id="v52RecapMaxWeight">—</strong><small>peso máximo</small></div>
+    <div class="v52-recap-card"><strong id="v52RecapRir">—</strong><small>RIR promedio</small></div>
+  </div>
+  <div class="v52-recap-trend" id="v52RecapTrend">Cargando comparación…</div>
 </div>
-<div class="v52-recap-trend" id="v52RecapTrend">Cargando comparación…</div>
-</div>
-<section class="v52-weekworkout v32-workout-pane" data-v52-pane="workout" id="v52WorkoutDashboard">
-<div class="v52-ww-head"><div><h3>📈 Rendimiento reciente</h3><p>Una vista rápida de tus últimas sesiones y tu volumen registrado.</p></div><span class="v45-badge" id="v52WorkoutTotal">0 registros</span></div>
-<div class="v52-ww-grid">
-<div class="v52-ww-card"><strong id="v52WWVolume">0 kg</strong><span>volumen reciente</span></div>
-<div class="v52-ww-card"><strong id="v52WWBestWeight">—</strong><span>mejor peso reciente</span></div>
-<div class="v52-ww-card"><strong id="v52WWSessions">0</strong><span>sesiones registradas</span></div>
-<div class="v52-ww-card"><strong id="v52WWExercises">0</strong><span>ejercicios registrados</span></div>
-</div>
-<div class="v52-ww-bars" id="v52WWBars"></div>
-<div class="v52-ww-note" id="v52WWNote">Cargando evolución…</div>
+
+<section class="v52-weekworkout v32-workout-pane" id="v52WorkoutDashboard" data-v52-pane="workout">
+  <div class="v52-ww-head"><div><h3>📈 Rendimiento reciente</h3><p>Una vista rápida de tus últimas sesiones y tu volumen registrado.</p></div><span class="v45-badge" id="v52WorkoutTotal">0 registros</span></div>
+  <div class="v52-ww-grid">
+    <div class="v52-ww-card"><strong id="v52WWVolume">0 kg</strong><span>volumen reciente</span></div>
+    <div class="v52-ww-card"><strong id="v52WWBestWeight">—</strong><span>mejor peso reciente</span></div>
+    <div class="v52-ww-card"><strong id="v52WWSessions">0</strong><span>sesiones registradas</span></div>
+    <div class="v52-ww-card"><strong id="v52WWExercises">0</strong><span>ejercicios registrados</span></div>
+  </div>
+  <div class="v52-ww-bars" id="v52WWBars"></div>
+  <div class="v52-ww-note" id="v52WWNote">Cargando evolución…</div>
 </section>
+
 <!-- split-js:28-v52-workout-enhancements-script.js -->
-<script src="./js/28-v52-workout-enhancements-script.js"></script>
+<script src="./js/28-v52-workout-enhancements-script.js" defer></script>
+
+
 <!-- split-css:51-v53-home-planning-style.css -->
-<link href="./css/51-v53-home-planning-style.css" rel="stylesheet"/>
-<section class="v53-panel v32-home-pane" data-v53-pane="home" id="v53HomePlanning">
-<div class="v53-head"><div><h3>🎯 Objetivos de la semana</h3><p>Pequeños objetivos medibles para que tu semana tenga dirección.</p></div><div class="v53-actions"><button class="v53-btn" id="v53ManageGoals" type="button">⚙ Configurar</button></div></div>
-<div class="v53-goals">
-<div class="v53-goal"><strong id="v53GoalTasks">0%</strong><span>Tareas completadas</span><div class="v53-bar"><i id="v53GoalTasksBar"></i></div></div>
-<div class="v53-goal"><strong id="v53GoalWorkouts">0 / 0</strong><span>Entrenamientos</span><div class="v53-bar"><i id="v53GoalWorkoutsBar"></i></div></div>
-<div class="v53-goal"><strong id="v53GoalHabits">0%</strong><span>Hábitos cumplidos</span><div class="v53-bar"><i id="v53GoalHabitsBar"></i></div></div>
-</div>
+<link rel="stylesheet" href="./css/51-v53-home-planning-style.css">
+
+<section class="v53-panel v32-home-pane" id="v53HomePlanning" data-v53-pane="home">
+  <div class="v53-head"><div><h3>🎯 Objetivos de la semana</h3><p>Pequeños objetivos medibles para que tu semana tenga dirección.</p></div><div class="v53-actions"><button class="v53-btn" id="v53ManageGoals" type="button">⚙ Configurar</button></div></div>
+  <div class="v53-goals">
+    <div class="v53-goal"><strong id="v53GoalTasks">0%</strong><span>Tareas completadas</span><div class="v53-bar"><i id="v53GoalTasksBar"></i></div></div>
+    <div class="v53-goal"><strong id="v53GoalWorkouts">0 / 0</strong><span>Entrenamientos</span><div class="v53-bar"><i id="v53GoalWorkoutsBar"></i></div></div>
+    <div class="v53-goal"><strong id="v53GoalHabits">0%</strong><span>Hábitos cumplidos</span><div class="v53-bar"><i id="v53GoalHabitsBar"></i></div></div>
+  </div>
 </section>
-<section class="v53-panel v32-home-pane" data-v53-pane="home" id="v53Upcoming">
-<div class="v53-head"><div><h3>📆 Próximos 7 días</h3><p>Una vista rápida de lo que se viene.</p></div></div>
-<div class="v53-events" id="v53UpcomingList"></div>
+
+<section class="v53-panel v32-home-pane" id="v53Upcoming" data-v53-pane="home">
+  <div class="v53-head"><div><h3>📆 Próximos 7 días</h3><p>Una vista rápida de lo que se viene.</p></div></div>
+  <div class="v53-events" id="v53UpcomingList"></div>
 </section>
-<div aria-hidden="true" class="v53-modal" id="v53GoalsModal">
-<div class="v53-card">
-<div class="v53-head"><div><h3>🎯 Objetivos semanales</h3><p>Estos objetivos se guardan por usuario en este dispositivo.</p></div><button class="v53-mini" id="v53GoalsClose" type="button">×</button></div>
-<div class="v53-field"><label>Tareas completadas / semana</label><input id="v53TargetTasks" min="0" placeholder="20" step="1" type="number"/></div>
-<div class="v53-field"><label>Entrenamientos / semana</label><input id="v53TargetWorkouts" min="0" placeholder="4" step="1" type="number"/></div>
-<div class="v53-field"><label>Hábitos cumplidos / semana</label><input id="v53TargetHabits" min="0" placeholder="20" step="1" type="number"/></div>
-<div class="v53-actions"><button class="v53-btn" id="v53GoalsCancel" type="button">Cancelar</button><button class="v53-btn" id="v53GoalsSave" type="button">Guardar objetivos</button></div>
+
+<div class="v53-modal" id="v53GoalsModal" aria-hidden="true">
+  <div class="v53-card">
+    <div class="v53-head"><div><h3>🎯 Objetivos semanales</h3><p>Estos objetivos se guardan por usuario en este dispositivo.</p></div><button class="v53-mini" id="v53GoalsClose" type="button">×</button></div>
+    <div class="v53-field"><label>Tareas completadas / semana</label><input id="v53TargetTasks" type="number" min="0" step="1" placeholder="20"></div>
+    <div class="v53-field"><label>Entrenamientos / semana</label><input id="v53TargetWorkouts" type="number" min="0" step="1" placeholder="4"></div>
+    <div class="v53-field"><label>Hábitos cumplidos / semana</label><input id="v53TargetHabits" type="number" min="0" step="1" placeholder="20"></div>
+    <div class="v53-actions"><button class="v53-btn" id="v53GoalsCancel" type="button">Cancelar</button><button class="v53-btn" id="v53GoalsSave" type="button">Guardar objetivos</button></div>
+  </div>
 </div>
-</div>
+
 <!-- split-js:29-v53-planning-script.js -->
-<script src="./js/29-v53-planning-script.js"></script>
+<script src="./js/29-v53-planning-script.js" defer></script>
+
 <!-- split-js:30-v54-template-script.js -->
-<script src="./js/30-v54-template-script.js"></script>
+<script src="./js/30-v54-template-script.js" defer></script>
+
 <!-- split-css:52-v55-upgrades-style.css -->
-<link href="./css/52-v55-upgrades-style.css" rel="stylesheet"/>
+<link rel="stylesheet" href="./css/52-v55-upgrades-style.css">
+
 <!-- split-js:31-v55-planning-upgrades.js -->
-<script src="./js/31-v55-planning-upgrades.js"></script>
+<script src="./js/31-v55-planning-upgrades.js" defer></script>
+
 <!-- split-css:53-v56-focus-insights-style.css -->
-<link href="./css/53-v56-focus-insights-style.css" rel="stylesheet"/>
-<section class="v56-focus-panel v32-home-pane" data-v56-pane="home" id="v56FocusPanel">
-<div class="v56-focus-head">
-<div><h3>🎯 Sesiones de enfoque</h3><p>Registrá tiempo de concentración y mirá tu constancia sin mezclarla con las tareas.</p></div>
-<span class="v56-focus-badge" id="v56FocusBadge">Listo</span>
-</div>
-<div class="v56-focus-grid">
-<div class="v56-focus-main">
-<strong id="v56FocusTask">Elegí una tarea o empezá una sesión libre</strong>
-<div class="v57-focus-taskbar">
-<div><label for="v57FocusTaskSelect">Tarea asociada</label><select class="v57-focus-task-select" id="v57FocusTaskSelect"><option value="">Sesión libre (sin tarea)</option></select></div>
-<button class="v57-focus-task-open" disabled="" id="v57FocusTaskOpen" type="button">Abrir tarea</button>
-</div>
-<div class="v57-focus-task-meta" id="v57FocusTaskMeta">Podés elegir una tarea para medir cuánto tiempo le dedicás.</div>
-<span id="v56FocusSub">El contador registra solo el tiempo que dejás correr.</span>
-<div class="v56-focus-timer" id="v56FocusTimer">25:00</div>
-<div class="v56-focus-actions">
-<button class="v56-focus-btn" id="v56Focus25" type="button">▶ 25 min</button>
-<button class="v56-focus-btn" id="v56Focus50" type="button">▶ 50 min</button>
-<button class="v56-focus-btn" id="v56FocusPause" type="button">⏸ Pausar</button>
-<button class="v56-focus-btn danger" id="v56FocusStop" type="button">■ Terminar</button>
-</div>
-</div>
-<div class="v56-focus-stat"><strong id="v56FocusToday">0</strong><span>minutos enfocados hoy</span></div>
-<div class="v56-focus-stat"><strong id="v56FocusSessions">0</strong><span>sesiones completadas hoy</span></div>
-<div class="v56-focus-stat"><strong id="v56FocusAvg">0 min</strong><span>promedio por sesión</span></div>
-</div>
-<div class="v57-focus-task-progress"><strong id="v57FocusTaskTotal">0 min</strong><span id="v57FocusTaskTotalLabel">Tiempo registrado para la tarea seleccionada</span></div>
-<div class="v57-focus-task-list" id="v57FocusTaskList"></div>
-<div class="v56-focus-week" id="v56FocusWeek"></div>
-<div class="v56-focus-note" id="v56FocusNote">Tip: usá 25 minutos para una tarea concreta y 50 para bloques largos.</div>
+<link rel="stylesheet" href="./css/53-v56-focus-insights-style.css">
+
+<section class="v56-focus-panel v32-home-pane" id="v56FocusPanel" data-v56-pane="home">
+  <div class="v56-focus-head">
+    <div><h3>🎯 Sesiones de enfoque</h3><p>Registrá tiempo de concentración y mirá tu constancia sin mezclarla con las tareas.</p></div>
+    <span class="v56-focus-badge" id="v56FocusBadge">Listo</span>
+  </div>
+  <div class="v56-focus-grid">
+    <div class="v56-focus-main">
+      <strong id="v56FocusTask">Elegí una tarea o empezá una sesión libre</strong>
+      <div class="v57-focus-taskbar">
+        <div><label for="v57FocusTaskSelect">Tarea asociada</label><select class="v57-focus-task-select" id="v57FocusTaskSelect"><option value="">Sesión libre (sin tarea)</option></select></div>
+        <button class="v57-focus-task-open" id="v57FocusTaskOpen" type="button" disabled>Abrir tarea</button>
+      </div>
+      <div class="v57-focus-task-meta" id="v57FocusTaskMeta">Podés elegir una tarea para medir cuánto tiempo le dedicás.</div>
+      <span id="v56FocusSub">El contador registra solo el tiempo que dejás correr.</span>
+      <div class="v56-focus-timer" id="v56FocusTimer">25:00</div>
+      <div class="v56-focus-actions">
+        <button class="v56-focus-btn" id="v56Focus25" type="button">▶ 25 min</button>
+        <button class="v56-focus-btn" id="v56Focus50" type="button">▶ 50 min</button>
+        <button class="v56-focus-btn" id="v56FocusPause" type="button">⏸ Pausar</button>
+        <button class="v56-focus-btn danger" id="v56FocusStop" type="button">■ Terminar</button>
+      </div>
+    </div>
+    <div class="v56-focus-stat"><strong id="v56FocusToday">0</strong><span>minutos enfocados hoy</span></div>
+    <div class="v56-focus-stat"><strong id="v56FocusSessions">0</strong><span>sesiones completadas hoy</span></div>
+    <div class="v56-focus-stat"><strong id="v56FocusAvg">0 min</strong><span>promedio por sesión</span></div>
+  </div>
+  <div class="v57-focus-task-progress"><strong id="v57FocusTaskTotal">0 min</strong><span id="v57FocusTaskTotalLabel">Tiempo registrado para la tarea seleccionada</span></div>
+  <div class="v57-focus-task-list" id="v57FocusTaskList"></div>
+  <div class="v56-focus-week" id="v56FocusWeek"></div>
+  <div class="v56-focus-note" id="v56FocusNote">Tip: usá 25 minutos para una tarea concreta y 50 para bloques largos.</div>
 </section>
+
 <!-- split-js:32-v56-focus-insights-script.js -->
-<script src="./js/32-v56-focus-insights-script.js"></script>
+<script src="./js/32-v56-focus-insights-script.js" defer></script>
+
 <!-- split-js:33-v57-focus-task-script.js -->
-<script src="./js/33-v57-focus-task-script.js"></script>
+<script src="./js/33-v57-focus-task-script.js" defer></script>
+
+
 <!-- split-js:34-v62-productivity-script.js -->
-<script src="./js/34-v62-productivity-script.js"></script>
-<!-- split-css:54-v64-stability-hardening.css -->
-<link href="./css/54-v64-stability-hardening.css" rel="stylesheet"/>
-<!-- split-js:35-v64-stability-hardening-script.js -->
-<script src="./js/35-v64-stability-hardening-script.js"></script>
-<script src="./js/36-v87-personal-suite.js"></script>
-<script src="./js/37-v89-weather.js"></script>
-<script src="./js/38-v93-training-insights.js"></script>
-<script src="./js/39-v94-rest-tracking.js"></script>
+<script src="./js/34-v62-productivity-script.js" defer></script>
+
+  <!-- split-css:54-v64-stability-hardening.css -->
+<link rel="stylesheet" href="./css/54-v64-stability-hardening.css">
+  <!-- split-js:35-v64-stability-hardening-script.js -->
+<script src="./js/35-v64-stability-hardening-script.js" defer></script>
+
+<script src="./js/36-v87-personal-suite.js" defer></script>
+<script src="./js/37-v89-weather.js" defer></script>
+<script src="./js/38-v93-training-insights.js" defer></script>
+<script src="./js/39-v94-rest-tracking.js" defer></script>
+  <link rel="stylesheet" href="./css/59-v98-training-summary.css">
+  <script src="./js/40-v98-training-summary.js"></script>
 </body>
 </html>

@@ -1,13 +1,11 @@
-# Agenda FICH V96 — proyecto separado
+Agenda FICH — V94
 
-Esta versión reconstruye la arquitectura separada usando como base el HTML V95 y recupera el orden de ejecución original del proyecto monolítico para evitar problemas de inicialización.
+Base: V93 separada.
+Cambios de esta versión:
+- Reemplaza js/07-v31-training-persistence.js por la versión V90 con temporizadores basados en tiempo real.
+- Mejora js/38-v93-training-insights.js: selector de comparación entre cualquier par de sesiones e historial seleccionable.
+- Agrega js/39-v94-rest-tracking.js: medición local del descanso real entre series.
+- Agrega css/58-v94-rest-tracking.css.
+- index.html actualizado para cargar el nuevo CSS/JS.
 
-## Cambio clave
-Los scripts ya no usan `defer`: se ejecutan en el mismo punto y orden que tenían los scripts inline originales. La Vista de entrenamiento usa el núcleo V82 probado, en especial para los controles del cronómetro/temporizador.
-
-## Estructura
-- index.html
-- css/
-- js/
-
-Las versiones nuevas (clima, productividad, seguimiento y descanso) quedan separadas y al final del flujo.
+Para GitHub: reemplazar/agregar solo los archivos indicados arriba respecto del proyecto completo.
