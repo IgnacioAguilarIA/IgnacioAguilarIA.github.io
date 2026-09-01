@@ -1,6 +1,13 @@
-Agenda FICH V95 — corrección de cronómetro y temporizador
+# Agenda FICH V96 — proyecto separado
 
-Archivo modificado:
-js/07-v31-training-persistence.js
+Esta versión reconstruye la arquitectura separada usando como base el HTML V95 y recupera el orden de ejecución original del proyecto monolítico para evitar problemas de inicialización.
 
-La corrección usa marcas de tiempo reales (Date.now) y un bucle de refresco híbrido para que el cronómetro/temporizador no dependan de que setInterval se ejecute exactamente cada segundo. También mantiene el estado al pausar, recargar y volver a la sesión.
+## Cambio clave
+Los scripts ya no usan `defer`: se ejecutan en el mismo punto y orden que tenían los scripts inline originales. La Vista de entrenamiento usa el núcleo V82 probado, en especial para los controles del cronómetro/temporizador.
+
+## Estructura
+- index.html
+- css/
+- js/
+
+Las versiones nuevas (clima, productividad, seguimiento y descanso) quedan separadas y al final del flujo.
