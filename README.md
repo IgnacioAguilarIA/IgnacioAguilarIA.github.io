@@ -1,13 +1,16 @@
-# Agenda FICH V96 — proyecto separado
+Agenda FICH — V96 final
 
-Esta versión reconstruye la arquitectura separada usando como base el HTML V95 y recupera el orden de ejecución original del proyecto monolítico para evitar problemas de inicialización.
+Base: V96 subida por el usuario.
 
-## Cambio clave
-Los scripts ya no usan `defer`: se ejecutan en el mismo punto y orden que tenían los scripts inline originales. La Vista de entrenamiento usa el núcleo V82 probado, en especial para los controles del cronómetro/temporizador.
+Cambios de esta entrega, únicamente en navegación móvil y entrenamiento:
+- En celulares queda solamente la navegación flotante inferior; se ocultan v32SectionNav y section-switcher.
+- Se conserva el botón "Cancelar entrenamiento" de la Vista de entrenamiento.
+- Se conserva el registro por serie de reps, peso, RIR y series completadas.
+- Se refuerza el historial avanzado: selección de cualquier sesión, comparación y evolución.
+- Se agregan récords personales visibles y resumen de sesiones completas.
+- Se mantiene la orientación de progresión existente.
+- Se mantiene el seguimiento de descanso real; se corrige el número de serie usado para calcular cada descanso.
+- No se modifica la lógica de cronómetro/temporizador existente.
+- No requiere cambios en el esquema de Supabase.
 
-## Estructura
-- index.html
-- css/
-- js/
-
-Las versiones nuevas (clima, productividad, seguimiento y descanso) quedan separadas y al final del flujo.
+Para GitHub Pages: reemplazar la carpeta completa por esta carpeta, conservando la estructura css/ y js/.
