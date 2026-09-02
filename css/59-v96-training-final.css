@@ -1,0 +1,15 @@
+/* V96 - mejoras finales de entrenamiento. Solo agrega UI de lectura; no toca controles existentes. */
+.v96-training-final{margin-top:18px}
+.v96-tf-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+.v96-tf-head h3{margin:0;font-size:1.05rem}.v96-tf-head p{margin:4px 0 0;opacity:.72;font-size:.88rem}
+.v96-tf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.v96-tf-card{padding:14px;border:1px solid rgba(148,163,184,.18);border-radius:14px;background:rgba(148,163,184,.06)}
+.v96-tf-card span{display:block;font-size:.78rem;opacity:.68}.v96-tf-card strong{display:block;margin-top:5px;font-size:1.18rem}
+.v96-tf-records{display:grid;gap:8px;margin-top:12px}.v96-tf-record{display:grid;grid-template-columns:minmax(0,1.2fr) repeat(3,minmax(0,1fr));gap:8px;align-items:center;padding:10px 12px;border:1px solid rgba(148,163,184,.14);border-radius:12px}
+.v96-tf-record .name{font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.v96-tf-record small{display:block;opacity:.65;margin-top:2px}.v96-tf-record .metric{font-size:.86rem}.v96-tf-record .metric strong{display:inline;font-size:.95rem}
+.v96-tf-sessions{display:grid;gap:8px;margin-top:12px}.v96-tf-session{padding:11px 12px;border:1px solid rgba(148,163,184,.14);border-radius:12px}.v96-tf-session-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.v96-tf-session-head strong{font-size:.92rem}.v96-tf-session-head span{font-size:.78rem;opacity:.68}.v96-tf-session-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;font-size:.8rem;opacity:.78}
+.v96-tf-compare{margin-top:12px;padding:12px;border-radius:12px;border:1px dashed rgba(148,163,184,.22)}.v96-tf-compare select{width:100%;margin:8px 0;padding:9px;border-radius:10px;border:1px solid rgba(148,163,184,.22);background:inherit;color:inherit}.v96-tf-compare-result{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.v96-tf-compare-result div{padding:9px;background:rgba(148,163,184,.06);border-radius:10px}.v96-tf-compare-result span{display:block;font-size:.75rem;opacity:.65}.v96-tf-compare-result strong{display:block;margin-top:3px}
+.v96-tf-empty{padding:12px;border-radius:12px;background:rgba(148,163,184,.06);opacity:.72}
+@media(max-width:800px){.v96-tf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.v96-tf-record{grid-template-columns:1fr 1fr}.v96-tf-record .name{grid-column:1/-1}.v96-tf-compare-result{grid-template-columns:1fr}}
+@media(max-width:520px){.v96-tf-grid{grid-template-columns:1fr}.v96-tf-record{grid-template-columns:1fr 1fr}}
+[data-theme="light"] .v96-tf-card,[data-theme="light"] .v96-tf-record,[data-theme="light"] .v96-tf-session,[data-theme="light"] .v96-tf-compare{background:#fff;border-color:rgba(15,23,42,.1)}
