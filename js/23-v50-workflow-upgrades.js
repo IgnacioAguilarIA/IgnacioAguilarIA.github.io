@@ -40,10 +40,26 @@
       const btn=q('v50CopyPrevious');
       const actual=window.__agendaTrainingActuals;
       // Prefer the native session data exposed below; fall back to inputs.
-      if(actual&&typeof actual.fillPrevious==='function'){actual.fillPrevious(log);if(btn)btn.textContent='✓ Copiado';setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1400);return;}
+      if(actual&&typeof actual.fillPrevious==='function'){
+        const ok=actual.fillPrevious(log);
+        if(ok===false)throw new Error('No se pudo copiar el registro anterior');
+        if(btn)btn.textContent='✓ Copiado';
+        setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1400);
+        return;
+      }
       const panel=q('v47SetList');if(!panel)return;
-      const rows=[...panel.querySelectorAll('.v48-set-row,.v47-set-row')];const reps=(String(log.reps||'').split('/').map(x=>x.trim()).filter(Boolean));const weight=String(log.weight||'').trim();
-      rows.forEach((row,i)=>{const inputs=[...row.querySelectorAll('input')];if(inputs[0]&&!inputs[0].value&&reps[i])inputs[0].value=reps[i];if(inputs[1]&&!inputs[1].value&&weight)inputs[1].value=weight;inputs.forEach(x=>x.dispatchEvent(new Event('input',{bubbles:true})))});
+      const state=window.__agendaTrainingActualsState;
+      const parse=(value)=>{
+        const text=String(value??'').trim();if(!text)return[];
+        const labeled=[];const re=/S\s*(\d+)\s*:\s*([^·|,;/]+)/gi;let m;
+        while((m=re.exec(text)))labeled[Number(m[1])-1]=String(m[2]).trim();
+        return labeled.some(Boolean)?labeled:text.split(/[\/;,]|\s+·\s+/).map(x=>x.trim()).filter(Boolean);
+      };
+      const copiedReps=parse(log?.reps),copiedWeight=parse(log?.weight);
+      const rows=[...panel.querySelectorAll('.v48-set-row,.v47-set-row')];
+      rows.forEach((row,i)=>{const inputs=[...row.querySelectorAll('input')];if(inputs[0]&&copiedReps[i])inputs[0].value=copiedReps[i];if(inputs[1]&&(copiedWeight[i]||copiedWeight.length===1))inputs[1].value=copiedWeight[i]||copiedWeight[0];inputs.forEach(x=>x.dispatchEvent(new Event('input',{bubbles:true})))});
+      if(state?.capture)state.capture();
+      if(state?.save)state.save();
       if(btn)btn.textContent='✓ Copiado';setTimeout(()=>{if(btn)btn.textContent='↗ Copiar reps/peso al registro actual'},1400);
     }catch(_){ }
   }

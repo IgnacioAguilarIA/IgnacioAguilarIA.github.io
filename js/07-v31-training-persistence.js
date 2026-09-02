@@ -95,7 +95,32 @@
   }
   function updateRepStatus(){const panel=q('v47RepsPanel');if(!panel||!activeSession)return;ensureActuals();const ex=list()[index],data=activeSession.actuals[index]||{reps:[],weight:[],rir:[],done:[]};const sets=Math.max(0,Number(ex?.sets)||1);const done=data.done.filter(Boolean).length;let volume=0;data.done.forEach((ok,i)=>{const rr=Number(data.reps[i]),ww=Number(data.weight[i]);if(ok&&Number.isFinite(rr)&&rr>0&&Number.isFinite(ww)&&ww>0)volume+=rr*ww});const counter=q('v47RepsCounter'),summary=q('v47RepsSummary');if(counter)counter.textContent=`${done}/${sets} series`;if(summary)summary.textContent=done===sets&&sets>0?`✅ Todas las series hechas · Volumen registrado: ${Math.round(volume*10)/10} kg`:'Reps + peso + RIR por serie. Marcá cada serie al terminarla.';panel.classList.toggle('complete',done===sets&&sets>0)}
   function updateMini(){const mini=q('v31TrainingMini');if(!mini)return;if(!activeSession||finishing||activeSession.finished){mini.classList.remove('show');return}mini.classList.add('show');const ex=list()[index];q('v31MiniTitle').textContent=ex?.exercise?`🏋️ ${ex.exercise}`:'🏋️ Entrenamiento en curso';q('v31MiniSub').textContent=`${DAYS?.[activeSession.day]||'Día'} · guardado automático`;q('v31MiniTimer').textContent=fmt(sessionSeconds)}
-  function updateFull(){const a=list();if(!a.length)return;captureVisibleActuals();save();window.__agendaTrainingActuals={fillPrevious:function(log){try{ensureActuals();const data=activeSession.actuals[index];const reps=String(log?.reps||'').split('/').map(x=>x.trim()).filter(Boolean);for(let i=0;i<data.reps.length;i++){if(reps[i])data.reps[i]=reps[i];if(log?.weight)data.weight[i]=String(log.weight);if(log?.rir!==null&&log?.rir!==undefined&&log?.rir!=='')data.rir[i]=String(log.rir);}save();renderRepTracker();updateFull()}catch(_){}}};index=Math.max(0,Math.min(index,a.length-1));const ex=a[index];q('v28WorkoutDayLabel').textContent=`${DAYS[workoutDay]} · ${a.length} ejercicios`;q('v28StepLabel').textContent=`Ejercicio ${index+1} de ${a.length}`;q('v28CurrentName').textContent=ex.exercise||'Ejercicio';const chips=q('v28CurrentChips');chips.innerHTML='';[['Series',ex.sets],['Reps',ex.reps],['RIR',ex.rir],['Descanso',ex.rest_seconds?`${ex.rest_seconds}s`:null],['Peso',ex.weight],['Tempo',ex.tempo]].forEach(([k,v])=>{if(v===null||v===undefined||v==='')return;const c=document.createElement('span');c.className='v28-chip';c.textContent=`${k}: ${v}`;chips.appendChild(c)});q('v28CurrentNote').textContent=ex.notes||'';q('v28CurrentNote').style.display=ex.notes?'block':'none';q('v28PrevBtn').disabled=index===0;q('v28NextBtn').disabled=index===a.length-1;q('v28ProgressBar').style.width=`${Math.round((index+1)/a.length*100)}%`;const s=q('v28SessionList');s.innerHTML='';a.forEach((e,i)=>{const p=document.createElement('div');p.className='v28-session-pill'+(i===index?' active':'');const done=activeSession?.loggedIndexes?.includes(i);p.textContent=`${i+1}. ${e.exercise||'Ejercicio'}${done?' ✓':''}`;p.onclick=()=>{index=i;save();updateFull()};s.appendChild(p)});q('v28TimerDisplay').textContent=fmt(timerSeconds);q('v28SessionClock').textContent=fmt(sessionSeconds);updateMini();renderRepTracker()}
+  function updateFull(){const a=list();if(!a.length)return;captureVisibleActuals();save();window.__agendaTrainingActuals={fillPrevious:function(log){try{
+      ensureActuals();
+      if(!activeSession)return false;
+      const data=activeSession.actuals[index];
+      if(!data)return false;
+      const parseSeriesValues=(value)=>{
+        const text=String(value??'').trim();
+        if(!text)return [];
+        // New format: S1:10 · S2:8. Legacy format: 10/8. Also accept comma/semicolon separators.
+        const labeled=[]; const re=/S\s*(\d+)\s*:\s*([^·|,;/]+)/gi; let mm;
+        while((mm=re.exec(text)))labeled[Number(mm[1])-1]=String(mm[2]).trim();
+        if(labeled.some(Boolean))return labeled;
+        return text.split(/[\/;,]|\s+·\s+/).map(x=>x.trim()).filter(Boolean);
+      };
+      const reps=parseSeriesValues(log?.reps);
+      const weights=parseSeriesValues(log?.weight);
+      for(let i=0;i<data.reps.length;i++){
+        if(reps[i]!==undefined&&reps[i]!==''&&reps[i]!=='-')data.reps[i]=reps[i];
+        if(weights[i]!==undefined&&weights[i]!==''&&weights[i]!=='-')data.weight[i]=weights[i];
+        else if(weights.length===1&&weights[0])data.weight[i]=weights[0];
+      }
+      save();
+      renderRepTracker();
+      updateFull();
+      return true;
+    }catch(_){return false;}}};index=Math.max(0,Math.min(index,a.length-1));const ex=a[index];q('v28WorkoutDayLabel').textContent=`${DAYS[workoutDay]} · ${a.length} ejercicios`;q('v28StepLabel').textContent=`Ejercicio ${index+1} de ${a.length}`;q('v28CurrentName').textContent=ex.exercise||'Ejercicio';const chips=q('v28CurrentChips');chips.innerHTML='';[['Series',ex.sets],['Reps',ex.reps],['RIR',ex.rir],['Descanso',ex.rest_seconds?`${ex.rest_seconds}s`:null],['Peso',ex.weight],['Tempo',ex.tempo]].forEach(([k,v])=>{if(v===null||v===undefined||v==='')return;const c=document.createElement('span');c.className='v28-chip';c.textContent=`${k}: ${v}`;chips.appendChild(c)});q('v28CurrentNote').textContent=ex.notes||'';q('v28CurrentNote').style.display=ex.notes?'block':'none';q('v28PrevBtn').disabled=index===0;q('v28NextBtn').disabled=index===a.length-1;q('v28ProgressBar').style.width=`${Math.round((index+1)/a.length*100)}%`;const s=q('v28SessionList');s.innerHTML='';a.forEach((e,i)=>{const p=document.createElement('div');p.className='v28-session-pill'+(i===index?' active':'');const done=activeSession?.loggedIndexes?.includes(i);p.textContent=`${i+1}. ${e.exercise||'Ejercicio'}${done?' ✓':''}`;p.onclick=()=>{index=i;save();updateFull()};s.appendChild(p)});q('v28TimerDisplay').textContent=fmt(timerSeconds);q('v28SessionClock').textContent=fmt(sessionSeconds);updateMini();renderRepTracker()}
   async function wake(){try{if('wakeLock' in navigator)wakeLock=await navigator.wakeLock.request('screen')}catch(_){}}
   async function unwake(){try{if(wakeLock){await wakeLock.release();wakeLock=null}}catch(_){}}
   function pauseTimer(){timerRunning=false;clearInterval(timerInterval);timerInterval=null;save();updateFull()}

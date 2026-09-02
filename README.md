@@ -14,3 +14,6 @@ Cambios de esta entrega, únicamente en navegación móvil y entrenamiento:
 - No requiere cambios en el esquema de Supabase.
 
 Para GitHub Pages: reemplazar la carpeta completa por esta carpeta, conservando la estructura css/ y js/.
+
+
+V96 copy fix: "Copiar reps/peso al registro actual" now supports the current S1:... format and legacy formats, and updates the active training session safely.
