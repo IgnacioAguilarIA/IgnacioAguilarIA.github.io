@@ -80,7 +80,6 @@
 <!-- split-css:30-agenda-structure-guard.css -->
 <link href="./css/30-agenda-structure-guard.css" rel="stylesheet"/>
 <link href="./css/55-v87-personal-suite.css" rel="stylesheet"/>
-<link href="./css/56-v89-weather.css" rel="stylesheet"/>
 <link href="./css/57-v93-training-insights.css" rel="stylesheet"/>
 <link href="./css/58-v94-rest-tracking.css" rel="stylesheet"/>
 <link href="./css/59-v96-training-final.css" rel="stylesheet"/>
@@ -96,6 +95,16 @@
 }
 </style>
 <link href="./css/60-agenda-final-enhancements.css" rel="stylesheet"/>
+<style id="v90-weather-fallback-style">
+/* V90 — Pronóstico robusto: presentación autocontenida para evitar fallos por CSS/JS externo. */
+.v87-weather-card{margin:14px 0 0;padding:16px;border:1px solid rgba(148,163,184,.16);border-radius:18px;background:linear-gradient(145deg,rgba(17,24,39,.94),rgba(15,23,42,.86));box-shadow:0 14px 34px rgba(0,0,0,.16);overflow:hidden}
+.v87-weather-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.v87-weather-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#93c5fd;margin-bottom:4px}.v87-weather-head strong{display:block;font-size:16px;line-height:1.15}.v87-weather-head span{display:block;margin-top:5px;color:var(--muted);font-size:10px;line-height:1.4}.v87-weather-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.v87-weather-actions .small-btn{min-height:34px}.v87-weather-actions button:disabled{opacity:.48;cursor:not-allowed}
+.v87-weather-location{margin-top:9px;color:var(--muted);font-size:9px;line-height:1.3}.v87-weather-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-top:13px;overflow-x:auto;padding:2px 1px 4px;scrollbar-width:thin}.v87-weather-day{min-width:92px;padding:10px 8px;border-radius:14px;background:rgba(255,255,255,.035);border:1px solid rgba(148,163,184,.11);text-align:center}.v87-weather-day.today{border-color:rgba(96,165,250,.55);background:rgba(59,130,246,.10);box-shadow:inset 0 0 0 1px rgba(96,165,250,.08)}.v87-weather-dayname{font-size:9px;font-weight:900;color:#bfdbfe}.v87-weather-icon{font-size:25px;line-height:1;margin:9px 0 7px}.v87-weather-label{min-height:24px;font-size:8px;color:var(--muted);line-height:1.25}.v87-weather-temp{display:flex;justify-content:center;align-items:baseline;gap:6px;margin-top:8px}.v87-weather-temp strong{font-size:16px}.v87-weather-temp span{font-size:9px;color:var(--muted)}.v87-weather-rain{margin-top:7px;font-size:8px;color:#93c5fd}.v87-weather-empty{padding:18px;text-align:center;color:var(--muted);font-size:10px}.v87-weather-note{margin-top:10px;font-size:8px;color:var(--muted);line-height:1.45}
+body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 12px 28px rgba(15,23,42,.06)}body.light .v87-weather-day{background:#f8fafc;border-color:#e5e7eb}body.light .v87-weather-day.today{background:#eff6ff;border-color:#93c5fd}.body.light .v87-weather-day.today{background:#eff6ff;border-color:#93c5fd}
+@media(max-width:900px){.v87-weather-grid{grid-template-columns:repeat(7,92px)}}
+@media(max-width:700px){.v87-weather-card{padding:13px}.v87-weather-head{flex-direction:column}.v87-weather-actions{width:100%;justify-content:stretch}.v87-weather-actions .small-btn{flex:1}.v87-weather-grid{grid-template-columns:repeat(7,88px);gap:7px}.v87-weather-day{min-width:88px;padding:9px 7px}}
+</style>
 </head>
 <body>
 <section id="authScreen">
@@ -1014,10 +1023,80 @@
 <!-- split-js:35-v64-stability-hardening-script.js -->
 <script src="./js/35-v64-stability-hardening-script.js"></script>
 <script src="./js/36-v87-personal-suite.js"></script>
-<script src="./js/37-v89-weather.js"></script>
 <script src="./js/38-v93-training-insights.js"></script>
 <script src="./js/39-v94-rest-tracking.js"></script>
 <script src="./js/40-v96-training-final.js"></script>
 <script src="./js/41-agenda-final-enhancements.js"></script>
+<script id="v90-weather-fallback-script">
+(function(){
+  'use strict';
+  const CARD='v87WeatherCard', GRID='v87WeatherGrid', STATUS='v87WeatherStatus', LOC='v87WeatherLocationLabel';
+  const API='https://api.open-meteo.com/v1/forecast';
+  const KEY='agendaWeatherV90';
+  const DEFAULT={lat:-31.7413,lon:-60.5115,label:'Paraná, Entre Ríos'};
+  let busy=false;
+  const $=id=>document.getElementById(id);
+  function safeJSON(s){try{return JSON.parse(s)}catch(_){return null}}
+  function getCoords(){try{const x=safeJSON(localStorage.getItem(KEY));if(Number.isFinite(x?.lat)&&Number.isFinite(x?.lon))return x}catch(_){}return DEFAULT}
+  function saveCoords(c){try{localStorage.setItem(KEY,JSON.stringify(c))}catch(_){}
+  }
+  function esc(v){const d=document.createElement('div');d.textContent=v??'';return d.innerHTML}
+  function meta(code){
+    const c=Number(code);
+    if(c===0)return ['☀️','Despejado']; if([1,2].includes(c))return ['🌤️','Parcialmente nublado']; if(c===3)return ['☁️','Nublado'];
+    if([45,48].includes(c))return ['🌫️','Niebla']; if([51,53,55].includes(c))return ['🌦️','Llovizna']; if([56,57].includes(c))return ['🌧️','Llovizna helada'];
+    if([61,63,65].includes(c))return ['🌧️','Lluvia']; if([66,67].includes(c))return ['🌧️','Lluvia helada']; if([71,73,75,77].includes(c))return ['🌨️','Nieve'];
+    if([80,81,82].includes(c))return ['🌧️','Chubascos']; if([85,86].includes(c))return ['🌨️','Chubascos de nieve']; if([95,96,99].includes(c))return ['⛈️','Tormenta'];
+    return ['🌦️','Condiciones variables'];
+  }
+  function dayLabel(iso){try{return new Intl.DateTimeFormat('es-AR',{weekday:'short',day:'2-digit',month:'2-digit'}).format(new Date(iso+'T12:00:00')).replace('.','').replace(/^./,c=>c.toUpperCase())}catch(_){return iso}}
+  function setStatus(t){const e=$(STATUS);if(e)e.textContent=t}
+  function render(data,fromCache){
+    const grid=$(GRID); if(!grid)return;
+    const d=data?.daily; if(!d?.time?.length){grid.innerHTML='<div class="v87-weather-empty">No hay pronóstico disponible.</div>';return}
+    grid.innerHTML=''; const n=Math.min(7,d.time.length);
+    for(let i=0;i<n;i++){
+      const [icon,label]=meta(d.weather_code?.[i]);
+      const rain=Math.round(Number(d.precipitation_probability_max?.[i])||0);
+      const sum=Number(d.precipitation_sum?.[i])||0;
+      const lo=Number(d.temperature_2m_min?.[i]); const hi=Number(d.temperature_2m_max?.[i]);
+      const card=document.createElement('div'); card.className='v87-weather-day'+(i===0?' today':'');
+      card.innerHTML='<div class="v87-weather-dayname">'+esc(dayLabel(d.time[i]))+'</div><div class="v87-weather-icon">'+icon+'</div><div class="v87-weather-label">'+esc(label)+'</div><div class="v87-weather-temp"><strong>'+(Number.isFinite(hi)?Math.round(hi):'—')+'°</strong><span>'+(Number.isFinite(lo)?Math.round(lo):'—')+'°</span></div><div class="v87-weather-rain">💧 '+rain+'%'+(sum>0?' · '+sum.toFixed(1)+' mm':'')+'</div>';
+      grid.appendChild(card);
+    }
+    const c=getCoords(); const loc=$(LOC); if(loc)loc.textContent='📍 '+(c.label||'Paraná, Entre Ríos')+' · '+Number(c.lat).toFixed(3)+', '+Number(c.lon).toFixed(3);
+    setStatus((fromCache?'Último pronóstico guardado · ':'')+'Datos meteorológicos para los próximos 7 días.');
+  }
+  async function load(force){
+    if(busy)return; busy=true; const refresh=$('v87WeatherRefreshBtn'); if(refresh)refresh.disabled=true; setStatus('Cargando pronóstico…');
+    const c=getCoords();
+    try{
+      const u=new URL(API); u.searchParams.set('latitude',c.lat);u.searchParams.set('longitude',c.lon);
+      u.searchParams.set('daily','weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,precipitation_sum');
+      u.searchParams.set('forecast_days','7'); u.searchParams.set('timezone','America/Argentina/Buenos_Aires');
+      const r=await fetch(u.toString(),{cache:force?'no-store':'default'}); if(!r.ok)throw new Error('weather '+r.status);
+      const data=await r.json(); try{localStorage.setItem(KEY,JSON.stringify({coords:c,savedAt:Date.now(),data}))}catch(_){}
+      render(data,false);
+    }catch(e){
+      let cache=null; try{cache=safeJSON(localStorage.getItem(KEY));}catch(_){}
+      if(cache?.data){render(cache.data,true)} else {const grid=$(GRID);if(grid)grid.innerHTML='<div class="v87-weather-empty">No se pudo cargar el pronóstico ahora. Probá “Actualizar” en unos segundos.</div>';setStatus('No se pudo cargar el pronóstico.');}
+    }finally{busy=false;if(refresh)refresh.disabled=false;}
+  }
+  function requestLocation(){
+    if(!navigator.geolocation){setStatus('Tu navegador no permite obtener la ubicación.');return}
+    setStatus('Solicitando ubicación…'); navigator.geolocation.getCurrentPosition(pos=>{saveCoords({lat:Number(pos.coords.latitude),lon:Number(pos.coords.longitude),label:'Ubicación actual'});load(true)},()=>setStatus('No se pudo obtener la ubicación. Se mantiene Paraná, Entre Ríos.'),{enableHighAccuracy:false,timeout:10000,maximumAge:6*60*60*1000});
+  }
+  function init(){
+    if(!$(CARD)||$(GRID)?.dataset.v90ready==='1')return;
+    const grid=$(GRID); if(grid)grid.dataset.v90ready='1';
+    const c=getCoords(); const loc=$(LOC); if(loc)loc.textContent='📍 '+(c.label||'Paraná, Entre Ríos')+' · '+Number(c.lat).toFixed(3)+', '+Number(c.lon).toFixed(3);
+    const b=$('v87WeatherLocationBtn'); if(b && !b.dataset.v90bound){b.dataset.v90bound='1';b.addEventListener('click',requestLocation)}
+    const r=$('v87WeatherRefreshBtn'); if(r && !r.dataset.v90bound){r.dataset.v90bound='1';r.addEventListener('click',()=>load(true))}
+    const cache=safeJSON(localStorage.getItem(KEY));
+    if(cache?.data && Date.now()-(Number(cache.savedAt)||0)<30*60*1000){render(cache.data,true); load(false)} else load(false);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
 </body>
 </html>
