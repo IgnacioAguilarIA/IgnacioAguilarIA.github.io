@@ -1,0 +1,14 @@
+/* Mejoras seguras de Agenda: solo presentación/estado, sin modificar Supabase. */
+.agenda-livebar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 12px;padding:10px;border-radius:16px;background:rgba(15,23,42,.46);border:1px solid rgba(148,163,184,.12)}
+.agenda-liveitem{min-width:0}.agenda-liveitem strong{display:block;font-size:13px;line-height:1.2;color:#dbeafe;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.agenda-liveitem span{display:block;margin-top:3px;font-size:8px;color:var(--muted)}
+.agenda-liveitem.next strong{color:#bfdbfe}.agenda-liveitem.overdue strong{color:#fecaca}.agenda-liveitem.done strong{color:#bbf7d0}
+.schedule .hour.agenda-current-hour .time{position:relative;font-weight:900;color:#93c5fd}.schedule .hour.agenda-current-hour .time::after{content:'AHORA';display:block;margin-top:3px;font-size:7px;letter-spacing:.08em;color:#60a5fa}
+.schedule .task.agenda-overdue{border-color:rgba(239,68,68,.30);box-shadow:inset 3px 0 0 rgba(239,68,68,.55)}
+.schedule .task.agenda-upcoming{border-color:rgba(96,165,250,.35);box-shadow:inset 3px 0 0 rgba(96,165,250,.65)}
+.schedule .task .agenda-state{display:inline-flex;align-items:center;gap:4px;margin-top:6px;padding:3px 6px;border-radius:999px;font-size:7px;font-weight:900;letter-spacing:.02em}
+.schedule .task .agenda-state.overdue{color:#fecaca;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.16)}
+.schedule .task .agenda-state.upcoming{color:#bfdbfe;background:rgba(59,130,246,.08);border:1px solid rgba(96,165,250,.16)}
+.schedule .task .agenda-state.done{color:#bbf7d0;background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.14)}
+body.light .agenda-livebar{background:#fff;border-color:#dbe3ee}.light .agenda-liveitem strong,body.light .agenda-liveitem strong{color:#0f172a}.light .agenda-liveitem.next strong,body.light .agenda-liveitem.next strong{color:#1d4ed8}.light .agenda-liveitem.overdue strong{color:#b91c1c}.light .agenda-liveitem.done strong{color:#15803d}
+@media(max-width:700px){.agenda-livebar{grid-template-columns:1fr 1fr}.agenda-liveitem:first-child{grid-column:1/-1}.agenda-liveitem strong{font-size:12px}}
+@media(max-width:480px){.agenda-livebar{grid-template-columns:1fr}.agenda-liveitem:first-child{grid-column:auto}}
