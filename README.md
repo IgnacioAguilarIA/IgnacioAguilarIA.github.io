@@ -17,3 +17,9 @@ Para GitHub Pages: reemplazar la carpeta completa por esta carpeta, conservando 
 
 
 V96 copy fix: "Copiar reps/peso al registro actual" now supports the current S1:... format and legacy formats, and updates the active training session safely.
+
+V98 estabilidad:
+- Agrega manifest.webmanifest y sw.js para soporte PWA/offline del shell estático.
+- Agrega un aviso compacto de conexión en pantalla cuando no hay internet.
+- Después de eliminar/completar tareas, refresca estadísticas, conflictos, dashboard y timeline.
+- No modifica Entrenamiento ni Time-blocking.

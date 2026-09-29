@@ -83,6 +83,8 @@
 <link href="./css/57-v93-training-insights.css" rel="stylesheet"/>
 <link href="./css/58-v94-rest-tracking.css" rel="stylesheet"/>
 <link href="./css/59-v96-training-final.css" rel="stylesheet"/>
+<!-- split-css:62-training-collapsed.css -->
+<link href="./css/62-training-collapsed.css" rel="stylesheet"/>
 
 <style id="v96-mobile-floating-only-fix">
 /* V96: en celulares queda solamente la navegación flotante inferior.
@@ -434,6 +436,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div class="workout-stat"><strong id="workoutStatExercises">0</strong><span>Ejercicios en rutina</span></div>
 <div class="workout-stat"><strong id="workoutStatLast">—</strong><span>Última sesión</span></div>
 </div>
+<div class="workout-list" id="workoutList"></div>
 <div class="workout-analytics">
 <div class="analytics-card">
 <div class="analytics-head"><div><h3>📈 Actividad semanal</h3><p>Sesiones registradas durante las últimas 4 semanas.</p></div><span class="analytics-badge" id="analyticsSummary">0 sesiones</span></div>
@@ -459,7 +462,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div class="progress-chart-wrap" id="progressChartWrap"></div>
 <div class="progress-legend" id="progressLegend"></div>
 </div>
-<div class="workout-list" id="workoutList"></div>
+
 <div class="workout-history">
 <div class="workout-history-head"><div><h3>Historial reciente</h3><p>Últimos registros de entrenamiento guardados.</p></div></div>
 <div class="history-list" id="workoutHistoryList"></div>
@@ -1026,7 +1029,12 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <script src="./js/38-v93-training-insights.js"></script>
 <script src="./js/39-v94-rest-tracking.js"></script>
 <script src="./js/40-v96-training-final.js"></script>
+<!-- split-js:43-training-collapsed.js -->
+<script src="./js/43-training-collapsed.js"></script>
 <script src="./js/41-agenda-final-enhancements.js"></script>
+<!-- V98 stability -->
+<link href="./css/61-v98-stability-improvements.css" rel="stylesheet"/>
+<script src="./js/42-v98-stability-improvements.js"></script>
 <script id="v90-weather-fallback-script">
 (function(){
   'use strict';
