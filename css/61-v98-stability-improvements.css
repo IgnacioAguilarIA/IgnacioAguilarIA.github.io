@@ -1,0 +1,14 @@
+/* V98 · mejoras de estabilidad y uso offline. No modifica Entrenamiento ni Time-blocking. */
+.v98-connection-status{position:fixed;right:16px;top:76px;z-index:600;display:none;align-items:center;gap:8px;max-width:min(420px,calc(100vw - 32px));padding:10px 12px;border-radius:13px;background:rgba(15,23,42,.96);border:1px solid rgba(245,158,11,.28);box-shadow:0 14px 35px rgba(0,0,0,.28);color:#fef3c7;font-size:10px;font-weight:800;line-height:1.35;backdrop-filter:blur(12px)}
+.v98-connection-status.show{display:flex}
+.v98-connection-status.online{border-color:rgba(34,197,94,.24);color:#dcfce7}
+.v98-connection-status.offline{border-color:rgba(239,68,68,.3);color:#fee2e2}
+.v98-connection-dot{width:9px;height:9px;border-radius:50%;background:#f59e0b;flex:0 0 auto;box-shadow:0 0 0 4px rgba(245,158,11,.09)}
+.v98-connection-status.online .v98-connection-dot{background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.09)}
+.v98-connection-status.offline .v98-connection-dot{background:#ef4444;box-shadow:0 0 0 4px rgba(239,68,68,.09)}
+body.light .v98-connection-status{background:rgba(255,255,255,.96);color:#92400e;box-shadow:0 14px 35px rgba(15,23,42,.12)}
+body.light .v98-connection-status.online{color:#166534}
+body.light .v98-connection-status.offline{color:#b91c1c}
+@media(max-width:700px){
+  .v98-connection-status{left:10px;right:10px;top:auto;bottom:78px;max-width:none;justify-content:center;text-align:center;padding:9px 11px;font-size:9px}
+}
