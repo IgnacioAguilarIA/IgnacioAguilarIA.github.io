@@ -550,23 +550,25 @@ async function loadWorkoutExercises(){
   if(!navigator.onLine){useCached();return}
   try{const {data,error}=await sb.from('workout_exercises').select('*').eq('day',workoutDay).order('position',{ascending:true}).order('created_at',{ascending:true});if(error)throw error;workoutExercises=data||[];let all=cacheRead('workoutExercisesAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==Number(workoutDay));all.push(...workoutExercises);cacheWrite('workoutExercisesAll',all)}catch(error){console.error('Entrenamiento:',error);useCached()}}
 async function loadWorkoutLogs(){const {data,error}=await sb.from('workout_logs').select('*').order('performed_at',{ascending:false}).order('created_at',{ascending:false}).limit(100);if(error){console.error(error);const c=cacheRead('workoutLogs');workoutLogs=Array.isArray(c)?c:[]}else{workoutLogs=data||[];cacheWrite('workoutLogs',workoutLogs)}}
+function workoutLogDate(l){return String(l?.performed_at||'').slice(0,10)}
 function renderWorkoutStats(){
   const now=new Date();
-  const cutoff=new Date(now);cutoff.setDate(cutoff.getDate()-30);
-  const recent=workoutLogs.filter(l=>new Date(l.performed_at+'T12:00:00')>=cutoff);
+  const cutoff=new Date(now);cutoff.setHours(12,0,0,0);cutoff.setDate(cutoff.getDate()-30);
+  const recent=workoutLogs.filter(l=>{const d=new Date(workoutLogDate(l)+'T12:00:00');return !Number.isNaN(d.getTime())&&d>=cutoff});
+  const sessionDates=[...new Set(recent.map(workoutLogDate).filter(Boolean))].sort((a,b)=>b.localeCompare(a));
   const sets=recent.reduce((s,l)=>s+(Number(l.sets_completed)||0),0);
   const exerciseCount=workoutExercises.length;
-  const last=workoutLogs[0];
-  $('workoutStatSessions').textContent=recent.length;
+  const lastDate=sessionDates[0];
+  $('workoutStatSessions').textContent=sessionDates.length;
   $('workoutStatSets').textContent=sets;
   $('workoutStatExercises').textContent=exerciseCount;
-  $('workoutStatLast').textContent=last?fmtDate(last.performed_at).replace(' de ',' ').slice(0,6):'—';
+  $('workoutStatLast').textContent=lastDate?fmtDate(lastDate).replace(' de ',' ').slice(0,6):'—';
 }
 function renderWorkoutAnalytics(){
   const bars=$('weeklyBars'); if(!bars)return; bars.innerHTML='';
   const now=new Date(); now.setHours(12,0,0,0);
   const weeks=[0,1,2,3].map(offset=>{const end=new Date(now); end.setDate(end.getDate()-offset*7); const start=new Date(end); start.setDate(start.getDate()-6); return {start,end};}).reverse();
-  const counts=weeks.map(w=>workoutLogs.filter(l=>{const d=new Date(l.performed_at+'T12:00:00');return d>=w.start&&d<=w.end;}).length);
+  const counts=weeks.map(w=>{const dates=new Set();workoutLogs.forEach(l=>{const ds=workoutLogDate(l);if(!ds)return;const d=new Date(ds+'T12:00:00');if(d>=w.start&&d<=w.end)dates.add(ds)});return dates.size;});
   const max=Math.max(1,...counts);
   counts.forEach((count,i)=>{const wrap=document.createElement('div');wrap.className='week-bar';const val=document.createElement('div');val.className='week-bar-value';val.textContent=count;const track=document.createElement('div');track.className='week-bar-track';const fill=document.createElement('div');fill.className='week-bar-fill';fill.style.height=(count/max*100)+'%';track.appendChild(fill);const label=document.createElement('div');label.className='week-bar-label';label.textContent=i===3?'Esta semana':`Sem ${i+1}`;wrap.append(val,track,label);bars.appendChild(wrap);});
   const total=counts.reduce((a,b)=>a+b,0); $('analyticsSummary').textContent=`${total} ${total===1?'sesión':'sesiones'}`;

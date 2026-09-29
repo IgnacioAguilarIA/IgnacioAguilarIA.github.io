@@ -1,7 +1,7 @@
 /* Agenda FICH — Service Worker V98 estable.
    Cachea solo el shell local y deja que los recursos usados se incorporen
    automáticamente mediante la estrategia network-first de fetch. */
-const CACHE='agenda-fich-v98-shell-v3';
+const CACHE='agenda-fich-v98-shell-v6';
 const SHELL=['./','./index.html','./manifest.webmanifest'];
 
 self.addEventListener('install',event=>{

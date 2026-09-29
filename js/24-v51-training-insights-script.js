@@ -2,16 +2,17 @@
   'use strict';
   const q=id=>document.getElementById(id);
   function seriesValues(v){
-    const text=String(v??'');const out={};let m;const re=/S(\d+)\s*:\s*([^·|/]+)/g;
-    while((m=re.exec(text))){const n=Number(String(m[2]).replace(',','.').match(/-?\d+(?:\.\d+)?/)?.[0]||0);out[Number(m[1])]=n}
+    const text=String(v??'').trim();const out={};let m;
+    const labeled=/S\s*(\d+)\s*[: ]\s*([^·|/;]+?)(?=\s*(?:·|\||;|$))/gi;
+    while((m=labeled.exec(text))){const n=Number(String(m[2]).replace(',','.').match(/-?\d+(?:\.\d+)?/)?.[0]);if(Number.isFinite(n))out[Number(m[1])]=n}
     if(Object.keys(out).length)return out;
-    const parts=text.split('/').map(x=>Number(String(x).replace(',','.').match(/-?\d+(?:\.\d+)?/)?.[0]||0));
+    const parts=text.split(/[\/|·;,]+/).map(x=>Number(String(x).replace(',','.').match(/-?\d+(?:\.\d+)?/)?.[0])).filter(Number.isFinite);
     parts.forEach((n,i)=>{out[i+1]=n});return out;
   }
   function numWeight(v){const vals=Object.values(seriesValues(v));return vals.length?Math.max(...vals):0}
   function repsTotal(v){return Object.values(seriesValues(v)).reduce((a,b)=>a+(Number.isFinite(b)?b:0),0)}
   function volume(log){const rs=seriesValues(log?.reps),ws=seriesValues(log?.weight);let total=0;Object.keys(rs).forEach(k=>{const r=Number(rs[k]),w=Number(ws[k]);if(r>0&&w>0)total+=r*w});return total}
-  function logsFor(name){return (workoutLogs||[]).filter(l=>String(l.exercise_name||'').trim().toLowerCase()===String(name||'').trim().toLowerCase()).sort((a,b)=>String(b.performed_at||'').localeCompare(String(a.performed_at||''))||String(b.created_at||'').localeCompare(String(a.created_at||'')))}
+  function logsFor(name){const key=String(name||'').trim().toLowerCase();return (workoutLogs||[]).filter(l=>String(l.exercise_name||'').trim().toLowerCase()===key).sort((a,b)=>String(b.performed_at||'').localeCompare(String(a.performed_at||''))||String(b.created_at||'').localeCompare(String(a.created_at||'')))}
   function bests(logs){let maxW=0,maxV=0,maxReps=0;logs.forEach(l=>{maxW=Math.max(maxW,numWeight(l.weight));maxV=Math.max(maxV,volume(l));maxReps=Math.max(maxReps,repsTotal(l.reps))});return {maxW,maxV,maxReps}}
   function compare(a,b){
     if(!a||!b)return {cls:'first',text:'🆕 Primer punto de comparación para este ejercicio.'};
@@ -32,7 +33,7 @@
       const logs=logsFor(name),b=bests(logs),last=logs[0],prev=logs[1];
       q('v51MaxWeight').textContent=b.maxW?`${b.maxW} kg`:'—';q('v51MaxVolume').textContent=b.maxV?`${Math.round(b.maxV)} kg`:'—';q('v51MaxReps').textContent=b.maxReps?String(b.maxReps):'—';q('v51LastDate').textContent=last?.performed_at||'—';
       const c=compare(last,prev);const tr=q('v51Trend');tr.className='v51-ti-status '+c.cls;tr.textContent=c.text;
-      const pr=q('v51PrBadge');const currentWeight=numWeight(q('v48SetList')?.querySelector('input:nth-of-type(2)')?.value||'');const hasNewWeight=currentWeight&&currentWeight>=b.maxW&&b.maxW>0;pr.style.display=hasNewWeight?'inline-flex':'none';
+      const pr=q('v51PrBadge');const currentWeight=Math.max(0,...[...document.querySelectorAll('#v47SetList input,#v48SetList input')].map(i=>numWeight(i.value||'')).filter(Number.isFinite));const hasNewWeight=currentWeight&&currentWeight>b.maxW&&b.maxW>0;pr.style.display=hasNewWeight?'inline-flex':'none';
     }catch(e){console.warn('V51 training insights',e)}
   }
   function bind(){

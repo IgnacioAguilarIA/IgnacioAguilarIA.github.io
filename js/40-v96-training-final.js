@@ -6,13 +6,18 @@
   const logs=()=>Array.isArray(window.workoutLogs)?window.workoutLogs:[];
   const dateFmt=v=>{if(!v)return '—';const d=new Date(String(v)+'T12:00:00');return Number.isNaN(d.getTime())?String(v):d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'})};
   function parseSeries(log){
-    const reps=[],weights=[],rirs=[]; const notes=String(log?.notes||'');
-    const re=/S(\d+)\s+([^·|]+?)\s+reps\s+·\s+([^·|]+?)\s+kg\s+RIR\s+([^·|]+)/g; let m;
-    while((m=re.exec(notes))){const i=Math.max(0,Number(m[1])-1);reps[i]=m[2].trim();weights[i]=m[3].trim();rirs[i]=m[4].trim();}
-    const kv=(text,target)=>String(text||'').split('·').forEach(part=>{const x=part.match(/S(\d+)\s*:\s*(.*)/);if(x)target[Number(x[1])-1]=x[2].trim()});
-    if(!reps.some(Boolean))kv(log?.reps,reps); if(!weights.some(Boolean))kv(log?.weight,weights);
-    const avg=n(log?.rir), count=Math.max(n(log?.sets_completed)||0,reps.length,weights.length,rirs.length); if(avg!==null)for(let i=0;i<count;i++)if(rirs[i]==null||rirs[i]==='')rirs[i]=String(avg);
-    return Array.from({length:count},(_,i)=>({reps:n(reps[i]),weight:n(weights[i]),rir:n(rirs[i])})).filter(s=>s.reps!==null||s.weight!==null||s.rir!==null);
+    const vals={reps:{},weight:{},rir:{}};
+    const notes=String(log?.notes||'');
+    const detail=/S\s*(\d+)\s+(?:✓\s*)?([^·|]+?)\s+reps\s+·\s+([^·|]+?)\s+kg\s+·\s+RIR\s+([^·|]+)/gi;
+    let m;while((m=detail.exec(notes))){const i=Number(m[1]);vals.reps[i]=m[2].trim();vals.weight[i]=m[3].trim();vals.rir[i]=m[4].trim();}
+    const parseKV=(text,target)=>{const re=/S\s*(\d+)\s*:\s*([^·|/;]+)/gi;let x;while((x=re.exec(String(text||''))))target[Number(x[1])]=x[2].trim()};
+    parseKV(log?.reps,vals.reps);parseKV(log?.weight,vals.weight);parseKV(log?.rir,vals.rir);
+    const plain=(text,target)=>{if(Object.keys(target).length)return;String(text||'').split(/[\/|·;,]+/).forEach((part,i)=>{const n=part.replace(',','.').match(/-?\d+(?:\.\d+)?/);if(n)target[i+1]=n[0]})};
+    plain(log?.reps,vals.reps);plain(log?.weight,vals.weight);plain(log?.rir,vals.rir);
+    const count=Math.max(Number(log?.sets_completed)||0,...Object.keys(vals.reps).map(Number),...Object.keys(vals.weight).map(Number),...Object.keys(vals.rir).map(Number),0);
+    const avg=Number(log?.rir),out=[];
+    for(let i=1;i<=count;i++){let rr=vals.rir[i];if((rr==null||rr==='')&&Number.isFinite(avg))rr=String(avg);const r=Number(String(vals.reps[i]??'').match(/-?\d+(?:[.,]\d+)?/)?.[0]?.replace(',','.')),w=Number(String(vals.weight[i]??'').match(/-?\d+(?:[.,]\d+)?/)?.[0]?.replace(',','.')),ri=Number(String(rr??'').match(/-?\d+(?:[.,]\d+)?/)?.[0]?.replace(',','.'));if(Number.isFinite(r)||Number.isFinite(w)||Number.isFinite(ri))out.push({reps:Number.isFinite(r)?r:null,weight:Number.isFinite(w)?w:null,rir:Number.isFinite(ri)?ri:null});}
+    return out;
   }
   function stat(log){const s=parseSeries(log);let reps=0,vol=0,maxW=0,sets=0; s.forEach(x=>{if(x.reps!==null)reps+=x.reps;if(x.reps!==null&&x.weight!==null)vol+=x.reps*x.weight;if(x.weight!==null)maxW=Math.max(maxW,x.weight);});sets=n(log?.sets_completed)||s.length;return{reps,vol,maxW,sets,exercises:1}};
   function groupSessions(){const map=new Map();logs().forEach(l=>{const d=String(l.performed_at||'');if(!d)return;if(!map.has(d))map.set(d,[]);map.get(d).push(l)});return [...map.entries()].sort((a,b)=>b[0].localeCompare(a[0])).map(([date,rows])=>{let sets=0,reps=0,vol=0,maxW=0;const names=new Set();rows.forEach(l=>{const s=stat(l);sets+=s.sets;reps+=s.reps;vol+=s.vol;maxW=Math.max(maxW,s.maxW);if(l.exercise_name)names.add(l.exercise_name)});return{date,rows,sets,reps,vol,maxW,exerciseCount:names.size}}).slice(0,30);}
