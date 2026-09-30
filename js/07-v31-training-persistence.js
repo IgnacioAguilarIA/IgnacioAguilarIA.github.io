@@ -112,14 +112,17 @@
       };
       const reps=parseSeriesValues(log?.reps);
       const weights=parseSeriesValues(log?.weight);
+      const rirs=parseSeriesValues(log?.rir);
       for(let i=0;i<data.reps.length;i++){
         if(reps[i]!==undefined&&reps[i]!==''&&reps[i]!=='-')data.reps[i]=reps[i];
         if(weights[i]!==undefined&&weights[i]!==''&&weights[i]!=='-')data.weight[i]=weights[i];
         else if(weights.length===1&&weights[0])data.weight[i]=weights[0];
+        if(rirs[i]!==undefined&&rirs[i]!==''&&rirs[i]!=='-')data.rir[i]=rirs[i];
       }
       save();
-      renderRepTracker();
-      updateFull();
+      // Render from the copied state without capturing the old DOM first.
+      renderRepTracker({capture:false});
+      renderedIndex=index;
       return true;
     }catch(_){return false;}}};index=Math.max(0,Math.min(index,a.length-1));const ex=a[index];q('v28WorkoutDayLabel').textContent=`${DAYS[workoutDay]} · ${a.length} ejercicios`;q('v28StepLabel').textContent=`Ejercicio ${index+1} de ${a.length}`;q('v28CurrentName').textContent=ex.exercise||'Ejercicio';const chips=q('v28CurrentChips');chips.innerHTML='';[['Series',ex.sets],['Reps',ex.reps],['RIR',ex.rir],['Descanso',ex.rest_seconds?`${ex.rest_seconds}s`:null],['Peso',ex.weight],['Tempo',ex.tempo]].forEach(([k,v])=>{if(v===null||v===undefined||v==='')return;const c=document.createElement('span');c.className='v28-chip';c.textContent=`${k}: ${v}`;chips.appendChild(c)});q('v28CurrentNote').textContent=ex.notes||'';q('v28CurrentNote').style.display=ex.notes?'block':'none';q('v28PrevBtn').disabled=index===0;q('v28NextBtn').disabled=index===a.length-1;q('v28ProgressBar').style.width=`${Math.round((index+1)/a.length*100)}%`;const s=q('v28SessionList');s.innerHTML='';a.forEach((e,i)=>{const p=document.createElement('div');p.className='v28-session-pill'+(i===index?' active':'');const done=activeSession?.loggedIndexes?.includes(i);p.textContent=`${i+1}. ${e.exercise||'Ejercicio'}${done?' ✓':''}`;p.onclick=()=>{captureVisibleActuals();index=i;renderedIndex=-1;save();updateFull()};s.appendChild(p)});q('v28TimerDisplay').textContent=fmt(timerSeconds);q('v28SessionClock').textContent=fmt(sessionSeconds);updateMini();renderRepTracker({capture:false});renderedIndex=index}
   async function wake(){try{if('wakeLock' in navigator)wakeLock=await navigator.wakeLock.request('screen')}catch(_){}}
@@ -164,12 +167,13 @@
     if(timerRunning)armTimerInterval();
   }
   function resetTimer(){pauseTimer();timerSeconds=timerMode==='countdown'?Math.max(0,Number(list()[index]?.rest_seconds)||0):0;save();updateFull()}
-  function setMode(mode){timerMode=mode;q('v28TimerModeStopwatch').classList.toggle('active',mode==='stopwatch');q('v28TimerModeCountdown').classList.toggle('active',mode==='countdown');resetTimer()}
+  function syncTimerModeUI(){const sw=q('v28TimerModeStopwatch'),cd=q('v28TimerModeCountdown');if(sw)sw.classList.toggle('active',timerMode==='stopwatch');if(cd)cd.classList.toggle('active',timerMode==='countdown')}
+  function setMode(mode){timerMode=mode;syncTimerModeUI();resetTimer()}
   function updateClocksOnly(){syncTimerFromClock();const timer=q('v28TimerDisplay'),session=q('v28SessionClock');if(timer)timer.textContent=fmt(timerSeconds);if(session)session.textContent=fmt(sessionSeconds);updateMini()}
   function startClock(){if(sessionInterval)return;if(!sessionStartedAt)sessionStartedAt=Date.now()-sessionSeconds*1000;sessionInterval=setInterval(()=>{sessionSeconds=Math.floor((Date.now()-sessionStartedAt)/1000);syncTimerFromClock();save();updateClocksOnly()},1000)}
   function stopClock(){clearInterval(sessionInterval);sessionInterval=null}
   function newSession(){activeSession={id:`training-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,userId:currentUser?.id||null,day:Number(workoutDay)||0,performedAt:today(),startedAt:Date.now(),currentIndex:0,exerciseIds:list().map(x=>x.id).filter(Boolean),sessionSeconds:0,timerMode:'stopwatch',timerSeconds:0,timerRunning:false,loggedIndexes:[],actuals:[]};index=0;renderedIndex=-1;sessionSeconds=0;sessionStartedAt=Date.now();timerMode='stopwatch';timerSeconds=0;timerRunning=false;timerStartedAt=null;timerEndAt=null;save()}
-  function restore(s){activeSession=s;workoutDay=Number(s.day)||workoutDay;index=Math.max(0,Number(s.currentIndex)||0);const elapsed=Math.max(0,Math.floor((Date.now()-Number(s.startedAt||Date.now()))/1000));sessionSeconds=Math.max(Number(s.sessionSeconds)||0,elapsed);sessionStartedAt=Date.now()-sessionSeconds*1000;timerMode=s.timerMode||'stopwatch';timerSeconds=Number(s.timerSeconds)||0;timerRunning=!!s.timerRunning;timerStartedAt=Number.isFinite(Number(s.timerStartedAt))?Number(s.timerStartedAt):null;timerEndAt=Number.isFinite(Number(s.timerEndAt))?Number(s.timerEndAt):null;if(timerRunning){const now=Date.now();if(timerMode==='countdown'){if(!Number.isFinite(Number(timerEndAt)))timerEndAt=now+Math.max(0,timerSeconds)*1000;}else{if(!Number.isFinite(Number(timerStartedAt)))timerStartedAt=now-Math.max(0,timerSeconds)*1000;}}else{timerStartedAt=null;timerEndAt=null;}syncTimerFromClock();activeSession.loggedIndexes=Array.isArray(s.loggedIndexes)?s.loggedIndexes:[];activeSession.actuals=Array.isArray(s.actuals)?s.actuals:[];renderedIndex=-1;ensureActuals();restoreSeriesDone();save()}
+  function restore(s){activeSession=s;workoutDay=Number(s.day)||workoutDay;index=Math.max(0,Number(s.currentIndex)||0);const elapsed=Math.max(0,Math.floor((Date.now()-Number(s.startedAt||Date.now()))/1000));sessionSeconds=Math.max(Number(s.sessionSeconds)||0,elapsed);sessionStartedAt=Date.now()-sessionSeconds*1000;timerMode=s.timerMode||'stopwatch';syncTimerModeUI();timerSeconds=Number(s.timerSeconds)||0;timerRunning=!!s.timerRunning;timerStartedAt=Number.isFinite(Number(s.timerStartedAt))?Number(s.timerStartedAt):null;timerEndAt=Number.isFinite(Number(s.timerEndAt))?Number(s.timerEndAt):null;if(timerRunning){const now=Date.now();if(timerMode==='countdown'){if(!Number.isFinite(Number(timerEndAt)))timerEndAt=now+Math.max(0,timerSeconds)*1000;}else{if(!Number.isFinite(Number(timerStartedAt)))timerStartedAt=now-Math.max(0,timerSeconds)*1000;}}else{timerStartedAt=null;timerEndAt=null;}syncTimerFromClock();activeSession.loggedIndexes=Array.isArray(s.loggedIndexes)?s.loggedIndexes:[];activeSession.actuals=Array.isArray(s.actuals)?s.actuals:[];renderedIndex=-1;ensureActuals();restoreSeriesDone();save()}
   function actualSetTouched(actual,i){if(!actual)return false;return !!(Array.isArray(actual?.done)&&actual.done[i])||['reps','weight','rir'].some(k=>Array.isArray(actual?.[k])&&String(actual[k][i]??'').trim()!=='');}
   function actualSetsCount(actual){const n=Math.max(Array.isArray(actual?.reps)?actual.reps.length:0,Array.isArray(actual?.weight)?actual.weight.length:0,Array.isArray(actual?.rir)?actual.rir.length:0,Array.isArray(actual?.done)?actual.done.length:0);let count=0;for(let i=0;i<n;i++)if(actualSetTouched(actual,i))count++;return count;}
   function hasActualData(actual){return actualSetsCount(actual)>0;}

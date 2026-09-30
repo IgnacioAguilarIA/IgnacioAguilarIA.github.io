@@ -23,3 +23,8 @@ V98 estabilidad:
 - Agrega un aviso compacto de conexión en pantalla cuando no hay internet.
 - Después de eliminar/completar tareas, refresca estadísticas, conflictos, dashboard y timeline.
 - No modifica Entrenamiento ni Time-blocking.
+
+
+### Último ajuste
+- La función `Copiar reps/peso al registro actual` copia los datos del último registro del mismo ejercicio directamente al registro actual, incluyendo reps, peso y RIR cuando están disponibles.
+- El render del formulario ya no vuelve a capturar los campos vacíos después de copiar, que era lo que hacía que pareciera que el botón no funcionaba.
