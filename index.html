@@ -96,6 +96,21 @@
   }
 }
 </style>
+<style id="v98-section-top-compact">
+/* En las secciones internas se oculta el resumen global superior (Tareas/Entrenamiento/Alimentación/Racha)
+   y el estado de sincronización. En Inicio se mantiene sin cambios. */
+#v25Goals{transition:none}
+#app:has(.v32-agenda-pane.v32-section-active) #v25Goals,
+#app:has(.v32-calendar-pane.v32-section-active) #v25Goals,
+#app:has(.v32-workout-pane.v32-section-active) #v25Goals,
+#app:has(.v32-nutrition-pane.v32-section-active) #v25Goals,
+body.v32-training-active #v25Goals{display:none !important;}
+#app:has(.v32-agenda-pane.v32-section-active) #refreshStatus,
+#app:has(.v32-calendar-pane.v32-section-active) #refreshStatus,
+#app:has(.v32-workout-pane.v32-section-active) #refreshStatus,
+#app:has(.v32-nutrition-pane.v32-section-active) #refreshStatus,
+body.v32-training-active #refreshStatus{display:none !important;}
+</style>
 <link href="./css/60-agenda-final-enhancements.css" rel="stylesheet"/>
 <style id="v90-weather-fallback-style">
 /* V90 — Pronóstico robusto: presentación autocontenida para evitar fallos por CSS/JS externo. */
@@ -107,6 +122,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 @media(max-width:900px){.v87-weather-grid{grid-template-columns:repeat(7,92px)}}
 @media(max-width:700px){.v87-weather-card{padding:13px}.v87-weather-head{flex-direction:column}.v87-weather-actions{width:100%;justify-content:stretch}.v87-weather-actions .small-btn{flex:1}.v87-weather-grid{grid-template-columns:repeat(7,88px);gap:7px}.v87-weather-day{min-width:88px;padding:9px 7px}}
 </style>
+<link href="./css/68-nutrition-food-catalog.css" rel="stylesheet"/>
 </head>
 <body>
 <section id="authScreen">
@@ -486,6 +502,22 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <button class="small-btn" id="addMealBtn">＋ Agregar comida</button>
 </div>
 </div>
+<div class="nutrition-day-summary" id="nutritionDaySummary">
+<div class="nutrition-day-summary-head">
+<div>
+<span class="nutrition-summary-kicker">Resumen del día</span>
+<strong id="nutritionSummaryDay">—</strong>
+<span id="nutritionSummaryMeals">0/6 comidas cubiertas</span>
+</div>
+<div class="nutrition-summary-progress" aria-label="Progreso de comidas del día"><span id="nutritionSummaryMealsBar"></span></div>
+</div>
+<div class="nutrition-summary-metrics">
+<div class="nutrition-summary-metric"><span>🔥 Calorías</span><strong id="nutritionSummaryCalories">0 kcal</strong></div>
+<div class="nutrition-summary-metric"><span>🥩 Proteínas</span><strong id="nutritionSummaryProtein">0 g</strong></div>
+<div class="nutrition-summary-metric"><span>🍚 Carbohidratos</span><strong id="nutritionSummaryCarbs">0 g</strong></div>
+<div class="nutrition-summary-metric"><span>🥑 Grasas</span><strong id="nutritionSummaryFat">0 g</strong></div>
+</div>
+</div>
 <div class="workout-days" id="nutritionDays"></div>
 <div class="goal-grid" id="nutritionGoals"></div>
 <div class="goal-settings" id="nutritionGoalSummary">Definí tus objetivos diarios para ver el progreso.</div>
@@ -611,6 +643,20 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 </select></div>
 <div class="field"><label>Título</label><input class="input" id="mealTitle" placeholder="Ej: Avena con banana y yogur"/></div>
 <div class="field"><label>Alimentos / cantidades</label><input class="input" id="mealFoods" placeholder="Ej: 80 g avena, 1 banana, 200 g yogur"/></div>
+<div class="nutrition-food-catalog-wrap">
+<button class="nutrition-food-catalog-toggle" id="nutritionFoodCatalogToggle" type="button" aria-expanded="false"><span>🔎 Buscar alimento en catálogo<small>Preparado para conectar Open Food Facts</small></span><span>＋</span></button>
+<div class="nutrition-food-catalog" id="nutritionFoodCatalog" hidden>
+<div class="nutrition-food-catalog-head">
+<div class="nutrition-food-catalog-search"><label for="nutritionFoodSearch">Alimento</label><input class="input" id="nutritionFoodSearch" autocomplete="off" placeholder="Ej: banana, arroz, yogur..."/></div>
+<button class="nutrition-food-catalog-find" id="nutritionFoodCatalogFind" type="button">Buscar</button>
+</div>
+<div class="nutrition-food-catalog-status" id="nutritionFoodCatalogStatus">Preparado para conectar el catálogo externo.</div>
+<div class="nutrition-food-catalog-results" id="nutritionFoodCatalogResults"></div>
+<div class="nutrition-food-selected" id="nutritionFoodSelected" hidden></div>
+<div class="nutrition-food-catalog-qty"><label for="nutritionFoodQuantity">Cantidad</label><input class="input" id="nutritionFoodQuantity" min="0" step="1" type="number" value="100"/></div>
+<button class="nutrition-food-apply" id="nutritionFoodApply" type="button" hidden>Usar datos en esta comida</button>
+</div>
+</div>
 <div class="meal-form-grid three">
 <div class="field"><label>Calorías</label><input class="input" id="mealCalories" min="0" placeholder="500" type="number"/></div>
 <div class="field"><label>Proteínas (g)</label><input class="input" id="mealProtein" min="0" placeholder="30" step="0.1" type="number"/></div>
@@ -1121,6 +1167,8 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <!-- V98 training stats repair -->
 <link href="./css/65-training-stats-repair.css" rel="stylesheet"/>
 <link href="./css/66-home-practical-summary.css" rel="stylesheet"/>
+<link href="./css/67-nutrition-daily-summary.css" rel="stylesheet"/>
 <script src="./js/46-v98-training-stats-repair.js"></script>
+<script src="./js/47-nutrition-food-catalog.js"></script>
 </body>
 </html>

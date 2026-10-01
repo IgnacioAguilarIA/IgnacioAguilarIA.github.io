@@ -1,30 +1,5 @@
-Agenda FICH — V96 final
+Agenda FICH — base preparada para catálogo de alimentos
 
-Base: V96 subida por el usuario.
+Esta versión agrega una interfaz y una capa de normalización para conectar más adelante un catálogo externo (Open Food Facts) sin modificar el esquema actual de nutrition_meals.
 
-Cambios de esta entrega, únicamente en navegación móvil y entrenamiento:
-- En celulares queda solamente la navegación flotante inferior; se ocultan v32SectionNav y section-switcher.
-- Se conserva el botón "Cancelar entrenamiento" de la Vista de entrenamiento.
-- Se conserva el registro por serie de reps, peso, RIR y series completadas.
-- Se refuerza el historial avanzado: selección de cualquier sesión, comparación y evolución.
-- Se agregan récords personales visibles y resumen de sesiones completas.
-- Se mantiene la orientación de progresión existente.
-- Se mantiene el seguimiento de descanso real; se corrige el número de serie usado para calcular cada descanso.
-- No se modifica la lógica de cronómetro/temporizador existente.
-- No requiere cambios en el esquema de Supabase.
-
-Para GitHub Pages: reemplazar la carpeta completa por esta carpeta, conservando la estructura css/ y js/.
-
-
-V96 copy fix: "Copiar reps/peso al registro actual" now supports the current S1:... format and legacy formats, and updates the active training session safely.
-
-V98 estabilidad:
-- Agrega manifest.webmanifest y sw.js para soporte PWA/offline del shell estático.
-- Agrega un aviso compacto de conexión en pantalla cuando no hay internet.
-- Después de eliminar/completar tareas, refresca estadísticas, conflictos, dashboard y timeline.
-- No modifica Entrenamiento ni Time-blocking.
-
-
-### Último ajuste
-- La función `Copiar reps/peso al registro actual` copia los datos del último registro del mismo ejercicio directamente al registro actual, incluyendo reps, peso y RIR cuando están disponibles.
-- El render del formulario ya no vuelve a capturar los campos vacíos después de copiar, que era lo que hacía que pareciera que el botón no funcionaba.
+La búsqueda externa todavía NO está conectada: el punto único de integración es window.AgendaFoodCatalog.search(query), que deberá devolver una lista de productos/items normalizados o compatibles con normalize().
