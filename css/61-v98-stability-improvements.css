@@ -12,3 +12,12 @@ body.light .v98-connection-status.offline{color:#b91c1c}
 @media(max-width:700px){
   .v98-connection-status{left:10px;right:10px;top:auto;bottom:78px;max-width:none;justify-content:center;text-align:center;padding:9px 11px;font-size:9px}
 }
+
+/* Oculta el bloque completo de sincronización mientras se navega fuera de Inicio. */
+#app:has(.v32-agenda-pane.v32-section-active) #v39SyncBar,
+#app:has(.v32-calendar-pane.v32-section-active) #v39SyncBar,
+#app:has(.v32-workout-pane.v32-section-active) #v39SyncBar,
+#app:has(.v32-nutrition-pane.v32-section-active) #v39SyncBar,
+body.v32-training-active #v39SyncBar{
+  display:none !important;
+}

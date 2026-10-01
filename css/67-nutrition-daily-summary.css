@@ -1,0 +1,25 @@
+/* Agenda FICH — Resumen rápido de Alimentación */
+.nutrition-day-summary{
+  margin:0 0 14px;
+  padding:14px;
+  border:1px solid rgba(96,165,250,.18);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(59,130,246,.09),rgba(34,197,94,.06));
+}
+.nutrition-day-summary-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:11px}
+.nutrition-day-summary-head>div:first-child{min-width:0}
+.nutrition-summary-kicker{display:block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:3px}
+.nutrition-day-summary-head strong{display:block;font-size:17px;line-height:1.2}
+.nutrition-summary-head span{display:block}
+#nutritionSummaryMeals{display:block;margin-top:3px;font-size:10px;color:var(--muted)}
+.nutrition-summary-progress{width:150px;max-width:34%;height:8px;background:rgba(148,163,184,.16);border-radius:999px;overflow:hidden;flex:0 0 auto}
+.nutrition-summary-progress span{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#22c55e,#3b82f6);transition:width .2s ease}
+.nutrition-summary-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.nutrition-summary-metric{min-width:0;padding:9px 10px;border:1px solid rgba(148,163,184,.12);border-radius:12px;background:rgba(15,23,42,.34)}
+.nutrition-summary-metric span{display:block;font-size:9px;color:var(--muted);margin-bottom:3px;white-space:nowrap}
+.nutrition-summary-metric strong{display:block;font-size:13px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.light .nutrition-day-summary{background:rgba(248,250,252,.9);border-color:#dbe3ee}
+body.light .nutrition-summary-metric{background:#fff;border-color:#dbe3ee}
+body.light .nutrition-summary-metric strong,.nutrition-summary-metric strong{color:inherit}
+@media(max-width:900px){.nutrition-summary-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.nutrition-day-summary{padding:12px}.nutrition-day-summary-head{align-items:flex-start}.nutrition-summary-progress{width:100px;max-width:36%;margin-top:7px}.nutrition-summary-metric{padding:8px 9px}.nutrition-summary-metric span{font-size:8px}.nutrition-summary-metric strong{font-size:12px}}
