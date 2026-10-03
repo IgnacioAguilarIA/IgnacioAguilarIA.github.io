@@ -1,0 +1,419 @@
+name,category,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,aliases,source,locale
+Frambuesa,Frutas,52.0,1.2,11.9,0.7,6.5,raspberry,curated,es-AR
+Mora,Frutas,43.0,1.4,9.6,0.5,5.3,blackberry; moras,curated,es-AR
+Arándano,Frutas,57.0,0.7,14.5,0.3,2.4,blueberry,curated,es-AR
+Granada,Frutas,83.0,1.7,18.7,1.2,4.0,pomegranate,curated,es-AR
+Higo fresco,Frutas,74.0,0.8,19.2,0.3,2.9,higo; fig,curated,es-AR
+Higo seco,Frutas,249.0,3.3,63.9,0.9,9.8,fig dried,curated,es-AR
+Dátil,Frutas,282.0,2.5,75.0,0.4,8.0,dates; dátil seco,curated,es-AR
+Papaya,Frutas,43.0,0.5,10.8,0.3,1.7,papaya,curated,es-AR
+Guayaba,Frutas,68.0,2.6,14.3,1.0,5.4,guava,curated,es-AR
+Maracuyá,Frutas,97.0,2.2,23.4,0.7,10.4,passion fruit; fruta de la pasión,curated,es-AR
+Caqui,Frutas,70.0,0.6,18.6,0.2,3.6,persimmon,curated,es-AR
+Coco fresco,Frutas,354.0,3.3,15.2,33.5,9.0,coconut; pulpa de coco,curated,es-AR
+Coco rallado sin azúcar,Frutos secos,660.0,7.0,24.0,64.5,16.3,coconut shredded,curated,es-AR
+Aceituna verde,Frutas,145.0,1.0,3.8,15.3,3.3,green olive; aceitunas verdes,curated,es-AR
+Aceituna negra,Frutas,115.0,0.8,6.3,10.9,3.2,black olive; aceitunas negras,curated,es-AR
+Pomelo rosado,Frutas,42.0,0.8,10.7,0.1,1.6,grapefruit,curated,es-AR
+Pomelo blanco,Frutas,37.0,0.9,9.7,0.1,1.0,white grapefruit,curated,es-AR
+Lima,Frutas,30.0,0.7,10.5,0.2,2.8,lime,curated,es-AR
+Limón,Frutas,29.0,1.1,9.3,0.3,2.8,lemon,curated,es-AR
+Cereza,Frutas,63.0,1.1,16.0,0.2,2.1,cherry,curated,es-AR
+Nectarina,Frutas,44.0,1.1,10.6,0.3,1.7,nectarine,curated,es-AR
+Higo chumbo,Frutas,41.0,0.7,9.6,0.5,3.6,tuna fruit; prickly pear,curated,es-AR
+Membrillo,Frutas,57.0,0.4,15.3,0.1,1.9,quince,curated,es-AR
+Carambola,Frutas,31.0,1.0,6.7,0.3,2.8,star fruit,curated,es-AR
+Lichi,Frutas,66.0,0.8,16.5,0.4,1.3,lychee,curated,es-AR
+Níspero,Frutas,47.0,0.4,12.1,0.2,1.7,loquat,curated,es-AR
+Tamarindo,Frutas,239.0,2.8,62.5,0.6,5.1,tamarind,curated,es-AR
+Albaricoque,Frutas,48.0,1.4,11.1,0.4,2.0,apricot,curated,es-AR
+Pasas de uva,Frutas secas,299.0,3.1,79.2,0.5,3.7,raisins; pasas,curated,es-AR
+Arándano deshidratado sin azúcar,Frutas secas,308.0,0.1,82.4,1.1,5.3,dried cranberry,curated,es-AR
+Chips de banana sin azúcar,Frutas secas,346.0,3.9,58.4,1.8,6.8,banana chips,curated,es-AR
+Tomate cherry,Verduras,18.0,0.9,3.9,0.2,1.2,cherry tomato,curated,es-AR
+Tomate perita,Verduras,18.0,0.9,3.9,0.2,1.2,roma tomato; tomate roma,curated,es-AR
+Morrón verde,Verduras,20.0,0.9,4.6,0.2,1.7,green pepper; ají morrón verde,curated,es-AR
+Morrón amarillo,Verduras,27.0,1.0,6.3,0.2,0.9,yellow pepper,curated,es-AR
+Ají picante,Verduras,40.0,1.9,8.8,0.4,1.5,chile; ají,curated,es-AR
+Puerro,Verduras,61.0,1.5,14.2,0.3,1.8,leek,curated,es-AR
+Cebolla de verdeo,Verduras,32.0,1.8,7.3,0.2,2.6,green onion; cebollín,curated,es-AR
+Repollo blanco,Verduras,25.0,1.3,5.8,0.1,2.5,white cabbage,curated,es-AR
+Repollo colorado,Verduras,31.0,1.4,7.4,0.2,2.1,red cabbage,curated,es-AR
+Coles de Bruselas,Verduras,43.0,3.4,8.9,0.3,3.8,brussels sprouts,curated,es-AR
+Kale,Verduras,35.0,2.9,4.4,1.5,4.1,col rizada,curated,es-AR
+Acelga,Verduras,19.0,1.8,3.7,0.2,1.6,swiss chard,curated,es-AR
+Rúcula,Verduras,25.0,2.6,3.7,0.7,1.6,arugula,curated,es-AR
+Berro,Verduras,11.0,2.3,1.3,0.1,0.5,watercress,curated,es-AR
+Endivia,Verduras,17.0,1.3,3.4,0.2,3.1,endive,curated,es-AR
+Escarola,Verduras,17.0,1.3,3.4,0.2,3.1,escarole,curated,es-AR
+Alcaucil,Verduras,47.0,3.3,10.5,0.2,5.4,alcachofa; artichoke,curated,es-AR
+Espárrago,Verduras,20.0,2.2,3.9,0.1,2.1,asparagus,curated,es-AR
+Apio,Verduras,16.0,0.7,3.0,0.2,1.6,celery,curated,es-AR
+Hinojo,Verduras,31.0,1.2,7.3,0.2,3.1,fennel,curated,es-AR
+Nabo,Verduras,28.0,0.9,6.4,0.1,1.8,turnip,curated,es-AR
+Rabanito,Verduras,16.0,0.7,3.4,0.1,1.6,radish,curated,es-AR
+Ñame,Verduras y tubérculos,118.0,1.5,27.9,0.2,4.1,yam,curated,es-AR
+Mandioca,Verduras y tubérculos,160.0,1.4,38.1,0.3,1.8,yuca; cassava,curated,es-AR
+Mandioca cocida,Verduras y tubérculos,165.0,1.3,39.0,0.3,1.8,cassava cooked,curated,es-AR
+Mandioca al horno,Verduras y tubérculos,180.0,1.4,42.0,0.6,2.0,baked cassava,curated,es-AR
+Calabaza anco,Verduras,45.0,1.0,11.7,0.1,2.0,butternut squash; anco,curated,es-AR
+Calabaza cabutia,Verduras,40.0,1.0,10.0,0.1,2.0,kabocha squash,curated,es-AR
+Zapallo plomo,Verduras,26.0,1.0,6.5,0.1,0.5,pumpkin,curated,es-AR
+Zanahoria baby,Verduras,35.0,0.6,8.2,0.1,3.0,baby carrots,curated,es-AR
+Remolacha cocida,Verduras,44.0,1.7,10.0,0.2,2.0,beet cooked,curated,es-AR
+Brócoli cocido,Verduras,35.0,2.4,7.2,0.4,3.3,broccoli cooked,curated,es-AR
+Coliflor cocida,Verduras,23.0,1.8,4.1,0.5,2.3,cauliflower cooked,curated,es-AR
+Espinaca cocida,Verduras,23.0,3.0,3.8,0.3,2.4,spinach cooked,curated,es-AR
+Acelga cocida,Verduras,19.0,1.9,3.7,0.2,1.6,chard cooked,curated,es-AR
+Berenjena cocida,Verduras,35.0,0.8,8.7,0.2,2.5,eggplant cooked,curated,es-AR
+Calabacín cocido,Verduras,17.0,1.2,3.3,0.3,1.1,zucchini cooked,curated,es-AR
+Choclo cocido,Verduras,96.0,3.4,21.0,1.5,2.4,corn cooked,curated,es-AR
+Arvejas frescas,Legumbres,81.0,5.4,14.5,0.4,5.1,peas fresh,curated,es-AR
+Brotes de soja,Verduras,49.0,4.5,6.2,0.2,2.5,soybean sprouts,curated,es-AR
+Brotes de alfalfa,Verduras,23.0,3.99,2.1,0.7,1.9,alfalfa sprouts,curated,es-AR
+Acelga baby,Verduras,19.0,1.8,3.7,0.2,1.6,baby chard,curated,es-AR
+Bok choy,Verduras,13.0,1.5,2.2,0.2,1.0,pak choi,curated,es-AR
+Col china,Verduras,16.0,1.2,3.2,0.2,1.2,napa cabbage,curated,es-AR
+Hojas de remolacha,Verduras,22.0,2.2,4.3,0.1,3.7,beet greens,curated,es-AR
+Hojas de mostaza,Verduras,27.0,2.9,4.7,0.4,3.2,mustard greens,curated,es-AR
+Berenjena japonesa,Verduras,25.0,1.0,5.9,0.2,3.0,japanese eggplant,curated,es-AR
+Calabaza spaghetti,Verduras,31.0,0.6,6.9,0.6,1.5,spaghetti squash,curated,es-AR
+Arroz integral cocido,Cereales,123.0,2.7,25.6,1.0,1.6,brown rice cooked,curated,es-AR
+Arroz yamaní crudo,Cereales,370.0,7.5,77.0,2.7,3.5,yamani rice,curated,es-AR
+Arroz yamaní cocido,Cereales,123.0,2.7,25.6,1.0,1.6,yamani rice cooked,curated,es-AR
+Arroz basmati crudo,Cereales,365.0,8.0,78.0,0.7,0.9,basmati rice,curated,es-AR
+Arroz basmati cocido,Cereales,130.0,2.7,28.2,0.3,0.4,basmati rice cooked,curated,es-AR
+Arroz jazmín crudo,Cereales,365.0,7.1,80.0,0.7,1.0,jasmine rice,curated,es-AR
+Arroz jazmín cocido,Cereales,130.0,2.7,28.2,0.3,0.4,jasmine rice cooked,curated,es-AR
+Arroz salvaje crudo,Cereales,357.0,14.7,74.9,1.1,6.2,wild rice,curated,es-AR
+Arroz salvaje cocido,Cereales,101.0,4.0,21.3,0.3,1.8,wild rice cooked,curated,es-AR
+Avena cocida con agua,Cereales,71.0,2.5,12.0,1.5,1.7,oatmeal cooked; oat porridge,curated,es-AR
+Salvado de avena,Cereales,246.0,17.3,66.2,7.0,15.4,oat bran,curated,es-AR
+Salvado de trigo,Cereales,216.0,15.6,64.5,4.3,42.8,wheat bran,curated,es-AR
+Harina de avena,Cereales,404.0,14.7,65.7,9.1,8.6,oat flour,curated,es-AR
+Harina de arroz,Cereales,366.0,5.9,80.1,1.4,2.4,rice flour,curated,es-AR
+Harina de maíz integral,Cereales,361.0,6.9,76.9,3.9,7.3,whole corn flour,curated,es-AR
+Harina de centeno,Cereales,335.0,9.3,76.0,1.3,15.1,rye flour,curated,es-AR
+Harina de cebada,Cereales,354.0,10.5,73.5,1.2,17.3,barley flour,curated,es-AR
+Harina de garbanzo,Legumbres,387.0,22.4,57.8,6.7,10.8,chickpea flour,curated,es-AR
+Harina de lentejas,Legumbres,353.0,25.8,59.2,1.1,10.7,lentil flour,curated,es-AR
+Harina de soja,Legumbres,434.0,36.5,30.2,20.6,9.3,soy flour,curated,es-AR
+Cuscús seco,Cereales,376.0,12.8,77.4,0.6,5.0,couscous dry,curated,es-AR
+Cuscús cocido,Cereales,112.0,3.8,23.2,0.2,1.4,couscous cooked,curated,es-AR
+Bulgur seco,Cereales,342.0,12.3,75.9,1.3,18.3,bulgur,curated,es-AR
+Bulgur cocido,Cereales,83.0,3.1,18.6,0.2,4.5,bulgur cooked,curated,es-AR
+Trigo sarraceno crudo,Cereales,343.0,13.3,71.5,3.4,10.0,buckwheat,curated,es-AR
+Trigo sarraceno cocido,Cereales,92.0,3.4,19.9,0.6,2.7,buckwheat cooked,curated,es-AR
+Mijo crudo,Cereales,378.0,11.0,72.8,4.2,8.5,millet,curated,es-AR
+Mijo cocido,Cereales,119.0,3.5,23.7,1.0,1.3,millet cooked,curated,es-AR
+Cebada perlada cruda,Cereales,352.0,9.9,77.7,1.2,15.6,pearl barley,curated,es-AR
+Cebada perlada cocida,Cereales,123.0,2.3,28.2,0.4,3.8,barley cooked,curated,es-AR
+Centeno en grano,Cereales,338.0,10.3,75.9,1.6,15.1,rye grain,curated,es-AR
+Amaranto crudo,Pseudocereales,371.0,13.6,65.3,7.0,6.7,amaranth,curated,es-AR
+Amaranto cocido,Pseudocereales,102.0,3.8,18.7,1.6,2.1,amaranth cooked,curated,es-AR
+Teff crudo,Pseudocereales,367.0,13.3,73.1,2.4,8.0,teff,curated,es-AR
+Teff cocido,Pseudocereales,101.0,3.9,19.9,0.7,2.8,teff cooked,curated,es-AR
+Fideos de arroz secos,Cereales,364.0,5.0,80.2,0.6,1.6,rice noodles dry,curated,es-AR
+Fideos de arroz cocidos,Cereales,109.0,0.9,24.9,0.2,1.6,rice noodles cooked,curated,es-AR
+Pasta integral seca,Cereales,348.0,14.0,74.6,2.5,9.2,whole wheat pasta,curated,es-AR
+Pasta integral cocida,Cereales,149.0,5.8,30.9,1.7,4.8,whole wheat pasta cooked,curated,es-AR
+Ñoquis de papa cocidos,Cereales,130.0,3.0,27.0,0.5,1.7,potato gnocchi,curated,es-AR
+Tortilla de trigo,Cereales,312.0,8.3,52.1,8.3,3.5,wheat tortilla,curated,es-AR
+Tortilla de maíz,Cereales,218.0,5.7,44.6,2.9,6.3,corn tortilla,curated,es-AR
+Tapioca seca,Cereales,358.0,0.2,88.7,0.0,0.9,tapioca,curated,es-AR
+Almidón de maíz,Cereales,381.0,0.3,91.3,0.1,0.9,cornstarch; maicena,curated,es-AR
+Almidón de papa,Cereales,357.0,0.1,88.0,0.1,0.0,potato starch,curated,es-AR
+Pan de centeno,Panificados,259.0,8.5,48.3,3.3,5.8,rye bread,curated,es-AR
+Pan de avena,Panificados,269.0,8.9,48.2,4.4,6.0,oat bread,curated,es-AR
+Pan de salvado,Panificados,248.0,12.0,41.0,5.0,7.5,bran bread,curated,es-AR
+Pan multicereal,Panificados,265.0,10.2,45.0,5.0,6.0,multigrain bread,curated,es-AR
+Pan de campo,Panificados,270.0,8.5,53.0,2.0,3.5,country bread,curated,es-AR
+Pan de masa madre,Panificados,250.0,9.0,48.0,2.5,2.7,sourdough bread,curated,es-AR
+Pan árabe,Panificados,275.0,9.0,55.7,1.2,2.2,pita bread,curated,es-AR
+Pan de hamburguesa,Panificados,278.0,9.9,49.0,5.0,2.0,burger bun,curated,es-AR
+Pan lactal,Panificados,270.0,9.4,49.0,4.2,2.7,sliced bread,curated,es-AR
+Tostada de pan blanco,Panificados,313.0,10.5,56.4,4.2,2.3,toast white bread,curated,es-AR
+Tostada integral,Panificados,293.0,13.0,50.0,4.0,6.0,whole wheat toast,curated,es-AR
+Galletas de agua,Panificados,420.0,10.0,70.0,12.0,3.0,water crackers,curated,es-AR
+Crackers integrales,Panificados,430.0,10.0,65.0,15.0,8.0,whole grain crackers,curated,es-AR
+Avena instantánea,Cereales,379.0,13.2,67.7,6.5,9.7,instant oats,curated,es-AR
+Granola sin azúcar,Cereales,450.0,10.0,62.0,16.0,8.0,granola no sugar,curated,es-AR
+Muesli,Cereales,360.0,10.5,64.0,8.0,8.0,muesli,curated,es-AR
+Copos de maíz,Cereales,357.0,7.5,84.1,0.4,3.3,corn flakes,curated,es-AR
+Copos de avena,Cereales,389.0,16.9,66.3,6.9,10.6,rolled oats,curated,es-AR
+Copos de salvado,Cereales,326.0,13.0,70.0,4.0,15.0,bran flakes,curated,es-AR
+Lentejas cocidas sin sal,Legumbres,116.0,9.0,20.1,0.4,7.9,lentils cooked no salt,curated,es-AR
+Lentejas rojas secas,Legumbres,358.0,25.0,63.0,1.1,11.0,red lentils,curated,es-AR
+Lentejas rojas cocidas,Legumbres,116.0,9.0,20.1,0.4,7.9,red lentils cooked,curated,es-AR
+Garbanzos cocidos sin sal,Legumbres,164.0,8.9,27.4,2.6,7.6,chickpeas cooked,curated,es-AR
+Garbanzos tostados,Legumbres,364.0,19.0,61.0,6.0,17.0,roasted chickpeas,curated,es-AR
+Porotos blancos cocidos,Legumbres,139.0,9.7,25.1,0.4,6.3,white beans,curated,es-AR
+Porotos alubia secos,Legumbres,333.0,23.4,60.3,0.8,15.7,navy beans,curated,es-AR
+Porotos negros secos,Legumbres,341.0,21.6,62.4,1.4,15.5,black beans dry,curated,es-AR
+Porotos colorados secos,Legumbres,333.0,24.4,60.1,0.8,24.9,kidney beans dry,curated,es-AR
+Porotos pallares cocidos,Legumbres,127.0,8.7,22.8,0.5,6.5,lima beans cooked,curated,es-AR
+Porotos mung cocidos,Legumbres,105.0,7.0,19.1,0.4,7.6,mung beans,curated,es-AR
+Porotos mung secos,Legumbres,347.0,23.9,62.6,1.2,16.3,mung beans dry,curated,es-AR
+Arvejas partidas secas,Legumbres,341.0,24.6,60.1,1.2,25.5,split peas,curated,es-AR
+Arvejas partidas cocidas,Legumbres,118.0,8.3,21.1,0.4,8.3,split peas cooked,curated,es-AR
+Hummus clásico,Legumbres,166.0,7.9,14.3,9.6,6.0,hummus,curated,es-AR
+Edamame cocido,Legumbres,121.0,11.9,8.9,5.2,5.2,edamame,curated,es-AR
+Soja seca,Legumbres,446.0,36.5,30.2,19.9,9.3,soybeans dry,curated,es-AR
+Tofu firme,Legumbres,144.0,17.3,2.8,8.7,2.3,firm tofu,curated,es-AR
+Tofu sedoso,Legumbres,55.0,4.8,2.3,3.0,0.3,silken tofu,curated,es-AR
+Tempeh,Legumbres,195.0,19.9,7.6,11.4,3.9,tempeh,curated,es-AR
+Habas secas,Legumbres,341.0,26.1,58.3,1.5,25.0,fava beans dry; broad beans,curated,es-AR
+Habas cocidas,Legumbres,110.0,7.6,19.7,0.4,5.4,fava beans cooked,curated,es-AR
+Huevo entero cocido,Huevos y lácteos,155.0,12.6,1.1,10.6,0.0,boiled egg,curated,es-AR
+Huevo pochado,Huevos y lácteos,143.0,12.5,0.7,9.5,0.0,poached egg,curated,es-AR
+Clara de huevo pasteurizada,Huevos y lácteos,52.0,10.9,0.7,0.2,0.0,egg whites liquid,curated,es-AR
+Yema de huevo,Huevos y lácteos,322.0,15.9,3.6,26.5,0.0,egg yolk,curated,es-AR
+Leche semidescremada,Huevos y lácteos,47.0,3.3,4.8,1.5,0.0,semi skim milk,curated,es-AR
+Leche sin lactosa entera,Huevos y lácteos,61.0,3.2,4.7,3.3,0.0,lactose free whole milk,curated,es-AR
+Leche sin lactosa descremada,Huevos y lácteos,34.0,3.4,5.0,0.1,0.0,lactose free skim milk,curated,es-AR
+Leche evaporada descremada,Huevos y lácteos,78.0,7.5,11.0,0.2,0.0,evaporated skim milk,curated,es-AR
+Leche en polvo entera,Huevos y lácteos,496.0,26.3,38.4,26.7,0.0,whole milk powder,curated,es-AR
+Leche en polvo descremada,Huevos y lácteos,362.0,36.2,51.0,0.8,0.0,skim milk powder,curated,es-AR
+Yogur natural descremado,Huevos y lácteos,59.0,10.3,3.6,0.4,0.0,low fat plain yogurt,curated,es-AR
+Yogur natural entero,Huevos y lácteos,61.0,3.5,4.7,3.3,0.0,whole plain yogurt,curated,es-AR
+Yogur griego descremado,Huevos y lácteos,59.0,10.2,3.6,0.4,0.0,nonfat greek yogurt,curated,es-AR
+Yogur griego entero,Huevos y lácteos,97.0,9.0,3.9,5.0,0.0,whole greek yogurt,curated,es-AR
+Kéfir natural,Huevos y lácteos,63.0,3.4,4.8,3.5,0.0,kefir plain,curated,es-AR
+Ricota,Huevos y lácteos,174.0,11.3,3.0,13.0,0.0,ricotta,curated,es-AR
+Queso cremoso,Huevos y lácteos,306.0,10.0,3.5,29.0,0.0,cream cheese argentina,curated,es-AR
+Queso fresco,Huevos y lácteos,264.0,18.0,3.0,20.0,0.0,fresh cheese,curated,es-AR
+Queso sardo,Huevos y lácteos,392.0,31.0,0.0,30.0,0.0,sardo cheese,curated,es-AR
+Queso pategrás,Huevos y lácteos,368.0,25.0,1.0,30.0,0.0,pategras cheese,curated,es-AR
+Queso de máquina,Huevos y lácteos,350.0,24.0,1.0,28.0,0.0,machine cheese,curated,es-AR
+Queso azul,Huevos y lácteos,353.0,21.4,2.3,28.7,0.0,blue cheese,curated,es-AR
+Queso brie,Huevos y lácteos,334.0,20.8,0.5,27.7,0.0,brie,curated,es-AR
+Queso camembert,Huevos y lácteos,300.0,19.8,0.5,24.3,0.0,camembert,curated,es-AR
+Queso cheddar,Huevos y lácteos,403.0,24.9,1.3,33.1,0.0,cheddar,curated,es-AR
+Queso gouda,Huevos y lácteos,356.0,25.0,2.2,27.4,0.0,gouda,curated,es-AR
+Queso provolone,Huevos y lácteos,352.0,24.0,2.1,27.5,0.0,provolone,curated,es-AR
+Queso gruyere,Huevos y lácteos,413.0,29.8,0.4,32.3,0.0,gruyere,curated,es-AR
+Queso cottage,Huevos y lácteos,98.0,11.1,3.4,4.3,0.0,cottage cheese,curated,es-AR
+Queso port salut,Huevos y lácteos,327.0,20.0,2.0,26.0,0.0,port salut,curated,es-AR
+Crema de leche,Huevos y lácteos,340.0,2.1,2.8,36.0,0.0,heavy cream,curated,es-AR
+Crema agria,Huevos y lácteos,193.0,2.4,4.6,18.0,0.0,sour cream,curated,es-AR
+Manteca clarificada,Aceites y grasas,876.0,0.3,0.0,99.5,0.0,ghee,curated,es-AR
+Aceite de oliva,Aceites y grasas,884.0,0.0,0.0,100.0,0.0,olive oil,curated,es-AR
+Aceite de girasol,Aceites y grasas,884.0,0.0,0.0,100.0,0.0,sunflower oil,curated,es-AR
+Aceite de canola,Aceites y grasas,884.0,0.0,0.0,100.0,0.0,canola oil,curated,es-AR
+Aceite de maíz,Aceites y grasas,884.0,0.0,0.0,100.0,0.0,corn oil,curated,es-AR
+Aceite de soja,Aceites y grasas,884.0,0.0,0.0,100.0,0.0,soybean oil,curated,es-AR
+Aceite de coco,Aceites y grasas,892.0,0.0,0.0,99.1,0.0,coconut oil,curated,es-AR
+Aceite de palta,Aceites y grasas,884.0,0.0,0.0,100.0,0.0,avocado oil,curated,es-AR
+Aceite de sésamo,Aceites y grasas,884.0,0.0,0.0,100.0,0.0,sesame oil,curated,es-AR
+Tahini,Untables,595.0,17.0,21.2,53.8,9.3,sesame paste,curated,es-AR
+Pasta de almendras,Untables,614.0,21.1,18.8,55.5,10.8,almond butter,curated,es-AR
+Pasta de castañas de cajú,Untables,553.0,18.2,30.2,43.8,3.3,cashew butter,curated,es-AR
+Pasta de avellanas 100%,Untables,628.0,15.0,17.0,61.2,9.7,hazelnut butter,curated,es-AR
+Pasta de pistacho 100%,Untables,572.0,20.6,28.3,45.4,10.3,pistachio butter,curated,es-AR
+Mantequilla de maní natural,Untables,588.0,25.1,20.0,50.0,6.0,natural peanut butter,curated,es-AR
+Maní tostado sin sal,Frutos secos,587.0,24.4,21.3,49.7,8.4,roasted peanuts,curated,es-AR
+Almendra tostada,Frutos secos,598.0,20.0,20.5,52.0,10.0,roasted almonds,curated,es-AR
+Nuez de macadamia,Frutos secos,718.0,7.9,13.8,75.8,8.6,macadamia,curated,es-AR
+Nuez de Brasil,Frutos secos,659.0,14.3,11.7,67.1,7.5,brazil nut,curated,es-AR
+Avellana,Frutos secos,628.0,15.0,16.7,60.8,9.7,hazelnut,curated,es-AR
+Nuez pecana tostada,Frutos secos,691.0,9.2,13.9,72.0,9.6,pecan roasted,curated,es-AR
+Castaña europea,Frutos secos,213.0,2.4,45.5,2.3,8.1,chestnut,curated,es-AR
+Castaña de cajú tostada,Frutos secos,574.0,15.3,32.7,46.4,3.0,roasted cashew,curated,es-AR
+Pistacho tostado,Frutos secos,572.0,21.1,28.2,45.8,10.3,roasted pistachio,curated,es-AR
+Semillas de calabaza,Semillas,559.0,30.2,10.7,49.1,6.0,pumpkin seeds,curated,es-AR
+Semillas de cáñamo,Semillas,553.0,31.6,8.7,48.8,4.0,hemp seeds,curated,es-AR
+Semillas de amapola,Semillas,525.0,18.0,28.1,41.6,19.5,poppy seeds,curated,es-AR
+Semillas de mostaza,Semillas,508.0,26.1,28.1,36.2,12.2,mustard seeds,curated,es-AR
+Semillas de comino,Semillas,375.0,17.8,44.2,17.8,10.5,cumin seeds,curated,es-AR
+Semillas de hinojo,Semillas,345.0,15.8,52.3,14.9,39.8,fennel seeds,curated,es-AR
+Semillas de coriandro,Semillas,298.0,12.4,55.0,17.8,41.9,coriander seeds,curated,es-AR
+Almendra molida,Frutos secos,579.0,21.2,21.6,49.9,12.5,almond meal; almond flour,curated,es-AR
+Cacao en polvo sin azúcar,Cacao y dulces,228.0,19.6,57.9,13.1,29.8,unsweetened cocoa powder; cacao amargo,curated,es-AR
+Cacao nibs,Cacao y dulces,600.0,14.0,45.0,43.0,20.0,cacao nibs,curated,es-AR
+Chocolate amargo 70%,Cacao y dulces,598.0,7.8,45.9,42.6,10.9,dark chocolate 70,curated,es-AR
+Chocolate amargo 85%,Cacao y dulces,598.0,11.0,19.0,52.0,11.0,dark chocolate 85,curated,es-AR
+Miel,Endulzantes,304.0,0.3,82.4,0.0,0.2,honey,curated,es-AR
+Azúcar blanca,Endulzantes,387.0,0.0,100.0,0.0,0.0,sugar,curated,es-AR
+Azúcar mascabo,Endulzantes,380.0,0.0,98.1,0.0,0.0,brown sugar; mascabo,curated,es-AR
+Dulce de leche,Untables,315.0,5.8,55.6,7.4,0.0,dulce de leche,curated,es-AR
+Melaza,Endulzantes,290.0,0.0,74.7,0.1,0.0,molasses,curated,es-AR
+Jarabe de arce,Endulzantes,260.0,0.0,67.0,0.1,0.0,maple syrup,curated,es-AR
+Mermelada de frutilla,Untables,250.0,0.4,64.0,0.1,1.0,strawberry jam,curated,es-AR
+Mermelada de durazno,Untables,250.0,0.4,64.0,0.1,1.0,peach jam,curated,es-AR
+Mermelada de frutos rojos,Untables,250.0,0.4,64.0,0.1,1.5,berry jam,curated,es-AR
+Pasta de tomate,Salsas,82.0,4.3,18.9,0.5,4.3,tomato paste,curated,es-AR
+Tomate triturado en lata,Salsas,29.0,1.4,5.0,0.3,1.3,crushed tomatoes,curated,es-AR
+Passata de tomate,Salsas,30.0,1.3,5.5,0.2,1.5,tomato passata,curated,es-AR
+Salsa de tomate casera,Salsas,45.0,1.5,7.0,1.3,1.5,homemade tomato sauce,curated,es-AR
+Salsa de soja,Salsas,53.0,8.1,4.9,0.6,0.8,soy sauce,curated,es-AR
+Mostaza amarilla,Salsas,66.0,4.0,5.8,3.3,3.3,yellow mustard,curated,es-AR
+Mostaza Dijon,Salsas,66.0,4.4,6.0,3.6,2.0,dijon mustard,curated,es-AR
+Mayonesa,Salsas,680.0,1.0,0.6,75.0,0.0,mayonnaise,curated,es-AR
+Ketchup,Salsas,112.0,1.2,26.0,0.3,0.3,tomato ketchup,curated,es-AR
+Vinagre de manzana,Salsas,21.0,0.9,0.9,0.0,0.0,apple cider vinegar,curated,es-AR
+Vinagre de alcohol,Salsas,20.0,0.0,0.9,0.0,0.0,white vinegar,curated,es-AR
+Vinagre balsámico,Salsas,88.0,0.5,17.0,0.0,0.0,balsamic vinegar,curated,es-AR
+Salsa picante,Salsas,40.0,1.0,8.0,0.4,0.5,hot sauce,curated,es-AR
+Caldo de verduras,Sopas y caldos,6.0,0.2,1.0,0.1,0.1,vegetable broth,curated,es-AR
+Caldo de pollo,Sopas y caldos,6.0,0.9,0.2,0.2,0.0,chicken broth,curated,es-AR
+Caldo de carne,Sopas y caldos,15.0,2.0,0.4,0.5,0.0,beef broth,curated,es-AR
+Sopa de verduras,Sopas y caldos,35.0,1.5,6.0,0.7,1.8,vegetable soup,curated,es-AR
+Sopa de lentejas,Sopas y caldos,71.0,4.0,11.0,1.3,3.5,lentil soup,curated,es-AR
+Sopa de pollo,Sopas y caldos,45.0,4.5,3.5,1.3,0.5,chicken soup,curated,es-AR
+Choclo en lata escurrido,Conservas,86.0,3.2,18.6,1.2,2.2,canned corn,curated,es-AR
+Arvejas en lata escurridas,Conservas,79.0,5.2,13.6,0.4,4.2,canned peas,curated,es-AR
+Garbanzos en lata escurridos,Conservas,139.0,7.1,22.5,2.1,6.4,canned chickpeas,curated,es-AR
+Lentejas en lata escurridas,Conservas,78.0,5.7,13.0,0.4,4.5,canned lentils,curated,es-AR
+Porotos negros en lata escurridos,Conservas,91.0,6.0,16.0,0.3,6.9,canned black beans,curated,es-AR
+Porotos colorados en lata escurridos,Conservas,99.0,8.1,17.1,0.4,6.4,canned kidney beans,curated,es-AR
+Palmitos en lata,Conservas,28.0,2.5,5.2,0.6,2.4,canned hearts of palm,curated,es-AR
+Champiñones en lata,Conservas,22.0,2.0,3.3,0.4,1.0,canned mushrooms,curated,es-AR
+Atún en agua,Pescados y mariscos,116.0,25.5,0.0,0.8,0.0,canned tuna in water,curated,es-AR
+Atún en aceite escurrido,Pescados y mariscos,198.0,29.1,0.0,8.2,0.0,canned tuna in oil,curated,es-AR
+Caballa cruda,Pescados y mariscos,205.0,18.6,0.0,13.9,0.0,mackerel raw,curated,es-AR
+Caballa en lata,Pescados y mariscos,200.0,23.0,0.0,11.5,0.0,canned mackerel,curated,es-AR
+Anchoa,Pescados y mariscos,210.0,28.9,0.0,9.7,0.0,anchovy,curated,es-AR
+Anchoa en aceite escurrida,Pescados y mariscos,210.0,28.9,0.0,9.7,0.0,anchovy canned,curated,es-AR
+Sardina fresca,Pescados y mariscos,208.0,24.6,0.0,11.5,0.0,sardine raw,curated,es-AR
+Sardina en agua,Pescados y mariscos,185.0,24.6,0.0,8.9,0.0,sardines water,curated,es-AR
+Trucha cruda,Pescados y mariscos,148.0,20.5,0.0,6.5,0.0,trout raw,curated,es-AR
+Trucha cocida,Pescados y mariscos,168.0,23.8,0.0,7.4,0.0,trout cooked,curated,es-AR
+Lenguado crudo,Pescados y mariscos,70.0,12.4,0.0,1.9,0.0,sole raw,curated,es-AR
+Lenguado cocido,Pescados y mariscos,86.0,18.0,0.0,1.5,0.0,sole cooked,curated,es-AR
+Pez espada crudo,Pescados y mariscos,144.0,19.7,0.0,6.7,0.0,swordfish,curated,es-AR
+Bacalao crudo,Pescados y mariscos,82.0,17.8,0.0,0.7,0.0,cod raw,curated,es-AR
+Bacalao cocido,Pescados y mariscos,105.0,23.0,0.0,0.9,0.0,cod cooked,curated,es-AR
+Abadejo crudo,Pescados y mariscos,92.0,18.3,0.0,1.2,0.0,pollock,curated,es-AR
+Abadejo cocido,Pescados y mariscos,119.0,24.9,0.0,1.3,0.0,pollock cooked,curated,es-AR
+Dorado crudo,Pescados y mariscos,96.0,19.0,0.0,1.5,0.0,mahi mahi,curated,es-AR
+Dorado cocido,Pescados y mariscos,109.0,23.7,0.0,0.9,0.0,mahi mahi cooked,curated,es-AR
+Corvina cruda,Pescados y mariscos,104.0,18.5,0.0,3.0,0.0,croaker,curated,es-AR
+Corvina cocida,Pescados y mariscos,126.0,23.5,0.0,3.4,0.0,croaker cooked,curated,es-AR
+Pez gallo,Pescados y mariscos,110.0,21.0,0.0,2.5,0.0,fish generic,curated,es-AR
+Langostino crudo,Pescados y mariscos,85.0,20.4,0.0,0.5,0.0,shrimp raw,curated,es-AR
+Langostino cocido,Pescados y mariscos,99.0,24.0,0.2,0.3,0.0,shrimp cooked,curated,es-AR
+Camarón crudo,Pescados y mariscos,99.0,24.0,0.2,0.3,0.0,prawn raw,curated,es-AR
+Camarón cocido,Pescados y mariscos,99.0,24.0,0.2,0.3,0.0,prawn cooked,curated,es-AR
+Mejillón crudo,Pescados y mariscos,86.0,11.9,3.7,2.2,0.0,mussels raw,curated,es-AR
+Mejillón cocido,Pescados y mariscos,172.0,23.8,7.4,4.5,0.0,mussels cooked,curated,es-AR
+Calamar crudo,Pescados y mariscos,92.0,15.6,3.1,1.4,0.0,squid raw,curated,es-AR
+Calamar cocido,Pescados y mariscos,175.0,29.0,8.3,2.5,0.0,squid cooked,curated,es-AR
+Pulpo cocido,Pescados y mariscos,164.0,29.8,4.4,2.1,0.0,octopus cooked,curated,es-AR
+Almeja cruda,Pescados y mariscos,74.0,12.8,2.6,1.0,0.0,clam raw,curated,es-AR
+Almeja cocida,Pescados y mariscos,148.0,25.6,5.1,2.0,0.0,clam cooked,curated,es-AR
+Ostra cruda,Pescados y mariscos,68.0,7.0,3.9,2.5,0.0,oyster raw,curated,es-AR
+Ostra cocida,Pescados y mariscos,79.0,9.5,4.2,2.0,0.0,oyster cooked,curated,es-AR
+Carne vacuna lomo crudo,Carnes,194.0,21.4,0.0,11.4,0.0,beef tenderloin raw,curated,es-AR
+Carne vacuna lomo cocido,Carnes,231.0,29.3,0.0,11.8,0.0,beef tenderloin cooked,curated,es-AR
+Vacío crudo,Carnes,290.0,22.3,0.0,22.7,0.0,flank steak raw; vacío,curated,es-AR
+Vacío cocido,Carnes,316.0,28.0,0.0,22.0,0.0,flank steak cooked,curated,es-AR
+Bife de chorizo crudo,Carnes,271.0,22.0,0.0,20.6,0.0,strip steak raw,curated,es-AR
+Bife de chorizo cocido,Carnes,291.0,28.0,0.0,18.5,0.0,strip steak cooked,curated,es-AR
+Cuadril crudo,Carnes,195.0,21.0,0.0,12.0,0.0,rump steak raw,curated,es-AR
+Cuadril cocido,Carnes,206.0,28.0,0.0,9.0,0.0,rump steak cooked,curated,es-AR
+Colita de cuadril cruda,Carnes,190.0,22.0,0.0,10.0,0.0,tri tip raw,curated,es-AR
+Colita de cuadril cocida,Carnes,210.0,30.0,0.0,9.0,0.0,tri tip cooked,curated,es-AR
+Nalga cruda,Carnes,145.0,22.0,0.0,6.0,0.0,top round raw,curated,es-AR
+Nalga cocida,Carnes,190.0,30.0,0.0,7.0,0.0,top round cooked,curated,es-AR
+Bola de lomo cruda,Carnes,150.0,22.0,0.0,6.0,0.0,round beef raw,curated,es-AR
+Bola de lomo cocida,Carnes,190.0,30.0,0.0,7.0,0.0,round beef cooked,curated,es-AR
+Carnaza de paleta cruda,Carnes,180.0,21.0,0.0,10.0,0.0,shoulder beef raw,curated,es-AR
+Carnaza de paleta cocida,Carnes,220.0,28.0,0.0,11.0,0.0,shoulder beef cooked,curated,es-AR
+Osobuco crudo,Carnes,190.0,18.0,0.0,13.0,0.0,osso buco raw,curated,es-AR
+Osobuco cocido,Carnes,250.0,25.0,0.0,16.0,0.0,osso buco cooked,curated,es-AR
+Roast beef crudo,Carnes,206.0,21.0,0.0,13.0,0.0,roast beef raw,curated,es-AR
+Roast beef cocido,Carnes,250.0,27.0,0.0,16.0,0.0,roast beef cooked,curated,es-AR
+Entraña cruda,Carnes,220.0,23.0,0.0,14.0,0.0,skirt steak,curated,es-AR
+Entraña cocida,Carnes,280.0,29.0,0.0,18.0,0.0,skirt steak cooked,curated,es-AR
+Asado de tira crudo,Carnes,290.0,19.0,0.0,23.0,0.0,short ribs raw,curated,es-AR
+Asado de tira cocido,Carnes,320.0,28.0,0.0,22.0,0.0,short ribs cooked,curated,es-AR
+Carne picada vacuna 10% grasa,Carnes,176.0,20.0,0.0,10.0,0.0,ground beef 90 10,curated,es-AR
+Carne picada vacuna 20% grasa,Carnes,254.0,17.2,0.0,20.0,0.0,ground beef 80 20,curated,es-AR
+Hamburguesa casera de carne cocida,Carnes,230.0,26.0,2.0,13.0,0.0,beef burger cooked,curated,es-AR
+Carne de cerdo magra cruda,Carnes,143.0,21.0,0.0,6.0,0.0,lean pork raw,curated,es-AR
+Carne de cerdo magra cocida,Carnes,190.0,27.0,0.0,8.0,0.0,lean pork cooked,curated,es-AR
+Bondiola cruda,Carnes,210.0,19.0,0.0,15.0,0.0,pork shoulder,curated,es-AR
+Bondiola cocida,Carnes,250.0,26.0,0.0,15.0,0.0,pork shoulder cooked,curated,es-AR
+Carré de cerdo crudo,Carnes,143.0,21.0,0.0,6.0,0.0,pork loin,curated,es-AR
+Carré de cerdo cocido,Carnes,173.0,26.0,0.0,7.0,0.0,pork loin cooked,curated,es-AR
+Costilla de cerdo cruda,Carnes,250.0,18.0,0.0,20.0,0.0,pork ribs,curated,es-AR
+Costilla de cerdo cocida,Carnes,290.0,24.0,0.0,21.0,0.0,pork ribs cooked,curated,es-AR
+Pechuga de pollo sin piel cruda,Carnes,120.0,22.5,0.0,2.6,0.0,chicken breast skinless raw,curated,es-AR
+Muslo de pollo sin piel crudo,Carnes,135.0,19.0,0.0,5.8,0.0,chicken thigh skinless raw,curated,es-AR
+Muslo de pollo cocido,Carnes,209.0,26.0,0.0,10.9,0.0,chicken thigh cooked,curated,es-AR
+Pata muslo de pollo con piel,Carnes,216.0,18.0,0.0,15.0,0.0,chicken leg quarter,curated,es-AR
+Alitas de pollo crudas,Carnes,203.0,18.0,0.0,14.0,0.0,chicken wings raw,curated,es-AR
+Alitas de pollo cocidas,Carnes,260.0,23.0,0.0,18.0,0.0,chicken wings cooked,curated,es-AR
+Pavo crudo,Carnes,114.0,23.7,0.0,1.5,0.0,turkey raw,curated,es-AR
+Pavo cocido,Carnes,189.0,29.0,0.0,7.4,0.0,turkey cooked,curated,es-AR
+Pechuga de pavo cruda,Carnes,114.0,23.7,0.0,1.5,0.0,turkey breast raw,curated,es-AR
+Carne de cordero magra cruda,Carnes,202.0,20.0,0.0,13.0,0.0,lamb lean raw,curated,es-AR
+Carne de cordero magra cocida,Carnes,258.0,25.6,0.0,16.5,0.0,lamb lean cooked,curated,es-AR
+Chuleta de cordero cruda,Carnes,282.0,20.0,0.0,21.0,0.0,lamb chop,curated,es-AR
+Chuleta de cordero cocida,Carnes,294.0,25.0,0.0,20.0,0.0,lamb chop cooked,curated,es-AR
+Conejo crudo,Carnes,173.0,33.0,0.0,3.5,0.0,rabbit raw,curated,es-AR
+Conejo cocido,Carnes,197.0,29.1,0.0,8.0,0.0,rabbit cooked,curated,es-AR
+Hígado de pollo crudo,Carnes,119.0,16.9,0.7,4.8,0.0,chicken liver,curated,es-AR
+Hígado de pollo cocido,Carnes,167.0,24.5,0.9,6.5,0.0,chicken liver cooked,curated,es-AR
+Hígado de cerdo,Carnes,134.0,21.4,2.2,4.4,0.0,pork liver,curated,es-AR
+Riñón vacuno,Carnes,99.0,17.4,0.0,3.1,0.0,beef kidney,curated,es-AR
+Corazón vacuno,Carnes,112.0,17.7,0.1,3.9,0.0,beef heart,curated,es-AR
+Corazón de pollo,Carnes,153.0,15.6,0.7,9.3,0.0,chicken heart,curated,es-AR
+Molleja,Carnes,229.0,16.4,0.0,18.0,0.0,sweetbreads,curated,es-AR
+Jamón cocido,Carnes procesadas,145.0,21.0,1.5,5.5,0.0,cooked ham,curated,es-AR
+Jamón crudo,Carnes procesadas,241.0,31.0,0.0,12.0,0.0,prosciutto; jamon crudo,curated,es-AR
+Panceta,Carnes procesadas,541.0,37.0,1.4,42.0,0.0,bacon; tocino,curated,es-AR
+Salame,Carnes procesadas,425.0,23.0,2.0,35.0,0.0,salami,curated,es-AR
+Mortadela,Carnes procesadas,311.0,15.0,3.0,27.0,0.0,mortadella,curated,es-AR
+Chorizo fresco,Carnes procesadas,333.0,14.0,2.0,29.0,0.0,fresh chorizo,curated,es-AR
+Salchicha tipo viena,Carnes procesadas,290.0,10.0,3.0,26.0,0.0,frankfurter; hot dog,curated,es-AR
+Salmón cocido,Pescados y mariscos,206.0,22.1,0.0,12.4,0.0,salmon cooked,curated,es-AR
+Salmón ahumado,Pescados y mariscos,117.0,18.3,0.0,4.3,0.0,smoked salmon,curated,es-AR
+Merluza cocida,Pescados y mariscos,119.0,25.0,0.0,1.5,0.0,hake cooked,curated,es-AR
+Merluza rebozada,Pescados y mariscos,190.0,15.0,17.0,7.0,1.0,breaded hake,curated,es-AR
+Boga cruda,Pescados y mariscos,105.0,20.0,0.0,2.0,0.0,boga fish,curated,es-AR
+Boga cocida,Pescados y mariscos,128.0,24.0,0.0,3.0,0.0,boga cooked,curated,es-AR
+Pejerrey crudo,Pescados y mariscos,96.0,19.0,0.0,1.7,0.0,silverside fish,curated,es-AR
+Pejerrey cocido,Pescados y mariscos,116.0,22.5,0.0,2.5,0.0,silverside cooked,curated,es-AR
+Pacú crudo,Pescados y mariscos,172.0,18.0,0.0,11.0,0.0,pacu fish,curated,es-AR
+Pacú cocido,Pescados y mariscos,200.0,22.0,0.0,13.0,0.0,pacu cooked,curated,es-AR
+Surubí crudo,Pescados y mariscos,112.0,20.0,0.0,3.0,0.0,surubi fish,curated,es-AR
+Surubí cocido,Pescados y mariscos,132.0,24.0,0.0,3.5,0.0,surubi cooked,curated,es-AR
+Langostino pelado cocido,Pescados y mariscos,99.0,24.0,0.2,0.3,0.0,peeled shrimp cooked,curated,es-AR
+Calamar en anillos cocido,Pescados y mariscos,175.0,29.0,8.3,2.5,0.0,squid rings cooked,curated,es-AR
+Atún fresco crudo,Pescados y mariscos,132.0,28.2,0.0,1.3,0.0,fresh tuna,curated,es-AR
+Atún fresco cocido,Pescados y mariscos,184.0,29.9,0.0,6.3,0.0,fresh tuna cooked,curated,es-AR
+Trucha ahumada,Pescados y mariscos,117.0,18.3,0.0,4.3,0.0,smoked trout,curated,es-AR
+Bacalao salado desalado,Pescados y mariscos,105.0,23.0,0.0,0.9,0.0,salt cod,curated,es-AR
+Harina de almendra,Frutos secos,571.0,21.2,21.4,49.4,10.7,almond flour,curated,es-AR
+Harina de coco,Frutos secos,400.0,20.0,60.0,13.0,40.0,coconut flour,curated,es-AR
+Harina de maní,Frutos secos,567.0,32.0,31.0,46.0,9.0,peanut flour,curated,es-AR
+Semillas de amaranto,Semillas,371.0,13.6,65.3,7.0,6.7,amaranth seeds,curated,es-AR
+Semillas de quinoa,Semillas,368.0,14.1,64.2,6.1,7.0,quinoa seeds,curated,es-AR
+Semillas de girasol tostadas,Semillas,619.0,20.8,20.0,54.0,8.6,roasted sunflower seeds,curated,es-AR
+Semillas de sésamo tostadas,Semillas,573.0,17.7,23.5,49.7,11.8,roasted sesame,curated,es-AR
+Pasas de ciruela,Frutas secas,240.0,2.2,63.9,0.4,7.1,prunes,curated,es-AR
+Orejones de durazno,Frutas secas,241.0,3.4,62.6,0.5,7.3,dried apricot,curated,es-AR
+Orejones de damasco,Frutas secas,241.0,3.4,62.6,0.5,7.3,dried apricots,curated,es-AR
+Manzana deshidratada sin azúcar,Frutas secas,243.0,0.9,65.9,0.3,8.7,dried apple,curated,es-AR
+Pera deshidratada,Frutas secas,262.0,1.9,69.7,0.6,7.5,dried pear,curated,es-AR
+Coco deshidratado sin azúcar,Frutas secas,660.0,6.9,23.7,64.5,16.3,dried coconut,curated,es-AR
+Banana deshidratada sin azúcar,Frutas secas,346.0,3.9,88.3,1.8,9.9,dried banana,curated,es-AR
+Caldo de huesos,Sopas y caldos,40.0,6.0,0.0,1.5,0.0,bone broth,curated,es-AR
+Sopa de tomate,Sopas y caldos,42.0,1.1,7.2,1.1,1.2,tomato soup,curated,es-AR
+Crema de calabaza,Sopas y caldos,61.0,1.2,9.5,2.0,1.7,pumpkin soup,curated,es-AR
+Gazpacho,Sopas y caldos,35.0,0.9,5.4,1.3,1.2,gazpacho,curated,es-AR
+Polenta seca,Cereales,362.0,8.1,76.0,3.6,4.7,polenta dry,curated,es-AR
+Polenta cocida con agua,Cereales,70.0,1.6,15.0,0.6,1.2,polenta cooked,curated,es-AR
+Harina de mandioca,Cereales,350.0,0.7,86.0,0.3,2.5,cassava flour,curated,es-AR
+Harina de tapioca,Cereales,358.0,0.2,88.7,0.0,0.9,tapioca flour,curated,es-AR
+Fécula de papa,Cereales,357.0,0.1,88.0,0.1,0.0,potato starch,curated,es-AR
+Puré de papa casero,Verduras y tubérculos,113.0,2.0,17.0,4.0,1.5,mashed potatoes homemade,curated,es-AR
+Papa al horno,Verduras y tubérculos,93.0,2.5,21.2,0.1,2.2,baked potato,curated,es-AR
+Papa hervida,Verduras y tubérculos,87.0,1.9,20.1,0.1,1.8,boiled potato,curated,es-AR
+Batata al horno,Verduras y tubérculos,90.0,2.0,20.7,0.2,3.3,baked sweet potato,curated,es-AR
+Batata hervida,Verduras y tubérculos,76.0,1.4,17.7,0.1,2.5,boiled sweet potato,curated,es-AR
+Mandioca frita,Verduras y tubérculos,330.0,2.0,38.0,17.0,2.0,cassava fries,curated,es-AR
+Papas fritas caseras,Verduras y tubérculos,312.0,3.4,41.0,15.0,3.8,french fries homemade,curated,es-AR
+Papas chips,Verduras y tubérculos,536.0,7.0,53.0,34.0,4.8,potato chips,curated,es-AR
+Chips de batata,Verduras y tubérculos,540.0,5.0,49.0,36.0,7.0,sweet potato chips,curated,es-AR

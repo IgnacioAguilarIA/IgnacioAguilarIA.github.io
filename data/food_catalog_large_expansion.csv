@@ -1,0 +1,492 @@
+name,category,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,aliases,source,locale
+Acerola,Frutas,32.0,0.4,7.7,0.3,2.4,acerola; west indian cherry,curated-reference-2026,es-AR
+Grosella roja,Frutas,56.0,1.4,13.8,0.2,4.3,red currant,curated-reference-2026,es-AR
+Grosella negra,Frutas,63.0,1.4,15.4,0.4,5.0,black currant,curated-reference-2026,es-AR
+Uchuva,Frutas,53.0,1.9,11.2,0.7,4.9,aguaymanto; physalis; cape gooseberry,curated-reference-2026,es-AR
+Feijoa,Frutas,55.0,0.7,13.0,0.6,6.4,pineapple guava,curated-reference-2026,es-AR
+Pitahaya,Frutas,60.0,1.2,13.0,0.4,2.9,dragon fruit,curated-reference-2026,es-AR
+Mangostán,Frutas,73.0,0.4,17.9,0.6,1.8,mangosteen,curated-reference-2026,es-AR
+Rambután,Frutas,68.0,0.9,16.5,0.2,0.9,rambutan,curated-reference-2026,es-AR
+Tamarillo,Frutas,31.0,1.0,5.7,0.4,1.8,tomate de arbol,curated-reference-2026,es-AR
+Jabuticaba,Frutas,58.0,0.7,15.0,0.1,2.3,jaboticaba,curated-reference-2026,es-AR
+Mora de boysen,Frutas,43.0,1.4,9.6,0.5,5.3,boysenberry,curated-reference-2026,es-AR
+Mora roja,Frutas,50.0,1.0,12.0,0.5,5.0,red raspberry,curated-reference-2026,es-AR
+Frambuesa amarilla,Frutas,52.0,1.2,12.0,0.7,6.5,yellow raspberry,curated-reference-2026,es-AR
+Arándano rojo fresco,Frutas,46.0,0.4,12.2,0.1,4.6,cranberry,curated-reference-2026,es-AR
+Grosella espinosa,Frutas,44.0,0.9,10.2,0.6,4.3,gooseberry,curated-reference-2026,es-AR
+Naranja sanguina,Frutas,47.0,0.9,11.8,0.1,2.4,blood orange,curated-reference-2026,es-AR
+Limón Meyer,Frutas,29.0,1.1,9.3,0.3,2.8,meyer lemon,curated-reference-2026,es-AR
+Lima kaffir,Frutas,30.0,0.7,10.0,0.2,2.8,makrut lime,curated-reference-2026,es-AR
+Clementina,Frutas,47.0,0.9,12.0,0.2,1.7,clementine,curated-reference-2026,es-AR
+Pomelo rojo,Frutas,42.0,0.8,10.7,0.1,1.6,red grapefruit,curated-reference-2026,es-AR
+Melocotón blanco,Frutas,39.0,0.9,9.5,0.3,1.5,white peach,curated-reference-2026,es-AR
+Ciruela amarilla,Frutas,46.0,0.7,11.4,0.3,1.4,yellow plum,curated-reference-2026,es-AR
+Uva moscatel,Frutas,69.0,0.7,18.1,0.2,0.9,muscat grape,curated-reference-2026,es-AR
+Uva roja sin semilla,Frutas,69.0,0.7,18.1,0.2,0.9,red seedless grapes,curated-reference-2026,es-AR
+Uva verde sin semilla,Frutas,69.0,0.7,18.1,0.2,0.9,green seedless grapes,curated-reference-2026,es-AR
+Melón cantalupo,Frutas,34.0,0.8,8.2,0.2,0.9,cantaloupe,curated-reference-2026,es-AR
+Melón honeydew,Frutas,36.0,0.5,9.1,0.1,0.8,honeydew,curated-reference-2026,es-AR
+Sandía amarilla,Frutas,30.0,0.6,7.6,0.2,0.4,yellow watermelon,curated-reference-2026,es-AR
+Papaya roja,Frutas,43.0,0.5,10.8,0.3,1.7,red papaya,curated-reference-2026,es-AR
+Mango ataulfo,Frutas,60.0,0.8,15.0,0.4,1.6,ataulfo mango,curated-reference-2026,es-AR
+Mango verde,Frutas,60.0,0.8,15.0,0.4,1.6,green mango,curated-reference-2026,es-AR
+Banana manzano,Frutas,89.0,1.1,22.8,0.3,2.6,apple banana,curated-reference-2026,es-AR
+Banana roja,Frutas,89.0,1.1,22.8,0.3,2.6,red banana,curated-reference-2026,es-AR
+Higo seco sin azúcar,Frutas secas,249.0,3.3,63.9,0.9,9.8,dried figs,curated-reference-2026,es-AR
+Dátil medjool,Frutas secas,277.0,1.8,75.0,0.2,6.7,medjool date,curated-reference-2026,es-AR
+Uvas pasas doradas,Frutas secas,299.0,3.1,79.2,0.5,3.7,golden raisins,curated-reference-2026,es-AR
+Pasas de arándano sin azúcar,Frutas secas,308.0,0.1,82.4,1.1,5.3,dried cranberry,curated-reference-2026,es-AR
+Pasas de mango sin azúcar,Frutas secas,319.0,2.0,78.0,1.0,8.0,dried mango,curated-reference-2026,es-AR
+Ciruela pasa,Frutas secas,240.0,2.2,63.9,0.4,7.1,prune,curated-reference-2026,es-AR
+Pera deshidratada sin azúcar,Frutas secas,262.0,1.9,69.7,0.6,7.5,dried pear,curated-reference-2026,es-AR
+Durazno deshidratado,Frutas secas,241.0,3.4,62.6,0.5,7.3,dried peach,curated-reference-2026,es-AR
+Kiwi deshidratado,Frutas secas,316.0,3.1,72.5,2.0,6.2,dried kiwi,curated-reference-2026,es-AR
+Ananá deshidratada,Frutas secas,350.0,2.8,82.0,0.9,5.0,dried pineapple,curated-reference-2026,es-AR
+Mango deshidratado,Frutas secas,319.0,2.0,78.0,1.0,8.0,dried mango,curated-reference-2026,es-AR
+Boniato naranja,Verduras y tubérculos,86.0,1.6,20.1,0.1,3.0,orange sweet potato,curated-reference-2026,es-AR
+Boniato blanco,Verduras y tubérculos,86.0,1.6,20.1,0.1,3.0,white sweet potato,curated-reference-2026,es-AR
+Papa roja,Verduras y tubérculos,77.0,2.0,17.5,0.1,2.2,red potato,curated-reference-2026,es-AR
+Papa amarilla,Verduras y tubérculos,77.0,2.0,17.5,0.1,2.2,yellow potato,curated-reference-2026,es-AR
+Papa morada,Verduras y tubérculos,77.0,2.0,17.5,0.1,2.2,purple potato,curated-reference-2026,es-AR
+Papa baby,Verduras y tubérculos,77.0,2.0,17.5,0.1,2.2,baby potato,curated-reference-2026,es-AR
+Batata morada,Verduras y tubérculos,86.0,1.6,20.1,0.1,3.0,purple sweet potato,curated-reference-2026,es-AR
+Yuca fresca,Verduras y tubérculos,160.0,1.4,38.1,0.3,1.8,fresh cassava,curated-reference-2026,es-AR
+Yautía,Verduras y tubérculos,142.0,1.5,34.6,0.2,5.1,taro; malanga,curated-reference-2026,es-AR
+Oca,Verduras y tubérculos,55.0,1.0,13.0,0.1,3.3,oca tuber,curated-reference-2026,es-AR
+Mashua,Verduras y tubérculos,47.0,1.5,10.0,0.2,3.0,mashua tuber,curated-reference-2026,es-AR
+Chirivía,Verduras,75.0,1.2,18.0,0.3,4.9,parsnip,curated-reference-2026,es-AR
+Colinabo,Verduras,27.0,1.7,6.2,0.1,3.6,rutabaga; swede,curated-reference-2026,es-AR
+Daikon,Verduras,18.0,0.6,4.1,0.1,1.6,japanese radish,curated-reference-2026,es-AR
+Rábano negro,Verduras,22.0,0.7,5.0,0.1,2.0,black radish,curated-reference-2026,es-AR
+Nabo japonés,Verduras,28.0,0.9,6.4,0.1,1.8,turnip,curated-reference-2026,es-AR
+Jícama,Verduras,38.0,0.7,8.8,0.1,4.9,jicama,curated-reference-2026,es-AR
+Palmito fresco,Verduras,115.0,2.7,25.6,0.2,2.4,fresh hearts of palm,curated-reference-2026,es-AR
+Palmito en conserva,Verduras,28.0,2.5,4.6,0.6,1.5,canned hearts of palm,curated-reference-2026,es-AR
+Alga nori seca,Verduras,322.0,41.4,35.1,3.7,17.9,nori,curated-reference-2026,es-AR
+Wakame seco,Verduras,45.0,3.0,9.1,0.6,0.5,wakame,curated-reference-2026,es-AR
+Kombu seco,Verduras,43.0,1.7,9.6,0.6,1.3,kombu,curated-reference-2026,es-AR
+Lechuga mantecosa,Verduras,13.0,1.4,2.2,0.2,1.1,butter lettuce,curated-reference-2026,es-AR
+Lechuga romana,Verduras,17.0,1.2,3.3,0.3,2.1,romaine lettuce,curated-reference-2026,es-AR
+Lechuga iceberg,Verduras,14.0,0.9,3.0,0.1,1.2,iceberg lettuce,curated-reference-2026,es-AR
+Repollo napa,Verduras,16.0,1.2,3.2,0.2,1.2,napa cabbage,curated-reference-2026,es-AR
+Repollo savoy,Verduras,27.0,2.0,6.1,0.1,3.1,savoy cabbage,curated-reference-2026,es-AR
+Col lombarda cruda,Verduras,31.0,1.4,7.4,0.2,2.1,red cabbage raw,curated-reference-2026,es-AR
+Col rizada cruda,Verduras,35.0,2.9,4.4,1.5,4.1,kale raw,curated-reference-2026,es-AR
+Berza,Verduras,32.0,3.0,5.4,0.6,4.0,collard greens,curated-reference-2026,es-AR
+Hojas de nabo,Verduras,32.0,1.5,7.1,0.3,3.2,turnip greens,curated-reference-2026,es-AR
+Hojas de rábano,Verduras,20.0,1.1,3.8,0.3,1.6,radish greens,curated-reference-2026,es-AR
+Hojas de apio,Verduras,16.0,0.7,3.0,0.2,1.6,celery leaves,curated-reference-2026,es-AR
+Escarola rizada,Verduras,17.0,1.3,3.4,0.2,3.1,curly endive,curated-reference-2026,es-AR
+Radicchio,Verduras,23.0,1.4,4.5,0.3,0.9,radicchio,curated-reference-2026,es-AR
+Achicoria,Verduras,23.0,1.7,4.7,0.3,4.0,chicory greens,curated-reference-2026,es-AR
+Diente de león hojas,Verduras,45.0,2.7,9.2,0.7,3.5,dandelion greens,curated-reference-2026,es-AR
+Bimi,Verduras,35.0,2.9,4.4,1.5,3.0,broccolini,curated-reference-2026,es-AR
+Brotes de brócoli,Verduras,35.0,2.8,7.0,0.4,2.6,broccoli sprouts,curated-reference-2026,es-AR
+Brotes de rabanito,Verduras,43.0,3.8,6.5,0.6,1.6,radish sprouts,curated-reference-2026,es-AR
+Zanahoria morada,Verduras,41.0,0.9,9.6,0.2,2.8,purple carrot,curated-reference-2026,es-AR
+Zanahoria amarilla,Verduras,41.0,0.9,9.6,0.2,2.8,yellow carrot,curated-reference-2026,es-AR
+Remolacha dorada,Verduras,43.0,1.6,9.6,0.2,2.8,golden beet,curated-reference-2026,es-AR
+Remolacha chioggia,Verduras,43.0,1.6,9.6,0.2,2.8,chioggia beet,curated-reference-2026,es-AR
+Calabacín amarillo,Verduras,17.0,1.2,3.1,0.3,1.0,yellow zucchini,curated-reference-2026,es-AR
+Calabacín redondo,Verduras,17.0,1.2,3.1,0.3,1.0,round zucchini,curated-reference-2026,es-AR
+Zapallo kabutia,Verduras,40.0,1.0,10.0,0.1,2.0,kabocha,curated-reference-2026,es-AR
+Zapallo spaghetti,Verduras,31.0,0.6,6.9,0.6,1.5,spaghetti squash,curated-reference-2026,es-AR
+Calabaza butternut,Verduras,45.0,1.0,11.7,0.1,2.0,butternut squash,curated-reference-2026,es-AR
+Calabaza delicata,Verduras,40.0,1.0,10.0,0.1,1.5,delicata squash,curated-reference-2026,es-AR
+Calabaza acorn,Verduras,40.0,0.8,10.4,0.1,1.5,acorn squash,curated-reference-2026,es-AR
+Hinojo crudo,Verduras,31.0,1.2,7.3,0.2,3.1,fennel bulb,curated-reference-2026,es-AR
+Puerro crudo,Verduras,61.0,1.5,14.2,0.3,1.8,leek raw,curated-reference-2026,es-AR
+Cebolla morada,Verduras,40.0,1.1,9.3,0.1,1.7,red onion,curated-reference-2026,es-AR
+Cebolla blanca,Verduras,40.0,1.1,9.3,0.1,1.7,white onion,curated-reference-2026,es-AR
+Cebolla dulce,Verduras,32.0,0.8,7.6,0.1,1.4,sweet onion,curated-reference-2026,es-AR
+Cebollín,Verduras,32.0,1.8,7.3,0.2,2.6,chives,curated-reference-2026,es-AR
+Morrón naranja,Verduras,27.0,1.0,6.3,0.2,1.0,orange bell pepper,curated-reference-2026,es-AR
+Ají jalapeño,Verduras,29.0,0.9,6.5,0.4,2.8,jalapeno,curated-reference-2026,es-AR
+Ají serrano,Verduras,32.0,1.7,6.7,0.4,3.7,serrano pepper,curated-reference-2026,es-AR
+Ají habanero,Verduras,40.0,1.9,8.8,0.6,5.3,habanero,curated-reference-2026,es-AR
+Tomate verde,Verduras,23.0,1.0,5.1,0.2,1.9,green tomato; tomatillo,curated-reference-2026,es-AR
+Tomate amarillo,Verduras,18.0,0.9,3.9,0.2,1.2,yellow tomato,curated-reference-2026,es-AR
+Tomate corazón de buey,Verduras,18.0,0.9,3.9,0.2,1.2,beefsteak tomato,curated-reference-2026,es-AR
+Tomate kumato,Verduras,18.0,0.9,3.9,0.2,1.2,kumato tomato,curated-reference-2026,es-AR
+Pepino con cáscara,Verduras,15.0,0.7,3.6,0.1,0.5,cucumber with skin,curated-reference-2026,es-AR
+Pepino sin cáscara,Verduras,12.0,0.6,2.2,0.2,0.7,peeled cucumber,curated-reference-2026,es-AR
+Apio crudo,Verduras,14.0,0.7,3.0,0.2,1.6,celery raw,curated-reference-2026,es-AR
+Espárrago verde crudo,Verduras,20.0,2.2,3.9,0.1,2.1,green asparagus,curated-reference-2026,es-AR
+Espárrago blanco,Verduras,20.0,2.2,3.9,0.1,2.1,white asparagus,curated-reference-2026,es-AR
+Brote de bambú,Verduras,27.0,2.6,5.2,0.3,2.2,bamboo shoots,curated-reference-2026,es-AR
+Guisante partido verde,Legumbres,341.0,24.6,60.1,1.2,25.5,green split pea,curated-reference-2026,es-AR
+Guisante partido amarillo,Legumbres,341.0,24.6,60.1,1.2,25.5,yellow split pea,curated-reference-2026,es-AR
+Lenteja beluga seca,Legumbres,352.0,25.0,63.0,1.1,10.7,beluga lentils,curated-reference-2026,es-AR
+Lenteja verde seca,Legumbres,352.0,25.0,63.0,1.1,10.7,green lentils,curated-reference-2026,es-AR
+Lenteja marrón seca,Legumbres,352.0,25.0,63.0,1.1,10.7,brown lentils,curated-reference-2026,es-AR
+Lenteja francesa seca,Legumbres,352.0,25.0,63.0,1.1,10.7,puy lentils,curated-reference-2026,es-AR
+Lupino seco,Legumbres,371.0,36.2,40.4,9.7,18.9,lupin beans,curated-reference-2026,es-AR
+Lupino cocido,Legumbres,119.0,15.6,10.5,2.9,2.8,cooked lupin,curated-reference-2026,es-AR
+Frijol canario seco,Legumbres,337.0,20.8,60.3,1.2,15.2,canary beans,curated-reference-2026,es-AR
+Frijol canario cocido,Legumbres,125.0,8.5,22.8,0.6,6.3,canary beans cooked,curated-reference-2026,es-AR
+Poroto rojo seco,Legumbres,333.0,24.4,60.1,0.8,24.9,red kidney beans dry,curated-reference-2026,es-AR
+Poroto rojo cocido,Legumbres,127.0,8.7,22.8,0.5,6.4,red kidney beans cooked,curated-reference-2026,es-AR
+Poroto negro cocido,Legumbres,132.0,8.9,23.7,0.5,8.7,black beans cooked,curated-reference-2026,es-AR
+Poroto blanco seco,Legumbres,333.0,23.4,60.3,0.8,15.7,white beans dry,curated-reference-2026,es-AR
+Poroto blanco cocido,Legumbres,139.0,9.7,25.1,0.4,6.3,white beans cooked,curated-reference-2026,es-AR
+Poroto pinto seco,Legumbres,347.0,21.4,62.6,1.2,15.5,pinto beans dry,curated-reference-2026,es-AR
+Poroto pinto cocido,Legumbres,143.0,9.0,26.2,0.7,9.0,pinto beans cooked,curated-reference-2026,es-AR
+Poroto adzuki seco,Legumbres,329.0,19.9,62.9,0.5,12.7,adzuki beans,curated-reference-2026,es-AR
+Poroto adzuki cocido,Legumbres,128.0,7.5,24.8,0.1,7.3,adzuki cooked,curated-reference-2026,es-AR
+Poroto mung cocido,Legumbres,105.0,7.0,19.1,0.4,7.6,mung beans cooked,curated-reference-2026,es-AR
+Poroto mung seco,Legumbres,347.0,23.9,62.6,1.2,16.3,mung beans dry,curated-reference-2026,es-AR
+Soja verde cocida,Legumbres,141.0,12.0,11.1,6.0,4.2,green soybeans,curated-reference-2026,es-AR
+Soja negra seca,Legumbres,446.0,36.5,30.2,19.9,9.3,black soybeans,curated-reference-2026,es-AR
+Soja negra cocida,Legumbres,173.0,16.6,9.9,9.0,6.0,black soybeans cooked,curated-reference-2026,es-AR
+Harina de poroto blanco,Legumbres,350.0,22.0,60.0,1.5,14.0,white bean flour,curated-reference-2026,es-AR
+Harina de arvejas,Legumbres,340.0,24.6,60.0,1.2,20.0,pea flour,curated-reference-2026,es-AR
+Harina de habas,Legumbres,341.0,26.1,58.3,1.5,25.0,fava bean flour,curated-reference-2026,es-AR
+Harina de lupino,Legumbres,371.0,36.2,40.4,9.7,18.9,lupin flour,curated-reference-2026,es-AR
+Avena arrollada tradicional,Cereales,389.0,16.9,66.3,6.9,10.6,rolled oats; oats,curated-reference-2026,es-AR
+Avena steel cut,Cereales,375.0,12.5,67.5,6.3,10.0,steel cut oats,curated-reference-2026,es-AR
+Avena integral molida,Cereales,404.0,14.7,65.7,9.1,8.6,whole oat flour,curated-reference-2026,es-AR
+Trigo mote,Cereales,342.0,12.6,71.5,1.5,10.7,wheat berries,curated-reference-2026,es-AR
+Trigo sarraceno tostado,Cereales,343.0,13.3,71.5,3.4,10.0,kasha,curated-reference-2026,es-AR
+Quinoa blanca cruda,Cereales,368.0,14.1,64.2,6.1,7.0,white quinoa,curated-reference-2026,es-AR
+Quinoa roja cruda,Cereales,368.0,14.1,64.2,6.1,7.0,red quinoa,curated-reference-2026,es-AR
+Quinoa negra cruda,Cereales,368.0,14.1,64.2,6.1,7.0,black quinoa,curated-reference-2026,es-AR
+Cebada perlada seca,Cereales,352.0,9.9,77.7,1.2,15.6,pearl barley,curated-reference-2026,es-AR
+Cebada mondada,Cereales,354.0,12.5,73.5,2.3,17.3,hulled barley,curated-reference-2026,es-AR
+Centeno cocido,Cereales,120.0,3.8,25.0,0.9,4.0,cooked rye,curated-reference-2026,es-AR
+Trigo bulgur crudo,Cereales,342.0,12.3,75.9,1.3,18.3,bulgur dry,curated-reference-2026,es-AR
+Trigo bulgur cocido,Cereales,83.0,3.1,18.6,0.2,4.5,bulgur cooked,curated-reference-2026,es-AR
+Cuscús integral seco,Cereales,376.0,12.8,77.4,0.6,5.0,whole wheat couscous,curated-reference-2026,es-AR
+Cuscús integral cocido,Cereales,112.0,3.8,23.2,0.2,1.4,whole wheat couscous cooked,curated-reference-2026,es-AR
+Sémola de trigo seca,Cereales,360.0,12.7,72.8,1.1,3.9,semolina,curated-reference-2026,es-AR
+Sémola cocida con agua,Cereales,80.0,2.8,16.0,0.3,0.7,semolina cooked,curated-reference-2026,es-AR
+Harina de trigo 000,Cereales,364.0,10.3,76.3,1.0,2.7,wheat flour,curated-reference-2026,es-AR
+Harina de trigo integral,Cereales,340.0,13.7,72.6,2.5,12.2,whole wheat flour,curated-reference-2026,es-AR
+Harina de trigo leudante,Cereales,364.0,10.3,76.3,1.0,2.7,self rising flour,curated-reference-2026,es-AR
+Harina de espelta,Cereales,338.0,14.6,70.2,2.4,10.7,spelt flour,curated-reference-2026,es-AR
+Espelta en grano,Cereales,338.0,14.6,70.2,2.4,10.7,spelt grain,curated-reference-2026,es-AR
+Einkorn seco,Cereales,342.0,13.0,71.0,2.5,10.0,einkorn,curated-reference-2026,es-AR
+Farro seco,Cereales,375.0,15.0,72.0,2.5,8.0,farro,curated-reference-2026,es-AR
+Farro cocido,Cereales,170.0,6.0,32.0,1.5,5.0,farro cooked,curated-reference-2026,es-AR
+Sorgo seco,Cereales,329.0,11.3,72.1,3.3,6.7,sorghum,curated-reference-2026,es-AR
+Sorgo cocido,Cereales,119.0,3.5,26.5,1.2,1.7,sorghum cooked,curated-reference-2026,es-AR
+Fonio seco,Cereales,378.0,8.5,79.0,2.0,2.5,fonio,curated-reference-2026,es-AR
+Arroz negro crudo,Cereales,356.0,8.9,75.0,3.3,4.9,black rice,curated-reference-2026,es-AR
+Arroz negro cocido,Cereales,145.0,3.2,30.0,1.0,0.9,black rice cooked,curated-reference-2026,es-AR
+Arroz rojo crudo,Cereales,360.0,7.5,77.0,2.8,3.5,red rice,curated-reference-2026,es-AR
+Arroz rojo cocido,Cereales,124.0,2.6,25.0,1.0,1.4,red rice cooked,curated-reference-2026,es-AR
+Arroz arborio crudo,Cereales,356.0,6.5,79.3,0.7,0.9,arborio rice,curated-reference-2026,es-AR
+Arroz arborio cocido,Cereales,130.0,2.4,28.0,0.3,0.4,arborio cooked,curated-reference-2026,es-AR
+Arroz parboil crudo,Cereales,367.0,7.5,80.0,1.0,2.2,parboiled rice,curated-reference-2026,es-AR
+Arroz parboil cocido,Cereales,123.0,2.9,26.0,0.4,1.6,parboiled cooked,curated-reference-2026,es-AR
+Arroz glutinoso crudo,Cereales,370.0,6.8,82.0,0.6,1.0,sticky rice,curated-reference-2026,es-AR
+Arroz glutinoso cocido,Cereales,97.0,2.0,21.0,0.2,1.0,sticky rice cooked,curated-reference-2026,es-AR
+Maíz blanco seco,Cereales,365.0,9.4,74.3,4.7,7.3,white corn,curated-reference-2026,es-AR
+Maíz amarillo seco,Cereales,365.0,9.4,74.3,4.7,7.3,yellow corn,curated-reference-2026,es-AR
+Harina de maíz blanca,Cereales,362.0,8.1,76.0,3.6,7.3,white corn flour,curated-reference-2026,es-AR
+Harina de maíz amarilla,Cereales,361.0,6.9,76.9,3.9,7.3,yellow corn flour,curated-reference-2026,es-AR
+Masa harina,Cereales,365.0,8.0,76.0,4.0,6.5,masa harina,curated-reference-2026,es-AR
+Polenta instantánea,Cereales,360.0,8.0,78.0,2.0,5.0,instant polenta,curated-reference-2026,es-AR
+Harina de teff,Cereales,366.0,12.0,73.0,3.0,8.0,teff flour,curated-reference-2026,es-AR
+Harina de sorgo,Cereales,359.0,8.4,76.6,3.3,6.6,sorghum flour,curated-reference-2026,es-AR
+Harina de mijo,Cereales,382.0,11.0,73.0,4.2,8.5,millet flour,curated-reference-2026,es-AR
+Harina de quinoa,Cereales,368.0,14.1,64.2,6.1,7.0,quinoa flour,curated-reference-2026,es-AR
+Harina de amaranto,Cereales,371.0,13.6,65.3,7.0,6.7,amaranth flour,curated-reference-2026,es-AR
+Harina de trigo sarraceno,Cereales,335.0,13.5,71.5,3.4,10.0,buckwheat flour,curated-reference-2026,es-AR
+Harina de centeno integral,Cereales,335.0,9.3,76.0,1.3,15.1,whole rye flour,curated-reference-2026,es-AR
+Harina de cebada integral,Cereales,354.0,10.5,73.5,1.2,17.3,whole barley flour,curated-reference-2026,es-AR
+Harina de mijo integral,Cereales,382.0,11.0,73.0,4.2,8.5,whole millet flour,curated-reference-2026,es-AR
+Salvado de arroz,Cereales,316.0,13.4,50.7,20.9,21.0,rice bran,curated-reference-2026,es-AR
+Germen de trigo,Cereales,360.0,23.2,51.8,9.7,13.2,wheat germ,curated-reference-2026,es-AR
+Gluten de trigo,Cereales,370.0,75.2,13.0,1.9,0.6,vital wheat gluten,curated-reference-2026,es-AR
+Levadura nutricional,Cereales,325.0,50.0,35.0,5.0,25.0,nutritional yeast,curated-reference-2026,es-AR
+Carne picada vacuna magra 95%,Carnes,137.0,21.4,0.0,5.0,0.0,lean ground beef 95,curated-reference-2026,es-AR
+Carne picada vacuna 90%,Carnes,176.0,20.9,0.0,10.0,0.0,ground beef 90,curated-reference-2026,es-AR
+Carne picada vacuna 80%,Carnes,254.0,17.2,0.0,20.0,0.0,ground beef 80,curated-reference-2026,es-AR
+Cuadril vacuno magro,Carnes,150.0,21.0,0.0,6.5,0.0,top sirloin,curated-reference-2026,es-AR
+Bife de chorizo magro,Carnes,214.0,21.0,0.0,14.0,0.0,sirloin steak,curated-reference-2026,es-AR
+Ojo de bife magro,Carnes,217.0,21.6,0.0,14.0,0.0,ribeye lean,curated-reference-2026,es-AR
+Colita de cuadril,Carnes,155.0,22.0,0.0,7.0,0.0,rump roast,curated-reference-2026,es-AR
+Nalga vacuna,Carnes,150.0,22.0,0.0,6.0,0.0,top round,curated-reference-2026,es-AR
+Bola de lomo,Carnes,154.0,22.0,0.0,6.5,0.0,top round cap,curated-reference-2026,es-AR
+Peceto,Carnes,149.0,22.2,0.0,5.8,0.0,eye of round,curated-reference-2026,es-AR
+Palomita,Carnes,152.0,22.0,0.0,6.0,0.0,beef roast,curated-reference-2026,es-AR
+Tortuguita,Carnes,155.0,22.0,0.0,6.5,0.0,beef round,curated-reference-2026,es-AR
+Cuadrada vacuna,Carnes,155.0,22.0,0.0,6.5,0.0,bottom round,curated-reference-2026,es-AR
+Tapa de cuadril,Carnes,185.0,21.0,0.0,11.0,0.0,rump cap,curated-reference-2026,es-AR
+Tapa de asado magra,Carnes,220.0,20.0,0.0,15.0,0.0,beef cap,curated-reference-2026,es-AR
+Vacío magro,Carnes,220.0,20.0,0.0,15.0,0.0,flank steak lean,curated-reference-2026,es-AR
+Entraña vacuna,Carnes,205.0,21.0,0.0,13.0,0.0,skirt steak,curated-reference-2026,es-AR
+Matambre vacuno magro,Carnes,210.0,20.5,0.0,13.5,0.0,flank cut,curated-reference-2026,es-AR
+Osobuco,Carnes,207.0,20.0,0.0,14.0,0.0,beef shank,curated-reference-2026,es-AR
+Aguja vacuna,Carnes,215.0,21.0,0.0,14.0,0.0,chuck,curated-reference-2026,es-AR
+Roast beef magro,Carnes,190.0,21.0,0.0,11.5,0.0,chuck roast,curated-reference-2026,es-AR
+Marucha vacuna,Carnes,208.0,21.0,0.0,13.5,0.0,beef shoulder,curated-reference-2026,es-AR
+Bife angosto,Carnes,220.0,21.0,0.0,15.0,0.0,strip steak,curated-reference-2026,es-AR
+Tapa de nalga,Carnes,158.0,22.0,0.0,6.5,0.0,beef top round cap,curated-reference-2026,es-AR
+Tapa de asado,Carnes,240.0,19.0,0.0,18.0,0.0,beef cap,curated-reference-2026,es-AR
+Lomo de cerdo,Carnes,143.0,21.0,0.0,5.0,0.0,pork tenderloin,curated-reference-2026,es-AR
+Bondiola de cerdo magra,Carnes,220.0,21.0,0.0,14.0,0.0,pork shoulder lean,curated-reference-2026,es-AR
+Paleta de cerdo,Carnes,260.0,18.0,0.0,20.0,0.0,pork shoulder,curated-reference-2026,es-AR
+Panceta fresca,Carnes,417.0,12.5,0.0,42.0,0.0,fresh pork belly,curated-reference-2026,es-AR
+Panceta curada,Carnes,541.0,12.0,1.4,54.0,0.0,cured bacon,curated-reference-2026,es-AR
+Costilla de cerdo,Carnes,277.0,18.0,0.0,22.0,0.0,pork ribs,curated-reference-2026,es-AR
+Costeleta de cerdo,Carnes,231.0,21.0,0.0,16.0,0.0,pork chop,curated-reference-2026,es-AR
+Carne de cordero magra,Carnes,206.0,25.6,0.0,10.9,0.0,lamb lean,curated-reference-2026,es-AR
+Pierna de cordero,Carnes,191.0,27.1,0.0,8.0,0.0,lamb leg,curated-reference-2026,es-AR
+Paleta de cordero,Carnes,276.0,19.0,0.0,21.0,0.0,lamb shoulder,curated-reference-2026,es-AR
+Costilla de cordero,Carnes,294.0,20.0,0.0,23.0,0.0,lamb rib,curated-reference-2026,es-AR
+Carne de cabra,Carnes,143.0,27.1,0.0,3.0,0.0,goat meat,curated-reference-2026,es-AR
+Carne de conejo,Carnes,173.0,33.0,0.0,3.5,0.0,rabbit meat,curated-reference-2026,es-AR
+Carne de liebre,Carnes,173.0,30.2,0.0,3.5,0.0,hare meat,curated-reference-2026,es-AR
+Pechuga de pollo con piel cruda,Carnes,172.0,20.8,0.0,9.2,0.0,chicken breast skin on,curated-reference-2026,es-AR
+Muslo de pollo sin piel,Carnes,135.0,18.6,0.0,6.0,0.0,chicken thigh skinless,curated-reference-2026,es-AR
+Muslo de pollo con piel,Carnes,177.0,18.6,0.0,11.8,0.0,chicken thigh skin on,curated-reference-2026,es-AR
+Contramuslo de pollo sin piel,Carnes,135.0,18.6,0.0,6.0,0.0,chicken upper thigh,curated-reference-2026,es-AR
+Ala de pollo sin piel,Carnes,167.0,18.3,0.0,9.2,0.0,chicken wing skinless,curated-reference-2026,es-AR
+Ala de pollo con piel,Carnes,203.0,18.3,0.0,14.8,0.0,chicken wing skin on,curated-reference-2026,es-AR
+Pata de pollo sin piel,Carnes,159.0,18.5,0.0,9.0,0.0,chicken drumstick skinless,curated-reference-2026,es-AR
+Pata de pollo con piel,Carnes,175.0,18.2,0.0,11.0,0.0,chicken drumstick skin on,curated-reference-2026,es-AR
+Carne de pavo pechuga cruda,Carnes,114.0,23.7,0.0,1.5,0.0,turkey breast raw,curated-reference-2026,es-AR
+Carne de pavo muslo,Carnes,144.0,20.0,0.0,6.5,0.0,turkey thigh,curated-reference-2026,es-AR
+Carne de pato magra,Carnes,132.0,18.3,0.0,5.9,0.0,duck meat lean,curated-reference-2026,es-AR
+Carne de ganso,Carnes,238.0,15.9,0.0,19.6,0.0,goose meat,curated-reference-2026,es-AR
+Pechuga de pato sin piel,Carnes,140.0,19.0,0.0,6.0,0.0,duck breast skinless,curated-reference-2026,es-AR
+Hígado de cerdo crudo,Carnes,134.0,21.0,2.0,4.4,0.0,pork liver,curated-reference-2026,es-AR
+Riñón vacuno crudo,Carnes,99.0,17.4,0.0,3.1,0.0,beef kidney,curated-reference-2026,es-AR
+Corazón vacuno crudo,Carnes,112.0,17.7,0.1,4.7,0.0,beef heart,curated-reference-2026,es-AR
+Corazón de pollo crudo,Carnes,185.0,15.6,0.7,12.9,0.0,chicken heart,curated-reference-2026,es-AR
+Molleja de pollo cruda,Carnes,154.0,17.7,0.0,9.2,0.0,chicken gizzard,curated-reference-2026,es-AR
+Lengua vacuna cruda,Carnes,284.0,16.0,0.0,22.3,0.0,beef tongue,curated-reference-2026,es-AR
+Chinchulines crudos,Carnes,230.0,14.0,0.0,19.0,0.0,small intestine beef,curated-reference-2026,es-AR
+Mondongo crudo,Carnes,94.0,12.0,0.0,4.0,0.0,tripe,curated-reference-2026,es-AR
+Carne vacuna desmechada,Carnes,180.0,26.0,0.0,7.5,0.0,shredded beef,curated-reference-2026,es-AR
+Carne de pollo desmenuzada,Carnes,165.0,31.0,0.0,3.6,0.0,shredded chicken,curated-reference-2026,es-AR
+Carne de pavo desmenuzada,Carnes,150.0,30.0,0.0,2.5,0.0,shredded turkey,curated-reference-2026,es-AR
+Salmón rosado,Pescados y mariscos,208.0,20.4,0.0,13.4,0.0,pink salmon,curated-reference-2026,es-AR
+Salmón coho,Pescados y mariscos,146.0,22.5,0.0,5.9,0.0,coho salmon,curated-reference-2026,es-AR
+Salmón chinook,Pescados y mariscos,206.0,22.0,0.0,12.4,0.0,king salmon,curated-reference-2026,es-AR
+Trucha arcoíris,Pescados y mariscos,148.0,20.5,0.0,6.5,0.0,rainbow trout,curated-reference-2026,es-AR
+Trucha marrón,Pescados y mariscos,148.0,20.5,0.0,6.5,0.0,brown trout,curated-reference-2026,es-AR
+Merluza negra,Pescados y mariscos,120.0,20.0,0.0,4.0,0.0,black hake,curated-reference-2026,es-AR
+Merluza austral,Pescados y mariscos,90.0,18.5,0.0,1.5,0.0,hake,curated-reference-2026,es-AR
+Bacalao del Atlántico,Pescados y mariscos,82.0,17.8,0.0,0.7,0.0,atlantic cod,curated-reference-2026,es-AR
+Abadejo de Alaska,Pescados y mariscos,92.0,19.4,0.0,0.9,0.0,pollock,curated-reference-2026,es-AR
+Abadejo negro,Pescados y mariscos,92.0,19.4,0.0,0.9,0.0,saithe,curated-reference-2026,es-AR
+Pescadilla,Pescados y mariscos,90.0,18.5,0.0,1.5,0.0,whiting,curated-reference-2026,es-AR
+Lenguado,Pescados y mariscos,86.0,18.8,0.0,1.2,0.0,sole,curated-reference-2026,es-AR
+Lenguado limón,Pescados y mariscos,91.0,19.0,0.0,1.4,0.0,lemon sole,curated-reference-2026,es-AR
+Rodaballo,Pescados y mariscos,117.0,16.5,0.0,5.0,0.0,turbot,curated-reference-2026,es-AR
+Corvina,Pescados y mariscos,96.0,19.0,0.0,2.0,0.0,croaker,curated-reference-2026,es-AR
+Róbalo,Pescados y mariscos,97.0,20.0,0.0,1.5,0.0,sea bass,curated-reference-2026,es-AR
+Lubina,Pescados y mariscos,97.0,20.0,0.0,1.5,0.0,European seabass,curated-reference-2026,es-AR
+Dorada,Pescados y mariscos,96.0,19.0,0.0,1.8,0.0,gilthead seabream,curated-reference-2026,es-AR
+Besugo,Pescados y mariscos,100.0,20.0,0.0,2.0,0.0,porgy,curated-reference-2026,es-AR
+Pargo rojo,Pescados y mariscos,100.0,20.5,0.0,1.5,0.0,red snapper,curated-reference-2026,es-AR
+Mero,Pescados y mariscos,118.0,24.0,0.0,1.3,0.0,grouper,curated-reference-2026,es-AR
+Caballa,Pescados y mariscos,205.0,18.6,0.0,13.9,0.0,mackerel,curated-reference-2026,es-AR
+Jurel,Pescados y mariscos,134.0,20.0,0.0,5.0,0.0,horse mackerel,curated-reference-2026,es-AR
+Anchoa fresca,Pescados y mariscos,131.0,20.4,0.0,4.8,0.0,anchovy,curated-reference-2026,es-AR
+Arenque fresco,Pescados y mariscos,158.0,17.9,0.0,9.0,0.0,herring,curated-reference-2026,es-AR
+Anguila,Pescados y mariscos,184.0,18.4,0.0,11.7,0.0,eel,curated-reference-2026,es-AR
+Atún rojo,Pescados y mariscos,144.0,23.3,0.0,4.9,0.0,bluefin tuna,curated-reference-2026,es-AR
+Atún aleta amarilla,Pescados y mariscos,109.0,24.4,0.0,0.5,0.0,yellowfin tuna,curated-reference-2026,es-AR
+Bonito,Pescados y mariscos,139.0,24.0,0.0,4.5,0.0,bonito fish,curated-reference-2026,es-AR
+Pez espada,Pescados y mariscos,144.0,19.7,0.0,6.7,0.0,swordfish,curated-reference-2026,es-AR
+Dorado de mar,Pescados y mariscos,100.0,20.0,0.0,1.5,0.0,mahi mahi,curated-reference-2026,es-AR
+Pez limón,Pescados y mariscos,146.0,21.0,0.0,6.0,0.0,amberjack,curated-reference-2026,es-AR
+Pez gato,Pescados y mariscos,105.0,18.2,0.0,3.5,0.0,catfish,curated-reference-2026,es-AR
+Tilapia,Pescados y mariscos,96.0,20.1,0.0,1.7,0.0,tilapia,curated-reference-2026,es-AR
+Perca,Pescados y mariscos,96.0,19.4,0.0,1.4,0.0,perch,curated-reference-2026,es-AR
+Lucio,Pescados y mariscos,88.0,18.6,0.0,0.7,0.0,pike,curated-reference-2026,es-AR
+Carpa,Pescados y mariscos,127.0,17.8,0.0,5.6,0.0,carp,curated-reference-2026,es-AR
+Bagre de río,Pescados y mariscos,105.0,18.2,0.0,3.5,0.0,river catfish,curated-reference-2026,es-AR
+Pejerrey,Pescados y mariscos,105.0,19.0,0.0,2.5,0.0,silverside fish,curated-reference-2026,es-AR
+Pescado blanco magro,Pescados y mariscos,90.0,19.0,0.0,1.0,0.0,white fish,curated-reference-2026,es-AR
+Pescado azul,Pescados y mariscos,180.0,20.0,0.0,11.0,0.0,oily fish,curated-reference-2026,es-AR
+Pulpo crudo,Pescados y mariscos,82.0,14.9,2.2,1.0,0.0,octopus raw,curated-reference-2026,es-AR
+Vieira cruda,Pescados y mariscos,69.0,12.1,3.2,0.5,0.0,scallop raw,curated-reference-2026,es-AR
+Cangrejo crudo,Pescados y mariscos,87.0,18.1,0.0,1.1,0.0,crab raw,curated-reference-2026,es-AR
+Langosta cruda,Pescados y mariscos,89.0,19.0,0.0,0.9,0.0,lobster raw,curated-reference-2026,es-AR
+Cangrejo de río,Pescados y mariscos,82.0,17.5,0.0,0.9,0.0,crayfish,curated-reference-2026,es-AR
+Erizo de mar,Pescados y mariscos,172.0,13.0,3.0,11.0,0.0,sea urchin,curated-reference-2026,es-AR
+Huevas de pescado,Pescados y mariscos,143.0,22.3,0.0,6.4,0.0,fish roe,curated-reference-2026,es-AR
+Leche entera 3.0%,Huevos y lácteos,61.0,3.2,4.8,3.3,0.0,whole milk,curated-reference-2026,es-AR
+Leche entera 3.5%,Huevos y lácteos,64.0,3.4,4.8,3.5,0.0,whole milk 3.5,curated-reference-2026,es-AR
+Leche descremada 0.1%,Huevos y lácteos,34.0,3.4,5.0,0.1,0.0,skim milk,curated-reference-2026,es-AR
+Leche 1% grasa,Huevos y lácteos,42.0,3.4,5.0,1.0,0.0,1% milk,curated-reference-2026,es-AR
+Leche 2% grasa,Huevos y lácteos,50.0,3.3,4.8,2.0,0.0,2% milk,curated-reference-2026,es-AR
+Leche evaporada entera,Huevos y lácteos,134.0,6.8,10.0,7.6,0.0,evaporated milk,curated-reference-2026,es-AR
+Leche condensada azucarada,Huevos y lácteos,321.0,7.9,54.4,8.7,0.0,sweetened condensed milk,curated-reference-2026,es-AR
+Buttermilk,Huevos y lácteos,40.0,3.3,4.8,0.9,0.0,buttermilk,curated-reference-2026,es-AR
+Yogur de vainilla entero,Huevos y lácteos,98.0,3.5,15.2,2.8,0.0,vanilla yogurt,curated-reference-2026,es-AR
+Yogur de frutilla entero,Huevos y lácteos,99.0,3.5,17.0,1.5,0.0,strawberry yogurt,curated-reference-2026,es-AR
+Yogur natural 2%,Huevos y lácteos,73.0,10.0,4.0,2.0,0.0,2 percent yogurt,curated-reference-2026,es-AR
+Yogur griego 2%,Huevos y lácteos,73.0,9.9,3.9,2.0,0.0,greek yogurt 2%,curated-reference-2026,es-AR
+Yogur griego 5%,Huevos y lácteos,97.0,9.0,3.9,5.0,0.0,greek yogurt 5%,curated-reference-2026,es-AR
+Yogur bebible natural,Huevos y lácteos,60.0,3.2,7.0,2.0,0.0,drinkable yogurt,curated-reference-2026,es-AR
+Kéfir de leche,Huevos y lácteos,63.0,3.4,4.8,3.5,0.0,milk kefir,curated-reference-2026,es-AR
+Queso reggianito,Huevos y lácteos,402.0,35.8,0.0,29.0,0.0,reggianito cheese,curated-reference-2026,es-AR
+Queso fontina,Huevos y lácteos,389.0,25.6,1.5,31.1,0.0,fontina,curated-reference-2026,es-AR
+Queso emmental,Huevos y lácteos,380.0,28.4,1.4,29.7,0.0,emmental,curated-reference-2026,es-AR
+Queso provolone picante,Huevos y lácteos,351.0,25.6,2.1,26.6,0.0,sharp provolone,curated-reference-2026,es-AR
+Queso mozzarella fresca,Huevos y lácteos,280.0,28.0,3.1,17.0,0.0,fresh mozzarella,curated-reference-2026,es-AR
+Mozzarella descremada,Huevos y lácteos,254.0,24.3,2.8,16.2,0.0,part skim mozzarella,curated-reference-2026,es-AR
+Queso feta,Huevos y lácteos,265.0,14.2,4.1,21.5,0.0,feta,curated-reference-2026,es-AR
+Queso ricota descremada,Huevos y lácteos,138.0,11.4,3.0,8.8,0.0,part skim ricotta,curated-reference-2026,es-AR
+Queso mascarpone,Huevos y lácteos,429.0,4.8,4.0,44.0,0.0,mascarpone,curated-reference-2026,es-AR
+Queso halloumi,Huevos y lácteos,321.0,22.0,2.4,25.0,0.0,halloumi,curated-reference-2026,es-AR
+Queso manchego,Huevos y lácteos,393.0,25.0,0.5,32.0,0.0,manchego,curated-reference-2026,es-AR
+Queso romano,Huevos y lácteos,387.0,31.8,3.6,27.9,0.0,romano,curated-reference-2026,es-AR
+Queso asiago,Huevos y lácteos,392.0,25.6,2.9,31.1,0.0,asiago,curated-reference-2026,es-AR
+Queso havarti,Huevos y lácteos,371.0,25.0,3.0,30.0,0.0,havarti,curated-reference-2026,es-AR
+Queso edam,Huevos y lácteos,357.0,25.0,1.4,28.0,0.0,edam,curated-reference-2026,es-AR
+Queso colby,Huevos y lácteos,394.0,23.8,2.6,32.1,0.0,colby,curated-reference-2026,es-AR
+Queso monterey jack,Huevos y lácteos,373.0,24.5,0.7,30.3,0.0,monterey jack,curated-reference-2026,es-AR
+Queso grana padano,Huevos y lácteos,398.0,33.0,0.0,29.0,0.0,grana padano,curated-reference-2026,es-AR
+Queso fresco batido,Huevos y lácteos,90.0,10.0,4.0,3.0,0.0,whipped fresh cheese,curated-reference-2026,es-AR
+Queso untable light,Huevos y lácteos,180.0,7.5,6.0,14.0,0.0,light cream cheese,curated-reference-2026,es-AR
+Ricota descremada,Huevos y lácteos,138.0,11.4,3.0,8.8,0.0,part skim ricotta,curated-reference-2026,es-AR
+Mantequilla sin sal,Huevos y lácteos,717.0,0.9,0.1,81.1,0.0,unsalted butter,curated-reference-2026,es-AR
+Mantequilla con sal,Huevos y lácteos,717.0,0.9,0.1,81.1,0.0,salted butter,curated-reference-2026,es-AR
+Ghee,Aceites y grasas,876.0,0.3,0.0,99.5,0.0,clarified butter,curated-reference-2026,es-AR
+Suero de leche en polvo,Huevos y lácteos,359.0,34.3,47.7,1.0,0.0,whey powder,curated-reference-2026,es-AR
+Caseína en polvo,Huevos y lácteos,360.0,80.0,8.0,1.5,0.0,casein powder,curated-reference-2026,es-AR
+Almendra cruda con piel,Frutos secos,579.0,21.2,21.6,49.9,12.5,raw almonds,curated-reference-2026,es-AR
+Almendra blanqueada,Frutos secos,590.0,21.0,18.7,52.5,10.0,blanched almonds,curated-reference-2026,es-AR
+Nuez de nogal,Frutos secos,654.0,15.2,13.7,65.2,6.7,walnuts,curated-reference-2026,es-AR
+Nuez mariposa,Frutos secos,654.0,15.2,13.7,65.2,6.7,walnut halves,curated-reference-2026,es-AR
+Nuez pecana,Frutos secos,691.0,9.2,13.9,72.0,9.6,pecans,curated-reference-2026,es-AR
+Castaña de cajú cruda,Frutos secos,553.0,18.2,30.2,43.8,3.3,raw cashews,curated-reference-2026,es-AR
+Avellana cruda,Frutos secos,628.0,15.0,16.7,60.8,9.7,raw hazelnuts,curated-reference-2026,es-AR
+Pistacho crudo,Frutos secos,560.0,20.2,27.2,45.3,10.6,raw pistachios,curated-reference-2026,es-AR
+Nuez de macadamia cruda,Frutos secos,718.0,7.9,13.8,75.8,8.6,raw macadamias,curated-reference-2026,es-AR
+Nuez de Brasil cruda,Frutos secos,659.0,14.3,11.7,67.1,7.5,raw brazil nuts,curated-reference-2026,es-AR
+Piñones,Frutos secos,673.0,13.7,13.1,68.4,3.7,pine nuts,curated-reference-2026,es-AR
+Pistacho tostado sin sal,Frutos secos,572.0,21.1,28.2,45.8,10.3,roasted pistachios,curated-reference-2026,es-AR
+Castaña asada,Frutos secos,245.0,3.2,52.4,2.2,5.1,roasted chestnuts,curated-reference-2026,es-AR
+Coco fresco rallado,Frutos secos,354.0,3.3,15.2,33.5,9.0,fresh coconut,curated-reference-2026,es-AR
+Coco crema,Frutos secos,330.0,3.0,6.0,34.0,2.0,coconut cream,curated-reference-2026,es-AR
+Crema de almendras,Untables,614.0,21.1,18.8,55.5,10.8,almond butter,curated-reference-2026,es-AR
+Crema de avellanas 100%,Untables,628.0,15.0,17.0,61.2,9.7,hazelnut butter,curated-reference-2026,es-AR
+Crema de pistacho 100%,Untables,572.0,20.6,28.3,45.4,10.3,pistachio butter,curated-reference-2026,es-AR
+Crema de nuez,Untables,650.0,15.0,12.0,65.0,7.0,walnut butter,curated-reference-2026,es-AR
+Pasta de semillas de girasol,Untables,617.0,17.0,18.0,56.0,10.0,sunflower seed butter,curated-reference-2026,es-AR
+Pasta de semillas de calabaza,Untables,574.0,29.8,10.7,49.0,6.0,pumpkin seed butter,curated-reference-2026,es-AR
+Tahini integral,Untables,595.0,17.0,21.2,53.8,9.3,whole sesame tahini,curated-reference-2026,es-AR
+Semillas de lino dorado,Semillas,534.0,18.3,28.9,42.2,27.3,golden flaxseed,curated-reference-2026,es-AR
+Semillas de lino marrón,Semillas,534.0,18.3,28.9,42.2,27.3,brown flaxseed,curated-reference-2026,es-AR
+Semillas de sésamo blanco,Semillas,573.0,17.7,23.5,49.7,11.8,white sesame,curated-reference-2026,es-AR
+Semillas de sésamo negro,Semillas,573.0,17.7,23.5,49.7,11.8,black sesame,curated-reference-2026,es-AR
+Semillas de girasol sin sal,Semillas,584.0,20.8,20.0,51.5,8.6,sunflower kernels,curated-reference-2026,es-AR
+Semillas de calabaza peladas,Semillas,559.0,30.2,10.7,49.1,6.0,pepitas,curated-reference-2026,es-AR
+Semillas de cáñamo descascaradas,Semillas,553.0,31.6,8.7,48.8,4.0,hemp hearts,curated-reference-2026,es-AR
+Semillas de amapola azul,Semillas,525.0,18.0,28.1,41.6,19.5,blue poppy seeds,curated-reference-2026,es-AR
+Semillas de quinoa negra,Semillas,368.0,14.1,64.2,6.1,7.0,black quinoa seeds,curated-reference-2026,es-AR
+Pan francés,Panificados,270.0,9.0,56.0,3.2,2.4,french bread,curated-reference-2026,es-AR
+Pan de molde blanco,Panificados,266.0,8.9,49.4,3.2,2.7,white sandwich bread,curated-reference-2026,es-AR
+Pan de molde integral,Panificados,247.0,13.0,41.0,4.2,7.0,whole wheat sandwich bread,curated-reference-2026,es-AR
+Pan pita blanco,Panificados,275.0,9.1,55.7,1.2,2.2,pita bread,curated-reference-2026,es-AR
+Pan pita integral,Panificados,250.0,9.8,48.0,2.0,6.0,whole wheat pita,curated-reference-2026,es-AR
+Pan naan,Panificados,310.0,9.0,52.0,7.0,2.0,naan,curated-reference-2026,es-AR
+Pan chapati,Panificados,297.0,11.3,45.4,8.0,6.0,chapati,curated-reference-2026,es-AR
+Tortilla integral de trigo,Panificados,300.0,8.2,50.0,7.0,6.0,whole wheat tortilla,curated-reference-2026,es-AR
+Grisines de trigo,Panificados,410.0,11.0,73.0,9.0,3.5,breadsticks,curated-reference-2026,es-AR
+Galletas de salvado,Panificados,430.0,9.0,70.0,12.0,10.0,bran biscuits,curated-reference-2026,es-AR
+Galletas de avena caseras,Panificados,430.0,7.0,63.0,17.0,4.0,homemade oat cookies,curated-reference-2026,es-AR
+Galleta de arroz,Panificados,387.0,8.0,81.0,3.0,4.0,rice cakes,curated-reference-2026,es-AR
+Galleta de maíz,Panificados,410.0,7.0,82.0,4.5,2.0,corn cakes,curated-reference-2026,es-AR
+Bagel,Panificados,257.0,10.0,50.0,1.5,2.5,bagel plain,curated-reference-2026,es-AR
+Bagel integral,Panificados,250.0,10.0,48.0,2.0,6.0,whole wheat bagel,curated-reference-2026,es-AR
+Croissant,Panificados,406.0,8.2,45.8,21.0,2.6,croissant,curated-reference-2026,es-AR
+Medialuna de manteca,Panificados,406.0,8.2,45.8,21.0,2.6,butter medialuna,curated-reference-2026,es-AR
+Medialuna de grasa,Panificados,420.0,7.0,50.0,21.0,2.0,lard medialuna,curated-reference-2026,es-AR
+Brioche,Panificados,330.0,8.3,52.0,11.0,2.0,brioche bread,curated-reference-2026,es-AR
+Pan dulce,Panificados,330.0,7.0,50.0,11.0,2.0,panettone,curated-reference-2026,es-AR
+Budín de vainilla,Panificados,350.0,5.5,52.0,13.5,1.0,vanilla loaf cake,curated-reference-2026,es-AR
+Budín de limón,Panificados,350.0,5.0,52.0,14.0,1.0,lemon loaf cake,curated-reference-2026,es-AR
+Bizcochuelo casero,Panificados,290.0,6.0,47.0,8.5,1.0,sponge cake,curated-reference-2026,es-AR
+Torta de chocolate casera,Panificados,370.0,5.0,52.0,16.0,3.0,chocolate cake,curated-reference-2026,es-AR
+Brownie casero,Panificados,405.0,5.0,49.0,21.0,2.5,brownie,curated-reference-2026,es-AR
+Muffin de arándanos,Panificados,390.0,5.0,52.0,18.0,2.0,blueberry muffin,curated-reference-2026,es-AR
+Muffin de banana,Panificados,375.0,5.0,55.0,15.0,3.0,banana muffin,curated-reference-2026,es-AR
+Pan de banana,Panificados,326.0,4.3,50.0,11.0,2.6,banana bread,curated-reference-2026,es-AR
+Pan de zanahoria,Panificados,330.0,4.8,50.0,11.0,2.5,carrot bread,curated-reference-2026,es-AR
+Salsa de tomate sin azúcar,Salsas y conservas,29.0,1.4,5.0,0.2,1.5,tomato sauce no sugar,curated-reference-2026,es-AR
+Tomate triturado,Salsas y conservas,24.0,1.2,5.0,0.2,1.5,crushed tomatoes,curated-reference-2026,es-AR
+Tomate en cubos en lata,Salsas y conservas,23.0,1.1,4.7,0.2,1.5,diced tomatoes canned,curated-reference-2026,es-AR
+Puré de tomate en lata,Salsas y conservas,38.0,1.6,8.0,0.2,1.5,tomato puree canned,curated-reference-2026,es-AR
+Mayonesa clásica,Salsas y conservas,680.0,1.0,0.6,75.0,0.0,mayonnaise,curated-reference-2026,es-AR
+Mayonesa light,Salsas y conservas,330.0,1.0,8.0,33.0,0.0,light mayonnaise,curated-reference-2026,es-AR
+Salsa golf,Salsas y conservas,500.0,1.0,12.0,52.0,0.0,golf sauce,curated-reference-2026,es-AR
+Salsa barbacoa,Salsas y conservas,172.0,1.1,40.0,0.7,1.0,barbecue sauce,curated-reference-2026,es-AR
+Salsa teriyaki,Salsas y conservas,89.0,5.0,15.6,0.0,0.0,teriyaki sauce,curated-reference-2026,es-AR
+Salsa de ají,Salsas y conservas,45.0,1.0,9.0,0.5,1.0,chili sauce,curated-reference-2026,es-AR
+Pesto de albahaca,Salsas y conservas,430.0,5.0,6.0,42.0,1.5,basil pesto,curated-reference-2026,es-AR
+Hummus de remolacha,Salsas y conservas,170.0,7.0,15.0,9.0,5.0,beet hummus,curated-reference-2026,es-AR
+Hummus de pimentón,Salsas y conservas,170.0,7.0,15.0,9.0,5.0,paprika hummus,curated-reference-2026,es-AR
+Tapenade de aceituna,Salsas y conservas,180.0,1.5,6.0,17.0,2.5,olive tapenade,curated-reference-2026,es-AR
+Chutney de mango,Salsas y conservas,180.0,0.7,45.0,0.8,2.0,mango chutney,curated-reference-2026,es-AR
+Pepinillos en vinagre,Salsas y conservas,12.0,0.5,2.4,0.2,1.0,pickles,curated-reference-2026,es-AR
+Aceitunas rellenas de pimiento,Salsas y conservas,145.0,1.0,4.0,15.0,3.0,stuffed olives,curated-reference-2026,es-AR
+Aceitunas negras sin carozo,Salsas y conservas,115.0,0.8,6.3,10.9,3.2,pitted black olives,curated-reference-2026,es-AR
+Aceitunas verdes sin carozo,Salsas y conservas,145.0,1.0,3.8,15.3,3.3,pitted green olives,curated-reference-2026,es-AR
+Alcaparras en salmuera,Salsas y conservas,23.0,2.4,4.9,0.9,3.2,capers,curated-reference-2026,es-AR
+Pepinillos agridulces,Salsas y conservas,40.0,0.5,9.0,0.1,1.0,sweet pickles,curated-reference-2026,es-AR
+Albahaca seca,Especias y hierbas,233.0,22.0,47.8,4.0,37.7,dried basil,curated-reference-2026,es-AR
+Orégano seco,Especias y hierbas,265.0,9.0,68.9,4.3,42.5,dried oregano,curated-reference-2026,es-AR
+Perejil seco,Especias y hierbas,292.0,26.6,50.6,5.5,26.7,dried parsley,curated-reference-2026,es-AR
+Cilantro seco,Especias y hierbas,279.0,21.9,52.1,4.8,10.4,dried cilantro,curated-reference-2026,es-AR
+Romero seco,Especias y hierbas,331.0,4.9,64.1,15.2,42.6,dried rosemary,curated-reference-2026,es-AR
+Tomillo seco,Especias y hierbas,276.0,9.1,63.9,7.4,37.0,dried thyme,curated-reference-2026,es-AR
+Eneldo seco,Especias y hierbas,253.0,20.0,55.8,4.4,13.6,dried dill,curated-reference-2026,es-AR
+Salvia seca,Especias y hierbas,315.0,10.6,60.7,12.8,40.3,dried sage,curated-reference-2026,es-AR
+Menta seca,Especias y hierbas,285.0,19.9,52.0,6.0,29.8,dried mint,curated-reference-2026,es-AR
+Estragón seco,Especias y hierbas,295.0,22.8,50.2,7.2,7.4,dried tarragon,curated-reference-2026,es-AR
+Laurel seco,Especias y hierbas,313.0,7.6,74.9,8.4,26.3,bay leaves,curated-reference-2026,es-AR
+Pimentón dulce,Especias y hierbas,282.0,14.1,53.9,13.0,34.9,sweet paprika,curated-reference-2026,es-AR
+Pimentón ahumado,Especias y hierbas,282.0,14.1,53.9,13.0,34.9,smoked paprika,curated-reference-2026,es-AR
+Pimentón picante,Especias y hierbas,282.0,14.1,53.9,13.0,34.9,hot paprika,curated-reference-2026,es-AR
+Cúrcuma en polvo,Especias y hierbas,312.0,9.7,67.1,3.2,22.7,turmeric,curated-reference-2026,es-AR
+Curry en polvo,Especias y hierbas,325.0,14.3,58.2,14.0,33.2,curry powder,curated-reference-2026,es-AR
+Canela molida,Especias y hierbas,247.0,4.0,80.6,1.2,53.1,cinnamon,curated-reference-2026,es-AR
+Nuez moscada molida,Especias y hierbas,525.0,5.8,49.3,36.3,20.8,nutmeg,curated-reference-2026,es-AR
+Clavo de olor molido,Especias y hierbas,274.0,6.0,65.5,13.0,33.9,ground cloves,curated-reference-2026,es-AR
+Comino molido,Especias y hierbas,375.0,17.8,44.2,17.8,10.5,ground cumin,curated-reference-2026,es-AR
+Coriandro molido,Especias y hierbas,298.0,12.4,55.0,17.8,41.9,ground coriander,curated-reference-2026,es-AR
+Pimienta negra molida,Especias y hierbas,251.0,10.4,63.9,3.3,25.3,black pepper,curated-reference-2026,es-AR
+Pimienta blanca molida,Especias y hierbas,296.0,10.4,68.6,2.1,26.2,white pepper,curated-reference-2026,es-AR
+Pimienta rosa seca,Especias y hierbas,296.0,5.0,60.0,8.0,20.0,pink peppercorn,curated-reference-2026,es-AR
+Ají molido,Especias y hierbas,282.0,12.0,56.6,14.0,27.2,crushed chili,curated-reference-2026,es-AR
+Ajo granulado,Especias y hierbas,331.0,16.6,72.7,0.7,9.0,granulated garlic,curated-reference-2026,es-AR
+Cebolla en polvo,Especias y hierbas,341.0,10.0,79.1,1.0,15.0,onion powder,curated-reference-2026,es-AR
+Jengibre molido,Especias y hierbas,335.0,9.0,71.6,4.2,14.1,ground ginger,curated-reference-2026,es-AR
+Cardamomo molido,Especias y hierbas,311.0,11.0,68.5,6.7,28.0,cardamom,curated-reference-2026,es-AR
+Azafrán,Especias y hierbas,310.0,11.4,65.4,5.9,3.9,saffron,curated-reference-2026,es-AR
+Anís estrellado,Especias y hierbas,337.0,17.6,50.0,15.9,14.6,star anise,curated-reference-2026,es-AR
+Pimienta de Jamaica,Especias y hierbas,263.0,6.1,72.1,8.7,21.6,allspice,curated-reference-2026,es-AR
+Fenogreco semillas,Especias y hierbas,323.0,23.0,58.4,6.4,24.6,fenugreek,curated-reference-2026,es-AR
+Café molido tostado,Bebidas e infusiones,1.0,0.1,0.0,0.0,0.0,ground coffee brewed equivalent,curated-reference-2026,es-AR
+Café instantáneo en polvo,Bebidas e infusiones,353.0,12.2,75.4,0.5,0.0,instant coffee powder,curated-reference-2026,es-AR
+Té negro seco,Bebidas e infusiones,1.0,0.0,0.3,0.0,0.0,black tea,curated-reference-2026,es-AR
+Té verde seco,Bebidas e infusiones,1.0,0.0,0.2,0.0,0.0,green tea,curated-reference-2026,es-AR
+Yerba mate seca,Bebidas e infusiones,280.0,9.9,38.0,4.5,7.5,yerba mate,curated-reference-2026,es-AR
+Mate cocido preparado,Bebidas e infusiones,1.0,0.0,0.2,0.0,0.0,mate cocido,curated-reference-2026,es-AR
+Agua de coco,Bebidas e infusiones,19.0,0.7,3.7,0.2,1.1,coconut water,curated-reference-2026,es-AR
+Leche de almendras sin azúcar,Bebidas e infusiones,15.0,0.6,0.3,1.2,0.2,unsweetened almond milk,curated-reference-2026,es-AR
+Leche de soja sin azúcar,Bebidas e infusiones,33.0,2.9,0.7,1.6,0.6,unsweetened soy milk,curated-reference-2026,es-AR
+Leche de avena,Bebidas e infusiones,47.0,1.0,7.0,1.5,0.8,oat milk,curated-reference-2026,es-AR
+Leche de arroz,Bebidas e infusiones,47.0,0.3,9.2,1.0,0.3,rice milk,curated-reference-2026,es-AR
+Leche de coco bebida,Bebidas e infusiones,20.0,0.2,2.3,1.0,0.0,coconut milk beverage,curated-reference-2026,es-AR
+Jugo de naranja 100%,Bebidas e infusiones,45.0,0.7,10.4,0.2,0.2,orange juice,curated-reference-2026,es-AR
+Jugo de manzana 100%,Bebidas e infusiones,46.0,0.1,11.3,0.1,0.2,apple juice,curated-reference-2026,es-AR
+Jugo de pomelo 100%,Bebidas e infusiones,39.0,0.5,9.2,0.1,0.1,grapefruit juice,curated-reference-2026,es-AR
+Jugo de tomate,Bebidas e infusiones,17.0,0.9,3.5,0.1,0.4,tomato juice,curated-reference-2026,es-AR
+Limonada casera sin azúcar,Bebidas e infusiones,4.0,0.0,1.0,0.0,0.1,homemade lemonade,curated-reference-2026,es-AR
+Dulce de batata,Endulzantes y dulces,290.0,0.8,71.0,0.1,2.0,sweet potato paste,curated-reference-2026,es-AR
+Dulce de membrillo,Endulzantes y dulces,250.0,0.2,64.0,0.1,1.0,quince paste,curated-reference-2026,es-AR
+Mermelada de naranja,Endulzantes y dulces,250.0,0.3,63.0,0.1,1.0,orange marmalade,curated-reference-2026,es-AR
+Chocolate blanco,Cacao y dulces,539.0,5.9,59.0,32.1,0.2,white chocolate,curated-reference-2026,es-AR
+Chocolate con leche,Cacao y dulces,535.0,7.6,59.4,30.6,3.4,milk chocolate,curated-reference-2026,es-AR
+Chocolate semiamargo,Cacao y dulces,520.0,7.8,52.0,30.0,6.0,semisweet chocolate,curated-reference-2026,es-AR
+Chocolate negro 90%,Cacao y dulces,598.0,11.0,14.0,54.0,11.0,dark chocolate 90,curated-reference-2026,es-AR
+Algarroba en polvo,Cacao y dulces,222.0,4.6,88.0,0.7,39.8,carob powder,curated-reference-2026,es-AR

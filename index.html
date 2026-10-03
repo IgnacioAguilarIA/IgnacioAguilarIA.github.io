@@ -123,6 +123,8 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 @media(max-width:700px){.v87-weather-card{padding:13px}.v87-weather-head{flex-direction:column}.v87-weather-actions{width:100%;justify-content:stretch}.v87-weather-actions .small-btn{flex:1}.v87-weather-grid{grid-template-columns:repeat(7,88px);gap:7px}.v87-weather-day{min-width:88px;padding:9px 7px}}
 </style>
 <link href="./css/68-nutrition-food-catalog.css" rel="stylesheet"/>
+<link href="./css/69-nutrition-professional.css" rel="stylesheet"/>
+<link href="./css/70-nutrition-autocomplete.css" rel="stylesheet"/>
 </head>
 <body>
 <section id="authScreen">
@@ -644,17 +646,20 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div class="field"><label>Título</label><input class="input" id="mealTitle" placeholder="Ej: Avena con banana y yogur"/></div>
 <div class="field"><label>Alimentos / cantidades</label><input class="input" id="mealFoods" placeholder="Ej: 80 g avena, 1 banana, 200 g yogur"/></div>
 <div class="nutrition-food-catalog-wrap">
-<button class="nutrition-food-catalog-toggle" id="nutritionFoodCatalogToggle" type="button" aria-expanded="false"><span>🔎 Buscar alimento en catálogo<small>Preparado para conectar Open Food Facts</small></span><span>＋</span></button>
+<button class="nutrition-food-catalog-toggle" id="nutritionFoodCatalogToggle" type="button" aria-expanded="false"><span>🔎 Buscar alimento en catálogo<small>Busca primero en tus alimentos y el catálogo propio; después en Open Food Facts</small></span><span>＋</span></button>
 <div class="nutrition-food-catalog" id="nutritionFoodCatalog" hidden>
 <div class="nutrition-food-catalog-head">
-<div class="nutrition-food-catalog-search"><label for="nutritionFoodSearch">Alimento</label><input class="input" id="nutritionFoodSearch" autocomplete="off" placeholder="Ej: banana, arroz, yogur..."/></div>
-<button class="nutrition-food-catalog-find" id="nutritionFoodCatalogFind" type="button">Buscar</button>
+<div class="nutrition-food-catalog-search"><label for="nutritionFoodSearch">Alimento</label><input class="input" id="nutritionFoodSearch" autocomplete="off" placeholder="Escribí el alimento…"/><div class="nutrition-food-autocomplete" id="nutritionFoodAutocomplete" hidden></div></div>
+<button class="nutrition-food-catalog-find" id="nutritionFoodCatalogFind" type="button">Buscar en Open Food Facts</button>
 </div>
-<div class="nutrition-food-catalog-status" id="nutritionFoodCatalogStatus">Preparado para conectar el catálogo externo.</div>
+<div class="nutrition-food-catalog-status" id="nutritionFoodCatalogStatus">Escribí el nombre del alimento y las sugerencias aparecerán automáticamente.</div>
 <div class="nutrition-food-catalog-results" id="nutritionFoodCatalogResults"></div>
 <div class="nutrition-food-selected" id="nutritionFoodSelected" hidden></div>
 <div class="nutrition-food-catalog-qty"><label for="nutritionFoodQuantity">Cantidad</label><input class="input" id="nutritionFoodQuantity" min="0" step="1" type="number" value="100"/></div>
-<button class="nutrition-food-apply" id="nutritionFoodApply" type="button" hidden>Usar datos en esta comida</button>
+<div class="nutrition-food-catalog-actions" id="nutritionFoodCatalogActions" hidden>
+<button class="nutrition-food-save" id="nutritionFoodSave" type="button">☆ Guardar en mis alimentos</button>
+<button class="nutrition-food-apply" id="nutritionFoodApply" type="button">✓ Agregar estos valores a la comida</button>
+</div>
 </div>
 </div>
 <div class="meal-form-grid three">
@@ -1170,5 +1175,8 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <link href="./css/67-nutrition-daily-summary.css" rel="stylesheet"/>
 <script src="./js/46-v98-training-stats-repair.js"></script>
 <script src="./js/47-nutrition-food-catalog.js"></script>
+<script src="./js/48-openfoodfacts-adapter.js"></script>
+<script src="./js/49-nutrition-persistence.js"></script>
+<script src="./js/50-nutrition-food-autocomplete.js"></script>
 </body>
 </html>
