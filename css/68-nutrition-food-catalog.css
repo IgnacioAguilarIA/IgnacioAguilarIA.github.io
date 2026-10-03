@@ -9,13 +9,24 @@
 .nutrition-food-catalog-search input,.nutrition-food-catalog-qty input{width:100%;box-sizing:border-box}
 .nutrition-food-catalog-find{min-height:42px;padding:0 13px;border:0;border-radius:10px;font-weight:900;cursor:pointer;background:#2563eb;color:#fff}
 .nutrition-food-catalog-status{font-size:11px;opacity:.72;margin-bottom:9px;min-height:15px}
-.nutrition-food-catalog-results{display:grid;gap:8px}
-.nutrition-food-result{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 11px;border:1px solid rgba(148,163,184,.15);border-radius:11px;background:rgba(255,255,255,.025);cursor:pointer;text-align:left;color:inherit}
-.nutrition-food-result:hover{border-color:rgba(96,165,250,.45)}
-.nutrition-food-result-main{min-width:0}
-.nutrition-food-result-title{font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nutrition-food-result-sub{font-size:10px;opacity:.68;margin-top:2px}
-.nutrition-food-result-tag{font-size:9px;font-weight:900;opacity:.72;white-space:nowrap}
+.nutrition-food-catalog-results{display:grid;gap:8px;max-height:330px;overflow-y:auto;padding-right:2px}
+.nutrition-food-result{
+  width:100%;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:10px;
+  padding:11px 12px;border:1px solid rgba(148,163,184,.15);border-radius:12px;background:rgba(255,255,255,.025);
+  cursor:pointer;text-align:left;color:inherit;min-width:0;overflow:hidden;
+}
+.nutrition-food-result:hover{border-color:rgba(96,165,250,.45);background:rgba(59,130,246,.05)}
+.nutrition-food-result:focus-visible{outline:2px solid rgba(96,165,250,.65);outline-offset:1px}
+.nutrition-food-result-main{min-width:0;display:grid;gap:5px}
+.nutrition-food-result-title{display:block;font-size:12px;font-weight:900;line-height:1.3;white-space:normal;overflow-wrap:anywhere;word-break:break-word}
+.nutrition-food-result-brand{display:inline-block;width:max-content;max-width:100%;font-size:9px;font-weight:800;line-height:1.2;opacity:.6;white-space:normal;overflow-wrap:anywhere}
+.nutrition-food-result-macros{display:grid;grid-template-columns:repeat(4,minmax(0,auto));gap:5px;min-width:0}
+.nutrition-food-result-macros span{min-width:0;padding:4px 6px;border-radius:7px;background:rgba(148,163,184,.07);border:1px solid rgba(148,163,184,.08);font-size:8px;line-height:1.2;white-space:nowrap}
+.nutrition-food-result-macros b{font-size:9px}
+.nutrition-food-result-details{display:flex;flex-wrap:wrap;gap:7px;font-size:8px;line-height:1.25;opacity:.65}
+.nutrition-food-result-details span{white-space:normal;overflow-wrap:anywhere}
+.nutrition-food-result-details b{font-weight:900}
+.nutrition-food-result-tag{align-self:start;justify-self:end;max-width:110px;padding:5px 7px;border-radius:999px;background:rgba(59,130,246,.10);border:1px solid rgba(96,165,250,.18);color:#bfdbfe;font-size:8px;font-weight:900;line-height:1.1;text-align:center;white-space:normal;overflow-wrap:anywhere}
 .nutrition-food-selected{margin-top:9px;padding:10px;border-radius:11px;background:rgba(59,130,246,.09);border:1px solid rgba(96,165,250,.22)}
 .nutrition-food-selected strong{display:block;font-size:11px}
 .nutrition-food-selected small{display:block;margin-top:3px;font-size:10px;opacity:.72}
@@ -24,4 +35,83 @@ body.light .nutrition-food-catalog{background:#f8fafc;border-color:#dbe3ee}
 body.light .nutrition-food-catalog-toggle{border-color:#dbe3ee}
 body.light .nutrition-food-result{background:#fff;border-color:#dbe3ee}
 body.light .nutrition-food-selected{background:#eff6ff;border-color:#bfdbfe}
-@media(max-width:600px){.nutrition-food-catalog-head{align-items:stretch;flex-direction:column}.nutrition-food-catalog-find{width:100%}}
+@media(max-width:600px){
+  .nutrition-food-catalog-head{align-items:stretch;flex-direction:column}.nutrition-food-catalog-find{width:100%}
+  .nutrition-food-result{grid-template-columns:minmax(0,1fr)}
+  .nutrition-food-result-tag{justify-self:start}
+  .nutrition-food-result-macros{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+
+
+/* Ficha ordenada del producto seleccionado desde Open Food Facts */
+.nutrition-food-selected{
+  margin-top:10px;
+  padding:12px;
+  border-radius:14px;
+  background:linear-gradient(180deg,rgba(59,130,246,.10),rgba(15,23,42,.10));
+  border:1px solid rgba(96,165,250,.24);
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+.nutrition-food-selected-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.nutrition-food-selected-title{display:flex;align-items:flex-start;gap:9px;min-width:0}
+.nutrition-food-check{
+  width:28px;height:28px;flex:0 0 28px;border-radius:9px;
+  display:grid;place-items:center;font-size:14px;font-weight:1000;
+  background:rgba(34,197,94,.18);border:1px solid rgba(34,197,94,.28);color:#86efac;
+}
+.nutrition-food-selected-title strong{display:block;font-size:13px;line-height:1.3}
+.nutrition-food-selected-title small{display:block;margin-top:2px;font-size:9px;opacity:.62;font-weight:700}
+.nutrition-food-selected-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:10px}
+.nutrition-food-selected-meta span{
+  min-width:0;padding:8px 9px;border-radius:10px;
+  background:rgba(255,255,255,.035);border:1px solid rgba(148,163,184,.13);
+  font-size:9px;line-height:1.35;overflow-wrap:anywhere;
+}
+.nutrition-food-selected-meta b{display:block;font-size:8px;text-transform:uppercase;letter-spacing:.04em;opacity:.55;margin-bottom:2px}
+.nutrition-food-selected-nutrition{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:9px}
+.nutrition-food-selected-nutrition>div{
+  padding:8px 6px;border-radius:10px;text-align:center;
+  background:rgba(15,23,42,.20);border:1px solid rgba(148,163,184,.12)
+}
+.nutrition-food-selected-nutrition b{display:block;font-size:11px;line-height:1.15}
+.nutrition-food-selected-nutrition span{display:block;margin-top:3px;font-size:8px;opacity:.58;line-height:1.2}
+.nutrition-food-ingredients{margin-top:10px;padding:10px;border-radius:11px;background:rgba(15,23,42,.16);border:1px solid rgba(148,163,184,.12)}
+.nutrition-food-section-title{font-size:10px;font-weight:900;letter-spacing:.02em;margin-bottom:6px}
+.nutrition-food-ingredients ul{margin:0;padding-left:18px;display:grid;gap:4px;max-height:170px;overflow:auto}
+.nutrition-food-ingredients li{font-size:9px;line-height:1.4;opacity:.84;padding-right:4px}
+.nutrition-food-ingredients.is-empty p{margin:0;font-size:9px;line-height:1.45;opacity:.6}
+.nutrition-food-selected-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.nutrition-food-selected-tags span{padding:4px 7px;border-radius:999px;font-size:8px;font-weight:800;background:rgba(148,163,184,.09);border:1px solid rgba(148,163,184,.12);opacity:.78}
+.nutrition-food-selected-total{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px;padding-top:9px;border-top:1px solid rgba(148,163,184,.12);font-size:9px}
+.nutrition-food-selected-total span{opacity:.62}
+.nutrition-food-selected-total b{font-size:9px;text-align:right}
+
+body.light .nutrition-food-selected{background:linear-gradient(180deg,#f8fbff,#eef5ff);border-color:#bfdbfe;box-shadow:0 8px 18px rgba(15,23,42,.06)}
+body.light .nutrition-food-selected-meta span,
+body.light .nutrition-food-selected-nutrition>div,
+body.light .nutrition-food-ingredients{background:#fff;border-color:#dbe3ee}
+body.light .nutrition-food-selected-nutrition>div{background:#f8fafc}
+body.light .nutrition-food-selected-total{border-color:#dbe3ee}
+
+@media(max-width:560px){
+  .nutrition-food-selected-meta{grid-template-columns:1fr}
+  .nutrition-food-selected-nutrition{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .nutrition-food-selected-total{align-items:flex-start;flex-direction:column}
+  .nutrition-food-selected-total b{text-align:left}
+}
+
+.nutrition-food-apply{display:block;visibility:visible;opacity:1;font-size:11px;line-height:1.2;padding:9px 12px;box-sizing:border-box}
+.nutrition-food-apply[hidden]{display:none!important}
+
+/* Acciones de persistencia del catálogo personal */
+.nutrition-food-catalog-actions{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:8px;margin-top:9px}
+.nutrition-food-catalog-actions[hidden]{display:none!important}
+.nutrition-food-save,.nutrition-food-apply{min-height:40px;border-radius:10px;font-weight:900;cursor:pointer;padding:9px 12px;box-sizing:border-box}
+.nutrition-food-save{border:1px solid rgba(34,197,94,.25);background:rgba(34,197,94,.10);color:inherit}
+.nutrition-food-save:hover{background:rgba(34,197,94,.16)}
+.nutrition-food-save:disabled{opacity:.72;cursor:default}
+.nutrition-food-apply{margin-top:0;border:1px solid rgba(96,165,250,.28);background:rgba(59,130,246,.12);color:inherit}
+@media(max-width:560px){.nutrition-food-catalog-actions{grid-template-columns:1fr}}
+body.light .nutrition-food-save{background:#f0fdf4;border-color:#bbf7d0}
+body.light .nutrition-food-apply{background:#eff6ff;border-color:#bfdbfe}
