@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-06T15:54:10.169328+00:00",
+  "updated_at": "2026-10-07T16:24:14.271506+00:00",
   "timezone": "America/Argentina/Cordoba",
   "events": [
     {
@@ -521,6 +521,17 @@
     },
     {
       "id": "auto-ctera-2026-02-24-47010",
+      "date": "2026-02-24",
+      "title": "PARO NACIONAL DE CTERA 24 DE FEBRERO",
+      "description": "PARO NACIONAL DE CTERA 24 DE FEBRERO",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/paro-nacional-de-ctera-24-de-febrero/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-02-24-42850",
       "date": "2026-02-24",
       "title": "PARO NACIONAL DE CTERA 24 DE FEBRERO",
       "description": "PARO NACIONAL DE CTERA 24 DE FEBRERO",
@@ -1059,6 +1070,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-02-26-54580",
+      "date": "2026-02-26",
+      "title": "PARO NACIONAL DOCENTE DE CTERA: 80 % DE ACATAMIENTO EN TODO EL PAÍS",
+      "description": "PARO NACIONAL DOCENTE DE CTERA: 80 % DE ACATAMIENTO EN TODO EL PAÍS",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/paro-nacional-docente-de-ctera-80-de-acatamiento-en-todo-el-pais/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-03-02-68967",
       "date": "2026-03-02",
       "title": "EL CONGRESO NACIONAL DE CTERA DEFINIÓ PARO NACIONAL DOCENTE EL 2 DE MARZO",
@@ -1577,6 +1599,17 @@
     },
     {
       "id": "auto-ctera-2026-03-02-95381",
+      "date": "2026-03-02",
+      "title": "EL CONGRESO NACIONAL DE CTERA DEFINIÓ PARO NACIONAL DOCENTE EL 2 DE MARZO",
+      "description": "EL CONGRESO NACIONAL DE CTERA DEFINIÓ PARO NACIONAL DOCENTE EL 2 DE MARZO",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/el-congreso-nacional-de-ctera-definio-paro-nacional-docente-el-2-de-marzo/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-03-02-46797",
       "date": "2026-03-02",
       "title": "EL CONGRESO NACIONAL DE CTERA DEFINIÓ PARO NACIONAL DOCENTE EL 2 DE MARZO",
       "description": "EL CONGRESO NACIONAL DE CTERA DEFINIÓ PARO NACIONAL DOCENTE EL 2 DE MARZO",
@@ -2115,6 +2148,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-03-02-69152",
+      "date": "2026-03-02",
+      "title": "MASIVA MOVILIZACIÓN DE CTERA CON ALTÍSIMO ACATAMIENTO AL PARO NACIONAL",
+      "description": "MASIVA MOVILIZACIÓN DE CTERA CON ALTÍSIMO ACATAMIENTO AL PARO NACIONAL",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/masiva-movilizacion-de-ctera-con-altisimo-acatamiento-al-paro-nacional/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-03-13-6709",
       "date": "2026-03-13",
       "title": "CTERA SE SOLIDARIZÓ CON EL PARO DE LAS Y LOS DOCENTES UNIVERSITARIOS",
@@ -2633,6 +2677,17 @@
     },
     {
       "id": "auto-ctera-2026-03-13-89347",
+      "date": "2026-03-13",
+      "title": "CTERA SE SOLIDARIZÓ CON EL PARO DE LAS Y LOS DOCENTES UNIVERSITARIOS",
+      "description": "CTERA SE SOLIDARIZÓ CON EL PARO DE LAS Y LOS DOCENTES UNIVERSITARIOS",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-se-solidarizo-con-el-paro-de-las-y-los-docentes-universitarios/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-03-13-53733",
       "date": "2026-03-13",
       "title": "CTERA SE SOLIDARIZÓ CON EL PARO DE LAS Y LOS DOCENTES UNIVERSITARIOS",
       "description": "CTERA SE SOLIDARIZÓ CON EL PARO DE LAS Y LOS DOCENTES UNIVERSITARIOS",
@@ -3171,6 +3226,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-03-20-70316",
+      "date": "2026-03-20",
+      "title": "CTERA Y CTA PARTICIPARON DE LA REUNIÓN DE LA MESA «EL SALARIO NO ES GANANCIA»",
+      "description": "CTERA Y CTA PARTICIPARON DE LA REUNIÓN DE LA MESA «EL SALARIO NO ES GANANCIA»",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-y-cta-participaron-de-la-reunion-de-la-mesa-el-salario-no-es-ganancia/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-04-04-38237",
       "date": "2026-04-04",
       "title": "4 DE ABRIL PARO NACIONAL DE CTERA",
@@ -3689,6 +3755,17 @@
     },
     {
       "id": "auto-ctera-2026-04-04-28485",
+      "date": "2026-04-04",
+      "title": "4 DE ABRIL PARO NACIONAL DE CTERA",
+      "description": "4 DE ABRIL PARO NACIONAL DE CTERA",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/4-de-abril-paro-nacional-de-ctera/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-04-04-88475",
       "date": "2026-04-04",
       "title": "4 DE ABRIL PARO NACIONAL DE CTERA",
       "description": "4 DE ABRIL PARO NACIONAL DE CTERA",
@@ -4227,6 +4304,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-04-04-62463",
+      "date": "2026-04-04",
+      "title": "MASIVO PARO DOCENTE NACIONAL DE CTERA",
+      "description": "MASIVO PARO DOCENTE NACIONAL DE CTERA",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/masivo-paro-docente-nacional-de-ctera/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-04-04-21334",
       "date": "2026-04-04",
       "title": "PARO NACIONAL DOCENTE: CTERA MARCHÓ AL CONGRESO DE LA NACIÓN EN DEFENSA DE NUESTRA JUBILACIÓN",
@@ -4755,6 +4843,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-04-04-22142",
+      "date": "2026-04-04",
+      "title": "PARO NACIONAL DOCENTE: CTERA MARCHÓ AL CONGRESO DE LA NACIÓN EN DEFENSA DE NUESTRA JUBILACIÓN",
+      "description": "PARO NACIONAL DOCENTE: CTERA MARCHÓ AL CONGRESO DE LA NACIÓN EN DEFENSA DE NUESTRA JUBILACIÓN",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/paro-nacional-docente-ctera-marcho-al-congreso-de-la-nacion-en-defensa-de-nuestra-jubilacion/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-04-10-58365",
       "date": "2026-04-10",
       "title": "CTERA CONVOCA A PARO NACIONAL DOCENTE EL 10 DE ABRIL Y A MOVILIZACIÓN EL 9 DE ABRIL EN TODO EL PAÍS EN DEFENSA DE LA EDU",
@@ -5273,6 +5372,17 @@
     },
     {
       "id": "auto-ctera-2026-04-10-98705",
+      "date": "2026-04-10",
+      "title": "CTERA CONVOCA A PARO NACIONAL DOCENTE EL 10 DE ABRIL Y A MOVILIZACIÓN EL 9 DE ABRIL EN TODO EL PAÍS EN DEFENSA DE LA EDU",
+      "description": "CTERA CONVOCA A PARO NACIONAL DOCENTE EL 10 DE ABRIL Y A MOVILIZACIÓN EL 9 DE ABRIL EN TODO EL PAÍS EN DEFENSA DE LA EDUCACIÓN PÚBLICA Y LAS JUBILADAS Y JUBILADOS",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-convoca-a-paro-nacional-docente-el-10-de-abril-y-a-movilizacion-el-9-de-abril-en-todo-el-pais-en-defensa-de-la-educacion-publica-y-las-jubiladas-y-jubilados/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-04-10-25251",
       "date": "2026-04-10",
       "title": "CTERA CONVOCA A PARO NACIONAL DOCENTE EL 10 DE ABRIL Y A MOVILIZACIÓN EL 9 DE ABRIL EN TODO EL PAÍS EN DEFENSA DE LA EDU",
       "description": "CTERA CONVOCA A PARO NACIONAL DOCENTE EL 10 DE ABRIL Y A MOVILIZACIÓN EL 9 DE ABRIL EN TODO EL PAÍS EN DEFENSA DE LA EDUCACIÓN PÚBLICA Y LAS JUBILADAS Y JUBILADOS",
@@ -6020,6 +6130,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-05-09-23372",
+      "date": "2026-05-09",
+      "title": "CONTUNDENTE PARO NACIONAL DE CTERA",
+      "description": "CONTUNDENTE PARO NACIONAL DE CTERA",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/contundente-paro-nacional-de-ctera/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-05-09-76800",
       "date": "2026-05-09",
       "title": "La unidad sindical argentina frente al ajuste: Un paro nacional que resuena",
@@ -6548,6 +6669,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-05-09-91972",
+      "date": "2026-05-09",
+      "title": "La unidad sindical argentina frente al ajuste: Un paro nacional que resuena",
+      "description": "La unidad sindical argentina frente al ajuste: Un paro nacional que resuena",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/la-unidad-sindical-argentina-frente-al-ajuste-un-paro-nacional-que-resuena/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-05-09-14363",
       "date": "2026-05-09",
       "title": "SOLIDARIDAD INTERNACIONAL CON EL PARO NACIONAL DEL 9 DE MAYO",
@@ -7066,6 +7198,17 @@
     },
     {
       "id": "auto-ctera-2026-05-09-1623",
+      "date": "2026-05-09",
+      "title": "SOLIDARIDAD INTERNACIONAL CON EL PARO NACIONAL DEL 9 DE MAYO",
+      "description": "SOLIDARIDAD INTERNACIONAL CON EL PARO NACIONAL DEL 9 DE MAYO",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/solidaridad-internacional-con-la-lucha-del-movimiento-obrero-argentino/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-05-09-24692",
       "date": "2026-05-09",
       "title": "SOLIDARIDAD INTERNACIONAL CON EL PARO NACIONAL DEL 9 DE MAYO",
       "description": "SOLIDARIDAD INTERNACIONAL CON EL PARO NACIONAL DEL 9 DE MAYO",
@@ -7813,6 +7956,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-05-23-62103",
+      "date": "2026-05-23",
+      "title": "LA CTERA CONVOCA A PARO NACIONAL DOCENTE EL JUEVES 23 DE MAYO",
+      "description": "LA CTERA CONVOCA A PARO NACIONAL DOCENTE EL JUEVES 23 DE MAYO",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/la-ctera-convoca-a-paro-nacional-docente-el-jueves-23-de-mayo/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-05-23-27710",
       "date": "2026-05-23",
       "title": "PARO DOCENTE NACIONAL TOTAL EN TODOS LOS NIVELES DEL SISTEMA EDUCATIVO",
@@ -8331,6 +8485,17 @@
     },
     {
       "id": "auto-ctera-2026-05-23-10124",
+      "date": "2026-05-23",
+      "title": "PARO DOCENTE NACIONAL TOTAL EN TODOS LOS NIVELES DEL SISTEMA EDUCATIVO",
+      "description": "PARO DOCENTE NACIONAL TOTAL EN TODOS LOS NIVELES DEL SISTEMA EDUCATIVO",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/paro-docente-nacional-total-en-todos-los-niveles-del-sistema-educativo/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-05-23-35906",
       "date": "2026-05-23",
       "title": "PARO DOCENTE NACIONAL TOTAL EN TODOS LOS NIVELES DEL SISTEMA EDUCATIVO",
       "description": "PARO DOCENTE NACIONAL TOTAL EN TODOS LOS NIVELES DEL SISTEMA EDUCATIVO",
@@ -8902,6 +9067,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-06-17-87669",
+      "date": "2026-06-17",
+      "title": "CTERA realizó una Jornada Nacional de Lucha frente al Palacio Pizzurno y anunció un Paro Nacional Docente",
+      "description": "CTERA realizó una Jornada Nacional de Lucha frente al Palacio Pizzurno y anunció un Paro Nacional Docente",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-realizo-una-jornada-nacional-de-lucha-frente-al-palacio-pizzurno-y-anuncio-un-paro-nacional-docente/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-06-25-93683",
       "date": "2026-06-25",
       "title": "PAROS PROVINCIALES DE UEPC – CÓRDOBA – Y ATEN – NEUQUÉN –",
@@ -9420,6 +9596,17 @@
     },
     {
       "id": "auto-ctera-2026-06-25-86489",
+      "date": "2026-06-25",
+      "title": "PAROS PROVINCIALES DE UEPC – CÓRDOBA – Y ATEN – NEUQUÉN –",
+      "description": "PAROS PROVINCIALES DE UEPC – CÓRDOBA – Y ATEN – NEUQUÉN –",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/paros-provinciales-de-uepc-cordoba-y-aten-neuquen/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-06-25-13747",
       "date": "2026-06-25",
       "title": "PAROS PROVINCIALES DE UEPC – CÓRDOBA – Y ATEN – NEUQUÉN –",
       "description": "PAROS PROVINCIALES DE UEPC – CÓRDOBA – Y ATEN – NEUQUÉN –",
@@ -9958,6 +10145,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-08-03-18523",
+      "date": "2026-08-03",
+      "title": "CTERA convoca a Paro Nacional Docente el 3 de agosto.",
+      "description": "CTERA convoca a Paro Nacional Docente el 3 de agosto.",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-convoca-a-paro-nacional-docente-el-3-de-agosto/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-08-03-5364",
       "date": "2026-08-03",
       "title": "Contundente paro nacional docente con altísimo acatamiento y masiva movilización de CTERA en todo el país",
@@ -10476,6 +10674,17 @@
     },
     {
       "id": "auto-ctera-2026-08-03-67364",
+      "date": "2026-08-03",
+      "title": "Contundente paro nacional docente con altísimo acatamiento y masiva movilización de CTERA en todo el país",
+      "description": "Contundente paro nacional docente con altísimo acatamiento y masiva movilización de CTERA en todo el país",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/contundente-paro-nacional-docente-con-altisimo-acatamiento-y-masiva-movilizacion-de-ctera-en-todo-el-pais/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-08-03-28155",
       "date": "2026-08-03",
       "title": "Contundente paro nacional docente con altísimo acatamiento y masiva movilización de CTERA en todo el país",
       "description": "Contundente paro nacional docente con altísimo acatamiento y masiva movilización de CTERA en todo el país",
@@ -11015,6 +11224,17 @@
     },
     {
       "id": "auto-ctera-2026-08-05-58513",
+      "date": "2026-08-05",
+      "title": "¡EL SALARIO NO ES GANANCIA! LA CTERA PRESENTÓ UN AMPARO JUDICIAL CONTRA LA LEY DEL IMPUESTO A LAS GANANCIAS DE MILEI",
+      "description": "¡EL SALARIO NO ES GANANCIA! LA CTERA PRESENTÓ UN AMPARO JUDICIAL CONTRA LA LEY DEL IMPUESTO A LAS GANANCIAS DE MILEI",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/el-salario-no-es-gananciala-ctera-presento-un-amparo-judicial-contra-la-ley-del-impuesto-a-las-ganancias-de-milei/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-08-05-49990",
       "date": "2026-08-05",
       "title": "¡EL SALARIO NO ES GANANCIA! LA CTERA PRESENTÓ UN AMPARO JUDICIAL CONTRA LA LEY DEL IMPUESTO A LAS GANANCIAS DE MILEI",
       "description": "¡EL SALARIO NO ES GANANCIA! LA CTERA PRESENTÓ UN AMPARO JUDICIAL CONTRA LA LEY DEL IMPUESTO A LAS GANANCIAS DE MILEI",
@@ -14391,6 +14611,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-09-11-83581",
+      "date": "2026-09-11",
+      "title": "CTERA PRESENTE EN EL MASIVO PARO Y MOVILIZACIÓN DE AMSAFE CONTRA LA REFORMA PREVISIONAL DE LA PROVINCIA DE SANTA FE",
+      "description": "CTERA PRESENTE EN EL MASIVO PARO Y MOVILIZACIÓN DE AMSAFE CONTRA LA REFORMA PREVISIONAL DE LA PROVINCIA DE SANTA FE",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-presente-en-el-masivo-paro-y-movilizacion-de-amsafe-contra-la-reforma-previsional-de-la-provincia-de-santa-fe/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-09-12-68980",
       "date": "2026-09-12",
       "title": "CTERA PRESENTE EN EL MASIVO PARO Y MOVILIZACIÓN DE AMSAFE CONTRA LA REFORMA PREVISIONAL DE LA PROVINCIA DE SANTA FE",
@@ -14909,6 +15140,17 @@
     },
     {
       "id": "auto-ctera-2026-09-12-84012",
+      "date": "2026-09-12",
+      "title": "CTERA PRESENTE EN EL MASIVO PARO Y MOVILIZACIÓN DE AMSAFE CONTRA LA REFORMA PREVISIONAL DE LA PROVINCIA DE SANTA FE",
+      "description": "CTERA PRESENTE EN EL MASIVO PARO Y MOVILIZACIÓN DE AMSAFE CONTRA LA REFORMA PREVISIONAL DE LA PROVINCIA DE SANTA FE",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-presente-en-el-masivo-paro-y-movilizacion-de-amsafe-contra-la-reforma-previsional-de-la-provincia-de-santa-fe/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-09-12-83581",
       "date": "2026-09-12",
       "title": "CTERA PRESENTE EN EL MASIVO PARO Y MOVILIZACIÓN DE AMSAFE CONTRA LA REFORMA PREVISIONAL DE LA PROVINCIA DE SANTA FE",
       "description": "CTERA PRESENTE EN EL MASIVO PARO Y MOVILIZACIÓN DE AMSAFE CONTRA LA REFORMA PREVISIONAL DE LA PROVINCIA DE SANTA FE",
@@ -15447,6 +15689,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-10-02-78851",
+      "date": "2026-10-02",
+      "title": "CTERA CONVOCA A PARO Y MARCHA FEDERAL EDUCATIVA 2 DE OCTUBRE",
+      "description": "CTERA CONVOCA A PARO Y MARCHA FEDERAL EDUCATIVA 2 DE OCTUBRE",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-convoca-a-paro-y-marcha-federal-educativa-2-de-octubre/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-10-02-74535",
       "date": "2026-10-02",
       "title": "Masivo Paro y Multitudinaria movilización de CTERA en Defensa de la Educación Pública",
@@ -15965,6 +16218,17 @@
     },
     {
       "id": "auto-ctera-2026-10-02-16382",
+      "date": "2026-10-02",
+      "title": "Masivo Paro y Multitudinaria movilización de CTERA en Defensa de la Educación Pública",
+      "description": "Masivo Paro y Multitudinaria movilización de CTERA en Defensa de la Educación Pública",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/masivo-paro-y-multitudinaria-movilizacion-de-ctera-en-defensa-de-la-educacion-publica/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-10-02-23138",
       "date": "2026-10-02",
       "title": "Masivo Paro y Multitudinaria movilización de CTERA en Defensa de la Educación Pública",
       "description": "Masivo Paro y Multitudinaria movilización de CTERA en Defensa de la Educación Pública",
@@ -16503,6 +16767,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-10-02-94540",
+      "date": "2026-10-02",
+      "title": "Solidaridad con el Paro y Marcha Nacional de la Educación en Argentina CNTE Brasil",
+      "description": "Solidaridad con el Paro y Marcha Nacional de la Educación en Argentina CNTE Brasil",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/solidaridad-con-el-paro-y-marcha-nacional-de-la-educacion-en-argentina-cnte-brasil/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-10-07-33713",
       "date": "2026-10-07",
       "title": "CTERA JUNTO A UNTER EN LA SEGUNDA JORNADA DEL PARO PROVINCIAL DOCENTE EN RÍO NEGRO",
@@ -17031,6 +17306,17 @@
       "status": "announced"
     },
     {
+      "id": "auto-ctera-2026-10-07-89261",
+      "date": "2026-10-07",
+      "title": "CTERA JUNTO A UNTER EN LA SEGUNDA JORNADA DEL PARO PROVINCIAL DOCENTE EN RÍO NEGRO",
+      "description": "CTERA JUNTO A UNTER EN LA SEGUNDA JORNADA DEL PARO PROVINCIAL DOCENTE EN RÍO NEGRO",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/ctera-junto-a-unter-en-la-segunda-jornada-del-paro-provincial-docente-en-rio-negro/",
+      "status": "announced"
+    },
+    {
       "id": "auto-ctera-2026-10-14-29807",
       "date": "2026-10-14",
       "title": "MASIVO PARO Y MULTITUDINARIO ACTO DE CTERA FRENTE AL PALACIO PIZZURNO",
@@ -17549,6 +17835,17 @@
     },
     {
       "id": "auto-ctera-2026-10-14-46822",
+      "date": "2026-10-14",
+      "title": "MASIVO PARO Y MULTITUDINARIO ACTO DE CTERA FRENTE AL PALACIO PIZZURNO",
+      "description": "MASIVO PARO Y MULTITUDINARIO ACTO DE CTERA FRENTE AL PALACIO PIZZURNO",
+      "type": "teacher",
+      "scope": "Nacional · docentes",
+      "source": "CTERA",
+      "source_url": "https://ctera.org.ar/masivo-paro-y-multitudinario-acto-de-ctera-frente-al-palacio-pizzurno/",
+      "status": "announced"
+    },
+    {
+      "id": "auto-ctera-2026-10-14-10061",
       "date": "2026-10-14",
       "title": "MASIVO PARO Y MULTITUDINARIO ACTO DE CTERA FRENTE AL PALACIO PIZZURNO",
       "description": "MASIVO PARO Y MULTITUDINARIO ACTO DE CTERA FRENTE AL PALACIO PIZZURNO",
