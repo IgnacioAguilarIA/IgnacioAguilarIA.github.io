@@ -1,0 +1,68 @@
+/* Agenda FICH V98 — Etapa 4: alimentos propios, recetas e historial */
+.nutrition-history-btn{white-space:nowrap}
+.nutrition-advanced-catalog-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:10px 0 4px;flex-wrap:wrap}
+.nutrition-advanced-catalog-actions>span{font-size:.78rem;opacity:.68}
+.nutrition-advanced-overlay{position:fixed;inset:0;z-index:15000;display:flex;align-items:center;justify-content:center;padding:14px;background:rgba(4,10,20,.68);backdrop-filter:blur(3px)}
+.nutrition-advanced-modal{width:min(720px,100%);max-height:min(91vh,900px);display:flex;flex-direction:column;overflow:hidden;background:var(--card,#fff);color:var(--text,#172033);border:1px solid rgba(127,127,127,.23);border-radius:18px;box-shadow:0 24px 85px rgba(0,0,0,.32)}
+.nutrition-advanced-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:17px 19px;border-bottom:1px solid rgba(127,127,127,.19)}
+.nutrition-advanced-head h3{margin:0 0 5px;font-size:1.12rem;line-height:1.35}
+.nutrition-advanced-head p{margin:0;font-size:.86rem;line-height:1.45;opacity:.72}
+.nutrition-advanced-close{flex:0 0 auto;border:0;background:rgba(127,127,127,.12);color:inherit;width:36px;height:36px;border-radius:10px;font-size:1.4rem;cursor:pointer}
+.nutrition-advanced-body{overflow:auto;padding:17px 19px;display:grid;gap:13px;overscroll-behavior:contain}
+.nutrition-advanced-form{display:grid;gap:13px;min-width:0}
+.nutrition-advanced-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.nutrition-advanced-form .field{min-width:0;margin:0}
+.nutrition-advanced-form label,.nutrition-recipe-card-controls label{display:block;margin-bottom:5px;font-size:.84rem;font-weight:650}
+.nutrition-advanced-form .input,.nutrition-recipe-card-controls .input{width:100%;min-width:0;box-sizing:border-box}
+.nutrition-advanced-form small{display:block;font-size:.78rem;opacity:.7;margin-top:5px}
+.nutrition-advanced-note{margin:0;padding:10px 12px;border-radius:10px;background:rgba(127,127,127,.09);font-size:.81rem;line-height:1.5;opacity:.85}
+.nutrition-advanced-status{font-size:.84rem;line-height:1.45;overflow-wrap:anywhere;opacity:.82}
+.nutrition-advanced-actions{display:flex;justify-content:flex-end;align-items:center;gap:9px;flex-wrap:wrap;padding-top:5px}
+.nutrition-advanced-primary,.nutrition-advanced-secondary,.nutrition-advanced-danger{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:39px;padding:9px 13px;border:1px solid transparent;border-radius:10px;font:inherit;font-size:.85rem;font-weight:650;cursor:pointer;text-decoration:none}
+.nutrition-advanced-primary{background:var(--accent,#2563eb);color:#fff}
+.nutrition-advanced-secondary{background:rgba(127,127,127,.1);color:inherit;border-color:rgba(127,127,127,.2)}
+.nutrition-advanced-danger{background:rgba(210,50,55,.08);color:var(--danger,#b4232a);border-color:rgba(210,50,55,.22)}
+.nutrition-advanced-primary:disabled,.nutrition-advanced-secondary:disabled,.nutrition-advanced-danger:disabled{opacity:.55;cursor:not-allowed}
+.nutrition-advanced-recipe-preview{display:grid;gap:5px;background:rgba(127,127,127,.09);border-radius:12px;padding:12px 14px;font-size:.86rem;line-height:1.45}
+.nutrition-advanced-recipe-preview span{opacity:.78}
+.nutrition-recipe-list{display:grid;gap:10px}
+.nutrition-recipe-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(165px,.55fr);gap:13px;padding:13px;border:1px solid rgba(127,127,127,.22);border-radius:13px;background:rgba(127,127,127,.035)}
+.nutrition-recipe-card-main{display:grid;align-content:start;gap:5px;min-width:0}
+.nutrition-recipe-card-main>strong{font-size:.95rem;overflow-wrap:anywhere}
+.nutrition-recipe-card-main>small,.nutrition-recipe-card-main>span{font-size:.79rem;line-height:1.45;opacity:.75}
+.nutrition-recipe-card-main p{margin:2px 0 0;font-size:.82rem;line-height:1.45;overflow-wrap:anywhere}
+.nutrition-recipe-card-controls{display:grid;align-content:start;gap:7px;min-width:0}
+.nutrition-recipe-card-controls label{font-size:.77rem;margin:0}
+.nutrition-recipe-card-controls label .input{margin-top:4px}
+.nutrition-recipe-card-controls button{width:100%;font-size:.8rem;padding:8px 10px;min-height:35px}
+.nutrition-advanced-empty{padding:18px 14px;border:1px dashed rgba(127,127,127,.35);border-radius:12px;text-align:center;line-height:1.5;font-size:.85rem;opacity:.76}
+.nutrition-advanced-history-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:10px}
+.nutrition-advanced-history-toolbar label{font-size:.84rem;font-weight:650}
+.nutrition-advanced-history-toolbar select{width:auto;max-width:190px}
+.nutrition-history-results{display:grid;gap:12px}
+.nutrition-history-day{border:1px solid rgba(127,127,127,.22);border-radius:13px;overflow:hidden}
+.nutrition-history-day>header{display:grid;gap:5px;padding:12px 13px;background:rgba(127,127,127,.08)}
+.nutrition-history-day>header strong{text-transform:capitalize;font-size:.91rem}
+.nutrition-history-day>header span{font-size:.78rem;line-height:1.45;opacity:.78}
+.nutrition-history-items{display:grid}
+.nutrition-history-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 13px;border-top:1px solid rgba(127,127,127,.14)}
+.nutrition-history-item>div{display:grid;gap:3px;min-width:0}
+.nutrition-history-item strong{font-size:.86rem;overflow-wrap:anywhere}
+.nutrition-history-item small{font-size:.76rem;opacity:.68;overflow-wrap:anywhere}
+.nutrition-history-item>span{flex:0 0 auto;font-size:.82rem;font-weight:700}
+.nutrition-advanced-toast{position:fixed;z-index:15100;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:min(560px,calc(100vw - 28px));padding:11px 15px;border-radius:12px;background:#172033;color:#fff;box-shadow:0 12px 35px rgba(0,0,0,.28);font-size:.86rem;line-height:1.4}
+.nutrition-advanced-toast.is-success{background:#176044}
+.nutrition-advanced-toast.is-warning{background:#794712}
+@media(max-width:580px){
+ .nutrition-advanced-overlay{padding:8px;align-items:flex-end}
+ .nutrition-advanced-modal{max-height:94dvh;border-radius:17px 17px 12px 12px;width:100%}
+ .nutrition-advanced-head{padding:14px 15px}
+ .nutrition-advanced-body{padding:13px 15px max(15px,env(safe-area-inset-bottom,0px))}
+ .nutrition-advanced-grid{grid-template-columns:1fr 1fr;gap:8px}
+ .nutrition-recipe-card{grid-template-columns:1fr;gap:10px}
+ .nutrition-recipe-card-controls{grid-template-columns:1fr 1fr}
+ .nutrition-recipe-card-controls label{grid-column:1/-1}
+ .nutrition-advanced-actions>*{flex:1 1 120px}
+ .nutrition-advanced-catalog-actions .nutrition-advanced-secondary{flex:1}
+}
+@media(prefers-reduced-motion:reduce){.nutrition-advanced-overlay{backdrop-filter:none}}

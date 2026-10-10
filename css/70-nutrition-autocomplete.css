@@ -43,3 +43,13 @@ body.light .nutrition-food-autocomplete-item[data-source="online"] .nutrition-fo
   .nutrition-food-autocomplete-item{grid-template-columns:minmax(0,1fr)}
   .nutrition-food-autocomplete-pill{justify-self:start;max-width:none}
 }
+
+/* Autocompletado principal del título de la comida */
+.nutrition-meal-title-field{position:relative;z-index:3}
+.nutrition-meal-title-wrap{position:relative;min-width:0}
+.nutrition-meal-title-autocomplete{top:calc(100% + 6px);left:0;right:0;max-height:360px;z-index:1300}
+.nutrition-meal-title-help{margin-top:5px;font-size:8px;line-height:1.35;opacity:.55}
+@media(max-width:600px){
+  .nutrition-meal-title-autocomplete{max-height:300px}
+  .nutrition-meal-title-help{font-size:8px}
+}

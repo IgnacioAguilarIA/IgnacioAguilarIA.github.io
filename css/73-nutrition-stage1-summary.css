@@ -1,0 +1,10 @@
+/* Etapa 1 de Alimentación: distinguir claramente lo planificado del consumo real. */
+.nutrition-summary-block{margin-top:10px}
+.nutrition-summary-block-title{margin:0 0 7px;font-size:10px;font-weight:800;letter-spacing:.025em;color:var(--muted);line-height:1.4}
+.nutrition-summary-planned .nutrition-summary-metric{background:rgba(127,127,127,.045);border-style:dashed}
+.nutrition-summary-consumed .nutrition-summary-metric{border-color:rgba(34,197,94,.22);background:rgba(34,197,94,.055)}
+body.light .nutrition-summary-planned .nutrition-summary-metric{background:#f8fafc;border-color:#dbe3ee}
+body.light .nutrition-summary-consumed .nutrition-summary-metric{background:#f0fdf4;border-color:#bbf7d0}
+.nutrition-summary-planned .nutrition-summary-metric strong,
+.nutrition-summary-consumed .nutrition-summary-metric strong{font-variant-numeric:tabular-nums}
+@media(max-width:520px){.nutrition-summary-block-title{font-size:9px}.nutrition-summary-block{margin-top:9px}}
