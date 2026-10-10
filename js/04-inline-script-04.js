@@ -187,7 +187,66 @@
     }
   }
 
-  function exportData(){let v33Local={};try{const prefix=`agendaV33:${currentUser?.id||'guest'}:`;v33Local={habits:JSON.parse(localStorage.getItem(prefix+'habits')||'[]'),notes:JSON.parse(localStorage.getItem(prefix+'notes')||'[]'),priorities:JSON.parse(localStorage.getItem(prefix+'priorities')||'{}')};}catch(_){}const payload={exported_at:new Date().toISOString(),account:currentUser?.email||null,tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,nutrition_meals:nutritionMeals,v33_local:v33Local};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+  function readLocalJSON(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch(_){return fallback}}
+  async function fetchAllForCurrentUser(table){
+    if(!currentUser?.id)throw new Error('Necesitás iniciar sesión para exportar los datos de tu cuenta.');
+    const out=[];const pageSize=500;let from=0;
+    while(true){
+      const {data,error}=await sb.from(table).select('*').eq('user_id',currentUser.id).range(from,from+pageSize-1);
+      if(error)throw error;
+      const batch=Array.isArray(data)?data:[];out.push(...batch);
+      if(batch.length<pageSize)break;
+      from+=pageSize;
+    }
+    return out;
+  }
+  async function exportData(){
+    if(!currentUser?.id){alert('Iniciá sesión para crear una copia completa de tu cuenta.');return}
+    const warnings=[];let exportedMeals=Array.isArray(nutritionMeals)?nutritionMeals.slice():[];
+    const optionalTables=['nutrition_meals','nutrition_meal_items','user_foods','nutrition_recipes','nutrition_consumption_history'];
+    const nutritionRows={nutrition_meals:exportedMeals,nutrition_meal_items:[],user_foods:[],nutrition_recipes:[],nutrition_consumption_history:[]};
+    // Intentamos sincronizar primero las acciones offline pendientes. Si no se
+    // pueden confirmar, el backup refleja igualmente el estado deseado local.
+    try{await window.AgendaNutritionConsumption?.flushPending?.()}catch(_){}
+    const pendingConsumption=readLocalJSON(`agendaNutritionPendingConsumption:${String(currentUser.id)}`,{});
+    for(const table of optionalTables){
+      try{nutritionRows[table]=await fetchAllForCurrentUser(table)}
+      catch(err){warnings.push(`${table}: ${err?.message||'no disponible'}`)}
+    }
+    let preferences=[];
+    try{
+      const {data,error}=await sb.from('nutrition_preferences').select('user_id,meal_order,nutrition_goals,favorite_foods,recent_foods').eq('user_id',currentUser.id).maybeSingle();
+      if(error)throw error;
+      preferences=data?[data]:[];
+    }catch(err){
+      warnings.push(`nutrition_preferences (preferencias sincronizadas): ${err?.message||'no disponible'}`);
+      try{const {data,error:fallbackError}=await sb.from('nutrition_preferences').select('*').eq('user_id',currentUser.id).maybeSingle();if(fallbackError)throw fallbackError;preferences=data?[data]:[]}catch(fallbackErr){warnings.push(`nutrition_preferences (respaldo): ${fallbackErr?.message||'no disponible'}`)}
+    }
+    let v33Local={};
+    try{const prefix=`agendaV33:${currentUser.id}:`;v33Local={habits:readLocalJSON(prefix+'habits',[]),notes:readLocalJSON(prefix+'notes',[]),priorities:readLocalJSON(prefix+'priorities',{})}}catch(_){}
+    const uid=String(currentUser.id);
+    if(Array.isArray(nutritionRows.nutrition_meal_items))nutritionRows.nutrition_meal_items=nutritionRows.nutrition_meal_items.map(item=>{const pending=pendingConsumption?.[String(item.id)];return pending?{...item,consumed:!!pending.consumed,consumed_at:pending.consumed?(pending.consumed_at||null):null}:item});
+    const legacyConsumed={};
+    try{const prefix=`agendaNutritionConsumed:${uid}:`;for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.startsWith(prefix)){const itemId=key.slice(prefix.length);if(itemId.startsWith('fallback-meal:'))legacyConsumed[itemId]=localStorage.getItem(key)==='1';}}}catch(_){}
+    const nutritionLocal={
+      goals:readLocalJSON(`agendaNutritionGoals:${uid}`,typeof nutritionGoals!=='undefined'?nutritionGoals:{calories:2500,protein:160,carbs:300,fat:70}),
+      meal_order:readLocalJSON(`agendaNutritionMealOrder:${uid}`,null),
+      quick_access:readLocalJSON(`agenda-nutrition-quick-access-v1:${uid}`,{version:1,favorites:[],recent:[]}),
+      legacy_consumed:legacyConsumed,
+      pending_consumption:Object.keys(pendingConsumption||{}).length?pendingConsumption:{}
+    };
+    const payload={
+      backup_format:'agenda-fich-full-backup',backup_version:3,exported_at:new Date().toISOString(),account:currentUser?.email||null,
+      tasks,personal_dates:personalDates,workout_exercises:workoutExercises,workout_logs:workoutLogs,
+      nutrition_meals:nutritionRows.nutrition_meals,nutrition_meal_items:nutritionRows.nutrition_meal_items,
+      user_foods:nutritionRows.user_foods,nutrition_recipes:nutritionRows.nutrition_recipes,nutrition_consumption_history:nutritionRows.nutrition_consumption_history,
+      nutrition_preferences:preferences,nutrition_local:nutritionLocal,
+      v33_local:v33Local,backup_warnings:warnings
+    };
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    if(warnings.length){window.AgendaNutritionSync?.setStatus('warning','Copia descargada con datos pendientes de exportar.');alert('La copia se descargó, pero NO está completa. No pude exportar estas tablas de alimentación:\n\n'+warnings.join('\n')+'\n\nRevisá las migraciones y volvé a exportar.');}
+    else{window.AgendaNutritionSync?.setStatus('saved','Copia de seguridad completa descargada.');alert('Copia de seguridad completa descargada. Incluye todas las comidas, alimentos detallados, estados de consumo, alimentos personales y preferencias nutricionales.');}
+  }
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}
   function syncSettingsExtras(){const u=$v('settingsUserEmail');if(u)u.textContent=currentUser?.email||'Tu cuenta';const r=$v('settingsReminderValue');if(r)r.textContent=(typeof remindersEnabled!=='undefined'&&remindersEnabled)?'Activos':'Apagados';const s=$v('settingsRefreshStatus');if(s)s.textContent=$v('refreshStatus')?.textContent||'Listo'}

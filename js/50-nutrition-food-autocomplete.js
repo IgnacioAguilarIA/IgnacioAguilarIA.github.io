@@ -29,6 +29,13 @@
   let lastSuggestionItems=[];
   let bound=false;
 
+  // El título de la comida tiene su propio autocompletado.
+  let titleInputTimer=0;
+  let titleOnlineTimer=0;
+  let titleRequestId=0;
+  let titleActiveIndex=-1;
+  let titleSuggestionItems=[];
+
   function normalizeSearch(v){
     return text(v)
       .toLowerCase()
@@ -236,6 +243,21 @@
     return box;
   }
 
+  function ensureTitleBox(){
+    let box=$('nutritionMealTitleAutocomplete');
+    if(box)return box;
+    const input=$('mealTitle');
+    const parent=input?.closest('.nutrition-meal-title-wrap');
+    if(!parent)return null;
+    box=document.createElement('div');
+    box.id='nutritionMealTitleAutocomplete';
+    box.className='nutrition-food-autocomplete nutrition-meal-title-autocomplete';
+    box.hidden=true;
+    box.setAttribute('role','listbox');
+    parent.appendChild(box);
+    return box;
+  }
+
   function sourceClass(source){
     const s=normalizeSearch(source);
     if(s.includes('open food facts'))return 'online';
@@ -309,6 +331,38 @@
     });
   }
 
+  function paintTitle(items,onlineLoading=false){
+    const box=ensureTitleBox();
+    if(!box)return;
+    const local=Array.isArray(items?.local)?items.local:[];
+    const online=Array.isArray(items?.online)?items.online:[];
+    const merged=[...local,...online];
+    titleSuggestionItems=merged;
+    titleActiveIndex=-1;
+
+    if(!merged.length&&!onlineLoading){
+      box.innerHTML='<div class="nutrition-food-autocomplete-empty">No encontré coincidencias. Podés seguir escribiendo.</div>';
+      box.hidden=false;
+      return;
+    }
+
+    const personal=local.filter(item=>item?.sourceType==='user_food');
+    const catalog=local.filter(item=>item?.sourceType!=='user_food');
+    let html='';
+    let offset=0;
+    if(personal.length){html+=renderGroup('Mis alimentos',personal,'local',offset);offset+=personal.length;}
+    if(catalog.length){html+=renderGroup('Catálogo de la aplicación',catalog,'local',offset);offset+=catalog.length;}
+    if(online.length)html+=renderGroup('Open Food Facts',online,'online',offset);
+    if(onlineLoading){
+      html+=`<div class="nutrition-food-autocomplete-loading"><span class="nutrition-food-autocomplete-spinner" aria-hidden="true"></span><span>Buscando alternativas en Open Food Facts…</span></div>`;
+    }
+    box.innerHTML=html;
+    box.hidden=false;
+    box.querySelectorAll('.nutrition-food-autocomplete-item').forEach(button=>{
+      button.addEventListener('click',()=>selectTitleSuggestion(Number(button.dataset.index)));
+    });
+  }
+
   function setStatus(message){
     const el=$('nutritionFoodCatalogStatus');
     if(el)el.textContent=message||'';
@@ -331,6 +385,120 @@
       $('nutritionFoodQuantity')?.focus();
       $('nutritionFoodQuantity')?.select?.();
     },40);
+  }
+
+  function selectTitleSuggestion(index){
+    const food=titleSuggestionItems[index];
+    if(!food)return;
+    titleRequestId++;
+    window.clearTimeout(titleInputTimer);
+    window.clearTimeout(titleOnlineTimer);
+    const title=$('mealTitle');
+    if(title){
+      title.value=food.name;
+      title.setAttribute('aria-expanded','false');
+    }
+    const search=$('nutritionFoodSearch');
+    if(search)search.value=food.name;
+    const selector=window.AgendaFoodCatalog?.select;
+    if(typeof selector==='function')selector(food);
+    const toggle=$('nutritionFoodCatalogToggle');
+    const panel=$('nutritionFoodCatalog');
+    if(toggle&&panel?.hidden){toggle.click()}
+    const box=ensureTitleBox();
+    if(box)box.hidden=true;
+    setStatus(`✓ ${food.name} seleccionado desde ${food.source}. Revisá la cantidad y agregalo a la comida.`);
+    setTimeout(()=>{
+      const qty=$('nutritionFoodQuantity');
+      if(qty){qty.focus();qty.select?.()}
+    },60);
+  }
+
+  async function performTitleSearch(query,id){
+    const q=text(query);
+    if(id!==titleRequestId)return;
+    if(q.length<CONFIG.minChars){
+      const box=ensureTitleBox();
+      if(box)box.hidden=true;
+      if($('mealTitle'))$('mealTitle').setAttribute('aria-expanded','false');
+      return;
+    }
+
+    let local=[];
+    try{local=await searchLocalFast(q)}catch(err){console.warn('Autocompletado del título:',err)}
+    if(id!==titleRequestId)return;
+    paintTitle({local,online:[]},true);
+    const title=$('mealTitle');
+    if(title)title.setAttribute('aria-expanded','true');
+
+    window.clearTimeout(titleOnlineTimer);
+    titleOnlineTimer=window.setTimeout(async()=>{
+      const onlineId=id;
+      if(onlineId!==titleRequestId)return;
+      const off=window.AgendaFoodCatalogOFF?.search;
+      if(typeof off!=='function'){
+        paintTitle({local,online:[]},false);
+        return;
+      }
+      try{
+        const external=await off(q);
+        if(onlineId!==titleRequestId)return;
+        const localKeys=new Set(local.map(item=>`${normalizeSearch(item.name)}|${normalizeSearch(item.brand)}`));
+        const online=dedupe(external).filter(item=>{
+          const key=`${normalizeSearch(item.name)}|${normalizeSearch(item.brand)}`;
+          return !localKeys.has(key);
+        }).sort((a,b)=>relevance(b,q)-relevance(a,q)).slice(0,CONFIG.maxOnline);
+        paintTitle({local,online},false);
+      }catch(err){
+        if(onlineId!==titleRequestId)return;
+        paintTitle({local,online:[]},false);
+      }
+    },CONFIG.onlineDebounceMs);
+  }
+
+  function onTitleInput(event){
+    const q=text(event?.target?.value);
+    titleRequestId++;
+    const id=titleRequestId;
+    titleActiveIndex=-1;
+    window.clearTimeout(titleInputTimer);
+    window.clearTimeout(titleOnlineTimer);
+    const box=ensureTitleBox();
+    if(!box)return;
+    if(q.length<CONFIG.minChars){
+      box.hidden=true;
+      $('mealTitle')?.setAttribute('aria-expanded','false');
+      return;
+    }
+    box.hidden=false;
+    box.innerHTML='<div class="nutrition-food-autocomplete-loading"><span class="nutrition-food-autocomplete-spinner" aria-hidden="true"></span><span>Buscando en el catálogo de la aplicación…</span></div>';
+    $('mealTitle')?.setAttribute('aria-expanded','true');
+    titleInputTimer=window.setTimeout(()=>performTitleSearch(q,id),CONFIG.localDebounceMs);
+  }
+
+  function setTitleActive(delta){
+    const box=ensureTitleBox();
+    const buttons=[...box?.querySelectorAll('.nutrition-food-autocomplete-item')||[]];
+    if(!buttons.length)return;
+    titleActiveIndex=(titleActiveIndex+delta+buttons.length)%buttons.length;
+    buttons.forEach((b,i)=>b.classList.toggle('is-active',i===titleActiveIndex));
+    buttons[titleActiveIndex]?.scrollIntoView({block:'nearest'});
+  }
+
+  function onTitleKeyDown(event){
+    const box=ensureTitleBox();
+    const visible=!!box&&!box.hidden;
+    if(event.key==='ArrowDown'&&visible){event.preventDefault();setTitleActive(1);return}
+    if(event.key==='ArrowUp'&&visible){event.preventDefault();setTitleActive(-1);return}
+    if(event.key==='Enter'&&visible&&titleActiveIndex>=0){event.preventDefault();selectTitleSuggestion(titleActiveIndex);return}
+    if(event.key==='Escape'&&visible){event.preventDefault();box.hidden=true;$('mealTitle')?.setAttribute('aria-expanded','false');return}
+  }
+
+  function hideTitleAutocomplete(){
+    const box=ensureTitleBox();
+    if(box)box.hidden=true;
+    $('mealTitle')?.setAttribute('aria-expanded','false');
+    titleActiveIndex=-1;
   }
 
   function hide(){
@@ -442,7 +610,18 @@
     document.addEventListener('click',event=>{
       const host=input.closest('.nutrition-food-catalog-search');
       if(host&&!host.contains(event.target))hide();
+      const titleHost=$('mealTitle')?.closest('.nutrition-meal-title-wrap');
+      if(titleHost&&!titleHost.contains(event.target))hideTitleAutocomplete();
     });
+
+    const titleInput=$('mealTitle');
+    if(titleInput&&!titleInput.dataset.foodAutocompleteBound){
+      titleInput.dataset.foodAutocompleteBound='1';
+      titleInput.addEventListener('input',onTitleInput);
+      titleInput.addEventListener('keydown',onTitleKeyDown);
+      titleInput.addEventListener('focus',()=>{void loadLocalIndex();});
+      titleInput.setAttribute('aria-expanded','false');
+    }
 
     // Precarga el catálogo una vez, sin bloquear el formulario.
     window.setTimeout(()=>{void loadLocalIndex();},300);

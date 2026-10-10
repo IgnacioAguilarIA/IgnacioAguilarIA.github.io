@@ -125,6 +125,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <link href="./css/68-nutrition-food-catalog.css" rel="stylesheet"/>
 <link href="./css/69-nutrition-professional.css" rel="stylesheet"/>
 <link href="./css/70-nutrition-autocomplete.css" rel="stylesheet"/>
+<link href="./css/71-nutrition-consumption.css" rel="stylesheet"/>
 </head>
 <body>
 <section id="authScreen">
@@ -497,34 +498,66 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div class="nutrition-head">
 <div>
 <h2>Plan de alimentación</h2>
-<p>Organizá de lunes a domingo tus comidas en el orden: pre entrenamiento, post entrenamiento, almuerzo, merienda, cena y antes de dormir. Queda guardado en tu cuenta.</p>
+<p>Organizá de lunes a domingo tus comidas y elegí el orden que mejor se adapte a tu rutina. Todo queda guardado en tu cuenta.</p>
 </div>
 <div class="nutrition-actions">
 <button class="nutrition-goal-btn" id="nutritionGoalBtn">⚙ Objetivos</button>
+<button class="small-btn nutrition-history-btn" id="nutritionHistoryBtn" type="button">📅 Historial</button>
 <button class="small-btn" id="addMealBtn">＋ Agregar comida</button>
 </div>
 </div>
+<div class="nutrition-sync-status" id="nutritionSyncStatus" role="status" aria-live="polite"><span class="nutrition-sync-dot"></span><span id="nutritionSyncStatusText">Estado de sincronización nutricional pendiente de comprobar</span></div>
 <div class="nutrition-day-summary" id="nutritionDaySummary">
 <div class="nutrition-day-summary-head">
 <div>
-<span class="nutrition-summary-kicker">Resumen del día</span>
+<span class="nutrition-summary-kicker">Resumen nutricional del día</span>
 <strong id="nutritionSummaryDay">—</strong>
-<span id="nutritionSummaryMeals">0/6 comidas cubiertas</span>
+<span id="nutritionSummaryMeals">0/6 comidas planificadas · 0/0 alimentos consumidos</span>
 </div>
-<div class="nutrition-summary-progress" aria-label="Progreso de comidas del día"><span id="nutritionSummaryMealsBar"></span></div>
+<div class="nutrition-summary-progresses" aria-label="Progreso de planificación y consumo">
+<div class="nutrition-summary-progress-row"><small>Planificado</small><div class="nutrition-summary-progress"><span id="nutritionSummaryMealsBar"></span></div></div>
+<div class="nutrition-summary-progress-row"><small>Consumido</small><div class="nutrition-summary-progress consumed"><span id="nutritionSummaryConsumedBar"></span></div></div>
 </div>
+</div>
+<section class="nutrition-summary-block nutrition-summary-planned" aria-labelledby="nutritionSummaryPlannedTitle">
+<div class="nutrition-summary-block-title" id="nutritionSummaryPlannedTitle">📋 Total planificado · todos los alimentos del día</div>
 <div class="nutrition-summary-metrics">
-<div class="nutrition-summary-metric"><span>🔥 Calorías</span><strong id="nutritionSummaryCalories">0 kcal</strong></div>
-<div class="nutrition-summary-metric"><span>🥩 Proteínas</span><strong id="nutritionSummaryProtein">0 g</strong></div>
-<div class="nutrition-summary-metric"><span>🍚 Carbohidratos</span><strong id="nutritionSummaryCarbs">0 g</strong></div>
-<div class="nutrition-summary-metric"><span>🥑 Grasas</span><strong id="nutritionSummaryFat">0 g</strong></div>
+<div class="nutrition-summary-metric"><span>🔥 Calorías planificadas</span><strong id="nutritionSummaryCaloriesPlanned">0 kcal</strong></div>
+<div class="nutrition-summary-metric"><span>🥩 Proteínas planificadas</span><strong id="nutritionSummaryProteinPlanned">0 g</strong></div>
+<div class="nutrition-summary-metric"><span>🍚 Carbohidratos planificados</span><strong id="nutritionSummaryCarbsPlanned">0 g</strong></div>
+<div class="nutrition-summary-metric"><span>🥑 Grasas planificadas</span><strong id="nutritionSummaryFatPlanned">0 g</strong></div>
 </div>
+</section>
+<section class="nutrition-summary-block nutrition-summary-consumed" aria-labelledby="nutritionSummaryConsumedTitle">
+<div class="nutrition-summary-block-title" id="nutritionSummaryConsumedTitle">✅ Consumo real · solo alimentos marcados como «Consumir»</div>
+<div class="nutrition-summary-metrics">
+<div class="nutrition-summary-metric"><span>🔥 Calorías consumidas</span><strong id="nutritionSummaryCalories">0 kcal</strong></div>
+<div class="nutrition-summary-metric"><span>🥩 Proteínas consumidas</span><strong id="nutritionSummaryProtein">0 g</strong></div>
+<div class="nutrition-summary-metric"><span>🍚 Carbohidratos consumidos</span><strong id="nutritionSummaryCarbs">0 g</strong></div>
+<div class="nutrition-summary-metric"><span>🥑 Grasas consumidas</span><strong id="nutritionSummaryFat">0 g</strong></div>
+</div>
+</section>
 </div>
 <div class="workout-days" id="nutritionDays"></div>
 <div class="goal-grid" id="nutritionGoals"></div>
 <div class="goal-settings" id="nutritionGoalSummary">Definí tus objetivos diarios para ver el progreso.</div>
 <div class="meal-tabs" id="mealTabs"></div>
 <div class="meal-list" id="mealList"></div>
+<div class="nutrition-meal-order" id="nutritionMealOrder" hidden>
+  <div class="nutrition-meal-order-head">
+    <div>
+      <div class="nutrition-meal-order-title">Orden de tus comidas</div>
+      <div class="nutrition-meal-order-help">Elegí cómo querés que aparezcan las comidas en tu plan. Arrastrá cada opción o usá las flechas. El orden queda guardado en tu cuenta.</div>
+    </div>
+    <div class="nutrition-meal-order-tools">
+      <button class="nutrition-order-btn" id="nutritionMealOrderReset" type="button">↺ Orden predeterminado</button>
+      <button class="nutrition-order-btn primary" id="nutritionMealOrderSave" type="button">Guardar orden</button>
+    </div>
+  </div>
+  <div class="nutrition-meal-order-list" id="nutritionMealOrderList"></div>
+  <div class="nutrition-meal-order-status" id="nutritionMealOrderStatus" aria-live="polite">Orden guardado</div>
+</div>
+<button class="nutrition-meal-order-toggle" id="nutritionMealOrderToggle" type="button" aria-expanded="false" aria-controls="nutritionMealOrder">↕ Ordenar comidas</button>
 </section>
 </div>
 <section class="conflict-panel" data-v33-pane="agenda" id="conflictPanel">
@@ -635,43 +668,105 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div><h3 id="nutritionModalTitle">＋ Agregar comida</h3><span id="nutritionModalInfo"></span></div>
 <button class="close" id="nutritionCloseBtn">×</button>
 </div>
-<div class="field"><label>Comida</label><select class="input" id="mealType">
-<option value="pre">Pre entrenamiento</option>
-<option value="post">Post entrenamiento</option>
-<option value="lunch">Almuerzo</option>
-<option value="snack">Merienda</option>
-<option value="dinner">Cena</option>
-<option value="sleep">Antes de dormir</option>
-</select></div>
-<div class="field"><label>Título</label><input class="input" id="mealTitle" placeholder="Ej: Avena con banana y yogur"/></div>
-<div class="field"><label>Alimentos / cantidades</label><input class="input" id="mealFoods" placeholder="Ej: 80 g avena, 1 banana, 200 g yogur"/></div>
-<div class="nutrition-food-catalog-wrap">
-<button class="nutrition-food-catalog-toggle" id="nutritionFoodCatalogToggle" type="button" aria-expanded="false"><span>🔎 Buscar alimento en catálogo<small>Busca primero en tus alimentos y el catálogo propio; después en Open Food Facts</small></span><span>＋</span></button>
-<div class="nutrition-food-catalog" id="nutritionFoodCatalog" hidden>
-<div class="nutrition-food-catalog-head">
-<div class="nutrition-food-catalog-search"><label for="nutritionFoodSearch">Alimento</label><input class="input" id="nutritionFoodSearch" autocomplete="off" placeholder="Escribí el alimento…"/><div class="nutrition-food-autocomplete" id="nutritionFoodAutocomplete" hidden></div></div>
-<button class="nutrition-food-catalog-find" id="nutritionFoodCatalogFind" type="button">Buscar en Open Food Facts</button>
+<section class="nutrition-entry-section nutrition-entry-section-basics" aria-labelledby="nutritionMealBasicsTitle">
+  <div class="nutrition-entry-section-heading">
+    <span class="nutrition-entry-step">01</span>
+    <div><strong id="nutritionMealBasicsTitle">Datos de la comida</strong><small>Elegí el horario y poné un nombre fácil de reconocer.</small></div>
+  </div>
+  <div class="nutrition-entry-meta-grid">
+    <div class="field"><label for="mealType">Horario de comida</label><select class="input" id="mealType">
+    <option value="pre">Pre entrenamiento</option>
+    <option value="post">Post entrenamiento</option>
+    <option value="lunch">Almuerzo</option>
+    <option value="snack">Merienda</option>
+    <option value="dinner">Cena</option>
+    <option value="sleep">Antes de dormir</option>
+    </select></div>
+    <div class="field nutrition-meal-title-field"><label for="mealTitle">Nombre de la comida</label><div class="nutrition-meal-title-wrap"><input class="input" id="mealTitle" autocomplete="off" role="combobox" aria-autocomplete="list" aria-controls="nutritionMealTitleAutocomplete" aria-expanded="false" placeholder="Ej.: Avena con banana y yogur"/><div class="nutrition-food-autocomplete nutrition-meal-title-autocomplete" id="nutritionMealTitleAutocomplete" hidden role="listbox"></div></div><div class="nutrition-meal-title-help">Podés elegir una sugerencia o escribir un nombre propio.</div></div>
+  </div>
+</section>
+<section class="nutrition-entry-section nutrition-entry-section-catalog" aria-labelledby="nutritionAddFoodTitle">
+  <div class="nutrition-entry-section-heading">
+    <span class="nutrition-entry-step">02</span>
+    <div><strong id="nutritionAddFoodTitle">Agregar alimentos</strong><small>Buscá en el catálogo, reutilizá un favorito o creá uno propio.</small></div>
+  </div>
+  <div class="nutrition-food-catalog-wrap">
+    <button class="nutrition-food-catalog-toggle" id="nutritionFoodCatalogToggle" type="button" aria-expanded="false" aria-controls="nutritionFoodCatalog"><span><strong>Buscar o elegir alimento</strong><small>Catálogo personal, recientes, favoritos y Open Food Facts</small></span><span class="nutrition-food-catalog-toggle-icon" aria-hidden="true">＋</span></button>
+    <div class="nutrition-food-catalog" id="nutritionFoodCatalog" hidden>
+      <div class="nutrition-food-catalog-intro"><span class="nutrition-food-catalog-eyebrow">CATÁLOGO DE ALIMENTOS</span><h4>¿Qué alimento querés agregar?</h4><p>Escribí un nombre para buscarlo o elegí uno de tus accesos rápidos.</p></div>
+      <div class="nutrition-food-catalog-head">
+        <div class="nutrition-food-catalog-search"><label for="nutritionFoodSearch">Buscar alimento</label><input class="input" id="nutritionFoodSearch" autocomplete="off" placeholder="Ej.: arroz, huevo, leche…"/><div class="nutrition-food-autocomplete" id="nutritionFoodAutocomplete" hidden></div></div>
+        <button class="nutrition-food-catalog-find" id="nutritionFoodCatalogFind" type="button">Buscar alimento</button>
+      </div>
+      <div class="nutrition-advanced-catalog-actions"><button class="nutrition-advanced-secondary" id="nutritionCreateCustomFoodBtn" type="button">＋ Crear alimento propio</button><span>Valores de referencia por 100 g</span></div>
+      <div class="nutrition-food-quick-access" id="nutritionFoodQuickAccess">
+        <div class="nutrition-food-quick-access-head">
+          <div><strong>Accesos rápidos</strong><small>Volvé a usar alimentos que ya cargaste</small></div>
+          <div class="nutrition-food-quick-tabs" role="tablist" aria-label="Alimentos guardados">
+            <button type="button" class="nutrition-food-quick-tab is-active" id="nutritionFoodRecentTab" role="tab" aria-selected="true" aria-controls="nutritionFoodQuickList" data-quick-tab="recent">Recientes</button>
+            <button type="button" class="nutrition-food-quick-tab" id="nutritionFoodFavoritesTab" role="tab" aria-selected="false" aria-controls="nutritionFoodQuickList" data-quick-tab="favorites">★ Favoritos</button>
+          </div>
+        </div>
+        <div class="nutrition-food-quick-list" id="nutritionFoodQuickList" role="tabpanel" aria-live="polite"></div>
+        <p class="nutrition-food-quick-note">Estos accesos se guardan en este navegador por cuenta.</p>
+      </div>
+      <div class="nutrition-food-catalog-status" id="nutritionFoodCatalogStatus" role="status" aria-live="polite">Escribí el nombre del alimento para ver sugerencias.</div>
+      <div class="nutrition-food-catalog-results" id="nutritionFoodCatalogResults"></div>
+      <div class="nutrition-food-selection-panel">
+        <div class="nutrition-food-selection-heading"><span class="nutrition-entry-step small">03</span><div><strong>Revisá el alimento y la cantidad</strong><small>Confirmá los valores antes de sumarlo a la comida.</small></div></div>
+        <div class="nutrition-food-selected" id="nutritionFoodSelected" hidden></div>
+        <div class="nutrition-food-catalog-qty"><label for="nutritionFoodQuantity">Cantidad que vas a agregar</label><div class="nutrition-food-quantity-wrap"><input class="input" id="nutritionFoodQuantity" min="0" step="0.1" inputmode="decimal" type="number" value="100"/><span>g</span></div><small>Los macros se recalculan automáticamente según los gramos.</small></div>
+        <div class="nutrition-food-catalog-actions" id="nutritionFoodCatalogActions" hidden>
+          <button class="nutrition-food-save" id="nutritionFoodSave" type="button">☆ Guardar en mis alimentos</button>
+          <button class="nutrition-food-favorite-toggle" id="nutritionFoodFavoriteToggle" type="button" aria-pressed="false">☆ Agregar a favoritos</button>
+          <button class="nutrition-food-apply" id="nutritionFoodApply" type="button">＋ Agregar a esta comida</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="nutrition-meal-builder" id="nutritionMealBuilder">
+  <div class="nutrition-meal-builder-head">
+    <div class="nutrition-meal-builder-heading">
+      <span class="nutrition-entry-step">04</span>
+      <div><div class="nutrition-meal-builder-title">Alimentos de esta comida</div>
+      <div class="nutrition-meal-builder-subtitle">Ajustá las cantidades, marcá lo consumido y revisá los nutrientes calculados.</div></div>
+    </div>
+    <div class="nutrition-meal-builder-tools">
+      <button class="nutrition-meal-builder-tool primary" id="nutritionMealBuilderAdd" type="button">＋ Agregar alimento</button>
+      <button class="nutrition-meal-builder-tool" id="nutritionMealBuilderSaveRecipe" type="button">📖 Guardar como receta</button>
+      <button class="nutrition-meal-builder-tool" id="nutritionOpenRecipesBtn" type="button">Mis recetas</button>
+      <button class="nutrition-meal-builder-tool danger" id="nutritionMealBuilderClear" type="button">Limpiar</button>
+    </div>
+  </div>
+  <div class="nutrition-meal-builder-status" id="nutritionMealBuilderStatus">Agregá alimentos para calcular la comida automáticamente.</div>
+  <div class="nutrition-meal-builder-list" id="nutritionMealBuilderList"></div>
+  <div class="nutrition-meal-builder-empty" id="nutritionMealBuilderEmpty">Todavía no hay alimentos estructurados. Podés usar “Agregar alimento” para buscar uno en el catálogo.</div>
+  <div class="nutrition-meal-builder-totals" id="nutritionMealBuilderTotals">
+    <div><span>🔥 Calorías</span><strong>0 kcal</strong></div>
+    <div><span>🥩 Proteínas</span><strong>0 g</strong></div>
+    <div><span>🍚 Carbohidratos</span><strong>0 g</strong></div>
+    <div><span>🥑 Grasas</span><strong>0 g</strong></div>
+  </div>
+  <div class="nutrition-meal-builder-note">Las cantidades y macros se guardan dentro de la comida. Las comidas antiguas sin alimentos estructurados siguen siendo editables de forma manual.</div>
 </div>
-<div class="nutrition-food-catalog-status" id="nutritionFoodCatalogStatus">Escribí el nombre del alimento y las sugerencias aparecerán automáticamente.</div>
-<div class="nutrition-food-catalog-results" id="nutritionFoodCatalogResults"></div>
-<div class="nutrition-food-selected" id="nutritionFoodSelected" hidden></div>
-<div class="nutrition-food-catalog-qty"><label for="nutritionFoodQuantity">Cantidad</label><input class="input" id="nutritionFoodQuantity" min="0" step="1" type="number" value="100"/></div>
-<div class="nutrition-food-catalog-actions" id="nutritionFoodCatalogActions" hidden>
-<button class="nutrition-food-save" id="nutritionFoodSave" type="button">☆ Guardar en mis alimentos</button>
-<button class="nutrition-food-apply" id="nutritionFoodApply" type="button">✓ Agregar estos valores a la comida</button>
-</div>
-</div>
-</div>
-<div class="meal-form-grid three">
-<div class="field"><label>Calorías</label><input class="input" id="mealCalories" min="0" placeholder="500" type="number"/></div>
-<div class="field"><label>Proteínas (g)</label><input class="input" id="mealProtein" min="0" placeholder="30" step="0.1" type="number"/></div>
-<div class="field"><label>Carbohidratos (g)</label><input class="input" id="mealCarbs" min="0" placeholder="60" step="0.1" type="number"/></div>
-</div>
-<div class="meal-form-grid three">
-<div class="field"><label>Grasas (g)</label><input class="input" id="mealFat" min="0" placeholder="15" step="0.1" type="number"/></div>
-<div class="field"><label>Horario</label><input class="input" id="mealTime" type="time"/></div>
-<div class="field"><label>Descripción</label><input class="input" id="mealDescription" placeholder="Notas, preparación, etc."/></div>
-</div>
+<section class="nutrition-entry-section nutrition-entry-section-details" aria-labelledby="nutritionEntryDetailsTitle">
+  <div class="nutrition-entry-section-heading">
+    <span class="nutrition-entry-step">05</span>
+    <div><strong id="nutritionEntryDetailsTitle">Resumen y detalles</strong><small>Los macros se completan solos al cargar alimentos; también podés editar comidas antiguas manualmente.</small></div>
+  </div>
+  <div class="field"><label for="mealFoods">Resumen de alimentos</label><input class="input" id="mealFoods" placeholder="Se completa automáticamente al agregar alimentos"/><div class="meal-help">Con alimentos estructurados, este campo se genera automáticamente. Las comidas antiguas sin detalle estructurado siguen siendo editables.</div></div>
+  <div class="nutrition-entry-macros-grid">
+    <div class="field"><label for="mealCalories">Calorías (kcal)</label><input class="input" id="mealCalories" min="0" placeholder="500" type="number"/></div>
+    <div class="field"><label for="mealProtein">Proteínas (g)</label><input class="input" id="mealProtein" min="0" placeholder="30" step="0.1" type="number"/></div>
+    <div class="field"><label for="mealCarbs">Carbohidratos (g)</label><input class="input" id="mealCarbs" min="0" placeholder="60" step="0.1" type="number"/></div>
+    <div class="field"><label for="mealFat">Grasas (g)</label><input class="input" id="mealFat" min="0" placeholder="15" step="0.1" type="number"/></div>
+  </div>
+  <div class="nutrition-entry-extra-grid">
+    <div class="field"><label for="mealTime">Horario</label><input class="input" id="mealTime" type="time"/></div>
+    <div class="field"><label for="mealDescription">Descripción o notas</label><input class="input" id="mealDescription" placeholder="Ej.: preparación, ingredientes extra…"/></div>
+  </div>
+</section>
 <div class="meal-form-actions">
 <button class="save" id="saveMealBtn">Guardar comida</button>
 <button class="secondary hidden" id="cancelMealBtn">Cancelar edición</button>
@@ -1173,10 +1268,26 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <link href="./css/65-training-stats-repair.css" rel="stylesheet"/>
 <link href="./css/66-home-practical-summary.css" rel="stylesheet"/>
 <link href="./css/67-nutrition-daily-summary.css" rel="stylesheet"/>
+<link href="./css/71-nutrition-meal-order.css" rel="stylesheet"/>
+<link href="./css/72-nutrition-meal-builder.css" rel="stylesheet"/>
+<link href="./css/73-nutrition-stage1-summary.css" rel="stylesheet"/>
+<link href="./css/74-nutrition-quick-access.css" rel="stylesheet"/>
+<link href="./css/75-nutrition-data-protection.css" rel="stylesheet"/>
+<link href="./css/76-nutrition-advanced.css" rel="stylesheet"/>
+<link href="./css/77-nutrition-stage5-polish.css" rel="stylesheet"/>
+<link href="./css/78-nutrition-food-entry.css" rel="stylesheet"/>
 <script src="./js/46-v98-training-stats-repair.js"></script>
 <script src="./js/47-nutrition-food-catalog.js"></script>
 <script src="./js/48-openfoodfacts-adapter.js"></script>
 <script src="./js/49-nutrition-persistence.js"></script>
 <script src="./js/50-nutrition-food-autocomplete.js"></script>
+<script src="./js/51-nutrition-meal-order.js"></script>
+<script src="./js/52-nutrition-meal-builder.js"></script>
+<script src="./js/53-nutrition-meal-copy.js"></script>
+<script src="./js/54-nutrition-consumption.js"></script>
+<script src="./js/55-nutrition-live-summary.js"></script>
+<script src="./js/56-nutrition-quick-access.js"></script>
+<script src="./js/57-nutrition-account-sync.js"></script>
+<script src="./js/58-nutrition-advanced.js"></script>
 </body>
 </html>

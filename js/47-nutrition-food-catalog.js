@@ -10,8 +10,14 @@
   let selectedFood=null;
   let expanded=false;
   let pendingMealFoods=[];
+  let pendingMealContext=null;
 
   function safeNumber(v){const n=Number(v);return Number.isFinite(n)?n:0}
+  function dateKeyInCordoba(value=new Date()){
+    const d=value instanceof Date?value:new Date(value);if(!Number.isFinite(d.getTime()))return '';
+    const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Argentina/Cordoba',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
+    const map=Object.fromEntries(parts.map(p=>[p.type,p.value]));return `${map.year}-${map.month}-${map.day}`;
+  }
   function text(v){return String(v??'').trim()}
   function esc(v){const d=document.createElement('div');d.textContent=v??'';return d.innerHTML}
 
@@ -22,7 +28,17 @@
       id:String(item.id||item.code||item.gtin||item.barcode||item._id||''),
       name:String(item.name||item.product_name||item.product_name_es||item.title||'Alimento'),
       brand:String(item.brand||item.brands||''),
-      quantityBase:safeNumber(item.quantityBase||item.serving_size_g||item.serving_quantity||100)||100,
+      sourceType:String(item.sourceType||item.source_type||''),
+      catalogId:item.catalogId||item.catalog_id||null,
+      userFoodId:item.userFoodId||item.user_food_id||null,
+      externalId:String(item.externalId||item.external_id||item.code||item.id||''),
+      aliases:String(item.aliases||''),
+      fiber:safeNumber(n.fiber||n.fiber_g||n['fiber_100g']),
+      isGeneric:item.isGeneric!==false && item.is_generic!==false,
+      // Los valores nutricionales del catálogo se expresan por 100 g.
+      // El tamaño de porción solo se usa como cantidad inicial, nunca como divisor.
+      quantityBase:100,
+      defaultQuantity:safeNumber(item.defaultQuantity||item.serving_size_g||item.servingQuantity||item.serving_quantity||100)||100,
       unit:String(item.unit||'g'),
       calories:safeNumber(n.calories||n.energy_kcal||n['energy-kcal_100g']),
       protein:safeNumber(n.protein||n.proteins||n.proteins_g||n['proteins_100g']),
@@ -43,8 +59,11 @@
 
   function calc(item,amount){
     const f=normalize(item); if(!f)return null;
-    const qty=safeNumber(amount)||f.quantityBase||100;
-    const factor=qty/(f.quantityBase||100);
+    const raw=String(amount??'').trim();
+    const parsed=raw===''?f.defaultQuantity:Number(raw);
+    const qty=Number.isFinite(parsed)?Math.max(0,parsed):(f.defaultQuantity||100);
+    // Las columnas calories/protein/carbs/fat del catálogo son valores por 100 g.
+    const factor=qty/100;
     return {
       calories:Math.round(f.calories*factor*10)/10,
       protein:Math.round(f.protein*factor*10)/10,
@@ -115,13 +134,15 @@
 
   function renderSelected(){
     const box=$('nutritionFoodSelected'); if(!box)return;
+    const catalog=$('nutritionFoodCatalog');
+    if(catalog)catalog.classList.toggle('has-selection',Boolean(selectedFood));
     const apply=$('nutritionFoodApply');
     const save=$('nutritionFoodSave');
     const actions=$('nutritionFoodCatalogActions');
     if(!selectedFood){box.hidden=true;if(apply)apply.hidden=true;if(save)save.hidden=true;if(actions)actions.hidden=true;return}
     box.hidden=false;
     const qtyEl=$('nutritionFoodQuantity');
-    const qty=safeNumber(qtyEl?.value)||selectedFood.quantityBase||100;
+    const qty=safeNumber(qtyEl?.value)||selectedFood.defaultQuantity||100;
     const totals=calc(selectedFood,qty);
     const ingredients=splitIngredients(selectedFood.ingredients);
     const details=[selectedFood.brand?`<span><b>Marca</b>${esc(selectedFood.brand)}</span>`:'',selectedFood.quantity?`<span><b>Envase</b>${esc(selectedFood.quantity)}</span>`:'',selectedFood.servingSize?`<span><b>Porción</b>${esc(selectedFood.servingSize)}</span>`:''].filter(Boolean).join('');
@@ -140,15 +161,26 @@
         <div><b>${esc(selectedFood.carbs)} g</b><span>carbohidratos</span></div>
         <div><b>${esc(selectedFood.fat)} g</b><span>grasas</span></div>
       </div>
-      ${ingredientHtml}
-      ${meta?`<div class="nutrition-food-selected-tags">${meta}</div>`:''}
-      <div class="nutrition-food-selected-total"><span>Para ${qty} ${esc(selectedFood.unit)}</span><b>${totals.calories} kcal · ${totals.protein} g P · ${totals.carbs} g C · ${totals.fat} g G</b></div>`;
+      <div class="nutrition-food-selected-total"><span>Para ${qty} ${esc(selectedFood.unit)}</span><b>${totals.calories} kcal · ${totals.protein} g P · ${totals.carbs} g C · ${totals.fat} g G</b></div>
+      <details class="nutrition-food-more-details"><summary>Ver ingredientes y detalles del producto</summary><div class="nutrition-food-more-details-body">${ingredientHtml}${meta?`<div class="nutrition-food-selected-tags">${meta}</div>`:''}</div></details>`;
     if(apply){apply.hidden=false;apply.disabled=false;}
     if(save){save.hidden=false;save.disabled=false;save.textContent='☆ Guardar en mis alimentos';}
     if(actions)actions.hidden=false;
   }
 
-  function selectFood(food){selectedFood=normalize(food);const q=$('nutritionFoodQuantity');if(q)q.value=selectedFood.quantityBase||100;setStatus('Alimento seleccionado. Ajustá la cantidad y aplicalo a la comida.');renderSelected()}
+  function selectFood(food){
+    selectedFood=normalize(food);
+    const q=$('nutritionFoodQuantity');if(q)q.value=selectedFood.defaultQuantity||100;
+    setStatus(`Seleccionado: ${selectedFood.name}. Ajustá los gramos y agregalo a la comida.`);
+    renderSelected();
+    document.dispatchEvent(new CustomEvent('agenda:nutrition-selected-food-changed',{detail:{food:selectedFood}}));
+    // En resultados largos, llevar la selección y la cantidad a la vista para que el siguiente paso sea evidente.
+    const selectionPanel=$('nutritionFoodSelected')?.closest('.nutrition-food-selection-panel');
+    if(selectionPanel){
+      const reduceMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+      window.setTimeout(()=>selectionPanel.scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'}),30);
+    }
+  }
 
   async function saveSelectedToUser(){
     if(!selectedFood)return;
@@ -169,7 +201,10 @@
 
   function applySelected(){
     if(!selectedFood)return;
-    const qty=safeNumber($('nutritionFoodQuantity')?.value)||selectedFood.quantityBase||100;
+    const raw=String($('nutritionFoodQuantity')?.value??'').trim();
+    const parsed=raw===''?(selectedFood.defaultQuantity||100):Number(raw);
+    const qty=Number.isFinite(parsed)?Math.max(0,parsed):(selectedFood.defaultQuantity||100);
+    if(qty<=0){setStatus('Ingresá una cantidad mayor que cero para agregar el alimento.');return;}
     const totals=calc(selectedFood,qty); if(!totals)return;
     const title=$('mealTitle'),foods=$('mealFoods');
     const set=(id,val)=>{const el=$(id);if(el)el.value=val};
@@ -187,24 +222,41 @@
     }
     if(window.AgendaNutritionData?.snapshot){
       pendingMealFoods.push(window.AgendaNutritionData.snapshot(selectedFood,qty));
+      document.dispatchEvent(new CustomEvent('agenda:nutrition-pending-foods-changed',{detail:{count:pendingMealFoods.length}}));
     }
     // Al usar un alimento externo o del catálogo, lo guardamos también en el catálogo personal.
     window.AgendaNutritionData?.saveUserFood?.(selectedFood).catch?.(err=>console.warn('No se pudo guardar automáticamente en Mis alimentos:',err));
+    document.dispatchEvent(new CustomEvent('agenda:nutrition-food-added',{detail:{food:selectedFood,quantity:qty}}));
     setStatus(`✓ ${selectedFood.name} agregado a la comida${pendingMealFoods.length>1?` · ${pendingMealFoods.length} alimentos listos para guardar`:''}.`);
   }
 
   async function restoreMealItems(mealId){
     pendingMealFoods=[];
-    if(!mealId||!window.AgendaNutritionData?.loadMealItems)return;
+    document.dispatchEvent(new CustomEvent('agenda:nutrition-pending-foods-changed',{detail:{count:0,mealId}}));
+    if(!mealId||!window.AgendaNutritionData?.loadMealItems){
+      document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-restored',{detail:{mealId:mealId||null,count:0,ok:true}}));
+      return;
+    }
     try{
       const rows=await window.AgendaNutritionData.loadMealItems(mealId);
-      pendingMealFoods=(rows||[]).map(row=>({
-        catalog_id:row.catalog_id||null,user_food_id:row.user_food_id||null,source:row.source||'external',external_id:row.external_id||null,
-        name:row.name||'Alimento',brand:row.brand||'',quantity:Number(row.quantity)||100,unit:row.unit||'g',serving_size:row.serving_size||'',
-        calories_per_100g:Number(row.calories_per_100g)||0,protein_per_100g:Number(row.protein_per_100g)||0,carbs_per_100g:Number(row.carbs_per_100g)||0,
-        fat_per_100g:Number(row.fat_per_100g)||0,fiber_per_100g:Number(row.fiber_per_100g)||0,ingredients:row.ingredients||'',categories:row.categories||'',labels:row.labels||'',image_url:row.image_url||''
-      }));
-    }catch(err){console.warn('No se pudieron recuperar los alimentos estructurados de la comida:',err)}
+      pendingMealFoods=(rows||[]).map(row=>{
+        const stamp=row.consumed_at||null;
+        const consumedToday=Boolean(row.consumed&&stamp&&dateKeyInCordoba(stamp)===dateKeyInCordoba(new Date()));
+        if(row.consumed&&stamp&&window.AgendaNutritionData?.recordConsumptionHistory){window.AgendaNutritionData.recordConsumptionHistory(row,stamp).catch(err=>console.warn('Historial nutricional pendiente:',err));}
+        return {
+          catalog_id:row.catalog_id||null,user_food_id:row.user_food_id||null,source:row.source||'external',external_id:row.external_id||null,
+          name:row.name||'Alimento',brand:row.brand||'',quantity:Number(row.quantity)||100,unit:row.unit||'g',serving_size:row.serving_size||'',
+          calories_per_100g:Number(row.calories_per_100g)||0,protein_per_100g:Number(row.protein_per_100g)||0,carbs_per_100g:Number(row.carbs_per_100g)||0,
+          fat_per_100g:Number(row.fat_per_100g)||0,fiber_per_100g:Number(row.fiber_per_100g)||0,ingredients:row.ingredients||'',categories:row.categories||'',labels:row.labels||'',image_url:row.image_url||'',consumed:consumedToday,consumed_at:consumedToday?stamp:null
+        };
+      });
+      pendingMealContext={mealId:String(mealId)};
+      document.dispatchEvent(new CustomEvent('agenda:nutrition-pending-foods-changed',{detail:{count:pendingMealFoods.length,mealId}}));
+      document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-restored',{detail:{mealId,count:pendingMealFoods.length,ok:true}}));
+    }catch(err){
+      console.warn('No se pudieron recuperar los alimentos estructurados de la comida:',err);
+      document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-restored',{detail:{mealId,count:0,ok:false}}));
+    }
   }
 
   let searchRequestId=0;
@@ -255,7 +307,7 @@
   function open(){expanded=true;const panel=$('nutritionFoodCatalog');if(panel)panel.hidden=false;const toggle=$('nutritionFoodCatalogToggle');if(toggle)toggle.setAttribute('aria-expanded','true');if(!$('nutritionFoodSearch')?.value)setStatus('Buscá un alimento por nombre en Open Food Facts.');}
   function close(){expanded=false;const panel=$('nutritionFoodCatalog');if(panel)panel.hidden=true;const toggle=$('nutritionFoodCatalogToggle');if(toggle)toggle.setAttribute('aria-expanded','false');}
   function toggle(){expanded?close():open()}
-  function reset(){selectedFood=null;pendingMealFoods=[];const q=$('nutritionFoodSearch');if(q)q.value='';const qty=$('nutritionFoodQuantity');if(qty)qty.value=100;const results=$('nutritionFoodCatalogResults');if(results)results.innerHTML='';setStatus('Primero busca en tus alimentos y en el catálogo propio.');renderSelected()}
+  function reset(context=null){selectedFood=null;pendingMealFoods=[];pendingMealContext=context||null;document.dispatchEvent(new CustomEvent('agenda:nutrition-pending-foods-changed',{detail:{count:0}}));document.dispatchEvent(new CustomEvent('agenda:nutrition-selected-food-changed',{detail:{food:null}}));const q=$('nutritionFoodSearch');if(q)q.value='';const qty=$('nutritionFoodQuantity');if(qty)qty.value=100;const results=$('nutritionFoodCatalogResults');if(results)results.innerHTML='';setStatus('Primero busca en tus alimentos y en el catálogo propio.');renderSelected()}
 
   function bind(){
     const toggleBtn=$('nutritionFoodCatalogToggle');if(toggleBtn&&!toggleBtn.dataset.bound){toggleBtn.dataset.bound='1';toggleBtn.addEventListener('click',toggle)}
@@ -266,7 +318,13 @@
     const save=$('nutritionFoodSave');if(save&&!save.dataset.bound){save.dataset.bound='1';save.addEventListener('click',saveSelectedToUser)}
     if(typeof window.openNutritionModal==='function'&&!window.openNutritionModal.__foodCatalogWrapped){
       const original=window.openNutritionModal;
-      const wrapped=function(meal=null){original(meal);reset();if(meal?.id)setTimeout(()=>restoreMealItems(meal.id),0)};
+      const wrapped=function(meal=null){
+        const context={mealId:meal?.id?String(meal.id):null,day:(typeof nutritionDay!=='undefined'?Number(nutritionDay):null),mealType:String(meal?.meal_type||activeMealType||'')};
+        reset(context);
+        original(meal);
+        reset(context);
+        if(meal?.id)setTimeout(()=>restoreMealItems(meal.id),0);
+      };
       wrapped.__foodCatalogWrapped=true;window.openNutritionModal=wrapped;
     }
     window.AgendaFoodCatalog={
@@ -278,6 +336,8 @@
       getProductDetails:window.AgendaFoodCatalog?.getProductDetails||null,
       getPendingMealFoods:()=>pendingMealFoods.slice(),
       setPendingMealFoods:items=>{pendingMealFoods=Array.isArray(items)?items.slice():[]},
+      clearPendingMealFoods:()=>{reset(pendingMealContext)},
+      getPendingMealContext:()=>pendingMealContext?{...pendingMealContext}:null,
       getSelectedFood:()=>selectedFood,
       saveSelectedToUser,
       ready:true

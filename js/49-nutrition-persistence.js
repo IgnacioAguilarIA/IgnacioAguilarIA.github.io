@@ -126,7 +126,9 @@
       ingredients:text(food?.ingredients),
       categories:text(food?.categories),
       labels:text(food?.labels),
-      image_url:text(food?.imageUrl)
+      image_url:text(food?.imageUrl),
+      consumed:false,
+      consumed_at:null
     };
   }
 
@@ -169,37 +171,72 @@
     return {ok:true,food:toFood(data,'user')};
   }
 
+  function itemBaseKey(item){
+    return [text(item?.source||item?.sourceType),text(item?.external_id||item?.externalId||item?.code),normalizeSearch(item?.name),normalizeSearch(item?.brand),text(item?.unit||'g')].join('|');
+  }
+  function itemExactKey(item){return itemBaseKey(item)+'|'+String(num(item?.quantity));}
+
   async function persistMealItems(mealId,items){
     const uid=currentUserId();
-    if(!uid||!mealId||!Array.isArray(items)||!items.length)return {ok:true,skipped:true};
+    if(!uid||!mealId||!Array.isArray(items))return {ok:true,skipped:true};
     const c=await client();
-    const {error:delError}=await c.from('nutrition_meal_items').delete().eq('meal_id',String(mealId)).eq('user_id',uid);
-    if(delError)throw delError;
+    const {data:oldRows,error:readError}=await c.from('nutrition_meal_items').select('*').eq('meal_id',String(mealId)).eq('user_id',uid).order('created_at',{ascending:true});
+    if(readError)throw readError;
+    const old=Array.isArray(oldRows)?oldRows:[];
+    if(!items.length){
+      const removedIds=old.map(item=>String(item.id)).filter(Boolean);
+      const {error}=await c.from('nutrition_meal_items').delete().eq('meal_id',String(mealId)).eq('user_id',uid);
+      if(error)throw error;
+      document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:0,cleared:true,removedIds}}));
+      return {ok:true,count:0,cleared:true,removed:removedIds.length};
+    }
     const rows=items.map(item=>({
-      meal_id:String(mealId),
-      user_id:uid,
-      catalog_id:item.catalog_id??null,
-      user_food_id:item.user_food_id??null,
-      source:text(item.source||'external'),
-      external_id:text(item.external_id)||null,
-      name:text(item.name)||'Alimento',
-      brand:text(item.brand),
-      quantity:num(item.quantity),
-      unit:text(item.unit)||'g',
-      serving_size:text(item.serving_size),
-      calories_per_100g:num(item.calories_per_100g),
-      protein_per_100g:num(item.protein_per_100g),
-      carbs_per_100g:num(item.carbs_per_100g),
-      fat_per_100g:num(item.fat_per_100g),
-      fiber_per_100g:num(item.fiber_per_100g),
-      ingredients:text(item.ingredients),
-      categories:text(item.categories),
-      labels:text(item.labels),
-      image_url:text(item.image_url)
+      meal_id:String(mealId),user_id:uid,catalog_id:item.catalog_id??item.catalogId??null,
+      user_food_id:item.user_food_id??item.userFoodId??null,source:text(item.source||item.sourceType||'external'),
+      external_id:text(item.external_id||item.externalId)||null,name:text(item.name)||'Alimento',brand:text(item.brand),
+      quantity:Math.max(0,num(item.quantity)),unit:text(item.unit)||'g',serving_size:text(item.serving_size||item.servingSize),
+      calories_per_100g:num(item.calories_per_100g??item.calories),protein_per_100g:num(item.protein_per_100g??item.protein),
+      carbs_per_100g:num(item.carbs_per_100g??item.carbs),fat_per_100g:num(item.fat_per_100g??item.fat),
+      fiber_per_100g:num(item.fiber_per_100g??item.fiber),ingredients:text(item.ingredients),categories:text(item.categories),
+      labels:text(item.labels),image_url:text(item.image_url||item.imageUrl),consumed:Boolean(item.consumed),
+      consumed_at:item.consumed&&item.consumed_at?item.consumed_at:null
     }));
-    const {error}=await c.from('nutrition_meal_items').insert(rows);
-    if(error)throw error;
-    return {ok:true,count:rows.length};
+    const unused=new Set(old.map((_,i)=>i));
+    const updates=[],inserts=[];
+    for(const row of rows){
+      let match=-1;
+      for(const i of unused){if(itemExactKey(old[i])===itemExactKey(row)){match=i;break}}
+      if(match<0){for(const i of unused){if(itemBaseKey(old[i])===itemBaseKey(row)){match=i;break}}}
+      if(match>=0){unused.delete(match);updates.push({id:old[match].id,row,previous:old[match]});}
+      else inserts.push(row);
+    }
+    // Insertamos nuevas filas antes de tocar/eliminar las antiguas. Si falla una
+    // fase posterior, intentamos compensar los cambios para evitar duplicados.
+    let insertedIds=[];const appliedUpdates=[];
+    const rollback=async()=>{
+      for(const entry of [...appliedUpdates].reverse()){
+        const restore={...entry.previous};delete restore.id;
+        try{await c.from('nutrition_meal_items').update(restore).eq('id',String(entry.id)).eq('user_id',uid)}catch(_){}
+      }
+      if(insertedIds.length){try{await c.from('nutrition_meal_items').delete().in('id',insertedIds).eq('user_id',uid)}catch(_){}}
+    };
+    if(inserts.length){
+      const {data,error}=await c.from('nutrition_meal_items').insert(inserts).select('id');
+      if(error)throw error;
+      insertedIds=(Array.isArray(data)?data:[]).map(x=>String(x.id)).filter(Boolean);
+    }
+    for(const entry of updates){
+      const {error}=await c.from('nutrition_meal_items').update(entry.row).eq('id',String(entry.id)).eq('user_id',uid);
+      if(error){await rollback();throw error;}
+      appliedUpdates.push(entry);
+    }
+    const staleIds=[...unused].map(i=>old[i]?.id).filter(Boolean).map(String);
+    if(staleIds.length){
+      const {error}=await c.from('nutrition_meal_items').delete().in('id',staleIds).eq('meal_id',String(mealId)).eq('user_id',uid);
+      if(error){await rollback();throw error;}
+    }
+    document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:rows.length,removedIds:staleIds}}));
+    return {ok:true,count:rows.length,updated:updates.length,inserted:inserts.length,removed:staleIds.length};
   }
 
   async function deleteMealItems(mealId){
@@ -208,6 +245,7 @@
     const c=await client();
     const {error}=await c.from('nutrition_meal_items').delete().eq('meal_id',String(mealId)).eq('user_id',uid);
     if(error)console.warn('No se pudieron eliminar los alimentos estructurados de la comida:',error);
+    else document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:0,cleared:true,deleted:true}}));
   }
 
   async function loadMealItems(mealId){
@@ -217,6 +255,134 @@
     const {data,error}=await c.from('nutrition_meal_items').select('*').eq('meal_id',String(mealId)).eq('user_id',uid).order('created_at',{ascending:true});
     if(error)throw error;
     return Array.isArray(data)?data:[];
+  }
+
+  function dateKeyInCordoba(value=new Date()){
+    const d=value instanceof Date?value:new Date(value);
+    if(!Number.isFinite(d.getTime()))return '';
+    const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Argentina/Cordoba',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
+    const map=Object.fromEntries(parts.map(p=>[p.type,p.value]));
+    return `${map.year}-${map.month}-${map.day}`;
+  }
+
+  function historySnapshot(item,meal,consumedAt){
+    const qty=Math.max(0,num(item?.quantity));
+    const factor=text(item?.unit)==='plan'?1:qty/100;
+    return {
+      user_id:currentUserId(),
+      consumed_date:dateKeyInCordoba(consumedAt),
+      meal_id:String(item?.meal_id||''),
+      meal_item_id:String(item?.id||''),
+      meal_title:text(meal?.title)||'Comida',
+      meal_type:text(meal?.meal_type),
+      meal_time:text(meal?.meal_time)||null,
+      food_name:text(item?.name)||'Alimento',
+      brand:text(item?.brand),
+      quantity:qty,
+      unit:text(item?.unit)||'g',
+      calories:Math.round(num(item?.calories_per_100g)*factor*10)/10,
+      protein_g:Math.round(num(item?.protein_per_100g)*factor*10)/10,
+      carbs_g:Math.round(num(item?.carbs_per_100g)*factor*10)/10,
+      fat_g:Math.round(num(item?.fat_per_100g)*factor*10)/10,
+      item_snapshot:{...item,consumed:true,consumed_at:consumedAt}
+    };
+  }
+
+  async function recordConsumptionHistory(item,consumedAt=item?.consumed_at){
+    const uid=currentUserId();
+    if(!uid||!item?.id||!consumedAt)return {ok:false,skipped:true};
+    const c=await client();
+    let meal=null;
+    if(item.meal_id){
+      const {data,error}=await c.from('nutrition_meals').select('title,meal_type,meal_time').eq('id',String(item.meal_id)).eq('user_id',uid).maybeSingle();
+      if(error)throw error;
+      meal=data||null;
+    }
+    const row=historySnapshot(item,meal,consumedAt);
+    if(!row.consumed_date||!row.meal_item_id)return {ok:false,skipped:true};
+    const {error}=await c.from('nutrition_consumption_history').upsert(row,{onConflict:'user_id,meal_item_id,consumed_date'});
+    if(error)throw error;
+    return {ok:true,date:row.consumed_date};
+  }
+
+  async function loadConsumptionHistory(days=30){
+    const uid=currentUserId();
+    if(!uid)throw new Error('Iniciá sesión para consultar el historial nutricional.');
+    const c=await client();
+    const today=dateKeyInCordoba(new Date());
+    const [y,m,d]=today.split('-').map(Number);
+    const rangeDays=Math.max(1,Math.min(365,Number(days)||30));
+    const start=new Date(Date.UTC(y,m-1,d-(rangeDays-1)));
+    const since=`${start.getUTCFullYear()}-${String(start.getUTCMonth()+1).padStart(2,'0')}-${String(start.getUTCDate()).padStart(2,'0')}`;
+    const {data,error}=await c.from('nutrition_consumption_history').select('id,consumed_date,meal_title,meal_type,meal_time,food_name,brand,quantity,unit,calories,protein_g,carbs_g,fat_g,created_at').eq('user_id',uid).gte('consumed_date',since).lte('consumed_date',today).order('consumed_date',{ascending:false}).order('created_at',{ascending:false}).limit(1500);
+    if(error)throw error;
+    return Array.isArray(data)?data:[];
+  }
+
+  async function setMealItemConsumed(itemId,consumed,requestedConsumedAt=null,changedAt=new Date().toISOString()){
+    const uid=currentUserId();
+    if(!uid||!itemId)return {ok:false,skipped:true};
+    const c=await client();
+    const next=Boolean(consumed);
+    const consumedAt=next?(text(requestedConsumedAt)||text(changedAt)||new Date().toISOString()):null;
+    const {data,error}=await c.from('nutrition_meal_items').update({consumed:next,consumed_at:consumedAt}).eq('id',String(itemId)).eq('user_id',uid).select('*').single();
+    if(error)throw error;
+    let historyOk=true,historyError=null;
+    try{
+      if(next)await recordConsumptionHistory(data||{...{},id:String(itemId),consumed_at:consumedAt});
+      else{
+        const changedDate=dateKeyInCordoba(changedAt||new Date());
+        const {error:deleteError}=await c.from('nutrition_consumption_history').delete().eq('user_id',uid).eq('meal_item_id',String(itemId)).eq('consumed_date',changedDate);
+        if(deleteError)throw deleteError;
+      }
+    }catch(err){
+      historyOk=false;historyError=err;
+      try{document.dispatchEvent(new CustomEvent('agenda:nutrition-history-warning',{detail:{message:err?.message||'No se pudo actualizar el historial. Ejecutá sql/07-nutrition-advanced.sql.'}}))}catch(_){}
+    }
+    return {ok:true,item:data||null,historyOk,historyError:historyError?.message||null};
+  }
+
+  async function loadRecipes(){
+    const uid=currentUserId();if(!uid)throw new Error('Iniciá sesión para consultar tus recetas.');
+    const c=await client();
+    const {data,error}=await c.from('nutrition_recipes').select('*').eq('user_id',uid).order('updated_at',{ascending:false}).limit(200);
+    if(error)throw error;
+    return Array.isArray(data)?data:[];
+  }
+
+  function calculateRecipe(ingredients){
+    const list=(Array.isArray(ingredients)?ingredients:[]).filter(x=>x&&Number(x.quantity)>0);
+    const weight=list.reduce((sum,x)=>sum+Math.max(0,num(x.quantity)),0);
+    const total=list.reduce((acc,x)=>{
+      const factor=Math.max(0,num(x.quantity))/100;
+      acc.calories+=num(x.calories_per_100g)*factor;
+      acc.protein+=num(x.protein_per_100g)*factor;
+      acc.carbs+=num(x.carbs_per_100g)*factor;
+      acc.fat+=num(x.fat_per_100g)*factor;
+      acc.fiber+=num(x.fiber_per_100g)*factor;
+      return acc;
+    },{calories:0,protein:0,carbs:0,fat:0,fiber:0});
+    const per100=weight>0?100/weight:0;
+    return {total_weight_g:Math.round(weight*10)/10,total_calories:Math.round(total.calories*10)/10,total_protein_g:Math.round(total.protein*10)/10,total_carbs_g:Math.round(total.carbs*10)/10,total_fat_g:Math.round(total.fat*10)/10,calories_per_100g:Math.round(total.calories*per100*10)/10,protein_per_100g:Math.round(total.protein*per100*10)/10,carbs_per_100g:Math.round(total.carbs*per100*10)/10,fat_per_100g:Math.round(total.fat*per100*10)/10,fiber_per_100g:Math.round(total.fiber*per100*10)/10};
+  }
+
+  async function saveRecipe(recipe){
+    const uid=currentUserId();if(!uid)throw new Error('Iniciá sesión para guardar recetas.');
+    const name=text(recipe?.name);const ingredients=(Array.isArray(recipe?.ingredients)?recipe.ingredients:[]).filter(x=>x&&num(x.quantity)>0).map(x=>({...x,consumed:false,consumed_at:null}));
+    if(!name)throw new Error('Escribí un nombre para la receta.');
+    if(!ingredients.length)throw new Error('Agregá al menos un alimento con cantidad para guardar la receta.');
+    const totals=calculateRecipe(ingredients);if(!(totals.total_weight_g>0))throw new Error('La receta debe tener un peso total mayor que cero.');
+    const c=await client();
+    const row={user_id:uid,name,notes:text(recipe?.notes),servings:Math.max(0.1,num(recipe?.servings)||1),ingredients,total_weight_g:totals.total_weight_g,calories_per_100g:totals.calories_per_100g,protein_per_100g:totals.protein_per_100g,carbs_per_100g:totals.carbs_per_100g,fat_per_100g:totals.fat_per_100g,fiber_per_100g:totals.fiber_per_100g};
+    const id=text(recipe?.id);
+    if(id){const {data,error}=await c.from('nutrition_recipes').update({...row,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',uid).select('*').single();if(error)throw error;return {ok:true,recipe:data,totals}}
+    const {data,error}=await c.from('nutrition_recipes').insert(row).select('*').single();if(error)throw error;return {ok:true,recipe:data,totals};
+  }
+
+  async function deleteRecipe(recipeId){
+    const uid=currentUserId();if(!uid||!recipeId)throw new Error('No se pudo identificar la receta.');
+    const c=await client();const {error}=await c.from('nutrition_recipes').delete().eq('id',String(recipeId)).eq('user_id',uid);
+    if(error)throw error;return {ok:true};
   }
 
   function mergeLocalFirst(localItems,externalItems,query){
@@ -294,6 +460,13 @@
     persistMealItems,
     deleteMealItems,
     loadMealItems,
+    setMealItemConsumed,
+    recordConsumptionHistory,
+    loadConsumptionHistory,
+    loadRecipes,
+    saveRecipe,
+    deleteRecipe,
+    calculateRecipe,
     setSavedButtonState,
     installHooks
   };
