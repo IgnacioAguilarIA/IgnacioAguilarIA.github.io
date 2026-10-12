@@ -30,7 +30,6 @@
       const data=window.__agendaTrainingActualsState;
       if(data?.setValue){data.setValue(i,ev);}
     }catch(_){ }
-    e.stopImmediatePropagation();
   },true);
 
   document.addEventListener('change',function(e){
@@ -44,7 +43,6 @@
       if(data?.setValue){data.setValue(i,ev);}
       if(data?.save)data.save();
     }catch(_){ }
-    e.stopImmediatePropagation();
   },true);
 
   document.addEventListener('blur',function(e){
@@ -96,8 +94,8 @@
         if(fieldIndex===1)this._values[setIndex].weight=String(ev.value??'');
         if(fieldIndex===2)this._values[setIndex].rir=String(ev.value??'');
         try{
-          const key=[...Object.keys(localStorage)].find(k=>k.startsWith('agendaTrainingV31:'));
-          if(!key)return;
+          const uid=(typeof currentUser!=='undefined'&&currentUser?.id)?currentUser.id:'guest';
+          const key=`agendaTrainingV31:${uid}`;
           const session=JSON.parse(localStorage.getItem(key)||'null');
           if(!session)return;
           const si=Math.max(0,Number(session.currentIndex)||0);

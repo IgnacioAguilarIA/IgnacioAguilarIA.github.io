@@ -15,7 +15,70 @@
   function save(){if(!activeSession)return;activeSession.currentIndex=index;activeSession.sessionSeconds=sessionSeconds;activeSession.timerMode=timerMode;activeSession.timerSeconds=timerSeconds;activeSession.timerRunning=timerRunning;activeSession.timerStartedAt=timerStartedAt;activeSession.timerEndAt=timerEndAt;activeSession.lastSavedAt=Date.now();activeSession.actuals=actualsSnapshot();try{localStorage.setItem(skey(),JSON.stringify(activeSession))}catch(_){} }
   function clear(){try{const k=seriesDoneKey();if(k)localStorage.removeItem(k);localStorage.removeItem(skey())}catch(_){} } function v32TrainingActive(on){document.body.classList.toggle('v32-training-active',!!on)}
   function actualsSnapshot(){return Array.isArray(activeSession?.actuals)?activeSession.actuals.map(x=>({reps:Array.isArray(x?.reps)?x.reps.slice():[],weight:Array.isArray(x?.weight)?x.weight.slice():[],rir:Array.isArray(x?.rir)?x.rir.slice():[],done:Array.isArray(x?.done)?x.done.slice():[]})):[]}
-  function ensureActualsBase(){if(!activeSession)return;const len=list().length;activeSession.actuals=Array.isArray(activeSession.actuals)?activeSession.actuals:[];while(activeSession.actuals.length<len)activeSession.actuals.push({reps:[],weight:[],rir:[],done:[]});if(activeSession.actuals.length>len)activeSession.actuals.length=len;activeSession.actuals.forEach((x,i)=>{x.reps=Array.isArray(x?.reps)?x.reps:[];x.weight=Array.isArray(x?.weight)?x.weight:[];x.rir=Array.isArray(x?.rir)?x.rir:[];x.done=Array.isArray(x?.done)?x.done:[];const n=Math.max(0,Number(list()[i]?.sets)||1);x.reps=Array.from({length:n},(_,j)=>x.reps[j]??'');x.weight=Array.from({length:n},(_,j)=>x.weight[j]??'');x.rir=Array.from({length:n},(_,j)=>x.rir[j]??'');x.done=Array.from({length:n},(_,j)=>!!x.done[j])})}
+  function ensureActualsBase(){
+    if(!activeSession)return;
+    const exercises=list();
+    const len=exercises.length;
+    activeSession.actuals=Array.isArray(activeSession.actuals)?activeSession.actuals:[];
+
+    // IMPORTANT: the training session may restore before Supabase has loaded the
+    // exercise list. Never interpret that temporary empty list as a zero-exercise
+    // workout: the saved actuals belong to the session and must be retained.
+    if(len===0){
+      activeSession.actuals.forEach((x,i)=>{
+        if(!x||typeof x!=='object')activeSession.actuals[i]=x={};
+        x.reps=Array.isArray(x.reps)?x.reps:[];
+        x.weight=Array.isArray(x.weight)?x.weight:[];
+        x.rir=Array.isArray(x.rir)?x.rir:[];
+        x.done=Array.isArray(x.done)?x.done:[];
+      });
+      return;
+    }
+
+    while(activeSession.actuals.length<len)activeSession.actuals.push({reps:[],weight:[],rir:[],done:[]});
+    // Do not trim entries beyond the currently loaded list. It may still be
+    // incomplete while data is loading; truncating here used to erase a session.
+    activeSession.actuals.forEach((x,i)=>{
+      if(!x||typeof x!=='object')activeSession.actuals[i]=x={};
+      x.reps=Array.isArray(x.reps)?x.reps:[];
+      x.weight=Array.isArray(x.weight)?x.weight:[];
+      x.rir=Array.isArray(x.rir)?x.rir:[];
+      x.done=Array.isArray(x.done)?x.done:[];
+      const exercise=exercises[i];
+      if(!exercise)return; // retain stored values for not-yet-loaded exercises
+      const n=Math.max(0,Number(exercise.sets)||1);
+      x.reps=Array.from({length:n},(_,j)=>x.reps[j]??'');
+      x.weight=Array.from({length:n},(_,j)=>x.weight[j]??'');
+      x.rir=Array.from({length:n},(_,j)=>x.rir[j]??'');
+      x.done=Array.from({length:n},(_,j)=>!!x.done[j]);
+    });
+  }
+
+  // Recover values saved by the previous editor bridge if an earlier page load
+  // had already emptied `actuals` before the user installed this fix. The backup
+  // represents the currently edited exercise, so only use it when that exercise
+  // has no actual values at all; never overwrite valid persisted data.
+  function recoverLegacyFieldBackup(session){
+    const backup=session?.fieldBackup;
+    if(!backup||typeof backup!=='object'||Array.isArray(backup))return;
+    const exerciseIndex=Math.max(0,Number(session.currentIndex)||0);
+    session.actuals=Array.isArray(session.actuals)?session.actuals:[];
+    while(session.actuals.length<=exerciseIndex)session.actuals.push({reps:[],weight:[],rir:[],done:[]});
+    const actual=session.actuals[exerciseIndex]||(session.actuals[exerciseIndex]={reps:[],weight:[],rir:[],done:[]});
+    const fields=['reps','weight','rir'];
+    const alreadyHasValues=fields.some(k=>Array.isArray(actual[k])&&actual[k].some(v=>String(v??'').trim()!==''));
+    if(alreadyHasValues)return;
+    const rows=Object.entries(backup).filter(([k,v])=>/^\d+$/.test(k)&&v&&typeof v==='object');
+    if(!rows.length)return;
+    const size=Math.max(...rows.map(([k])=>Number(k)))+1;
+    const recovered={};
+    fields.forEach(field=>{recovered[field]=Array.from({length:size},(_,i)=>String(backup[i]?.[field]??''));});
+    if(!fields.some(k=>recovered[k].some(v=>v.trim()!=='')))return;
+    actual.reps=recovered.reps;
+    actual.weight=recovered.weight;
+    actual.rir=recovered.rir;
+    actual.done=Array.isArray(actual.done)?actual.done:[];
+  }
   function ensureActuals(){if(!activeSession)return;ensureActualsBase();const map=readSeriesDone();Object.entries(map).forEach(([exIdx,val])=>{const i=Number(exIdx),arr=Array.isArray(val)?val:[];if(!activeSession.actuals?.[i])return;activeSession.actuals[i].done=Array.isArray(activeSession.actuals[i].done)?activeSession.actuals[i].done:[];arr.forEach((v,j)=>{if(v)activeSession.actuals[i].done[j]=true;});});}
   function restoreSeriesDone(){if(!activeSession)return;ensureActuals();}
   function captureVisibleActuals(){
@@ -173,7 +236,7 @@
   function startClock(){if(sessionInterval)return;if(!sessionStartedAt)sessionStartedAt=Date.now()-sessionSeconds*1000;sessionInterval=setInterval(()=>{sessionSeconds=Math.floor((Date.now()-sessionStartedAt)/1000);syncTimerFromClock();save();updateClocksOnly()},1000)}
   function stopClock(){clearInterval(sessionInterval);sessionInterval=null}
   function newSession(){activeSession={id:`training-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,userId:currentUser?.id||null,day:Number(workoutDay)||0,performedAt:today(),startedAt:Date.now(),currentIndex:0,exerciseIds:list().map(x=>x.id).filter(Boolean),sessionSeconds:0,timerMode:'stopwatch',timerSeconds:0,timerRunning:false,loggedIndexes:[],actuals:[]};index=0;renderedIndex=-1;sessionSeconds=0;sessionStartedAt=Date.now();timerMode='stopwatch';timerSeconds=0;timerRunning=false;timerStartedAt=null;timerEndAt=null;save()}
-  function restore(s){activeSession=s;workoutDay=Number(s.day)||workoutDay;index=Math.max(0,Number(s.currentIndex)||0);const elapsed=Math.max(0,Math.floor((Date.now()-Number(s.startedAt||Date.now()))/1000));sessionSeconds=Math.max(Number(s.sessionSeconds)||0,elapsed);sessionStartedAt=Date.now()-sessionSeconds*1000;timerMode=s.timerMode||'stopwatch';syncTimerModeUI();timerSeconds=Number(s.timerSeconds)||0;timerRunning=!!s.timerRunning;timerStartedAt=Number.isFinite(Number(s.timerStartedAt))?Number(s.timerStartedAt):null;timerEndAt=Number.isFinite(Number(s.timerEndAt))?Number(s.timerEndAt):null;if(timerRunning){const now=Date.now();if(timerMode==='countdown'){if(!Number.isFinite(Number(timerEndAt)))timerEndAt=now+Math.max(0,timerSeconds)*1000;}else{if(!Number.isFinite(Number(timerStartedAt)))timerStartedAt=now-Math.max(0,timerSeconds)*1000;}}else{timerStartedAt=null;timerEndAt=null;}syncTimerFromClock();activeSession.loggedIndexes=Array.isArray(s.loggedIndexes)?s.loggedIndexes:[];activeSession.actuals=Array.isArray(s.actuals)?s.actuals:[];renderedIndex=-1;ensureActuals();restoreSeriesDone();save()}
+  function restore(s){activeSession=s;workoutDay=Number(s.day)||workoutDay;index=Math.max(0,Number(s.currentIndex)||0);const elapsed=Math.max(0,Math.floor((Date.now()-Number(s.startedAt||Date.now()))/1000));sessionSeconds=Math.max(Number(s.sessionSeconds)||0,elapsed);sessionStartedAt=Date.now()-sessionSeconds*1000;timerMode=s.timerMode||'stopwatch';syncTimerModeUI();timerSeconds=Number(s.timerSeconds)||0;timerRunning=!!s.timerRunning;timerStartedAt=Number.isFinite(Number(s.timerStartedAt))?Number(s.timerStartedAt):null;timerEndAt=Number.isFinite(Number(s.timerEndAt))?Number(s.timerEndAt):null;if(timerRunning){const now=Date.now();if(timerMode==='countdown'){if(!Number.isFinite(Number(timerEndAt)))timerEndAt=now+Math.max(0,timerSeconds)*1000;}else{if(!Number.isFinite(Number(timerStartedAt)))timerStartedAt=now-Math.max(0,timerSeconds)*1000;}}else{timerStartedAt=null;timerEndAt=null;}syncTimerFromClock();activeSession.loggedIndexes=Array.isArray(s.loggedIndexes)?s.loggedIndexes:[];activeSession.actuals=Array.isArray(s.actuals)?s.actuals:[];recoverLegacyFieldBackup(activeSession);renderedIndex=-1;ensureActuals();restoreSeriesDone();save()}
   function actualSetTouched(actual,i){if(!actual)return false;return !!(Array.isArray(actual?.done)&&actual.done[i])||['reps','weight','rir'].some(k=>Array.isArray(actual?.[k])&&String(actual[k][i]??'').trim()!=='');}
   function actualSetsCount(actual){const n=Math.max(Array.isArray(actual?.reps)?actual.reps.length:0,Array.isArray(actual?.weight)?actual.weight.length:0,Array.isArray(actual?.rir)?actual.rir.length:0,Array.isArray(actual?.done)?actual.done.length:0);let count=0;for(let i=0;i<n;i++)if(actualSetTouched(actual,i))count++;return count;}
   function hasActualData(actual){return actualSetsCount(actual)>0;}
@@ -225,7 +288,15 @@
     clear();activeSession=null;updateMini();q('v28WorkoutOverlay')?.classList.remove('show');v32TrainingActive(false);document.body.style.overflow='';
     try{await loadWorkoutLogs();renderWorkoutHistory();renderWorkoutAnalytics?.();renderDashboard()}catch(_){ }
   }
-  function closeView(){save();q('v28WorkoutOverlay')?.classList.remove('show');v32TrainingActive(false);document.body.style.overflow='';updateMini()}
+  function closeView(){
+    // Capture the live inputs before saving; this protects the last edited set when the user exits immediately.
+    captureVisibleActuals();
+    save();
+    q('v28WorkoutOverlay')?.classList.remove('show');
+    v32TrainingActive(false);
+    document.body.style.overflow='';
+    updateMini();
+  }
   function openView(){
     if(activeSession){q('v28WorkoutOverlay')?.classList.add('show');v32TrainingActive(true);document.body.style.overflow='hidden';renderedIndex=-1;updateFull();startClock();if(timerRunning)startTimer();wake();return;}
     if(!list().length && !navigator.onLine){const cached=cacheRead('workoutExercisesAll');workoutExercises=Array.isArray(cached)?cached.filter(x=>Number(x.day)===Number(workoutDay)):[];}
@@ -234,7 +305,7 @@
     q('v28WorkoutOverlay')?.classList.add('show');v32TrainingActive(true);document.body.style.overflow='hidden';renderedIndex=-1;updateFull();startClock();if(timerRunning)startTimer();wake();
   }
   function restoreOnLoad(){const s=read();if(!s){v32TrainingActive(false);return}try{restore(s);v32TrainingActive(false);updateMini();startClock();if(timerRunning)startTimer()}catch(err){console.warn('Sesión de entrenamiento incompatible; se limpia la sesión local:',err);clear();activeSession=null;v32TrainingActive(false);updateMini();}}
-  function bind(){q('v28WorkoutClose')?.addEventListener('click',closeView);q('v28PrevBtn')?.addEventListener('click',prev);q('v28NextBtn')?.addEventListener('click',next);q('v28FinishBtn')?.addEventListener('click',finish);q('v49CancelWorkout')?.addEventListener('click',cancelWorkout);q('v28TimerModeStopwatch')?.addEventListener('click',()=>setMode('stopwatch'));q('v28TimerModeCountdown')?.addEventListener('click',()=>setMode('countdown'));q('v28TimerStart')?.addEventListener('click',startTimer);q('v28TimerPause')?.addEventListener('click',pauseTimer);q('v28TimerReset')?.addEventListener('click',resetTimer);q('v31MiniOpen')?.addEventListener('click',openView);q('v31MiniFinish')?.addEventListener('click',finish);window.addEventListener('beforeunload',save);window.addEventListener('pagehide',save);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&activeSession){syncTimerFromClock();save();updateClocksOnly();if(timerRunning&&!timerInterval)armTimerInterval();wake()}});document.addEventListener('keydown',e=>{if(!q('v28WorkoutOverlay')?.classList.contains('show'))return;if(e.key==='Escape'){closeView()}else if(e.key==='ArrowRight'){next()}else if(e.key==='ArrowLeft'){prev()}else if(e.code==='Space'){e.preventDefault();timerRunning?pauseTimer():startTimer()}});window.openWorkoutMode=openView;restoreOnLoad()}
+  function bind(){q('v28WorkoutClose')?.addEventListener('click',closeView);q('v28PrevBtn')?.addEventListener('click',prev);q('v28NextBtn')?.addEventListener('click',next);q('v28FinishBtn')?.addEventListener('click',finish);q('v49CancelWorkout')?.addEventListener('click',cancelWorkout);q('v28TimerModeStopwatch')?.addEventListener('click',()=>setMode('stopwatch'));q('v28TimerModeCountdown')?.addEventListener('click',()=>setMode('countdown'));q('v28TimerStart')?.addEventListener('click',startTimer);q('v28TimerPause')?.addEventListener('click',pauseTimer);q('v28TimerReset')?.addEventListener('click',resetTimer);q('v31MiniOpen')?.addEventListener('click',openView);q('v31MiniFinish')?.addEventListener('click',finish);const saveLeavingView=()=>{captureVisibleActuals();save()};window.addEventListener('beforeunload',saveLeavingView);window.addEventListener('pagehide',saveLeavingView);document.addEventListener('visibilitychange',()=>{if(activeSession){if(document.visibilityState==='hidden'){saveLeavingView();return;}if(document.visibilityState==='visible'){syncTimerFromClock();save();updateClocksOnly();if(timerRunning&&!timerInterval)armTimerInterval();wake();}}});document.addEventListener('keydown',e=>{if(!q('v28WorkoutOverlay')?.classList.contains('show'))return;if(e.key==='Escape'){closeView()}else if(e.key==='ArrowRight'){next()}else if(e.key==='ArrowLeft'){prev()}else if(e.code==='Space'){e.preventDefault();timerRunning?pauseTimer():startTimer()}});window.openWorkoutMode=openView;restoreOnLoad()}
   window.addEventListener('online',()=>{flushPendingWorkoutLogs().catch(()=>{})});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind()
 })();

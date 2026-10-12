@@ -34,7 +34,7 @@
     previousBodyOverflow=document.body.style.overflow;
     document.body.style.overflow='hidden';
     const overlay=document.createElement('div');overlay.id='nutritionAdvancedModal';overlay.className='nutrition-advanced-overlay';
-    overlay.innerHTML=`<section class="nutrition-advanced-modal" role="dialog" aria-modal="true" aria-labelledby="nutritionAdvancedTitle"><header class="nutrition-advanced-head"><div><h3 id="nutritionAdvancedTitle">${esc(title)}</h3><p>${esc(subtitle)}</p></div><button type="button" class="nutrition-advanced-close" id="nutritionAdvancedClose" aria-label="Cerrar ventana">×</button></header><div class="nutrition-advanced-body" id="nutritionAdvancedBody"></div></section>`;
+    overlay.innerHTML=`<section class="nutrition-advanced-modal" role="dialog" aria-modal="true" aria-labelledby="nutritionAdvancedTitle" aria-describedby="nutritionAdvancedDescription" tabindex="-1"><header class="nutrition-advanced-head"><div><h3 id="nutritionAdvancedTitle">${esc(title)}</h3><p id="nutritionAdvancedDescription">${esc(subtitle)}</p></div><button type="button" class="nutrition-advanced-close" id="nutritionAdvancedClose" aria-label="Cerrar ventana">×</button></header><div class="nutrition-advanced-body" id="nutritionAdvancedBody"></div></section>`;
     document.body.appendChild(overlay);
     $('nutritionAdvancedBody').innerHTML=content;
     $('nutritionAdvancedClose')?.addEventListener('click',closeModal);
@@ -57,8 +57,9 @@
     });
     return overlay;
   }
-  function customFoodModal(){
-    mountModal('＋ Crear alimento propio','Cargá los valores nutricionales por 100 g. Se guardará en Mis alimentos, separado por cuenta.',`
+  function customFoodModal(existingFood=null){
+    const editing=Boolean(existingFood?.userFoodId);
+    mountModal(editing?'Editar alimento propio':'＋ Crear alimento propio',editing?'Actualizá los datos nutricionales de tu alimento. Las comidas ya registradas conservan su propia instantánea.':'Cargá los valores nutricionales por 100 g. Se guardará en Mis alimentos, separado por cuenta.',`
       <form id="nutritionCustomFoodForm" class="nutrition-advanced-form">
         <div class="field"><label for="nutritionCustomFoodName">Nombre *</label><input class="input" id="nutritionCustomFoodName" required maxlength="120" autocomplete="off" placeholder="Ej.: Panqueque casero"></div>
         <div class="field"><label for="nutritionCustomFoodBrand">Marca o descripción breve</label><input class="input" id="nutritionCustomFoodBrand" maxlength="100" placeholder="Opcional"></div>
@@ -69,11 +70,28 @@
           <div class="field"><label for="nutritionCustomFoodFat">Grasas (g) *</label><input class="input" id="nutritionCustomFoodFat" type="number" min="0" max="100" step="0.1" required value="0"></div>
           <div class="field"><label for="nutritionCustomFoodFiber">Fibra (g)</label><input class="input" id="nutritionCustomFoodFiber" type="number" min="0" max="100" step="0.1" value="0"></div>
           <div class="field"><label for="nutritionCustomFoodServing">Porción habitual (g)</label><input class="input" id="nutritionCustomFoodServing" type="number" min="0.1" max="10000" step="0.1" value="100"></div>
+          <div class="field"><label for="nutritionCustomFoodPrep">Estado del alimento</label><select class="input" id="nutritionCustomFoodPrep"><option value="unspecified">No especificado</option><option value="raw">Crudo</option><option value="cooked">Cocido</option><option value="prepared">Preparado</option></select></div>
+          <div class="field"><label for="nutritionCustomFoodDensity">Densidad (g/ml)</label><input class="input" id="nutritionCustomFoodDensity" type="number" min="0.0001" max="10000" step="0.0001" placeholder="Dejar vacío si no se conoce"></div>
+          <div class="field"><label for="nutritionCustomFoodUnitWeight">Peso de una unidad (g)</label><input class="input" id="nutritionCustomFoodUnitWeight" type="number" min="0.1" max="100000" step="0.1" placeholder="Ej.: 120"></div><div class="field"><label for="nutritionCustomFoodPortionWeight">Peso de una porción (g)</label><input class="input" id="nutritionCustomFoodPortionWeight" type="number" min="0.1" max="100000" step="0.1" placeholder="Ej.: 180"></div>
         </div>
-        <p class="nutrition-advanced-note">Ingresá los valores por 100 g, no por la porción completa. La cantidad que uses en una comida se calcula aparte.</p>
+        <p class="nutrition-advanced-note">Ingresá los nutrientes por 100 g correspondientes al estado elegido. Los ml solo se convierten si ingresás una densidad; unidades y porciones solo si conocés su peso en gramos. El estado no transforma automáticamente los valores nutricionales.</p>
         <div class="nutrition-advanced-status" id="nutritionCustomFoodStatus" role="status" aria-live="polite"></div>
-        <div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cancelar</button><button type="submit" class="nutrition-advanced-primary" id="nutritionCustomFoodSave">Guardar alimento</button></div>
+        <div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cancelar</button><button type="submit" class="nutrition-advanced-primary" id="nutritionCustomFoodSave">${editing?'Guardar cambios':'Guardar alimento'}</button></div>
       </form>`);
+    if(editing){
+      $('nutritionCustomFoodName').value=txt(existingFood.name);
+      $('nutritionCustomFoodBrand').value=txt(existingFood.brand);
+      $('nutritionCustomFoodCalories').value=String(num(existingFood.calories));
+      $('nutritionCustomFoodProtein').value=String(num(existingFood.protein));
+      $('nutritionCustomFoodCarbs').value=String(num(existingFood.carbs));
+      $('nutritionCustomFoodFat').value=String(num(existingFood.fat));
+      $('nutritionCustomFoodFiber').value=String(num(existingFood.fiber));
+      $('nutritionCustomFoodServing').value=String(num(existingFood.servingQuantity)||100);
+      $('nutritionCustomFoodPrep').value=String(existingFood.preparationState||'unspecified');
+      $('nutritionCustomFoodDensity').value=existingFood.densityGPerMl?String(existingFood.densityGPerMl):'';
+      $('nutritionCustomFoodUnitWeight').value=existingFood.gramsPerUnit?String(existingFood.gramsPerUnit):'';
+      $('nutritionCustomFoodPortionWeight').value=existingFood.gramsPerPortion?String(existingFood.gramsPerPortion):'';
+    }
     $('nutritionCustomFoodName')?.focus();
     document.querySelectorAll('[data-advanced-close]').forEach(b=>b.addEventListener('click',closeModal));
     $('nutritionCustomFoodForm')?.addEventListener('submit',async e=>{
@@ -82,53 +100,171 @@
       const name=txt($('nutritionCustomFoodName')?.value);
       const values={calories:num($('nutritionCustomFoodCalories')?.value),protein:num($('nutritionCustomFoodProtein')?.value),carbs:num($('nutritionCustomFoodCarbs')?.value),fat:num($('nutritionCustomFoodFat')?.value),fiber:num($('nutritionCustomFoodFiber')?.value)};
       if(!name){if(status)status.textContent='Ingresá un nombre.';return}
+      const densityRaw=txt($('nutritionCustomFoodDensity')?.value),unitWeightRaw=txt($('nutritionCustomFoodUnitWeight')?.value),portionWeightRaw=txt($('nutritionCustomFoodPortionWeight')?.value);
+      const density=densityRaw===''?null:Number(densityRaw),unitWeight=unitWeightRaw===''?null:Number(unitWeightRaw),portionWeight=portionWeightRaw===''?null:Number(portionWeightRaw);
+      if((density!==null&&(!Number.isFinite(density)||density<=0))||(unitWeight!==null&&(!Number.isFinite(unitWeight)||unitWeight<=0))||(portionWeight!==null&&(!Number.isFinite(portionWeight)||portionWeight<=0))){if(status)status.textContent='La densidad y los pesos por unidad o porción deben ser mayores que cero, o dejarse vacíos si no se conocen.';return}
       if(Object.values(values).some(v=>v<0)||values.protein>100||values.carbs>100||values.fat>100||values.fiber>100||values.calories>1000||values.protein+values.carbs+values.fat>100.5){if(status)status.textContent='Revisá los valores por 100 g: no pueden ser negativos, superar los límites ni sumar más de 100 g entre proteínas, carbohidratos y grasas.';return}
       if(!data()?.saveUserFood){if(status)status.textContent='La persistencia nutricional todavía no está disponible.';return}
       if(save){save.disabled=true;save.textContent='Guardando…'}
       try{
         const customKey=(value)=>txt(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,70)||'alimento';
-        const food={name,brand:txt($('nutritionCustomFoodBrand')?.value),source:'Alimento personalizado',sourceType:'custom',externalId:`custom-${customKey(name)}-${customKey($('nutritionCustomFoodBrand')?.value||'sin-marca')}`,unit:'g',defaultQuantity:Math.max(.1,num($('nutritionCustomFoodServing')?.value)||100),servingQuantity:Math.max(.1,num($('nutritionCustomFoodServing')?.value)||100),servingSize:'Porción habitual',calories:values.calories,protein:values.protein,carbs:values.carbs,fat:values.fat,fiber:values.fiber,isGeneric:false,ingredients:'',categories:'Personalizado',labels:'',imageUrl:''};
+        const brand=txt($('nutritionCustomFoodBrand')?.value);
+        const food={name,brand,source:'Alimento personalizado',sourceType:editing?(existingFood.recordSource||'custom'):'custom',externalId:editing?(existingFood.externalId||existingFood.id):`custom-${customKey(name)}-${customKey(brand||'sin-marca')}`,fingerprint:editing?existingFood.fingerprint:undefined,userFoodId:editing?existingFood.userFoodId:null,unit:'g',preparationState:String($('nutritionCustomFoodPrep')?.value||'unspecified'),densityGPerMl:density,gramsPerUnit:unitWeight,gramsPerPortion:portionWeight,defaultQuantity:Math.max(.1,num($('nutritionCustomFoodServing')?.value)||100),servingQuantity:Math.max(.1,num($('nutritionCustomFoodServing')?.value)||100),servingSize:editing?(existingFood.servingSize||'Porción habitual'):'Porción habitual',calories:values.calories,protein:values.protein,carbs:values.carbs,fat:values.fat,fiber:values.fiber,isGeneric:editing?existingFood.isGeneric===true:false,ingredients:editing?txt(existingFood.ingredients):'',categories:editing?txt(existingFood.categories):'Personalizado',labels:editing?txt(existingFood.labels):'',imageUrl:editing?txt(existingFood.imageUrl):''};
         const result=await data().saveUserFood(food);
         if(!result?.ok)throw new Error('Supabase no confirmó el guardado. Revisá la conexión y las migraciones de catálogo.');
-        closeModal();foods()?.select?.(result.food||food);
-        const panel=$('nutritionFoodCatalog');if(panel?.hidden)$('nutritionFoodCatalogToggle')?.click();
-        if($('nutritionFoodCatalogStatus'))$('nutritionFoodCatalogStatus').textContent=`✓ ${name} guardado en Mis alimentos. Ajustá la cantidad y agregalo a la comida.`;
-        notify(`Alimento propio guardado: ${name}`,'success');
-      }catch(err){console.warn('Alimento personalizado:',err);if(status)status.textContent=`No se pudo guardar: ${err?.message||'error desconocido'}`;if(save){save.disabled=false;save.textContent='Guardar alimento'}}
+        closeModal();
+        if(editing){notify(`Alimento actualizado: ${name}`,'success');openUserFoodsModal();}
+        else{
+          foods()?.select?.(result.food||food);
+          const panel=$('nutritionFoodCatalog');if(panel?.hidden)$('nutritionFoodCatalogToggle')?.click();
+          if($('nutritionFoodCatalogStatus'))$('nutritionFoodCatalogStatus').textContent=`✓ ${name} guardado en Mis alimentos. Ajustá la cantidad y agregalo a la comida.`;
+          notify(`Alimento propio guardado: ${name}`,'success');
+        }
+      }catch(err){console.warn('Alimento personalizado:',err);if(status)status.textContent=`No se pudo guardar: ${err?.message||'error desconocido'}`;if(save){save.disabled=false;save.textContent=editing?'Guardar cambios':'Guardar alimento'}}
     });
   }
 
-  function recipeTotals(items){
-    if(data()?.calculateRecipe)return data().calculateRecipe(items);
-    const weight=(items||[]).reduce((s,x)=>s+Math.max(0,num(x.quantity)),0);
-    const total=(items||[]).reduce((a,x)=>{const f=Math.max(0,num(x.quantity))/100;a.calories+=num(x.calories_per_100g)*f;a.protein+=num(x.protein_per_100g)*f;a.carbs+=num(x.carbs_per_100g)*f;a.fat+=num(x.fat_per_100g)*f;return a},{calories:0,protein:0,carbs:0,fat:0});
+
+  function renderUserFoodCards(list,statusText=''){
+    const host=$('nutritionUserFoodsList'),status=$('nutritionUserFoodsStatus');
+    if(status)status.textContent=statusText;
+    if(!host)return;
+    if(!list.length){host.innerHTML='<div class="nutrition-advanced-empty">Todavía no guardaste alimentos personalizados. Podés crear uno y volver acá para editarlo.</div>';return}
+    host.innerHTML=list.map(food=>`<article class="nutrition-user-food-card"><div class="nutrition-user-food-main"><strong>${esc(food.name)}</strong><small>${food.brand?esc(food.brand)+' · ':''}Por 100 g · ${food.preparationState==='raw'?'Crudo':food.preparationState==='cooked'?'Cocido':food.preparationState==='prepared'?'Preparado':'estado no especificado'}</small><span>${fmt(food.calories)} kcal · P ${fmt(food.protein)} g · C ${fmt(food.carbs)} g · G ${fmt(food.fat)} g${food.fiber!=null?' · Fibra '+fmt(food.fiber)+' g':''}</span><small>Porción habitual: ${fmt(food.servingQuantity||100)} g${food.densityGPerMl?` · Densidad ${fmt(food.densityGPerMl)} g/ml`:''}${food.gramsPerUnit?` · Unidad ${fmt(food.gramsPerUnit)} g`:''}${food.gramsPerPortion?` · Porción ${fmt(food.gramsPerPortion)} g`:''}</small></div><div class="nutrition-user-food-actions"><button type="button" class="nutrition-advanced-secondary" data-user-food-edit="${esc(food.userFoodId)}">Editar</button><button type="button" class="nutrition-advanced-danger" data-user-food-delete="${esc(food.userFoodId)}">Eliminar</button></div></article>`).join('');
+    host.querySelectorAll('[data-user-food-edit]').forEach(button=>button.addEventListener('click',()=>{
+      const food=list.find(item=>String(item.userFoodId)===button.dataset.userFoodEdit);
+      if(food)customFoodModal(food);
+    }));
+    host.querySelectorAll('[data-user-food-delete]').forEach(button=>button.addEventListener('click',async()=>{
+      const food=list.find(item=>String(item.userFoodId)===button.dataset.userFoodDelete);if(!food)return;
+      if(!confirm(`¿Eliminar “${food.name}” de Mis alimentos? Las comidas e historiales ya guardados conservarán sus valores registrados.`))return;
+      button.disabled=true;
+      try{
+        await data().deleteUserFood(food.userFoodId);
+        const next=list.filter(item=>String(item.userFoodId)!==String(food.userFoodId));
+        renderUserFoodCards(next,`Alimento eliminado. Quedan ${next.length} alimentos propios.`);
+        notify('Alimento eliminado de Mis alimentos. Los registros anteriores se conservan.','success');
+      }catch(err){button.disabled=false;if(status)status.textContent=`No se pudo eliminar el alimento: ${err?.message||'error'}`;}
+    }));
+  }
+  async function openUserFoodsModal(){
+    mountModal('🥗 Mis alimentos','Editá tus alimentos personalizados. Los valores guardados dentro de comidas anteriores se conservan como instantáneas.',`<div class="nutrition-advanced-status" id="nutritionUserFoodsStatus" role="status" aria-live="polite">Cargando tus alimentos…</div><div class="nutrition-user-food-list" id="nutritionUserFoodsList"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" id="nutritionUserFoodCreateBtn">＋ Crear alimento</button><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
+    document.querySelectorAll('[data-advanced-close]').forEach(b=>b.addEventListener('click',closeModal));
+    $('nutritionUserFoodCreateBtn')?.addEventListener('click',()=>customFoodModal());
+    try{
+      if(!data()?.loadUserFoods)throw new Error('El módulo de persistencia todavía no ofrece la lista de alimentos.');
+      const list=await data().loadUserFoods();
+      renderUserFoodCards(list,`${list.length} alimento${list.length===1?'':'s'} personalizado${list.length===1?'':'s'}.`);
+    }catch(err){console.warn('Mis alimentos:',err);const status=$('nutritionUserFoodsStatus');if(status)status.textContent=`No se pudieron cargar tus alimentos. ${err?.message||'Comprobá tu conexión.'}`;}
+  }
+
+  function recipeTotals(items,finishedWeightG=null){
+    if(data()?.calculateRecipe)return data().calculateRecipe(items,finishedWeightG);
+    const weight=(items||[]).reduce((s,x)=>s+Math.max(0,num(x.quantity_in_grams??x.quantity)),0);
+    const total=(items||[]).reduce((a,x)=>{const f=Math.max(0,num(x.quantity_in_grams??x.quantity))/100;a.calories+=num(x.calories_per_100g)*f;a.protein+=num(x.protein_per_100g)*f;a.carbs+=num(x.carbs_per_100g)*f;a.fat+=num(x.fat_per_100g)*f;return a},{calories:0,protein:0,carbs:0,fat:0});
     const factor=weight?100/weight:0;return {total_weight_g:weight,calories_per_100g:total.calories*factor,protein_per_100g:total.protein*factor,carbs_per_100g:total.carbs*factor,fat_per_100g:total.fat*factor,total_calories:total.calories,total_protein_g:total.protein,total_carbs_g:total.carbs,total_fat_g:total.fat};
   }
-  function saveRecipeModal(){
-    const list=pendingFoods().filter(x=>num(x.quantity)>0);
-    if(!list.length){notify('Agregá al menos un alimento a la comida antes de guardarla como receta.','warning');return}
-    const total=recipeTotals(list);
-    mountModal('📖 Guardar comida como receta','La receta conserva ingredientes y cantidades. Después podés agregar porciones a cualquier comida.',`
+  function saveRecipeModal(existingRecipe=null){
+    const editing=Boolean(existingRecipe?.id);
+    let editorIngredients=(Array.isArray(editing?existingRecipe.ingredients:pendingFoods())?(editing?existingRecipe.ingredients:pendingFoods()):[])
+      .filter(item=>item&&num(item.quantity)>0)
+      .map(item=>({...item,consumed:false,consumed_at:null}));
+    if(!editorIngredients.length&&!editing){notify('Agregá al menos un alimento a la comida antes de guardarla como receta.','warning');return}
+    mountModal(editing?'✏️ Editar receta':'📖 Guardar comida como receta',editing?'Modificá cantidades, quitá ingredientes o buscá otros alimentos. Las comidas guardadas anteriormente no cambian.':'Revisá los ingredientes y sus cantidades antes de guardar esta preparación.',`
       <form id="nutritionRecipeSaveForm" class="nutrition-advanced-form">
-        <div class="nutrition-advanced-recipe-preview"><strong>${list.length} ingrediente${list.length===1?'':'s'} · ${fmt(total.total_weight_g)} g en total</strong><span>${fmt(total.total_calories)} kcal · P ${fmt(total.total_protein_g)} g · C ${fmt(total.total_carbs_g)} g · G ${fmt(total.total_fat_g)} g para toda la preparación</span></div>
-        <div class="field"><label for="nutritionRecipeName">Nombre de la receta *</label><input class="input" id="nutritionRecipeName" maxlength="120" required autocomplete="off" placeholder="Ej.: Avena con yogur y banana"></div>
-        <div class="field"><label for="nutritionRecipeNotes">Notas o preparación</label><textarea class="input" id="nutritionRecipeNotes" rows="2" maxlength="1000" placeholder="Opcional"></textarea></div>
-        <div class="field"><label for="nutritionRecipeServings">¿Cuántas porciones rinde?</label><input class="input" id="nutritionRecipeServings" type="number" min="0.1" max="1000" step="0.1" value="1" required><small>Se usa para calcular cuánto ingrediente agregar al elegir una porción.</small></div>
-        <p class="nutrition-advanced-note">Los macros se calculan a partir de los ingredientes cargados y sus cantidades, usando los valores por 100 g.</p>
+        <div class="nutrition-advanced-recipe-preview" id="nutritionRecipePreview"><strong>Calculando preparación…</strong></div>
+        <div class="field"><label for="nutritionRecipeName">Nombre de la receta *</label><input class="input" id="nutritionRecipeName" maxlength="120" required autocomplete="off" placeholder="Ej.: Avena con yogur y banana" value="${esc(existingRecipe?.name||'')}"></div>
+        <div class="field"><label for="nutritionRecipeNotes">Notas o preparación</label><textarea class="input" id="nutritionRecipeNotes" rows="2" maxlength="1000" placeholder="Opcional">${esc(existingRecipe?.notes||'')}</textarea></div>
+        <div class="field"><label for="nutritionRecipeServings">¿Cuántas porciones rinde?</label><input class="input" id="nutritionRecipeServings" type="number" min="0.1" max="1000" step="0.1" value="${esc(existingRecipe?.servings||1)}" required><small>Se usa para calcular cuánto ingrediente agregar al elegir una porción.</small></div>
+        <div class="field"><label for="nutritionRecipeFinishedWeight">Peso final preparado (g), opcional</label><input class="input" id="nutritionRecipeFinishedWeight" type="number" min="0.1" max="1000000" step="0.1" value="${esc(existingRecipe?.finished_weight_g||'')}" placeholder="Vacío = estimar sumando los ingredientes"><small>Pesá la preparación terminada y cargá el peso real. Si se deja vacío, la aplicación usa la suma de los ingredientes convertidos a gramos.</small></div>
+        <section class="nutrition-recipe-editor-section" aria-labelledby="nutritionRecipeIngredientTitle">
+          <div class="nutrition-recipe-editor-head"><strong id="nutritionRecipeIngredientTitle">Ingredientes y cantidades</strong><span id="nutritionRecipeIngredientCount"></span></div>
+          <div id="nutritionRecipeIngredientEditor" class="nutrition-recipe-ingredient-editor"></div>
+        </section>
+        <section class="nutrition-recipe-add-ingredient" aria-label="Agregar un ingrediente">
+          <label for="nutritionRecipeIngredientSearch">Agregar ingrediente</label>
+          <div class="nutrition-recipe-search-row"><input class="input" id="nutritionRecipeIngredientSearch" autocomplete="off" placeholder="Ej.: arroz cocido, leche…"><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeIngredientSearchBtn">Buscar</button></div>
+          <div class="nutrition-recipe-search-results" id="nutritionRecipeIngredientResults" aria-live="polite"></div>
+        </section>
+        <p class="nutrition-advanced-note">Los nutrientes se recalculan con los valores guardados por 100 g. Si agregás un alimento nuevo, comprobá que el resultado corresponda a su versión cruda, cocida o preparada.</p>
         <div class="nutrition-advanced-status" id="nutritionRecipeSaveStatus" role="status" aria-live="polite"></div>
-        <div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cancelar</button><button type="submit" class="nutrition-advanced-primary" id="nutritionRecipeSaveBtn">Guardar receta</button></div>
+        <div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cancelar</button><button type="submit" class="nutrition-advanced-primary" id="nutritionRecipeSaveBtn">${editing?'Guardar cambios':'Guardar receta'}</button></div>
       </form>`);
+    const ingredientHost=$('nutritionRecipeIngredientEditor');
+    const preview=$('nutritionRecipePreview');
+    const status=$('nutritionRecipeSaveStatus');
+    function updatePreview(){
+      const finishedRaw=txt($('nutritionRecipeFinishedWeight')?.value);
+      let total;
+      try{total=recipeTotals(editorIngredients,finishedRaw===''?null:Number(finishedRaw));}
+      catch(err){total=null;if(status)status.textContent=err?.message||'No se puede calcular una equivalencia fiable a gramos.';}
+      if(preview){
+        if(!total)preview.innerHTML='<strong>No se puede calcular la receta con las unidades actuales.</strong><span>Revisá las equivalencias de los ingredientes en Mis alimentos.</span>';
+        else preview.innerHTML=`<strong>${editorIngredients.length} ingrediente${editorIngredients.length===1?'':'s'} · ${fmt(total.ingredient_weight_g??total.total_weight_g)} g en ingredientes · ${total.finished_weight_g?`peso final: ${fmt(total.finished_weight_g)} g`:`peso estimado: ${fmt(total.total_weight_g)} g`}</strong><span>${fmt(total.total_calories)} kcal · P ${fmt(total.total_protein_g)} g · C ${fmt(total.total_carbs_g)} g · G ${fmt(total.total_fat_g)} g para toda la preparación · nutrientes por 100 g calculados con ${total.finished_weight_g?'el peso final':'el peso estimado'}</span>`;
+      }
+      const count=$('nutritionRecipeIngredientCount');if(count)count.textContent=`${editorIngredients.length} elemento${editorIngredients.length===1?'':'s'}`;
+    }
+
+    function renderIngredientEditor(){
+      if(!ingredientHost)return;
+      if(!editorIngredients.length){ingredientHost.innerHTML='<div class="nutrition-advanced-empty">No hay ingredientes. Buscá uno abajo para agregarlo.</div>';updatePreview();return}
+      ingredientHost.innerHTML=editorIngredients.map((item,index)=>`<article class="nutrition-recipe-editor-item"><div class="nutrition-recipe-editor-item-main"><strong>${esc(item.name||'Alimento')}</strong><small>${item.brand?esc(item.brand)+' · ':''}${item.preparation_state&&item.preparation_state!=='unspecified'?(item.preparation_state==='raw'?'Crudo · ':item.preparation_state==='cooked'?'Cocido · ':'Preparado · '):''}${fmt(item.calories_per_100g)} kcal · P ${fmt(item.protein_per_100g)} g · C ${fmt(item.carbs_per_100g)} g · G ${fmt(item.fat_per_100g)} g / 100 g</small></div><label class="nutrition-recipe-editor-quantity">Cantidad (${esc(item.unit||'g')})<input class="input" type="number" min="0.1" max="100000" step="0.1" value="${esc(fmt(item.quantity))}" data-recipe-ingredient-qty="${index}"></label><button type="button" class="nutrition-advanced-danger nutrition-recipe-editor-remove" data-recipe-ingredient-remove="${index}" aria-label="Quitar ${esc(item.name||'ingrediente')}">Quitar</button></article>`).join('');
+      ingredientHost.querySelectorAll('[data-recipe-ingredient-qty]').forEach(input=>input.addEventListener('change',()=>{
+        const index=Number(input.dataset.recipeIngredientQty),quantity=Number(input.value);
+        if(!Number.isFinite(quantity)||quantity<=0){if(status)status.textContent='Cada ingrediente debe tener una cantidad mayor que cero.';input.value=fmt(editorIngredients[index]?.quantity||100);return}
+        const previous=editorIngredients[index];
+        const nextQuantity=Math.round(quantity*10)/10;
+        const qg=data()?.weightInGrams?.(previous,nextQuantity);
+        editorIngredients[index]={...previous,quantity:nextQuantity,quantity_in_grams:qg===null||qg===undefined?previous.quantity_in_grams:Math.round(qg*1000)/1000};
+        if(status)status.textContent='';updatePreview();
+      }));
+      ingredientHost.querySelectorAll('[data-recipe-ingredient-remove]').forEach(button=>button.addEventListener('click',()=>{
+        const index=Number(button.dataset.recipeIngredientRemove);
+        editorIngredients=editorIngredients.filter((_,i)=>i!==index);
+        renderIngredientEditor();
+      }));
+      updatePreview();
+    }
+    renderIngredientEditor();
+    $('nutritionRecipeFinishedWeight')?.addEventListener('input',updatePreview);
     $('nutritionRecipeName')?.focus();document.querySelectorAll('[data-advanced-close]').forEach(b=>b.addEventListener('click',closeModal));
+    const searchButton=$('nutritionRecipeIngredientSearchBtn');
+    async function searchRecipeIngredients(){
+      const query=txt($('nutritionRecipeIngredientSearch')?.value),results=$('nutritionRecipeIngredientResults');
+      if(!results)return;
+      if(!query){results.textContent='Escribí el nombre de un alimento para buscar.';return}
+      searchButton.disabled=true;searchButton.textContent='Buscando…';results.textContent='Buscando primero en tus alimentos…';
+      try{
+        const pack=await data().searchWithLocalFirst(query,foods()?.search);
+        const matches=(Array.isArray(pack?.results)?pack.results:[]).slice(0,8);
+        if(!matches.length){results.textContent='No se encontraron alimentos. Probá otro nombre o agregá primero el alimento a Mis alimentos.';return}
+        results.innerHTML=matches.map((food,index)=>`<button type="button" class="nutrition-recipe-search-result" data-recipe-search-result="${index}"><span><strong>${esc(food.name)}</strong><small>${food.brand?esc(food.brand)+' · ':''}${esc(food.source||'Catálogo')} · ${fmt(food.calories)} kcal / 100 g</small></span><span aria-hidden="true">＋</span></button>`).join('');
+        results.querySelectorAll('[data-recipe-search-result]').forEach(button=>button.addEventListener('click',()=>{
+          const food=matches[Number(button.dataset.recipeSearchResult)];if(!food)return;
+          const unit=data()?.defaultUnit?.(food)||'g';
+          const quantity=Math.max(.1,num(food.defaultQuantity)|| (unit==='unit'||unit==='portion'?1:100));
+          const item=data().snapshot?data().snapshot(food,quantity,unit,food.preparationState||'unspecified'):{...food,quantity,unit,calories_per_100g:num(food.calories),protein_per_100g:num(food.protein),carbs_per_100g:num(food.carbs),fat_per_100g:num(food.fat),fiber_per_100g:num(food.fiber)};
+          editorIngredients.push({...item,name:food.name,brand:food.brand||'',quantity,unit,preparation_state:item.preparation_state||food.preparationState||'unspecified',calories_per_100g:num(food.calories??food.calories_per_100g),protein_per_100g:num(food.protein??food.protein_per_100g),carbs_per_100g:num(food.carbs??food.carbs_per_100g),fat_per_100g:num(food.fat??food.fat_per_100g),fiber_per_100g:num(food.fiber??food.fiber_per_100g),consumed:false,consumed_at:null});
+          $('nutritionRecipeIngredientSearch').value='';results.innerHTML='';if(status)status.textContent=`${food.name} agregado a la receta.`;renderIngredientEditor();
+        }));
+      }catch(err){console.warn('Buscar ingrediente para receta:',err);results.textContent='No se pudo buscar el alimento. Comprobá la conexión o usá Mis alimentos.';}
+      finally{searchButton.disabled=false;searchButton.textContent='Buscar'}
+    }
+    searchButton?.addEventListener('click',searchRecipeIngredients);
+    $('nutritionRecipeIngredientSearch')?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();searchRecipeIngredients()}});
     $('nutritionRecipeSaveForm')?.addEventListener('submit',async e=>{
-      e.preventDefault();const status=$('nutritionRecipeSaveStatus'),btn=$('nutritionRecipeSaveBtn');
+      e.preventDefault();const btn=$('nutritionRecipeSaveBtn');
       const name=txt($('nutritionRecipeName')?.value),servings=num($('nutritionRecipeServings')?.value);
+      const ingredients=editorIngredients.filter(item=>num(item.quantity)>0).map(item=>({...item,consumed:false,consumed_at:null}));
       if(!name||servings<=0){if(status)status.textContent='Ingresá un nombre y una cantidad de porciones válida.';return}
+      if(!ingredients.length){if(status)status.textContent='La receta debe contener al menos un ingrediente con cantidad.';return}
       if(!data()?.saveRecipe){if(status)status.textContent='La función de recetas no está disponible.';return}
       if(btn){btn.disabled=true;btn.textContent='Guardando…'}
       try{
-        const res=await data().saveRecipe({name,notes:txt($('nutritionRecipeNotes')?.value),servings,ingredients:list});
-        closeModal();notify(`Receta guardada: ${res.recipe.name}`,'success');openRecipesModal();
-      }catch(err){console.warn('Guardar receta:',err);if(status)status.textContent=`No se pudo guardar la receta. ¿Ejecutaste sql/07-nutrition-advanced.sql? ${err?.message||''}`;if(btn){btn.disabled=false;btn.textContent='Guardar receta'}}
+        const finishedWeightText=txt($('nutritionRecipeFinishedWeight')?.value);
+        const res=await data().saveRecipe({id:existingRecipe?.id||null,name,notes:txt($('nutritionRecipeNotes')?.value),servings,finishedWeightG:finishedWeightText===''?null:Number(finishedWeightText),ingredients});
+        closeModal();notify(`Receta ${editing?'actualizada':'guardada'}: ${res.recipe.name}`,'success');openRecipesModal();
+      }catch(err){console.warn('Guardar receta:',err);if(status)status.textContent=`No se pudo guardar la receta. Comprobá la conexión y los permisos de Supabase. ${err?.message||''}`;if(btn){btn.disabled=false;btn.textContent=editing?'Guardar cambios':'Guardar receta'}}
     });
   }
   function showRecipeCards(recipes,statusText=''){
@@ -137,14 +273,18 @@
     if(!recipes.length){host.innerHTML='<div class="nutrition-advanced-empty">Todavía no guardaste recetas. Abrí una comida con alimentos y tocá “Guardar como receta”.</div>';return}
     host.innerHTML=recipes.map(recipe=>{
       const ingredients=Array.isArray(recipe.ingredients)?recipe.ingredients:[];
-      return `<article class="nutrition-recipe-card" data-recipe-card="${esc(recipe.id)}"><div class="nutrition-recipe-card-main"><strong>${esc(recipe.name)}</strong><small>${ingredients.length} ingrediente${ingredients.length===1?'':'s'} · ${fmt(recipe.total_weight_g)} g · rinde ${fmt(recipe.servings)} porción/porciones</small><span>${fmt(recipe.calories_per_100g)} kcal · P ${fmt(recipe.protein_per_100g)} g · C ${fmt(recipe.carbs_per_100g)} g · G ${fmt(recipe.fat_per_100g)} g / 100 g</span>${recipe.notes?`<p>${esc(recipe.notes)}</p>`:''}</div><div class="nutrition-recipe-card-controls"><label>Porciones a agregar<input class="input" type="number" min="0.1" max="100" step="0.1" value="1" data-recipe-portions="${esc(recipe.id)}"></label><button type="button" class="nutrition-advanced-primary" data-recipe-add="${esc(recipe.id)}">Agregar a esta comida</button><button type="button" class="nutrition-advanced-danger" data-recipe-delete="${esc(recipe.id)}">Eliminar</button></div></article>`;
+      return `<article class="nutrition-recipe-card" data-recipe-card="${esc(recipe.id)}"><div class="nutrition-recipe-card-main"><strong>${esc(recipe.name)}</strong><small>${ingredients.length} ingrediente${ingredients.length===1?'':'s'} · ${recipe.finished_weight_g?`peso final ${fmt(recipe.finished_weight_g)} g`:`peso estimado ${fmt(recipe.total_weight_g)} g`} · rinde ${fmt(recipe.servings)} porción/porciones</small><span>${fmt(recipe.calories_per_100g)} kcal · P ${fmt(recipe.protein_per_100g)} g · C ${fmt(recipe.carbs_per_100g)} g · G ${fmt(recipe.fat_per_100g)} g / 100 g</span>${recipe.notes?`<p>${esc(recipe.notes)}</p>`:''}</div><div class="nutrition-recipe-card-controls"><label>Porciones a agregar<input class="input" type="number" min="0.1" max="100" step="0.1" value="1" data-recipe-portions="${esc(recipe.id)}"></label><button type="button" class="nutrition-advanced-primary" data-recipe-add="${esc(recipe.id)}">Agregar a esta comida</button><button type="button" class="nutrition-advanced-secondary" data-recipe-edit="${esc(recipe.id)}">Editar receta</button><button type="button" class="nutrition-advanced-danger" data-recipe-delete="${esc(recipe.id)}">Eliminar</button></div></article>`;
     }).join('');
+    host.querySelectorAll('[data-recipe-edit]').forEach(button=>button.addEventListener('click',()=>{
+      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeEdit);
+      if(recipe)saveRecipeModal(recipe);
+    }));
     host.querySelectorAll('[data-recipe-add]').forEach(button=>button.addEventListener('click',()=>{
       const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeAdd);if(!recipe)return;
       const portionInput=host.querySelector(`[data-recipe-portions="${CSS.escape(String(recipe.id))}"]`);const portions=num(portionInput?.value);
       if(portions<=0){if(status)status.textContent='Ingresá una cantidad de porciones mayor que cero.';return}
       const servings=Math.max(.1,num(recipe.servings)||1),scale=portions/servings;
-      const ingredients=(Array.isArray(recipe.ingredients)?recipe.ingredients:[]).filter(x=>num(x.quantity)>0).map(item=>({...item,quantity:Math.round(num(item.quantity)*scale*10)/10,consumed:false,consumed_at:null}));
+      const ingredients=(Array.isArray(recipe.ingredients)?recipe.ingredients:[]).filter(x=>num(x.quantity)>0).map(item=>{const quantity=Math.round(num(item.quantity)*scale*10)/10;const qg=data()?.weightInGrams?.(item,quantity);return {...item,quantity,quantity_in_grams:qg===null||qg===undefined?item.quantity_in_grams:Math.round(qg*1000)/1000,consumed:false,consumed_at:null}});
       if(!ingredients.length){if(status)status.textContent='Esta receta no tiene ingredientes guardados.';return}
       const current=pendingFoods();foods()?.setPendingMealFoods?.([...current,...ingredients]);
       closeModal();notify(`${recipe.name}: se agregaron ${fmt(portions)} porciones a la comida.`,'success');
@@ -174,7 +314,7 @@
       host.innerHTML=groups.map(([date,items])=>{
         const total=items.reduce((a,item)=>({calories:a.calories+num(item.calories),protein:a.protein+num(item.protein_g),carbs:a.carbs+num(item.carbs_g),fat:a.fat+num(item.fat_g)}),{calories:0,protein:0,carbs:0,fat:0});
         const human=new Date(`${date}T12:00:00`).toLocaleDateString('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-        return `<section class="nutrition-history-day"><header><strong>${esc(human)}</strong><span>${Math.round(total.calories)} kcal · P ${fmt(total.protein)} g · C ${fmt(total.carbs)} g · G ${fmt(total.fat)} g</span></header><div class="nutrition-history-items">${items.map(item=>`<div class="nutrition-history-item"><div><strong>${esc(item.food_name||'Alimento')}</strong><small>${esc(item.meal_title||'Comida')}${item.meal_time?' · '+esc(item.meal_time):''} · ${fmt(item.quantity)} ${esc(item.unit||'g')}</small></div><span>${fmt(item.calories)} kcal</span></div>`).join('')}</div></section>`;
+        return `<section class="nutrition-history-day"><header><strong>${esc(human)}</strong><span>${Math.round(total.calories)} kcal · P ${fmt(total.protein)} g · C ${fmt(total.carbs)} g · G ${fmt(total.fat)} g</span></header><div class="nutrition-history-items">${items.map(item=>`<div class="nutrition-history-item"><div><strong>${esc(item.food_name||'Alimento')}</strong><small>${esc(item.meal_title||'Comida')}${item.meal_time?' · '+esc(item.meal_time):''} · ${fmt(item.quantity)} ${esc(item.unit||'g')}${item.item_snapshot?.preparation_state&&item.item_snapshot.preparation_state!=='unspecified'?' · '+(item.item_snapshot.preparation_state==='raw'?'crudo':item.item_snapshot.preparation_state==='cooked'?'cocido':'preparado'):''}</small></div><span>${fmt(item.calories)} kcal</span></div>`).join('')}</div></section>`;
       }).join('');
     }catch(err){console.warn('Historial de consumo:',err);status.textContent=`No se pudo cargar el historial. Ejecutá sql/07-nutrition-advanced.sql. ${err?.message||''}`;host.innerHTML='';}
   }
@@ -184,12 +324,13 @@
     $('nutritionHistoryRange')?.addEventListener('change',e=>{historyDays=Number(e.target.value)||30;loadHistory()});historyDays=30;loadHistory();
   }
   function bind(){
-    $('nutritionCreateCustomFoodBtn')?.addEventListener('click',customFoodModal);
+    $('nutritionCreateCustomFoodBtn')?.addEventListener('click',()=>customFoodModal());
+    $('nutritionManageCustomFoodsBtn')?.addEventListener('click',openUserFoodsModal);
     $('nutritionOpenRecipesBtn')?.addEventListener('click',openRecipesModal);
     $('nutritionMealBuilderSaveRecipe')?.addEventListener('click',saveRecipeModal);
     $('nutritionHistoryBtn')?.addEventListener('click',openHistoryModal);
     document.addEventListener('agenda:nutrition-history-warning',event=>notify(`Consumo guardado, pero falta guardar en el historial. ${event.detail?.message||''}`,'warning'));
   }
-  window.AgendaNutritionAdvanced={openCustomFood:customFoodModal,openRecipes:openRecipesModal,openHistory:openHistoryModal,saveRecipe:saveRecipeModal};
+  window.AgendaNutritionAdvanced={openCustomFood:customFoodModal,openUserFoods:openUserFoodsModal,openRecipes:openRecipesModal,openHistory:openHistoryModal,saveRecipe:saveRecipeModal};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
 })();

@@ -188,12 +188,15 @@
   }
 
   function readLocalJSON(key,fallback){try{const raw=localStorage.getItem(key);return raw?JSON.parse(raw):fallback}catch(_){return fallback}}
-  async function fetchAllForCurrentUser(table){
-    if(!currentUser?.id)throw new Error('Necesitás iniciar sesión para exportar los datos de tu cuenta.');
+  async function fetchAllForCurrentUser(table,expectedUserId){
+    const owner=String(expectedUserId||'');
+    if(!owner||!currentUser?.id)throw new Error('Necesitás iniciar sesión para exportar los datos de tu cuenta.');
     const out=[];const pageSize=500;let from=0;
     while(true){
-      const {data,error}=await sb.from(table).select('*').eq('user_id',currentUser.id).range(from,from+pageSize-1);
+      if(String(currentUser?.id||'')!==owner)throw new Error('La cuenta cambió durante la exportación. No se generó una copia mezclando cuentas.');
+      const {data,error}=await sb.from(table).select('*').eq('user_id',owner).range(from,from+pageSize-1);
       if(error)throw error;
+      if(String(currentUser?.id||'')!==owner)throw new Error('La cuenta cambió durante la exportación. No se generó una copia mezclando cuentas.');
       const batch=Array.isArray(data)?data:[];out.push(...batch);
       if(batch.length<pageSize)break;
       from+=pageSize;
@@ -202,34 +205,49 @@
   }
   async function exportData(){
     if(!currentUser?.id){alert('Iniciá sesión para crear una copia completa de tu cuenta.');return}
-    const warnings=[];let exportedMeals=Array.isArray(nutritionMeals)?nutritionMeals.slice():[];
+    const exportUserId=String(currentUser.id);
+    const assertExportUser=()=>{if(String(currentUser?.id||'')!==exportUserId)throw new Error('La cuenta cambió durante la exportación. Se canceló la copia para evitar mezclar datos de distintas cuentas. Volvé a iniciar la exportación desde la cuenta correcta.')};
+    const warnings=[];let exportedMeals=Array.isArray(nutritionMeals)?nutritionMeals.filter(m=>String(m?.user_id||exportUserId)===exportUserId).slice():[];
     const optionalTables=['nutrition_meals','nutrition_meal_items','user_foods','nutrition_recipes','nutrition_consumption_history'];
     const nutritionRows={nutrition_meals:exportedMeals,nutrition_meal_items:[],user_foods:[],nutrition_recipes:[],nutrition_consumption_history:[]};
     // Intentamos sincronizar primero las acciones offline pendientes. Si no se
-    // pueden confirmar, el backup refleja igualmente el estado deseado local.
+    // pueden confirmar, el backup refleja el estado deseado local. La cuenta se
+    // valida antes y después para no mezclar colas de usuarios distintos.
     try{await window.AgendaNutritionConsumption?.flushPending?.()}catch(_){}
-    const pendingConsumption=readLocalJSON(`agendaNutritionPendingConsumption:${String(currentUser.id)}`,{});
+    try{assertExportUser()}catch(err){alert(err.message);return}
+    const pendingConsumption=readLocalJSON(`agendaNutritionPendingConsumption:${exportUserId}`,{});
     for(const table of optionalTables){
-      try{nutritionRows[table]=await fetchAllForCurrentUser(table)}
-      catch(err){warnings.push(`${table}: ${err?.message||'no disponible'}`)}
+      try{nutritionRows[table]=await fetchAllForCurrentUser(table,exportUserId)}
+      catch(err){if(String(currentUser?.id||'')!==exportUserId){alert(err?.message||'La cuenta cambió durante la exportación.');return}warnings.push(`${table}: ${err?.message||'no disponible'}`)}
     }
     let preferences=[];
     try{
-      const {data,error}=await sb.from('nutrition_preferences').select('user_id,meal_order,nutrition_goals,favorite_foods,recent_foods').eq('user_id',currentUser.id).maybeSingle();
+      assertExportUser();
+      const {data,error}=await sb.from('nutrition_preferences').select('user_id,meal_order,nutrition_goals,favorite_foods,recent_foods').eq('user_id',exportUserId).maybeSingle();
       if(error)throw error;
+      assertExportUser();
       preferences=data?[data]:[];
     }catch(err){
-      warnings.push(`nutrition_preferences (preferencias sincronizadas): ${err?.message||'no disponible'}`);
-      try{const {data,error:fallbackError}=await sb.from('nutrition_preferences').select('*').eq('user_id',currentUser.id).maybeSingle();if(fallbackError)throw fallbackError;preferences=data?[data]:[]}catch(fallbackErr){warnings.push(`nutrition_preferences (respaldo): ${fallbackErr?.message||'no disponible'}`)}
+      if(String(currentUser?.id||'')!==exportUserId){alert(err?.message||'La cuenta cambió durante la exportación.');return}
+      // Compatibilidad con esquemas que todavía no tienen todas las columnas nuevas.
+      // Solo se considera incompleta la copia si también falla la lectura amplia.
+      try{assertExportUser();const {data,error:fallbackError}=await sb.from('nutrition_preferences').select('*').eq('user_id',exportUserId).maybeSingle();if(fallbackError)throw fallbackError;assertExportUser();preferences=data?[data]:[]}catch(fallbackErr){if(String(currentUser?.id||'')!==exportUserId){alert(fallbackErr?.message||'La cuenta cambió durante la exportación.');return}warnings.push(`nutrition_preferences: ${err?.message||'consulta detallada no disponible'}; respaldo: ${fallbackErr?.message||'no disponible'}`)}
+    }
+    if(warnings.length){
+      const message='No generé la copia porque no pude leer todas las tablas nutricionales. No se descargó ningún archivo parcial; revisá las migraciones y la conexión, y volvé a intentar.';
+      window.AgendaNutritionSync?.setStatus('error',message);
+      alert(`${message}\n\n${warnings.join('\n')}`);
+      return;
     }
     let v33Local={};
     try{const prefix=`agendaV33:${currentUser.id}:`;v33Local={habits:readLocalJSON(prefix+'habits',[]),notes:readLocalJSON(prefix+'notes',[]),priorities:readLocalJSON(prefix+'priorities',{})}}catch(_){}
-    const uid=String(currentUser.id);
+    try{assertExportUser()}catch(err){alert(err.message);return}
+    const uid=exportUserId;
     if(Array.isArray(nutritionRows.nutrition_meal_items))nutritionRows.nutrition_meal_items=nutritionRows.nutrition_meal_items.map(item=>{const pending=pendingConsumption?.[String(item.id)];return pending?{...item,consumed:!!pending.consumed,consumed_at:pending.consumed?(pending.consumed_at||null):null}:item});
     const legacyConsumed={};
     try{const prefix=`agendaNutritionConsumed:${uid}:`;for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.startsWith(prefix)){const itemId=key.slice(prefix.length);if(itemId.startsWith('fallback-meal:'))legacyConsumed[itemId]=localStorage.getItem(key)==='1';}}}catch(_){}
     const nutritionLocal={
-      goals:readLocalJSON(`agendaNutritionGoals:${uid}`,typeof nutritionGoals!=='undefined'?nutritionGoals:{calories:2500,protein:160,carbs:300,fat:70}),
+      goals:readLocalJSON(`agendaNutritionGoals:${uid}`,{calories:2500,protein:160,carbs:300,fat:70}),
       meal_order:readLocalJSON(`agendaNutritionMealOrder:${uid}`,null),
       quick_access:readLocalJSON(`agenda-nutrition-quick-access-v1:${uid}`,{version:1,favorites:[],recent:[]}),
       legacy_consumed:legacyConsumed,
@@ -243,9 +261,10 @@
       nutrition_preferences:preferences,nutrition_local:nutritionLocal,
       v33_local:v33Local,backup_warnings:warnings
     };
+    try{assertExportUser()}catch(err){alert(err.message);return}
     const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-backup-${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
-    if(warnings.length){window.AgendaNutritionSync?.setStatus('warning','Copia descargada con datos pendientes de exportar.');alert('La copia se descargó, pero NO está completa. No pude exportar estas tablas de alimentación:\n\n'+warnings.join('\n')+'\n\nRevisá las migraciones y volvé a exportar.');}
-    else{window.AgendaNutritionSync?.setStatus('saved','Copia de seguridad completa descargada.');alert('Copia de seguridad completa descargada. Incluye todas las comidas, alimentos detallados, estados de consumo, alimentos personales y preferencias nutricionales.');}
+    window.AgendaNutritionSync?.setStatus('saved','Copia de seguridad completa descargada.');
+    alert('Copia de seguridad completa descargada. Incluye todas las comidas, alimentos detallados, estados de consumo, alimentos personales y preferencias nutricionales.');
   }
   function openSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.add('open');if(d){d.classList.add('open');d.setAttribute('aria-hidden','false')}}
   function closeSettings(){const o=$v('settingsOverlay'),d=$v('settingsDrawer');if(o)o.classList.remove('open');if(d){d.classList.remove('open');d.setAttribute('aria-hidden','true')}}

@@ -10,6 +10,8 @@
   let sourceMeal=null;
   let sourceItems=[];
   let sourceItemsLoaded=false;
+  let sourceItemsLoadFailed=false;
+  let sourceOwnerId=null;
   let saving=false;
 
   function esc(v){const d=document.createElement('div');d.textContent=v??'';return d.innerHTML}
@@ -46,7 +48,7 @@
   function closeModal(){
     const overlay=$(MODAL_ID);
     if(overlay)overlay.remove();
-    sourceMeal=null;sourceItems=[];sourceItemsLoaded=false;saving=false;
+    sourceMeal=null;sourceItems=[];sourceItemsLoaded=false;sourceItemsLoadFailed=false;sourceOwnerId=null;saving=false;
   }
 
   function mealOrderIndex(type){
@@ -67,6 +69,7 @@
   function buildModal(meal){
     closeModal();
     sourceMeal=meal;
+    sourceOwnerId=String(typeof currentUser!=='undefined'&&currentUser?.id||'');
     injectStyles();
 
     const overlay=document.createElement('div');
@@ -113,23 +116,29 @@
   async function loadSourceItems(){
     const status=$('nutritionMealCopyStatus');
     const save=$('nutritionMealCopySave');
-    sourceItemsLoaded=false;
+    sourceItemsLoaded=false;sourceItemsLoadFailed=false;
+    if(save)save.disabled=true;
     try{
+      if(!sourceOwnerId||String(currentUser?.id||'')!==sourceOwnerId)throw new Error('La cuenta activa cambió. Volvé a abrir la comida desde la cuenta correcta.');
       if(!sourceMeal?.id||!window.AgendaNutritionData?.loadMealItems)throw new Error('No hay soporte para alimentos estructurados.');
-      sourceItems=await window.AgendaNutritionData.loadMealItems(sourceMeal.id);
+      const loadedItems=await window.AgendaNutritionData.loadMealItems(sourceMeal.id,sourceOwnerId);
+      if(String(currentUser?.id||'')!==sourceOwnerId)throw new Error('La cuenta activa cambió mientras se cargaban los alimentos.');
+      sourceItems=loadedItems;
       sourceItemsLoaded=true;
       if(status)status.textContent=sourceItems.length?`✓ Se copiarán ${sourceItems.length} alimento${sourceItems.length===1?'':'s'} y todas sus cantidades.`:'Esta comida no tiene alimentos estructurados. Se copiarán sus datos nutricionales actuales.';
     }catch(err){
       console.warn('No se pudieron cargar los alimentos de la comida original:',err);
-      sourceItems=[];sourceItemsLoaded=true;
-      if(status)status.textContent='No se pudieron cargar los alimentos estructurados. Se duplicará la comida con sus datos nutricionales.';
+      sourceItems=[];sourceItemsLoaded=false;sourceItemsLoadFailed=true;
+      if(status)status.textContent='No se pudieron cargar los alimentos estructurados. No se duplicó nada para evitar una copia incompleta. Revisá la conexión y volvé a abrir la opción.';
     }finally{
-      if(save)save.disabled=false;
+      if(save)save.disabled=sourceItemsLoadFailed;
     }
   }
 
   async function saveCopy(){
     if(saving||!sourceMeal)return;
+    if(!sourceOwnerId||String(currentUser?.id||'')!==sourceOwnerId){const status=$('nutritionMealCopyStatus');if(status)status.textContent='La cuenta activa cambió. Cerrá esta ventana y volvé a abrir la comida desde la cuenta correcta.';return}
+    if(!sourceItemsLoaded||sourceItemsLoadFailed){const status=$('nutritionMealCopyStatus');if(status)status.textContent='Esperá a que se carguen todos los alimentos antes de duplicar la comida.';return}
     const title=safeText($('nutritionMealCopyTitleInput')?.value);
     const day=Number($('nutritionMealCopyDay')?.value);
     const type=safeText($('nutritionMealCopyType')?.value);
@@ -142,8 +151,11 @@
     if(!type){if(status)status.textContent='Elegí un tipo de comida válido.';return}
     if(typeof sb==='undefined'||!sb||typeof currentUser==='undefined'||!currentUser?.id){if(status)status.textContent='Necesitás tener una sesión iniciada para duplicar la comida.';return}
 
+    const owner=sourceOwnerId;
+    let createdMealId=null;
     saving=true;if(save){save.disabled=true;save.textContent='Duplicando…'}
     try{
+      if(String(currentUser?.id||'')!==owner)throw new Error('La cuenta activa cambió; no se duplicó la comida.');
       const payload={
         user_id:currentUser.id,
         day,
@@ -160,9 +172,13 @@
       };
       const {data,error}=await sb.from('nutrition_meals').insert(payload).select('id').single();
       if(error)throw error;
-      const newId=data?.id;
-      if(newId&&sourceItemsLoaded&&sourceItems.length&&window.AgendaNutritionData?.persistMealItems){
-        await window.AgendaNutritionData.persistMealItems(newId,sourceItems.map(item=>({...item,consumed:false,consumed_at:null})));
+      const newId=data?.id;createdMealId=newId?String(newId):null;
+      if(!newId)throw new Error('Supabase no devolvió el identificador de la comida duplicada.');
+      if(String(currentUser?.id||'')!==owner)throw new Error('La cuenta cambió después de crear la comida. Revisá la cuenta original antes de volver a intentarlo.');
+      if(newId&&sourceItems.length){
+        if(!window.AgendaNutritionData?.persistMealItems)throw new Error('No está disponible el guardado de alimentos detallados.');
+        await window.AgendaNutritionData.persistMealItems(newId,sourceItems.map(item=>({...item,id:undefined,meal_id:String(newId),user_id:owner,consumed:false,consumed_at:null})));
+        if(String(currentUser?.id||'')!==owner)throw new Error('La cuenta cambió durante la copia de alimentos. Revisá la cuenta original antes de volver a intentarlo.');
       }
 
       closeModal();
@@ -175,7 +191,12 @@
       else showToast(`Comida duplicada en ${DAYS[day]} · ${mealLabelSafe(type)} ✓`);
     }catch(err){
       console.error('No se pudo duplicar la comida:',err);
-      if(status)status.textContent=`No se pudo duplicar la comida: ${err?.message||'error desconocido'}`;
+      let rollbackNote='';
+      if(createdMealId&&String(currentUser?.id||'')===owner){
+        try{const {data,error}=await sb.rpc('delete_nutrition_meal_and_items',{p_meal_id:createdMealId});if(error||data!==true)rollbackNote=' La copia incompleta no pudo eliminarse automáticamente; revisá el día antes de reintentar.'}
+        catch(_){rollbackNote=' La copia incompleta no pudo eliminarse automáticamente; revisá el día antes de reintentar.'}
+      }else if(createdMealId){rollbackNote=' La sesión cambió después de crear la copia; verificá la cuenta original antes de reintentar.'}
+      if(status)status.textContent=`No se pudo duplicar la comida: ${err?.message||'error desconocido'}.${rollbackNote}`;
       if(save){save.disabled=false;save.textContent='Duplicar comida'}
       saving=false;
     }

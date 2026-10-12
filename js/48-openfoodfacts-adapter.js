@@ -27,10 +27,12 @@
 
   function energyKcal(product){
     const n=product?.nutriments||{};
-    if(Number.isFinite(Number(n['energy-kcal_100g'])))return num(n['energy-kcal_100g']);
-    if(Number.isFinite(Number(n['energy-kcal'])))return num(n['energy-kcal']);
-    if(Number.isFinite(Number(n['energy_100g'])))return num(n['energy_100g'])/4.184;
-    if(Number.isFinite(Number(n['energy-kj_100g'])))return num(n['energy-kj_100g'])/4.184;
+    const hasNumericValue=value=>value!==null&&value!==undefined&&String(value).trim()!==''&&Number.isFinite(Number(value));
+    // Usar solo valores normalizados por 100 g. El valor genérico energy-kcal
+    // puede corresponder a una porción y no debe tratarse como kcal/100 g.
+    if(hasNumericValue(n['energy-kcal_100g']))return num(n['energy-kcal_100g']);
+    if(hasNumericValue(n['energy_100g']))return num(n['energy_100g'])/4.184;
+    if(hasNumericValue(n['energy-kj_100g']))return num(n['energy-kj_100g'])/4.184;
     return 0;
   }
 

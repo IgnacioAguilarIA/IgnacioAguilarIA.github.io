@@ -17,10 +17,11 @@
     return list.filter(m=>Number(m.day)===Number(day));
   }
   function num(v){const n=Number(v);return Number.isFinite(n)?n:0}
+  function grams(item){return window.AgendaNutritionData?.weightInGrams?window.AgendaNutritionData.weightInGrams(item):((String(item?.unit||'g')==='g')?Math.max(0,num(item?.quantity)):null)}
   function round1(v){return Math.round(num(v)*10)/10}
   function fmt(v,unit){const n=round1(v);return unit==='kcal'?Math.round(n)+' kcal':(Number.isInteger(n)?String(n):n.toFixed(1))+' g'}
   function emptyMacros(){return {calories:0,protein:0,carbs:0,fat:0}}
-  function emptyTotals(){return {planned:emptyMacros(),consumed:emptyMacros(),foodTotal:0,foodConsumed:0}}
+  function emptyTotals(){return {planned:emptyMacros(),consumed:emptyMacros(),foodTotal:0,foodConsumed:0,unconvertible:0}}
   function uid(){return (typeof currentUser!=='undefined'&&currentUser?.id)||'guest'}
   function readFallback(itemId){try{return localStorage.getItem(`agendaNutritionConsumed:${uid()}:${String(itemId)}`)==='1'}catch(_){return false}}
   function clearFallback(itemId){try{localStorage.removeItem(`agendaNutritionConsumed:${uid()}:${String(itemId)}`)}catch(_){ }}
@@ -55,7 +56,9 @@
     (Array.isArray(items)?items:[]).forEach(item=>{
       if(!item||typeof item!=='object')return;
       const quantity=item.__fallback?100:Math.max(0,num(item.quantity));
-      const factor=item.__fallback?1:quantity/100;
+      const weight=item.__fallback?null:grams(item);
+      if(!item.__fallback&&weight===null){totals.unconvertible++;totals.foodTotal++;if(consumedValue(item))totals.foodConsumed++;return;}
+      const factor=item.__fallback?1:weight/100;
       totals.foodTotal++;
       addItemMacros(totals.planned,item,factor);
       if(consumedValue(item)){
@@ -123,7 +126,7 @@
     const foodPct=totals.foodTotal?Math.round(totals.foodConsumed/totals.foodTotal*100):0;
     const days=typeof DAYS!=='undefined'&&Array.isArray(DAYS)?DAYS:['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
     set('nutritionSummaryDay',days[d]||'Día');
-    set('nutritionSummaryMeals',`${meals.length} comida${meals.length===1?'':'s'} planificada${meals.length===1?'':'s'} · ${totals.foodConsumed}/${totals.foodTotal} alimentos consumidos`);
+    set('nutritionSummaryMeals',`${meals.length} comida${meals.length===1?'':'s'} planificada${meals.length===1?'':'s'} · ${totals.foodConsumed}/${totals.foodTotal} alimentos consumidos${totals.unconvertible?` · ${totals.unconvertible} sin conversión fiable`:''}`);
     const planBar=$('nutritionSummaryMealsBar');if(planBar)planBar.style.width=plannedPct+'%';
     const consumedBar=$('nutritionSummaryConsumedBar');if(consumedBar)consumedBar.style.width=foodPct+'%';
 
@@ -143,7 +146,7 @@
     host.classList.toggle('is-refreshing',refreshing);
     try{
       document.dispatchEvent(new CustomEvent('agenda:nutrition-consumed-summary-updated',{
-        detail:{day:d,totals:{...consumed},planned:{...planned},foodTotal:totals.foodTotal,foodConsumed:totals.foodConsumed}
+        detail:{day:d,totals:{...consumed},planned:{...planned},foodTotal:totals.foodTotal,foodConsumed:totals.foodConsumed,unconvertible:totals.unconvertible}
       }));
     }catch(_){ }
   }

@@ -16,19 +16,19 @@
   let originalOpen=null;
 
   function provider(){return window.AgendaFoodCatalog||null}
+  function grams(item,quantity=item?.quantity){return window.AgendaNutritionData?.weightInGrams?window.AgendaNutritionData.weightInGrams(item,quantity):(String(item?.unit||'g')==='g'?Math.max(0,num(quantity)):null)}
   function getItems(){return provider()?.getPendingMealFoods?.()||[]}
   function setItems(items){const p=provider();p?.setPendingMealFoods?.(items);if(!p?.setPendingMealFoods?.__builderWrapped)render()}
 
   function macroTotal(items){
-    return (Array.isArray(items)?items:[]).reduce((acc,item)=>{
-      const qty=Math.max(0,num(item?.quantity)||0);
-      const factor=qty/100;
-      acc.calories+=num(item?.calories_per_100g)*factor;
-      acc.protein+=num(item?.protein_per_100g)*factor;
-      acc.carbs+=num(item?.carbs_per_100g)*factor;
-      acc.fat+=num(item?.fat_per_100g)*factor;
+    const totals=(Array.isArray(items)?items:[]).reduce((acc,item)=>{
+      const weight=grams(item);
+      if(weight===null){acc.unconvertible.push(text(item?.name)||'Alimento');return acc;}
+      const factor=weight/100;
+      acc.calories+=num(item?.calories_per_100g)*factor;acc.protein+=num(item?.protein_per_100g)*factor;acc.carbs+=num(item?.carbs_per_100g)*factor;acc.fat+=num(item?.fat_per_100g)*factor;
       return acc;
-    },{calories:0,protein:0,carbs:0,fat:0});
+    },{calories:0,protein:0,carbs:0,fat:0,unconvertible:[]});
+    return totals;
   }
 
   function round1(v){return Math.round(v*10)/10}
@@ -69,7 +69,8 @@
       <div><span>🔥 Calorías planificadas</span><strong>${fmt(totals.calories)} kcal</strong></div>
       <div><span>🥩 Proteínas</span><strong>${fmt(totals.protein)} g</strong></div>
       <div><span>🍚 Carbohidratos</span><strong>${fmt(totals.carbs)} g</strong></div>
-      <div><span>🥑 Grasas</span><strong>${fmt(totals.fat)} g</strong></div>`;
+      <div><span>🥑 Grasas</span><strong>${fmt(totals.fat)} g</strong></div>
+      ${totals.unconvertible.length?`<div class="nutrition-unit-warning" role="alert">No se puede calcular con fiabilidad: ${esc(totals.unconvertible.join(', '))}. Elegí gramos o definí su equivalencia en Mis alimentos.</div>`:''}`;
     syncSummary(items,totals);
     return totals;
   }
@@ -87,7 +88,8 @@
     const preview=getItems().map((entry,i)=>i===index?{...entry,quantity:qty}:entry);
     const item=preview[index];
     const totalNode=row?.querySelector('.nutrition-meal-builder-item-total-value');
-    if(totalNode)totalNode.textContent=`${fmt(num(item?.calories_per_100g)*qty/100)} kcal`;
+    const weight=grams(item,qty);
+    if(totalNode)totalNode.textContent=weight===null?'Revisar unidad':`${fmt(num(item?.calories_per_100g)*weight/100)} kcal`;
     renderTotals(preview);
   }
 
@@ -106,6 +108,7 @@
       row.innerHTML=`
         <div class="nutrition-meal-builder-item-main">
           <div class="nutrition-meal-builder-item-name">${esc(item.name||'Alimento')}</div>
+          ${item.preparation_state&&item.preparation_state!=='unspecified'?`<span class="nutrition-food-preparation-mini">${item.preparation_state==='raw'?'Crudo':item.preparation_state==='cooked'?'Cocido':'Preparado'}</span>`:''}
           ${item.brand?`<div class="nutrition-meal-builder-item-brand">${esc(item.brand)}</div>`:''}
           <div class="nutrition-meal-builder-item-macros">
             <span>${fmt(num(item.calories_per_100g))} kcal/100</span>
@@ -128,9 +131,8 @@
           <button type="button" class="nutrition-meal-builder-remove" data-index="${index}" aria-label="Quitar ${esc(item.name||'alimento')}" title="Quitar alimento">×</button>
         </div>`;
       const totalNode=row.querySelector('.nutrition-meal-builder-item-total-value');
-      const factor=Math.max(0,num(item.quantity)||0)/100;
-      const itemTotal=num(item.calories_per_100g)*factor;
-      if(totalNode)totalNode.textContent=`${fmt(itemTotal)} kcal`;
+      const weight=grams(item);
+      if(totalNode)totalNode.textContent=weight===null?'Revisar unidad':`${fmt(num(item.calories_per_100g)*weight/100)} kcal`;
       const qtyInput=row.querySelector('.nutrition-meal-builder-qty');
       qtyInput?.addEventListener('input',event=>previewQuantity(index,event.target.value,row));
       qtyInput?.addEventListener('change',event=>{
@@ -138,7 +140,7 @@
         const parsed=Number(raw);
         const quantity=raw!==''&&Number.isFinite(parsed)&&parsed>0?parsed:0.1;
         event.target.value=fmt(quantity);
-        const nextItems=getItems().map((entry,i)=>i===index?{...entry,quantity}:entry);
+        const nextItems=getItems().map((entry,i)=>{if(i!==index)return entry;const quantityInGrams=grams(entry,quantity);return {...entry,quantity,quantity_in_grams:quantityInGrams===null?entry.quantity_in_grams:Math.round(quantityInGrams*1000)/1000}});
         setItems(nextItems);
       });
       row.querySelector('.nutrition-meal-builder-duplicate')?.addEventListener('click',()=>{
@@ -162,11 +164,14 @@
     });
 
     renderTotals(items);
+    const invalidItems=items.filter(item=>grams(item)===null);
     if(status){
-      status.textContent=loadingRestore?'Cargando los alimentos guardados de esta comida…':items.length?`${items.length} alimento${items.length===1?'':'s'} · macros calculados automáticamente`:'Agregá alimentos para calcular la comida automáticamente.';
+      status.textContent=loadingRestore?'Cargando los alimentos guardados de esta comida…':invalidItems.length?`Hay ${invalidItems.length} alimento(s) sin una conversión fiable a gramos. Corregilos antes de guardar.`:items.length?`${items.length} alimento${items.length===1?'':'s'} · cantidades convertidas a gramos para calcular los macros`:'Agregá alimentos para calcular la comida automáticamente.';
       status.classList.toggle('is-loading',loadingRestore);
-      status.classList.toggle('is-ready',!loadingRestore&&items.length>0);
+      status.classList.toggle('is-ready',!loadingRestore&&items.length>0&&!invalidItems.length);
+      status.classList.toggle('has-unit-error',invalidItems.length>0);
     }
+    const save=$('saveMealBtn');if(save){save.disabled=loadingRestore||invalidItems.length>0;save.title=invalidItems.length?'Corregí las unidades sin equivalencia a gramos antes de guardar.':'';}
   }
 
   function esc(v){const d=document.createElement('div');d.textContent=v??'';return d.innerHTML}

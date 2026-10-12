@@ -13,6 +13,11 @@
   const $=id=>document.getElementById(id);
   const text=v=>String(v??'').trim();
   const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0};
+  const mealSaveQueues=new Map();
+
+  function assertSameUser(expectedUid){
+    if(!expectedUid||currentUserId()!==expectedUid)throw new Error('La cuenta activa cambió durante el guardado. No se continuó la sincronización; volvé a abrir la comida con la cuenta correcta.');
+  }
 
   function normalizeSearch(v){
     return text(v)
@@ -26,6 +31,58 @@
   function escapeLike(v){return text(v).replace(/[\\%_]/g,' ').replace(/\s+/g,' ').trim()}
 
   function currentUserId(){return typeof currentUser!=='undefined'&&currentUser?.id?String(currentUser.id):''}
+
+  const UNIT_ALIASES={
+    g:['g','gram','grams','gramo','gramos'],
+    ml:['ml','milliliter','milliliters','mililitro','mililitros'],
+    unit:['unit','units','unidad','unidades','piece','pieces','pieza','piezas'],
+    portion:['portion','portions','porcion','porciones','racion','raciones'],
+    plan:['plan']
+  };
+  function normalizeUnit(value){
+    const raw=text(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    for(const [unit,aliases] of Object.entries(UNIT_ALIASES))if(aliases.includes(raw))return unit;
+    return raw||'g';
+  }
+  function normalizePreparationState(value,name=''){
+    const raw=text(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    if(['raw','cooked','prepared'].includes(raw))return raw;
+    const n=text(name).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if(/\b(crudo|cruda|raw)\b/.test(n))return 'raw';
+    if(/\b(cocido|cocida|hervido|hervida|asado|asada|horneado|horneada|frito|frita|cooked)\b/.test(n))return 'cooked';
+    if(/\b(preparado|preparada)\b/.test(n))return 'prepared';
+    return 'unspecified';
+  }
+  function positiveMeta(value){const n=Number(value);return value!==null&&value!==undefined&&String(value).trim()!==''&&Number.isFinite(n)&&n>0?n:null}
+  function quantityToGrams(food,quantity,unitOverride=null){
+    const amount=Number(quantity);
+    if(!Number.isFinite(amount)||amount<0)return null;
+    const unit=normalizeUnit(unitOverride??food?.unit??'g');
+    if(unit==='g')return amount;
+    const density=positiveMeta(food?.densityGPerMl??food?.density_g_per_ml);
+    const gramsPerUnit=positiveMeta(food?.gramsPerUnit??food?.grams_per_unit);
+    const gramsPerPortion=positiveMeta(food?.gramsPerPortion??food?.grams_per_portion);
+    if(unit==='ml')return density===null?null:amount*density;
+    if(unit==='unit')return gramsPerUnit===null?null:amount*gramsPerUnit;
+    if(unit==='portion')return gramsPerPortion===null?null:amount*gramsPerPortion;
+    return null;
+  }
+  function defaultUnit(food){
+    const raw=normalizeUnit(food?.unit||'g');
+    return quantityToGrams(food,1,raw)!==null?raw:'g';
+  }
+  function weightInGrams(item,quantity=item?.quantity){
+    const amount=Number(quantity);
+    if(!Number.isFinite(amount)||amount<0)return null;
+    const saved=Number(item?.quantity_in_grams??item?.quantityInGrams);
+    const sourceQty=Number(item?.quantity);
+    // Una instantánea guardada es la fuente de verdad: cambios posteriores en el
+    // catálogo no deben alterar cantidades históricas. Si cambia la cantidad,
+    // escalamos esa instantánea proporcionalmente.
+    if(Number.isFinite(saved)&&saved>=0&&Number.isFinite(sourceQty)&&sourceQty>0)return saved*(amount/sourceQty);
+    if(Number.isFinite(saved)&&saved===0&&amount===0)return 0;
+    return quantityToGrams(item,amount,item?.unit||'g');
+  }
 
   async function client(){
     if(typeof ensureSupabase!=='function')throw new Error('Supabase todavía no está disponible.');
@@ -44,7 +101,11 @@
       servingSize:text(row.serving_size),
       servingQuantity:num(row.serving_quantity)||null,
       quantityBase:100,
-      unit:text(row.unit)||'g',
+      unit:normalizeUnit(row.unit||'g'),
+      preparationState:normalizePreparationState(row.preparation_state,row.name),
+      densityGPerMl:positiveMeta(row.density_g_per_ml),
+      gramsPerUnit:positiveMeta(row.grams_per_unit),
+      gramsPerPortion:positiveMeta(row.grams_per_portion),
       calories:num(row.calories_per_100g),
       protein:num(row.protein_per_100g),
       carbs:num(row.carbs_per_100g),
@@ -56,6 +117,7 @@
       imageUrl:text(row.image_url),
       source:userFood?'Mis alimentos':(kind==='catalog'?'Catálogo propio':'Catálogo'),
       sourceType:userFood?'user_food':(kind==='catalog'?'food_catalog':''),
+      recordSource:text(row.source),
       catalogId:row.catalog_id??(kind==='catalog'?row.id:null),
       userFoodId:userFood?row.id:null,
       externalId:text(row.external_id),
@@ -91,14 +153,17 @@
   async function searchLocal(query){
     const q=normalizeSearch(query);
     if(!q||!currentUserId())return {user:[],catalog:[],all:[]};
+    const owner=currentUserId();
     const c=await client();
+    assertSameUser(owner);
     const pattern=`%${q}%`;
     const [userRes,catalogRes]=await Promise.all([
-      c.from('user_foods').select('id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic').eq('user_id',currentUserId()).ilike('search_text',pattern).order('updated_at',{ascending:false}).limit(12),
-      c.from('food_catalog').select('id,name,brand,category,aliases,serving_size,serving_quantity,unit,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,source,locale,is_generic').eq('active',true).ilike('search_text',pattern).limit(12)
+      c.from('user_foods').select('id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic').eq('user_id',owner).ilike('search_text',pattern).order('updated_at',{ascending:false}).limit(12),
+      c.from('food_catalog').select('id,name,brand,category,aliases,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,source,locale,is_generic').eq('active',true).ilike('search_text',pattern).limit(12)
     ]);
     const errors=[userRes.error,catalogRes.error].filter(Boolean);
     if(errors.length)throw errors[0];
+    assertSameUser(owner);
     const user=userRes.data||[];
     const catalog=catalogRes.data||[];
     const userFoods=user.map(x=>toFood(x,'user')).sort((a,b)=>relevance(b,q)-relevance(a,q));
@@ -106,8 +171,15 @@
     return {user:userFoods,catalog:catalogFoods,all:dedupe([...userFoods,...catalogFoods]).sort((a,b)=>relevance(b,q)-relevance(a,q))};
   }
 
-  function snapshot(food,quantity){
-    const qty=Math.max(0,num(quantity)||100);
+  function snapshot(food,quantity,unitOverride=null,preparationOverride=null){
+    const rawQty=Number(quantity);
+    const qty=Number.isFinite(rawQty)?Math.max(0,rawQty):100;
+    const unit=normalizeUnit(unitOverride??defaultUnit(food));
+    const density=positiveMeta(food?.densityGPerMl??food?.density_g_per_ml);
+    const gramsPerUnit=positiveMeta(food?.gramsPerUnit??food?.grams_per_unit);
+    const gramsPerPortion=positiveMeta(food?.gramsPerPortion??food?.grams_per_portion);
+    const grams=quantityToGrams({...food,densityGPerMl:density,gramsPerUnit,gramsPerPortion},qty,unit);
+    if(grams===null)throw new Error(`No se puede convertir ${unit} a gramos para “${text(food?.name)||'este alimento'}”. Definí una densidad o un peso por unidad/porción antes de agregarlo.`);
     return {
       catalog_id:food?.catalogId||null,
       user_food_id:food?.userFoodId||null,
@@ -116,17 +188,22 @@
       name:text(food?.name)||'Alimento',
       brand:text(food?.brand),
       quantity:qty,
-      unit:text(food?.unit)||'g',
+      unit,
+      quantity_in_grams:Math.round(grams*1000)/1000,
+      preparation_state:normalizePreparationState(preparationOverride??food?.preparationState??food?.preparation_state,food?.name),
+      density_g_per_ml:density,
+      grams_per_unit:gramsPerUnit,
+      grams_per_portion:gramsPerPortion,
       serving_size:text(food?.servingSize),
-      calories_per_100g:num(food?.calories),
-      protein_per_100g:num(food?.protein),
-      carbs_per_100g:num(food?.carbs),
-      fat_per_100g:num(food?.fat),
-      fiber_per_100g:num(food?.fiber),
+      calories_per_100g:num(food?.calories??food?.calories_per_100g),
+      protein_per_100g:num(food?.protein??food?.protein_per_100g),
+      carbs_per_100g:num(food?.carbs??food?.carbs_per_100g),
+      fat_per_100g:num(food?.fat??food?.fat_per_100g),
+      fiber_per_100g:num(food?.fiber??food?.fiber_per_100g),
       ingredients:text(food?.ingredients),
       categories:text(food?.categories),
       labels:text(food?.labels),
-      image_url:text(food?.imageUrl),
+      image_url:text(food?.imageUrl||food?.image_url),
       consumed:false,
       consumed_at:null
     };
@@ -139,22 +216,41 @@
     return `${source}:name:${normalizeSearch(food?.name)}:brand:${normalizeSearch(food?.brand)}`;
   }
 
+  async function loadUserFoods(){
+    const uid=currentUserId();
+    if(!uid)throw new Error('Iniciá sesión para consultar tus alimentos personalizados.');
+    const c=await client();
+    assertSameUser(uid);
+    const {data,error}=await c.from('user_foods')
+      .select('id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic,updated_at')
+      .eq('user_id',uid).order('updated_at',{ascending:false}).limit(300);
+    if(error)throw error;
+    assertSameUser(uid);
+    return Array.isArray(data)?data.map(row=>toFood(row,'user')):[];
+  }
+
   async function saveUserFood(food){
     const uid=currentUserId();
     if(!uid||!food)return {ok:false,skipped:true};
     const c=await client();
+    assertSameUser(uid);
+    const userFoodId=text(food.userFoodId||food.user_food_id);
     const row={
       user_id:uid,
       catalog_id:food.catalogId||null,
       source:text(food.sourceType||food.source||'external'),
       external_id:text(food.externalId||food.code||food.id)||null,
-      fingerprint:fingerprintFor(food),
+      fingerprint:text(food.fingerprint)||fingerprintFor(food),
       name:text(food.name)||'Alimento',
       brand:text(food.brand),
       quantity_label:text(food.quantity),
       serving_size:text(food.servingSize),
       serving_quantity:num(food.servingQuantity)||null,
-      unit:text(food.unit)||'g',
+      unit:normalizeUnit(food.unit||'g'),
+      preparation_state:normalizePreparationState(food.preparationState??food.preparation_state,food.name),
+      density_g_per_ml:positiveMeta(food.densityGPerMl??food.density_g_per_ml),
+      grams_per_unit:positiveMeta(food.gramsPerUnit??food.grams_per_unit),
+      grams_per_portion:positiveMeta(food.gramsPerPortion??food.grams_per_portion),
       calories_per_100g:num(food.calories),
       protein_per_100g:num(food.protein),
       carbs_per_100g:num(food.carbs),
@@ -166,9 +262,31 @@
       image_url:text(food.imageUrl),
       is_generic:food.isGeneric!==false
     };
-    const {data,error}=await c.from('user_foods').upsert(row,{onConflict:'user_id,fingerprint'}).select('*').single();
+    let result;
+    if(userFoodId){
+      const {data,error}=await c.from('user_foods').update(row).eq('id',userFoodId).eq('user_id',uid).select('*').single();
+      if(error)throw error;
+      if(!data)throw new Error('No se encontró ese alimento dentro de tu cuenta.');
+      result=data;
+    }else{
+      const {data,error}=await c.from('user_foods').upsert(row,{onConflict:'user_id,fingerprint'}).select('*').single();
+      if(error)throw error;
+      result=data;
+    }
+    assertSameUser(uid);
+    return {ok:true,food:toFood(result,'user')};
+  }
+
+  async function deleteUserFood(userFoodId){
+    const uid=currentUserId();
+    if(!uid||!userFoodId)throw new Error('No se pudo identificar el alimento propio.');
+    const c=await client();
+    assertSameUser(uid);
+    const {data,error}=await c.from('user_foods').delete().eq('id',String(userFoodId)).eq('user_id',uid).select('id');
     if(error)throw error;
-    return {ok:true,food:toFood(data,'user')};
+    if(!Array.isArray(data)||data.length===0)throw new Error('No se encontró ese alimento dentro de tu cuenta.');
+    assertSameUser(uid);
+    return {ok:true};
   }
 
   function itemBaseKey(item){
@@ -176,31 +294,57 @@
   }
   function itemExactKey(item){return itemBaseKey(item)+'|'+String(num(item?.quantity));}
 
-  async function persistMealItems(mealId,items){
+  function persistMealItems(mealId,items){
     const uid=currentUserId();
-    if(!uid||!mealId||!Array.isArray(items))return {ok:true,skipped:true};
+    if(!uid||!mealId||!Array.isArray(items))return Promise.resolve({ok:true,skipped:true});
+    const key=`${uid}::${String(mealId)}`;
+    const previous=mealSaveQueues.get(key)||Promise.resolve();
+    const operation=previous.catch(()=>{}).then(()=>persistMealItemsUnlocked(mealId,items,uid));
+    const tracked=operation.finally(()=>{if(mealSaveQueues.get(key)===tracked)mealSaveQueues.delete(key)});
+    mealSaveQueues.set(key,tracked);
+    return tracked;
+  }
+
+  async function persistMealItemsUnlocked(mealId,items,uid){
+    assertSameUser(uid);
     const c=await client();
+    assertSameUser(uid);
     const {data:oldRows,error:readError}=await c.from('nutrition_meal_items').select('*').eq('meal_id',String(mealId)).eq('user_id',uid).order('created_at',{ascending:true});
     if(readError)throw readError;
+    assertSameUser(uid);
     const old=Array.isArray(oldRows)?oldRows:[];
     if(!items.length){
       const removedIds=old.map(item=>String(item.id)).filter(Boolean);
+      assertSameUser(uid);
       const {error}=await c.from('nutrition_meal_items').delete().eq('meal_id',String(mealId)).eq('user_id',uid);
       if(error)throw error;
-      document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:0,cleared:true,removedIds}}));
+      document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:0,cleared:true,removedIds,userId:uid}}));
       return {ok:true,count:0,cleared:true,removed:removedIds.length};
     }
-    const rows=items.map(item=>({
-      meal_id:String(mealId),user_id:uid,catalog_id:item.catalog_id??item.catalogId??null,
-      user_food_id:item.user_food_id??item.userFoodId??null,source:text(item.source||item.sourceType||'external'),
-      external_id:text(item.external_id||item.externalId)||null,name:text(item.name)||'Alimento',brand:text(item.brand),
-      quantity:Math.max(0,num(item.quantity)),unit:text(item.unit)||'g',serving_size:text(item.serving_size||item.servingSize),
-      calories_per_100g:num(item.calories_per_100g??item.calories),protein_per_100g:num(item.protein_per_100g??item.protein),
-      carbs_per_100g:num(item.carbs_per_100g??item.carbs),fat_per_100g:num(item.fat_per_100g??item.fat),
-      fiber_per_100g:num(item.fiber_per_100g??item.fiber),ingredients:text(item.ingredients),categories:text(item.categories),
-      labels:text(item.labels),image_url:text(item.image_url||item.imageUrl),consumed:Boolean(item.consumed),
-      consumed_at:item.consumed&&item.consumed_at?item.consumed_at:null
-    }));
+    const rows=items.map(item=>{
+      const quantity=Math.max(0,num(item.quantity));
+      const unit=normalizeUnit(item.unit||'g');
+      const density=positiveMeta(item.density_g_per_ml??item.densityGPerMl);
+      const gramsPerUnit=positiveMeta(item.grams_per_unit??item.gramsPerUnit);
+      const gramsPerPortion=positiveMeta(item.grams_per_portion??item.gramsPerPortion);
+      const conversionItem={...item,quantity,unit,density_g_per_ml:density,grams_per_unit:gramsPerUnit,grams_per_portion:gramsPerPortion};
+      const grams=weightInGrams(conversionItem,quantity);
+      if(grams===null)throw new Error(`No se guardó la comida: “${text(item.name)||'Un alimento'}” está en ${unit} pero no tiene una conversión fiable a gramos. Elegí gramos o agregá el factor correspondiente en Mis alimentos.`);
+      return {
+        meal_id:String(mealId),user_id:uid,catalog_id:item.catalog_id??item.catalogId??null,
+        user_food_id:item.user_food_id??item.userFoodId??null,source:text(item.source||item.sourceType||'external'),
+        external_id:text(item.external_id||item.externalId)||null,name:text(item.name)||'Alimento',brand:text(item.brand),
+        quantity,unit,quantity_in_grams:Math.round(grams*1000)/1000,
+        preparation_state:normalizePreparationState(item.preparation_state??item.preparationState,item.name),
+        density_g_per_ml:density,grams_per_unit:gramsPerUnit,grams_per_portion:gramsPerPortion,
+        serving_size:text(item.serving_size||item.servingSize),
+        calories_per_100g:num(item.calories_per_100g??item.calories),protein_per_100g:num(item.protein_per_100g??item.protein),
+        carbs_per_100g:num(item.carbs_per_100g??item.carbs),fat_per_100g:num(item.fat_per_100g??item.fat),
+        fiber_per_100g:num(item.fiber_per_100g??item.fiber),ingredients:text(item.ingredients),categories:text(item.categories),
+        labels:text(item.labels),image_url:text(item.image_url||item.imageUrl),consumed:Boolean(item.consumed),
+        consumed_at:item.consumed&&item.consumed_at?item.consumed_at:null
+      };
+    });
     const unused=new Set(old.map((_,i)=>i));
     const updates=[],inserts=[];
     for(const row of rows){
@@ -214,46 +358,70 @@
     // fase posterior, intentamos compensar los cambios para evitar duplicados.
     let insertedIds=[];const appliedUpdates=[];
     const rollback=async()=>{
+      if(currentUserId()!==uid){
+        console.error('No se pudo completar el rollback automático porque cambió la cuenta activa. Los cambios previos permanecen restringidos a la cuenta original y requieren revisar la sincronización.');
+        return false;
+      }
+      let ok=true;
       for(const entry of [...appliedUpdates].reverse()){
         const restore={...entry.previous};delete restore.id;
-        try{await c.from('nutrition_meal_items').update(restore).eq('id',String(entry.id)).eq('user_id',uid)}catch(_){}
+        try{const {error}=await c.from('nutrition_meal_items').update(restore).eq('id',String(entry.id)).eq('user_id',uid);if(error)ok=false}catch(_){ok=false}
       }
-      if(insertedIds.length){try{await c.from('nutrition_meal_items').delete().in('id',insertedIds).eq('user_id',uid)}catch(_){}}
+      if(insertedIds.length){try{const {error}=await c.from('nutrition_meal_items').delete().in('id',insertedIds).eq('user_id',uid);if(error)ok=false}catch(_){ok=false}}
+      if(!ok)console.error('El rollback de una operación nutricional no se pudo confirmar por completo. Revisá la conexión antes de volver a guardar.');
+      return ok;
     };
-    if(inserts.length){
-      const {data,error}=await c.from('nutrition_meal_items').insert(inserts).select('id');
-      if(error)throw error;
-      insertedIds=(Array.isArray(data)?data:[]).map(x=>String(x.id)).filter(Boolean);
-    }
-    for(const entry of updates){
-      const {error}=await c.from('nutrition_meal_items').update(entry.row).eq('id',String(entry.id)).eq('user_id',uid);
-      if(error){await rollback();throw error;}
-      appliedUpdates.push(entry);
+    try{
+      if(inserts.length){
+        assertSameUser(uid);
+        const {data,error}=await c.from('nutrition_meal_items').insert(inserts).select('id');
+        if(error)throw error;
+        insertedIds=(Array.isArray(data)?data:[]).map(x=>String(x.id)).filter(Boolean);
+        assertSameUser(uid);
+      }
+      for(const entry of updates){
+        assertSameUser(uid);
+        const {error}=await c.from('nutrition_meal_items').update(entry.row).eq('id',String(entry.id)).eq('user_id',uid);
+        if(error)throw error;
+        appliedUpdates.push(entry);
+        assertSameUser(uid);
+      }
+      const staleIds=[...unused].map(i=>old[i]?.id).filter(Boolean).map(String);
+      if(staleIds.length){
+        assertSameUser(uid);
+        const {error}=await c.from('nutrition_meal_items').delete().in('id',staleIds).eq('meal_id',String(mealId)).eq('user_id',uid);
+        if(error)throw error;
+      }
+    }catch(error){
+      const rolledBack=await rollback();
+      if(rolledBack===false)throw new Error(`${error?.message||error} La cuenta cambió; no se pudo verificar la reversión automática.`);
+      throw error;
     }
     const staleIds=[...unused].map(i=>old[i]?.id).filter(Boolean).map(String);
-    if(staleIds.length){
-      const {error}=await c.from('nutrition_meal_items').delete().in('id',staleIds).eq('meal_id',String(mealId)).eq('user_id',uid);
-      if(error){await rollback();throw error;}
-    }
-    document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:rows.length,removedIds:staleIds}}));
+    document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:rows.length,removedIds:staleIds,userId:uid}}));
     return {ok:true,count:rows.length,updated:updates.length,inserted:inserts.length,removed:staleIds.length};
   }
 
   async function deleteMealItems(mealId){
     const uid=currentUserId();
-    if(!uid||!mealId)return;
+    if(!uid||!mealId)return {ok:true,skipped:true};
     const c=await client();
+    assertSameUser(uid);
     const {error}=await c.from('nutrition_meal_items').delete().eq('meal_id',String(mealId)).eq('user_id',uid);
-    if(error)console.warn('No se pudieron eliminar los alimentos estructurados de la comida:',error);
-    else document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:0,cleared:true,deleted:true}}));
+    if(error)throw error;
+    document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-items-saved',{detail:{mealId:String(mealId),count:0,cleared:true,deleted:true,userId:uid}}));
+    return {ok:true};
   }
 
-  async function loadMealItems(mealId){
+  async function loadMealItems(mealId,expectedUid=null){
     const uid=currentUserId();
     if(!uid||!mealId)return [];
+    if(expectedUid&&expectedUid!==uid)throw new Error('La cuenta activa cambió antes de recuperar los alimentos.');
     const c=await client();
+    assertSameUser(uid);
     const {data,error}=await c.from('nutrition_meal_items').select('*').eq('meal_id',String(mealId)).eq('user_id',uid).order('created_at',{ascending:true});
     if(error)throw error;
+    assertSameUser(uid);
     return Array.isArray(data)?data:[];
   }
 
@@ -265,11 +433,13 @@
     return `${map.year}-${map.month}-${map.day}`;
   }
 
-  function historySnapshot(item,meal,consumedAt){
+  function historySnapshot(item,meal,consumedAt,ownerUid=currentUserId()){
     const qty=Math.max(0,num(item?.quantity));
-    const factor=text(item?.unit)==='plan'?1:qty/100;
+    const grams=text(item?.unit)==='plan'?null:weightInGrams(item,qty);
+    if(text(item?.unit)!=='plan'&&grams===null)throw new Error(`No se puede registrar el historial de “${text(item?.name)||'este alimento'}”: falta una conversión fiable a gramos.`);
+    const factor=text(item?.unit)==='plan'?1:grams/100;
     return {
-      user_id:currentUserId(),
+      user_id:ownerUid,
       consumed_date:dateKeyInCordoba(consumedAt),
       meal_id:String(item?.meal_id||''),
       meal_item_id:String(item?.id||''),
@@ -288,20 +458,24 @@
     };
   }
 
-  async function recordConsumptionHistory(item,consumedAt=item?.consumed_at){
+  async function recordConsumptionHistory(item,consumedAt=item?.consumed_at,expectedUid=null){
     const uid=currentUserId();
     if(!uid||!item?.id||!consumedAt)return {ok:false,skipped:true};
+    if(expectedUid&&expectedUid!==uid)throw new Error('La cuenta activa cambió; el historial no se modificó.');
     const c=await client();
+    assertSameUser(uid);
     let meal=null;
     if(item.meal_id){
       const {data,error}=await c.from('nutrition_meals').select('title,meal_type,meal_time').eq('id',String(item.meal_id)).eq('user_id',uid).maybeSingle();
       if(error)throw error;
       meal=data||null;
     }
-    const row=historySnapshot(item,meal,consumedAt);
+    assertSameUser(uid);
+    const row=historySnapshot(item,meal,consumedAt,uid);
     if(!row.consumed_date||!row.meal_item_id)return {ok:false,skipped:true};
     const {error}=await c.from('nutrition_consumption_history').upsert(row,{onConflict:'user_id,meal_item_id,consumed_date'});
     if(error)throw error;
+    assertSameUser(uid);
     return {ok:true,date:row.consumed_date};
   }
 
@@ -314,26 +488,37 @@
     const rangeDays=Math.max(1,Math.min(365,Number(days)||30));
     const start=new Date(Date.UTC(y,m-1,d-(rangeDays-1)));
     const since=`${start.getUTCFullYear()}-${String(start.getUTCMonth()+1).padStart(2,'0')}-${String(start.getUTCDate()).padStart(2,'0')}`;
-    const {data,error}=await c.from('nutrition_consumption_history').select('id,consumed_date,meal_title,meal_type,meal_time,food_name,brand,quantity,unit,calories,protein_g,carbs_g,fat_g,created_at').eq('user_id',uid).gte('consumed_date',since).lte('consumed_date',today).order('consumed_date',{ascending:false}).order('created_at',{ascending:false}).limit(1500);
+    const {data,error}=await c.from('nutrition_consumption_history').select('id,consumed_date,meal_title,meal_type,meal_time,food_name,brand,quantity,unit,calories,protein_g,carbs_g,fat_g,item_snapshot,created_at').eq('user_id',uid).gte('consumed_date',since).lte('consumed_date',today).order('consumed_date',{ascending:false}).order('created_at',{ascending:false}).limit(1500);
     if(error)throw error;
+    assertSameUser(uid);
     return Array.isArray(data)?data:[];
   }
 
-  async function setMealItemConsumed(itemId,consumed,requestedConsumedAt=null,changedAt=new Date().toISOString()){
+  async function setMealItemConsumed(itemId,consumed,requestedConsumedAt=null,changedAt=new Date().toISOString(),expectedUid=null){
     const uid=currentUserId();
     if(!uid||!itemId)return {ok:false,skipped:true};
+    if(expectedUid&&expectedUid!==uid)throw new Error('La cuenta activa cambió; el consumo quedó pendiente para la cuenta original.');
     const c=await client();
+    assertSameUser(uid);
+    const {data:before,error:readError}=await c.from('nutrition_meal_items').select('*').eq('id',String(itemId)).eq('user_id',uid).maybeSingle();
+    if(readError)throw readError;
+    if(!before)throw new Error('No se encontró ese alimento dentro de la cuenta activa.');
+    assertSameUser(uid);
     const next=Boolean(consumed);
+    if(next&&text(before.unit)!=='plan'&&weightInGrams(before)===null)throw new Error(`No se puede marcar “${text(before.name)||'este alimento'}” como consumido hasta definir una conversión fiable a gramos.`);
     const consumedAt=next?(text(requestedConsumedAt)||text(changedAt)||new Date().toISOString()):null;
     const {data,error}=await c.from('nutrition_meal_items').update({consumed:next,consumed_at:consumedAt}).eq('id',String(itemId)).eq('user_id',uid).select('*').single();
     if(error)throw error;
+    if(currentUserId()!==uid)throw new Error('El estado de consumo se actualizó, pero la cuenta cambió antes de confirmar el historial. Volvé a iniciar sesión en la cuenta original para reintentar.');
     let historyOk=true,historyError=null;
     try{
-      if(next)await recordConsumptionHistory(data||{...{},id:String(itemId),consumed_at:consumedAt});
+      if(next)await recordConsumptionHistory(data||{...{},id:String(itemId),consumed_at:consumedAt},consumedAt,uid);
       else{
         const changedDate=dateKeyInCordoba(changedAt||new Date());
+        assertSameUser(uid);
         const {error:deleteError}=await c.from('nutrition_consumption_history').delete().eq('user_id',uid).eq('meal_item_id',String(itemId)).eq('consumed_date',changedDate);
         if(deleteError)throw deleteError;
+        assertSameUser(uid);
       }
     }catch(err){
       historyOk=false;historyError=err;
@@ -347,23 +532,33 @@
     const c=await client();
     const {data,error}=await c.from('nutrition_recipes').select('*').eq('user_id',uid).order('updated_at',{ascending:false}).limit(200);
     if(error)throw error;
+    assertSameUser(uid);
     return Array.isArray(data)?data:[];
   }
 
-  function calculateRecipe(ingredients){
+  function calculateRecipe(ingredients,finishedWeightG=null){
     const list=(Array.isArray(ingredients)?ingredients:[]).filter(x=>x&&Number(x.quantity)>0);
-    const weight=list.reduce((sum,x)=>sum+Math.max(0,num(x.quantity)),0);
+    if(!list.length)return {total_weight_g:0,ingredient_weight_g:0,finished_weight_g:null,total_calories:0,total_protein_g:0,total_carbs_g:0,total_fat_g:0,total_fiber_g:0,calories_per_100g:0,protein_per_100g:0,carbs_per_100g:0,fat_per_100g:0,fiber_per_100g:0};
+    let ingredientWeight=0;
     const total=list.reduce((acc,x)=>{
-      const factor=Math.max(0,num(x.quantity))/100;
-      acc.calories+=num(x.calories_per_100g)*factor;
-      acc.protein+=num(x.protein_per_100g)*factor;
-      acc.carbs+=num(x.carbs_per_100g)*factor;
-      acc.fat+=num(x.fat_per_100g)*factor;
-      acc.fiber+=num(x.fiber_per_100g)*factor;
+      const grams=weightInGrams(x);
+      if(grams===null)throw new Error(`No se puede calcular la receta: “${text(x.name)||'un ingrediente'}” está en ${normalizeUnit(x.unit||'g')} sin una conversión fiable a gramos.`);
+      ingredientWeight+=grams;
+      const factor=grams/100;
+      acc.calories+=num(x.calories_per_100g??x.calories)*factor;
+      acc.protein+=num(x.protein_per_100g??x.protein)*factor;
+      acc.carbs+=num(x.carbs_per_100g??x.carbs)*factor;
+      acc.fat+=num(x.fat_per_100g??x.fat)*factor;
+      acc.fiber+=num(x.fiber_per_100g??x.fiber)*factor;
       return acc;
     },{calories:0,protein:0,carbs:0,fat:0,fiber:0});
-    const per100=weight>0?100/weight:0;
-    return {total_weight_g:Math.round(weight*10)/10,total_calories:Math.round(total.calories*10)/10,total_protein_g:Math.round(total.protein*10)/10,total_carbs_g:Math.round(total.carbs*10)/10,total_fat_g:Math.round(total.fat*10)/10,calories_per_100g:Math.round(total.calories*per100*10)/10,protein_per_100g:Math.round(total.protein*per100*10)/10,carbs_per_100g:Math.round(total.carbs*per100*10)/10,fat_per_100g:Math.round(total.fat*per100*10)/10,fiber_per_100g:Math.round(total.fiber*per100*10)/10};
+    const requested=finishedWeightG===null||finishedWeightG===undefined||text(finishedWeightG)===''?null:positiveMeta(finishedWeightG);
+    if(finishedWeightG!==null&&finishedWeightG!==undefined&&text(finishedWeightG)!==''&&requested===null)throw new Error('El peso final preparado debe ser un número mayor que cero, en gramos.');
+    const effectiveWeight=requested??ingredientWeight;
+    if(!(effectiveWeight>0))throw new Error('La receta debe tener un peso total mayor que cero. Revisá las cantidades y las unidades.');
+    const per100=100/effectiveWeight;
+    const round=v=>Math.round(v*10)/10;
+    return {total_weight_g:round(effectiveWeight),ingredient_weight_g:round(ingredientWeight),finished_weight_g:requested,total_calories:round(total.calories),total_protein_g:round(total.protein),total_carbs_g:round(total.carbs),total_fat_g:round(total.fat),total_fiber_g:round(total.fiber),calories_per_100g:round(total.calories*per100),protein_per_100g:round(total.protein*per100),carbs_per_100g:round(total.carbs*per100),fat_per_100g:round(total.fat*per100),fiber_per_100g:round(total.fiber*per100)};
   }
 
   async function saveRecipe(recipe){
@@ -371,18 +566,20 @@
     const name=text(recipe?.name);const ingredients=(Array.isArray(recipe?.ingredients)?recipe.ingredients:[]).filter(x=>x&&num(x.quantity)>0).map(x=>({...x,consumed:false,consumed_at:null}));
     if(!name)throw new Error('Escribí un nombre para la receta.');
     if(!ingredients.length)throw new Error('Agregá al menos un alimento con cantidad para guardar la receta.');
-    const totals=calculateRecipe(ingredients);if(!(totals.total_weight_g>0))throw new Error('La receta debe tener un peso total mayor que cero.');
+    const finishedWeightRaw=recipe?.finishedWeightG??recipe?.finished_weight_g??null;
+    const totals=calculateRecipe(ingredients,finishedWeightRaw);if(!(totals.total_weight_g>0))throw new Error('La receta debe tener un peso total mayor que cero.');
     const c=await client();
-    const row={user_id:uid,name,notes:text(recipe?.notes),servings:Math.max(0.1,num(recipe?.servings)||1),ingredients,total_weight_g:totals.total_weight_g,calories_per_100g:totals.calories_per_100g,protein_per_100g:totals.protein_per_100g,carbs_per_100g:totals.carbs_per_100g,fat_per_100g:totals.fat_per_100g,fiber_per_100g:totals.fiber_per_100g};
+    assertSameUser(uid);
+    const row={user_id:uid,name,notes:text(recipe?.notes),servings:Math.max(0.1,num(recipe?.servings)||1),ingredients,total_weight_g:totals.total_weight_g,finished_weight_g:totals.finished_weight_g,calories_per_100g:totals.calories_per_100g,protein_per_100g:totals.protein_per_100g,carbs_per_100g:totals.carbs_per_100g,fat_per_100g:totals.fat_per_100g,fiber_per_100g:totals.fiber_per_100g};
     const id=text(recipe?.id);
-    if(id){const {data,error}=await c.from('nutrition_recipes').update({...row,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',uid).select('*').single();if(error)throw error;return {ok:true,recipe:data,totals}}
-    const {data,error}=await c.from('nutrition_recipes').insert(row).select('*').single();if(error)throw error;return {ok:true,recipe:data,totals};
+    if(id){const {data,error}=await c.from('nutrition_recipes').update({...row,updated_at:new Date().toISOString()}).eq('id',id).eq('user_id',uid).select('*').single();if(error)throw error;assertSameUser(uid);return {ok:true,recipe:data,totals, userId:uid}}
+    const {data,error}=await c.from('nutrition_recipes').insert(row).select('*').single();if(error)throw error;assertSameUser(uid);return {ok:true,recipe:data,totals,userId:uid};
   }
 
   async function deleteRecipe(recipeId){
     const uid=currentUserId();if(!uid||!recipeId)throw new Error('No se pudo identificar la receta.');
-    const c=await client();const {error}=await c.from('nutrition_recipes').delete().eq('id',String(recipeId)).eq('user_id',uid);
-    if(error)throw error;return {ok:true};
+    const c=await client();assertSameUser(uid);const {error}=await c.from('nutrition_recipes').delete().eq('id',String(recipeId)).eq('user_id',uid);
+    if(error)throw error;assertSameUser(uid);return {ok:true};
   }
 
   function mergeLocalFirst(localItems,externalItems,query){
@@ -412,32 +609,36 @@
   }
 
   async function searchWithLocalFirst(query,externalSearch){
+    const owner=currentUserId();
+    if(!owner)return {results:[],source:'local',localCount:0,externalCount:0};
     let local={user:[],catalog:[],all:[]};
     try{
       local=await searchLocal(query);
+      assertSameUser(owner);
     }catch(err){
+      // A switch of account is not an ordinary catalogue failure: never return
+      // results obtained for the previous account into the new session.
+      if(currentUserId()!==owner)throw err;
       console.warn('Catálogo propio no disponible; continúo con API externa.',err);
     }
 
+    let externalNorm=[];
     try{
       const external=typeof externalSearch==='function'?await externalSearch(query):[];
-      const externalNorm=Array.isArray(external)?external:[];
-      const merged=mergeLocalFirst(local.all,externalNorm,query);
-      return {
-        results:merged.slice(0,20),
-        source:local.all.length&&externalNorm.length?'local+online':(local.all.length?'local':'online'),
-        localCount:local.all.length,
-        externalCount:externalNorm.length
-      };
+      assertSameUser(owner);
+      externalNorm=Array.isArray(external)?external:[];
     }catch(err){
+      if(currentUserId()!==owner)throw err;
       console.warn('Open Food Facts no disponible; mostrando catálogo propio.',err);
-      return {
-        results:dedupe(local.all).slice(0,20),
-        source:local.all.length?'local':'online-error',
-        localCount:local.all.length,
-        externalCount:0
-      };
     }
+    assertSameUser(owner);
+    const merged=mergeLocalFirst(local.all,externalNorm,query);
+    return {
+      results:merged.slice(0,20),
+      source:local.all.length&&externalNorm.length?'local+online':(local.all.length?'local':(externalNorm.length?'online':'online-error')),
+      localCount:local.all.length,
+      externalCount:externalNorm.length
+    };
   }
 
   function setSavedButtonState(saved,message){
@@ -455,7 +656,9 @@
   window.AgendaNutritionData={
     searchLocal,
     searchWithLocalFirst,
+    loadUserFoods,
     saveUserFood,
+    deleteUserFood,
     snapshot,
     persistMealItems,
     deleteMealItems,
@@ -467,6 +670,11 @@
     saveRecipe,
     deleteRecipe,
     calculateRecipe,
+    normalizeUnit,
+    normalizePreparationState,
+    quantityToGrams,
+    weightInGrams,
+    defaultUnit,
     setSavedButtonState,
     installHooks
   };

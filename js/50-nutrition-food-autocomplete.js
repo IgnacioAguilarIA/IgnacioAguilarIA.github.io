@@ -104,6 +104,10 @@
       servingQuantity:num(row.serving_quantity)||null,
       quantityBase:100,
       unit:text(row.unit)||'g',
+      preparationState:text(row.preparation_state)||'unspecified',
+      densityGPerMl:num(row.density_g_per_ml)||null,
+      gramsPerUnit:num(row.grams_per_unit)||null,
+      gramsPerPortion:num(row.grams_per_portion)||null,
       calories:num(row.calories_per_100g),
       protein:num(row.protein_per_100g),
       carbs:num(row.carbs_per_100g),
@@ -134,6 +138,10 @@
       servingQuantity:num(row.serving_quantity)||null,
       quantityBase:100,
       unit:text(row.unit)||'g',
+      preparationState:text(row.preparation_state)||'unspecified',
+      densityGPerMl:num(row.density_g_per_ml)||null,
+      gramsPerUnit:num(row.grams_per_unit)||null,
+      gramsPerPortion:num(row.grams_per_portion)||null,
       calories:num(row.calories_per_100g),
       protein:num(row.protein_per_100g),
       carbs:num(row.carbs_per_100g),
@@ -166,10 +174,10 @@
         const c=await ensureSupabase();
         const [catalogRes,userRes]=await Promise.all([
           c.from('food_catalog')
-            .select('id,name,brand,category,aliases,serving_size,serving_quantity,unit,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,source,locale,is_generic,active')
+            .select('id,name,brand,category,aliases,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,source,locale,is_generic,active')
             .eq('active',true).limit(CONFIG.maxIndexCatalog),
           c.from('user_foods')
-            .select('id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic,updated_at')
+            .select('id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic,updated_at')
             .eq('user_id',uid).order('updated_at',{ascending:false}).limit(CONFIG.maxIndexUser)
         ]);
 

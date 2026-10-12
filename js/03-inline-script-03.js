@@ -625,7 +625,7 @@ let nutritionLoadingDay=null;
 async function selectNutritionDay(day){const target=Number(day);if(!Number.isInteger(target)||target<0||target>=DAYS.length)return;nutritionDay=target;nutritionMeals=[];try{document.dispatchEvent(new CustomEvent('agenda:nutrition-day-changed',{detail:{day:target}}))}catch(_){ }nutritionLoadingDay=target;renderNutritionDays();renderNutritionList();renderNutritionGoals();renderDashboard();try{await loadNutritionMeals(target);}finally{if(Number(nutritionDay)===target){nutritionLoadingDay=null;renderNutritionDays();renderNutritionList();renderNutritionGoals();renderDashboard();}}}
 function renderNutritionDays(){const c=$('nutritionDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===nutritionDay?' active':'');b.textContent=d;b.setAttribute('aria-busy',nutritionLoadingDay===i?'true':'false');b.onclick=()=>selectNutritionDay(i);c.appendChild(b);});}
 function renderMealTabs(){const c=$('mealTabs');c.innerHTML='';MEAL_TYPES.forEach(m=>{const b=document.createElement('button');b.className='meal-tab'+(m.key===activeMealType?' active':'');b.textContent=m.label;b.onclick=()=>{activeMealType=m.key;renderMealTabs();renderNutritionList();renderNutritionGoals();renderDashboard();};c.appendChild(b);});}
-async function loadNutritionMeals(targetDay=nutritionDay){const requestedDay=Number(targetDay);const requestSeq=++nutritionLoadSeq;const uid=currentUser?.id?String(currentUser.id):'';if(!uid){nutritionMeals=[];if(requestSeq===nutritionLoadSeq)try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meals-loaded',{detail:{day:requestedDay,meals:[]}}))}catch(_){}return}let query=sb.from('nutrition_meals').select('*').eq('day',requestedDay).eq('user_id',uid);const {data,error}=await query.order('meal_order',{ascending:true}).order('meal_time',{ascending:true});if(requestSeq!==nutritionLoadSeq||Number(nutritionDay)!==requestedDay)return;if(error){console.error(error);const c=cacheRead('nutritionMealsAll');nutritionMeals=Array.isArray(c)?c.filter(x=>Number(x.day)===requestedDay&&String(x.user_id||'')===uid):[]}else{nutritionMeals=(data||[]).filter(x=>Number(x.day)===requestedDay&&String(x.user_id||uid)===uid);let all=cacheRead('nutritionMealsAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==requestedDay);all.push(...nutritionMeals);cacheWrite('nutritionMealsAll',all)}try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meals-loaded',{detail:{day:requestedDay,meals:Array.isArray(nutritionMeals)?nutritionMeals.slice():[]}}))}catch(_){}}
+async function loadNutritionMeals(targetDay=nutritionDay){const requestedDay=Number(targetDay);const requestSeq=++nutritionLoadSeq;const uid=currentUser?.id?String(currentUser.id):'';if(!uid){nutritionMeals=[];if(requestSeq===nutritionLoadSeq)try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meals-loaded',{detail:{day:requestedDay,meals:[]}}))}catch(_){}return}let query=sb.from('nutrition_meals').select('*').eq('day',requestedDay).eq('user_id',uid);const {data,error}=await query.order('meal_order',{ascending:true}).order('meal_time',{ascending:true});if(requestSeq!==nutritionLoadSeq||Number(nutritionDay)!==requestedDay||String(currentUser?.id||'')!==uid)return;if(error){console.error(error);const c=cacheRead('nutritionMealsAll');nutritionMeals=Array.isArray(c)?c.filter(x=>Number(x.day)===requestedDay&&String(x.user_id||'')===uid):[]}else{nutritionMeals=(data||[]).filter(x=>Number(x.day)===requestedDay&&String(x.user_id||uid)===uid);let all=cacheRead('nutritionMealsAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==requestedDay);all.push(...nutritionMeals);cacheWrite('nutritionMealsAll',all)}try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meals-loaded',{detail:{day:requestedDay,meals:Array.isArray(nutritionMeals)?nutritionMeals.slice():[]}}))}catch(_){}}
 function mealLabel(key){return MEAL_TYPES.find(m=>m.key===key)?.label||key;}
 function upsertNutritionMealLocal(meal){
   if(!meal||meal.id==null)return;
@@ -667,55 +667,100 @@ function renderNutritionList(){const c=$('mealList');c.innerHTML='';if(nutrition
 function openNutritionPanel(){const willOpen=!$('nutritionPanel').classList.contains('open');setPanelOpen('nutritionPanel','nutritionIcon',willOpen);setPanelOpen('calendarPanel','calendarIcon',false);setPanelOpen('workoutPanel','workoutIcon',false);setTabActive('nutritionToggle',willOpen);setTabActive('calendarToggle',false);setTabActive('workoutToggle',false);if(willOpen){renderNutritionDays();renderMealTabs();loadNutritionMeals().then(()=>{renderNutritionList();renderNutritionGoals();});requestAnimationFrame(()=>$('nutritionPanel').scrollIntoView({behavior:'smooth',block:'nearest'}));}}
 function openNutritionModal(meal=null){editingMealId=meal?.id||null;$('nutritionModalTitle').textContent=meal?'✎ Editar comida':'＋ Agregar comida';$('nutritionModalInfo').textContent=`${DAYS[nutritionDay]} · ${mealLabel(meal?.meal_type||activeMealType)}`;$('mealType').value=meal?.meal_type||activeMealType;$('mealTitle').value=meal?.title||'';$('mealFoods').value=meal?.foods||'';$('mealCalories').value=meal?.calories??'';$('mealProtein').value=meal?.protein_g??'';$('mealCarbs').value=meal?.carbs_g??'';$('mealFat').value=meal?.fat_g??'';$('mealTime').value=meal?.meal_time||'';$('mealDescription').value=meal?.description||'';$('cancelMealBtn').classList.remove('hidden');$('cancelMealBtn').textContent='Cancelar';$('nutritionOverlay').classList.add('show');setTimeout(()=>$('mealTitle').focus(),80)}
 function closeNutritionModal(){$('nutritionOverlay').classList.remove('show');editingMealId=null;}
+let nutritionMealSaveBusy=false;
 $('saveMealBtn').onclick=async()=>{
+  if(nutritionMealSaveBusy)return;
+  const saveButton=$('saveMealBtn');
+  const originalButtonText=saveButton?.textContent||'Guardar comida';
+  const userId=String(currentUser?.id||'');
+  if(!userId){alert('Iniciá sesión para guardar una comida.');return}
   const meal_type=$('mealType').value;
   const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:Number($('mealCalories').value)||null,protein_g:Number($('mealProtein').value)||null,carbs_g:Number($('mealCarbs').value)||null,fat_g:Number($('mealFat').value)||null,meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};
-  if(!payload.title)return alert('Escribí el nombre de la comida.');
-  let savedMealId=editingMealId;
-  let savedMeal=null;
-  if(editingMealId){
-    const {data,error}=await sb.from('nutrition_meals').update(payload).eq('id',editingMealId).eq('user_id',currentUser.id).select('*').single();
-    if(error){alert(error.message);return}
-    savedMeal=data||{...payload,id:editingMealId,user_id:currentUser.id,day:nutritionDay};
-  }else{
-    payload.user_id=currentUser.id;payload.day=nutritionDay;payload.meal_order=MEAL_TYPES.findIndex(m=>m.key===meal_type);
-    const {data,error}=await sb.from('nutrition_meals').insert(payload).select('*').single();
-    if(error){alert(error.message);return}
-    savedMeal=data||null;
-    savedMealId=savedMeal?.id||null;
+  if(!payload.title){alert('Escribí el nombre de la comida.');return}
+  const targetEditingId=editingMealId;
+  nutritionMealSaveBusy=true;
+  if(saveButton){saveButton.disabled=true;saveButton.textContent='Guardando…'}
+  try{
+    let savedMealId=targetEditingId;
+    let savedMeal=null;
+    if(targetEditingId){
+      const {data,error}=await sb.from('nutrition_meals').update(payload).eq('id',targetEditingId).eq('user_id',userId).select('*').single();
+      if(error)throw new Error('No se pudo guardar la comida: '+error.message);
+      savedMeal=data||{...payload,id:targetEditingId,user_id:userId,day:nutritionDay};
+    }else{
+      payload.user_id=userId;payload.day=nutritionDay;payload.meal_order=MEAL_TYPES.findIndex(m=>m.key===meal_type);
+      const {data,error}=await sb.from('nutrition_meals').insert(payload).select('*').single();
+      if(error)throw new Error('No se pudo crear la comida: '+error.message);
+      savedMeal=data||null;
+      savedMealId=savedMeal?.id||null;
+    }
+    // An auth/account change during a request must never redirect the detail save
+    // into the new account. The parent write may have succeeded for the old one.
+    if(String(currentUser?.id||'')!==userId){
+      alert('La cuenta cambió mientras se guardaba la comida. No continué guardando sus alimentos en la cuenta nueva. Revisá la comida desde la cuenta original antes de reintentar.');
+      return;
+    }
+    window.AgendaNutritionLastSavedMealId=savedMealId||null;
+    const structuredFoods=window.AgendaFoodCatalog?.getPendingMealFoods?.()||[];
+    let structuredSaveError=null;
+    if(savedMealId&&window.AgendaNutritionData?.persistMealItems){
+      try{await window.AgendaNutritionData.persistMealItems(savedMealId,structuredFoods)}
+      catch(err){structuredSaveError=err;console.warn('La comida principal se guardó, pero falló el detalle de alimentos:',err);window.AgendaNutritionSync?.setStatus('error','La comida se guardó, pero faltan alimentos detallados por sincronizar.')}
+    }
+    if(String(currentUser?.id||'')!==userId){
+      alert('La cuenta cambió durante la sincronización del detalle. No se actualizará la interfaz de la cuenta nueva; volvé a la cuenta original y verificá la comida antes de reintentar.');
+      return;
+    }
+    if(savedMeal){
+      upsertNutritionMealLocal(savedMeal);
+      syncNutritionMealsCache();
+      renderNutritionStateNow();
+      try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-saved',{detail:{mealId:String(savedMealId||savedMeal.id||''),meal:savedMeal,day:Number(savedMeal.day??nutritionDay),userId}}))}catch(_){ }
+    }
+    if(structuredSaveError){
+      window.AgendaNutritionSync?.setStatus('error','La comida se guardó, pero faltan alimentos detallados por sincronizar.');
+      if(savedMealId){editingMealId=savedMealId;window.AgendaNutritionLastSavedMealId=savedMealId;}
+      $('nutritionModalInfo').textContent='La comida está guardada, pero falta sincronizar el detalle. No cierres esta ventana; revisá la conexión y volvé a guardar.';
+      alert('La comida principal quedó guardada, pero no se pudieron guardar sus alimentos detallados. Dejé la ventana abierta para conservar tu selección; revisá la conexión y volvé a guardar.');
+      return;
+    }
+    closeNutritionModal();
+  }catch(err){
+    console.error('Error al guardar Alimentación:',err);
+    alert(err?.message||'No se pudo guardar la comida. Revisá tu conexión y volvé a intentar.');
+  }finally{
+    nutritionMealSaveBusy=false;
+    if(saveButton){saveButton.disabled=false;saveButton.textContent=originalButtonText;}
   }
-  window.AgendaNutritionLastSavedMealId=savedMealId||null;
-  const structuredFoods=window.AgendaFoodCatalog?.getPendingMealFoods?.()||[];
-  let structuredSaveError=null;
-  if(savedMealId&&window.AgendaNutritionData?.persistMealItems){
-    try{await window.AgendaNutritionData.persistMealItems(savedMealId,structuredFoods)}catch(err){structuredSaveError=err;console.warn('La comida principal se guardó, pero falló el detalle de alimentos:',err);window.AgendaNutritionSync?.setStatus('error','La comida se guardó, pero faltan alimentos detallados por sincronizar.')}
-  }
-  if(savedMeal){
-    upsertNutritionMealLocal(savedMeal);
-    syncNutritionMealsCache();
-    renderNutritionStateNow();
-    try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-saved',{detail:{mealId:String(savedMealId||savedMeal.id||''),meal:savedMeal,day:Number(savedMeal.day??nutritionDay)}}))}catch(_){ }
-  }
-  if(structuredSaveError){
-    window.AgendaNutritionSync?.setStatus('error','La comida se guardó, pero faltan alimentos detallados por sincronizar.');
-    if(savedMealId){editingMealId=savedMealId;window.AgendaNutritionLastSavedMealId=savedMealId;}
-    $('nutritionModalInfo').textContent='La comida está guardada, pero falta sincronizar el detalle. Corregí la conexión y volvé a guardar sin cerrar esta ventana.';
-    alert('La comida principal quedó guardada, pero no se pudieron guardar sus alimentos detallados. Dejé la ventana abierta para conservar tu selección; revisá la conexión y volvé a guardar.');
-    return;
-  }
-  closeNutritionModal();
 };
 async function deleteMeal(id){
+  if(!currentUser?.id){alert('Iniciá sesión para eliminar una comida.');return;}
   if(!confirm('¿Eliminar esta comida?'))return;
+  const owner=String(currentUser.id);
   const key=String(id);
-  const previous=nutritionMeals.find(m=>String(m.id)===key);
-  const {error}=await sb.from('nutrition_meals').delete().eq('id',id).eq('user_id',currentUser.id);
-  if(error){alert(error.message);return;}
-  removeNutritionMealLocal(id);
-  syncNutritionMealsCache();
-  renderNutritionStateNow();
-  try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-deleted',{detail:{mealId:key,day:Number(previous?.day??nutritionDay)}}))}catch(_){ }
-  if(window.AgendaNutritionData?.deleteMealItems)try{await window.AgendaNutritionData.deleteMealItems(id)}catch(err){console.warn('No se pudieron eliminar los alimentos estructurados:',err)}
+  const previous=nutritionMeals.find(m=>String(m.id)===key&&String(m.user_id||owner)===owner);
+  try{
+    // La función SQL elimina comida + alimentos detallados en una transacción.
+    // No se usa una secuencia de DELETE en el cliente que pueda dejar huérfanos.
+    const {data,error}=await sb.rpc('delete_nutrition_meal_and_items',{p_meal_id:key});
+    if(error)throw error;
+    if(String(currentUser?.id||'')!==owner){
+      alert('La comida se eliminó de la cuenta original, pero la sesión cambió antes de actualizar la pantalla. Volvé a abrir Alimentación con la cuenta correcta.');
+      return;
+    }
+    if(data!==true){alert('No se encontró esa comida en tu cuenta o no se pudo confirmar su eliminación. No se modificó la pantalla.');return;}
+    removeNutritionMealLocal(id);
+    syncNutritionMealsCache();
+    renderNutritionStateNow();
+    try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-deleted',{detail:{mealId:key,day:Number(previous?.day??nutritionDay),userId:owner}}))}catch(_){ }
+  }catch(err){
+    console.error('No se pudo eliminar la comida de forma atómica:',err);
+    const message=String(err?.message||'');
+    const functionMissing=/delete_nutrition_meal_and_items|PGRST202|function .* not found/i.test(message);
+    alert(functionMissing
+      ?'No se eliminó nada. Para eliminar comidas con seguridad, primero revisá el diagnóstico y aplicá sql/08-nutrition-production-hardening.sql en Supabase.'
+      :'No se pudo eliminar la comida y sus alimentos de forma segura. No se actualizó la pantalla; revisá la conexión y volvé a intentar.');
+  }
 }
 
 function renderWorkoutDays(){const c=$('workoutDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===workoutDay?' active':'');b.textContent=d;b.onclick=async()=>{workoutDay=i;renderWorkoutDays();await loadWorkoutExercises();renderWorkoutList();renderWorkoutHistory();renderWorkoutAnalytics();renderDashboard();};c.appendChild(b)});}
@@ -982,6 +1027,10 @@ function setImportProgress(text,show=true){const e=$('importProgress');if(!e)ret
 
 async function importMyData(file, selected={tasks:true,dates:true,exercises:true,logs:true,meals:true}){
   if(!currentUser?.id){alert('Primero iniciá sesión.');return}
+  // Alimentación siempre conserva la identidad de la cuenta que inició la restauración.
+  // Si cambia la sesión durante una operación asíncrona, la importación nutricional se detiene.
+  const importNutritionUserId=String(currentUser.id);
+  const assertNutritionImportUser=()=>{if(String(currentUser?.id||'')!==importNutritionUserId)throw new Error('La cuenta cambió durante la restauración de Alimentación. Se detuvo la importación para evitar mezclar cuentas. Volvé a iniciar sesión en la cuenta original y revisá los datos antes de reintentar.')}
   let parsed;
   try{parsed=JSON.parse(await file.text());}catch(err){throw new Error('El archivo no contiene un JSON válido.')}
   if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error('El archivo de respaldo no tiene el formato esperado.');
@@ -1009,18 +1058,23 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
     const {error}=await sb.from(table).select(columns).eq('user_id',currentUser.id).limit(1);
     if(error)throw new Error(`No se puede importar con seguridad porque falta o no está disponible ${table}: ${error.message}`);
   }
+  async function ensureNutritionTable(table,columns='user_id'){
+    assertNutritionImportUser();
+    await ensureTable(table,columns);
+    assertNutritionImportUser();
+  }
   if(tasksIn.length||(replace&&selected.tasks))await ensureTable('tasks');
   if(datesIn.length||(replace&&selected.dates))await ensureTable('personal_dates');
   if(exercisesIn.length||(replace&&selected.exercises))await ensureTable('workout_exercises');
   if(logsIn.length||(replace&&selected.logs))await ensureTable('workout_logs');
-  if(nutritionDataSelected&&(mealsIn.length||(replace&&selected.meals)))await ensureTable('nutrition_meals');
-  if(nutritionDataSelected&&(mealItemsIn.length||(replace&&selected.meals)))await ensureTable('nutrition_meal_items',mealItemsIn.length?'user_id,meal_id,catalog_id,user_food_id,source,external_id,name,brand,quantity,unit,serving_size,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,consumed,consumed_at':'user_id');
-  if(nutritionDataSelected&&has('user_foods')&&(userFoodsIn.length||(replace&&selected.meals)))await ensureTable('user_foods','id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic');
-  if(nutritionDataSelected&&has('nutrition_recipes')&&(recipesIn.length||(replace&&selected.meals)))await ensureTable('nutrition_recipes','id,user_id,name,notes,servings,total_weight_g,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients');
-  if(nutritionDataSelected&&has('nutrition_consumption_history')&&(historyIn.length||(replace&&selected.meals)))await ensureTable('nutrition_consumption_history','id,user_id,consumed_date,meal_id,meal_item_id,meal_title,meal_type,meal_time,food_name,brand,quantity,unit,calories,protein_g,carbs_g,fat_g,item_snapshot');
+  if(nutritionDataSelected&&(mealsIn.length||(replace&&selected.meals)))await ensureNutritionTable('nutrition_meals');
+  if(nutritionDataSelected&&(mealItemsIn.length||(replace&&selected.meals)))await ensureNutritionTable('nutrition_meal_items',mealItemsIn.length?'user_id,meal_id,catalog_id,user_food_id,source,external_id,name,brand,quantity,unit,quantity_in_grams,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,serving_size,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,consumed,consumed_at':'user_id');
+  if(nutritionDataSelected&&has('user_foods')&&(userFoodsIn.length||(replace&&selected.meals)))await ensureNutritionTable('user_foods','id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic');
+  if(nutritionDataSelected&&has('nutrition_recipes')&&(recipesIn.length||(replace&&selected.meals)))await ensureNutritionTable('nutrition_recipes','id,user_id,name,notes,servings,total_weight_g,finished_weight_g,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients');
+  if(nutritionDataSelected&&has('nutrition_consumption_history')&&(historyIn.length||(replace&&selected.meals)))await ensureNutritionTable('nutrition_consumption_history','id,user_id,consumed_date,meal_id,meal_item_id,meal_title,meal_type,meal_time,food_name,brand,quantity,unit,calories,protein_g,carbs_g,fat_g,item_snapshot');
   if(nutritionDataSelected&&has('nutrition_preferences')&&(preferencesIn.length||(replace&&selected.meals))){
     const hasNewPrefs=!!localNutritionIn||preferencesIn.some(row=>Object.prototype.hasOwnProperty.call(row,'nutrition_goals')||Object.prototype.hasOwnProperty.call(row,'favorite_foods')||Object.prototype.hasOwnProperty.call(row,'recent_foods'));
-    await ensureTable('nutrition_preferences',hasNewPrefs?'user_id,meal_order,nutrition_goals,favorite_foods,recent_foods':'user_id,meal_order');
+    await ensureNutritionTable('nutrition_preferences',hasNewPrefs?'user_id,meal_order,nutrition_goals,favorite_foods,recent_foods':'user_id,meal_order');
   }
 
   // Capturamos los IDs actuales ANTES de importar. En modo reemplazo, las comidas
@@ -1033,8 +1087,10 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
   async function fetchUserIds(table){
     const ids=[];let from=0;const pageSize=500;
     while(true){
-      const {data,error}=await sb.from(table).select('id').eq('user_id',currentUser.id).range(from,from+pageSize-1);
+      assertNutritionImportUser();
+      const {data,error}=await sb.from(table).select('id').eq('user_id',importNutritionUserId).range(from,from+pageSize-1);
       if(error)throw error;
+      assertNutritionImportUser();
       const batch=Array.isArray(data)?data:[];ids.push(...batch.map(row=>String(row.id)).filter(Boolean));
       if(batch.length<pageSize)break;
       from+=pageSize;
@@ -1097,10 +1153,12 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
   const mealIdMap=new Map();
   let insertedMeals=0;
   for(const meal of mealsIn){
+    assertNutritionImportUser();
     const sourceId=meal?.id;
-    const row=clean(meal,['id','user_id','created_at','updated_at']);row.user_id=currentUser.id;
+    const row=clean(meal,['id','user_id','created_at','updated_at']);row.user_id=importNutritionUserId;
     const {data,error}=await sb.from('nutrition_meals').insert(row).select('*').single();
     if(error)throw new Error('Error importando alimentación: '+error.message);
+    assertNutritionImportUser();
     if(sourceId!=null&&data?.id!=null)mealIdMap.set(String(sourceId),String(data.id));
     insertedMeals++;
     setImportProgress(`Comidas importadas: ${insertedMeals}/${mealsIn.length}`);
@@ -1108,9 +1166,10 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
 
   const userFoodIdMap=new Map();
   for(const food of userFoodsIn){
+    assertNutritionImportUser();
     const sourceId=food?.id;
     const row=clean(food,['id','user_id','created_at','updated_at','search_text']);
-    row.user_id=currentUser.id;row.catalog_id=null;
+    row.user_id=importNutritionUserId;row.catalog_id=null;
     row.source=String(row.source||'external');
     row.name=String(row.name||'Alimento');row.brand=String(row.brand||'');
     row.fingerprint=String(row.fingerprint||`${row.source}:${row.external_id||`${row.name.toLowerCase()}|${row.brand.toLowerCase()}`}`);
@@ -1118,19 +1177,22 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
     if(row.is_generic==null)row.is_generic=false;
     const {data,error}=await sb.from('user_foods').upsert(row,{onConflict:'user_id,fingerprint'}).select('id').single();
     if(error)throw new Error('Error importando mis alimentos: '+error.message);
+    assertNutritionImportUser();
     if(sourceId!=null&&data?.id!=null)userFoodIdMap.set(String(sourceId),String(data.id));
   }
 
   let importedRecipes=0;
   const recipeIdMap=new Map();
   for(const recipe of recipesIn){
+    assertNutritionImportUser();
     const sourceId=recipe?.id;
-    const row=clean(recipe,['id','user_id','created_at','updated_at']);row.user_id=currentUser.id;
+    const row=clean(recipe,['id','user_id','created_at','updated_at']);row.user_id=importNutritionUserId;
     row.name=String(row.name||'Receta');row.notes=String(row.notes||'');
     row.servings=Math.max(.1,Number(row.servings)||1);row.total_weight_g=Math.max(0,Number(row.total_weight_g)||0);
     row.ingredients=(Array.isArray(row.ingredients)?row.ingredients:[]).map(item=>({...item,user_food_id:item?.user_food_id!=null?(userFoodIdMap.get(String(item.user_food_id))||null):(item?.user_food_id||null),consumed:false,consumed_at:null}));
     const {data,error}=await sb.from('nutrition_recipes').insert(row).select('id').single();
     if(error)throw new Error('Error importando recetas: '+error.message);
+    assertNutritionImportUser();
     if(sourceId!=null&&data?.id!=null)recipeIdMap.set(String(sourceId),String(data.id));
     importedRecipes++;setImportProgress(`Recetas importadas: ${importedRecipes}/${recipesIn.length}`);
   }
@@ -1142,10 +1204,11 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
     const sourceMeal=String(item?.meal_id??'');
     const targetMeal=mealIdMap.get(sourceMeal);
     if(!targetMeal){skippedItems++;continue;}
+    assertNutritionImportUser();
     const row=clean(item,['id','user_id','created_at','updated_at']);
     const targetItemId=makeImportedUuid();
     if(item?.id!=null)nutritionItemIdMap.set(String(item.id),targetItemId);
-    row.id=targetItemId;row.meal_id=targetMeal;row.user_id=currentUser.id;row.catalog_id=null;
+    row.id=targetItemId;row.meal_id=targetMeal;row.user_id=importNutritionUserId;row.catalog_id=null;
     row.user_food_id=item?.user_food_id!=null?(userFoodIdMap.get(String(item.user_food_id))||null):null;
     row.name=String(row.name||'Alimento');row.brand=String(row.brand||'');
     row.quantity=Number.isFinite(Number(row.quantity))?Math.max(0,Number(row.quantity)):0;
@@ -1153,30 +1216,36 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
     itemRows.push(row);
   }
   for(let i=0;i<itemRows.length;i+=100){
+    assertNutritionImportUser();
     const chunk=itemRows.slice(i,i+100);
     const {error}=await sb.from('nutrition_meal_items').insert(chunk);
     if(error)throw new Error('Error importando el detalle de alimentos consumidos: '+error.message);
+    assertNutritionImportUser();
     importedItems+=chunk.length;
     setImportProgress(`Alimentos detallados importados: ${importedItems}/${itemRows.length}`);
   }
 
   let importedPrefs=0;
   for(const pref of preferencesIn){
+    assertNutritionImportUser();
     const patch={};
     if(Array.isArray(pref?.meal_order))patch.meal_order=pref.meal_order;
     if(Object.prototype.hasOwnProperty.call(pref||{},'nutrition_goals'))patch.nutrition_goals=pref.nutrition_goals;
     if(Object.prototype.hasOwnProperty.call(pref||{},'favorite_foods'))patch.favorite_foods=pref.favorite_foods;
     if(Object.prototype.hasOwnProperty.call(pref||{},'recent_foods'))patch.recent_foods=pref.recent_foods;
     if(!Object.keys(patch).length)continue;
-    const {data:existing,error:readError}=await sb.from('nutrition_preferences').select('user_id').eq('user_id',currentUser.id).maybeSingle();
+    const {data:existing,error:readError}=await sb.from('nutrition_preferences').select('user_id').eq('user_id',importNutritionUserId).maybeSingle();
     if(readError)throw new Error('Error leyendo preferencias de alimentación: '+readError.message);
-    if(existing){const {error}=await sb.from('nutrition_preferences').update({...patch,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id);if(error)throw new Error('Error importando preferencias nutricionales: '+error.message)}
-    else {const {error}=await sb.from('nutrition_preferences').insert({user_id:currentUser.id,...patch});if(error)throw new Error('Error importando preferencias nutricionales: '+error.message)}
+    assertNutritionImportUser();
+    if(existing){const {error}=await sb.from('nutrition_preferences').update({...patch,updated_at:new Date().toISOString()}).eq('user_id',importNutritionUserId);if(error)throw new Error('Error importando preferencias nutricionales: '+error.message)}
+    else {const {error}=await sb.from('nutrition_preferences').insert({user_id:importNutritionUserId,...patch});if(error)throw new Error('Error importando preferencias nutricionales: '+error.message)}
+    assertNutritionImportUser();
     importedPrefs++;
   }
 
   if(localNutritionIn){
-    const uid=String(currentUser.id);
+    assertNutritionImportUser();
+    const uid=importNutritionUserId;
     const localKey=(name)=>`${name}:${uid}`;
     const oldQuick=(()=>{try{return JSON.parse(localStorage.getItem(`agenda-nutrition-quick-access-v1:${uid}`)||'{"version":1,"favorites":[],"recent":[]}')}catch(_){return {version:1,favorites:[],recent:[]}}})();
     const importedQuick=localNutritionIn.quick_access&&typeof localNutritionIn.quick_access==='object'?localNutritionIn.quick_access:{version:1,favorites:[],recent:[]};
@@ -1196,24 +1265,30 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
     }
   }
   if(replace&&selected.meals){
-    const uid=String(currentUser.id);
+    assertNutritionImportUser();
+    const uid=importNutritionUserId;
     // Recién ahora eliminamos los registros anteriores. Las inserciones necesarias
     // ya finalizaron; si no, la copia anterior sigue disponible para recuperación.
     const oldMealIds=oldNutritionMealIds.filter(id=>!Array.from(mealIdMap.values()).map(String).includes(String(id)));
     for(let i=0;i<oldMealIds.length;i+=100){
+      assertNutritionImportUser();
       const chunk=oldMealIds.slice(i,i+100);
-      const {error:itemDeleteError}=await sb.from('nutrition_meal_items').delete().eq('user_id',currentUser.id).in('meal_id',chunk);
+      const {error:itemDeleteError}=await sb.from('nutrition_meal_items').delete().eq('user_id',importNutritionUserId).in('meal_id',chunk);
       if(itemDeleteError)throw new Error(`La copia se importó, pero no se pudieron limpiar todos los alimentos anteriores: ${itemDeleteError.message}`);
-      const {error:mealDeleteError}=await sb.from('nutrition_meals').delete().eq('user_id',currentUser.id).in('id',chunk);
+      assertNutritionImportUser();
+      const {error:mealDeleteError}=await sb.from('nutrition_meals').delete().eq('user_id',importNutritionUserId).in('id',chunk);
       if(mealDeleteError)throw new Error(`La copia se importó, pero no se pudieron limpiar todas las comidas anteriores: ${mealDeleteError.message}`);
+      assertNutritionImportUser();
     }
     if(has('user_foods')){
       const keepFoodIds=new Set(Array.from(userFoodIdMap.values()).map(String));
       const staleFoodIds=oldNutritionFoodIds.filter(id=>!keepFoodIds.has(String(id)));
       for(let i=0;i<staleFoodIds.length;i+=100){
         const chunk=staleFoodIds.slice(i,i+100);
-        const {error}=await sb.from('user_foods').delete().eq('user_id',currentUser.id).in('id',chunk);
+        assertNutritionImportUser();
+        const {error}=await sb.from('user_foods').delete().eq('user_id',importNutritionUserId).in('id',chunk);
         if(error)throw new Error(`La copia se importó, pero no se pudieron limpiar todos los alimentos personales anteriores: ${error.message}`);
+        assertNutritionImportUser();
       }
     }
     if(has('nutrition_recipes')){
@@ -1221,13 +1296,17 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
       const staleRecipeIds=oldNutritionRecipeIds.filter(id=>!keepRecipeIds.has(String(id)));
       for(let i=0;i<staleRecipeIds.length;i+=100){
         const chunk=staleRecipeIds.slice(i,i+100);
-        const {error}=await sb.from('nutrition_recipes').delete().eq('user_id',currentUser.id).in('id',chunk);
+        assertNutritionImportUser();
+        const {error}=await sb.from('nutrition_recipes').delete().eq('user_id',importNutritionUserId).in('id',chunk);
         if(error)throw new Error(`La copia se importó, pero no se pudieron limpiar todas las recetas anteriores: ${error.message}`);
+        assertNutritionImportUser();
       }
     }
     if(has('nutrition_consumption_history')&&replace){
-      const {error}=await sb.from('nutrition_consumption_history').delete().eq('user_id',currentUser.id);
+      assertNutritionImportUser();
+      const {error}=await sb.from('nutrition_consumption_history').delete().eq('user_id',importNutritionUserId);
       if(error)throw new Error(`La copia se importó, pero no se pudo reemplazar el historial nutricional anterior: ${error.message}`);
+      assertNutritionImportUser();
     }
     try{
       const queuePrefix=`agendaNutritionPendingConsumption:${uid}`;localStorage.setItem(queuePrefix,'{}');
@@ -1242,16 +1321,19 @@ async function importMyData(file, selected={tasks:true,dates:true,exercises:true
     }catch(err){console.warn('No se pudieron restaurar algunos estados locales antiguos de consumo:',err)}
   }
   if(historyIn.length){
+    assertNutritionImportUser();
     const rows=historyIn.map(item=>{
-      const row=clean(item,['id','user_id','created_at','updated_at']);row.user_id=currentUser.id;
+      const row=clean(item,['id','user_id','created_at','updated_at']);row.user_id=importNutritionUserId;
       row.consumed_date=String(row.consumed_date||'').slice(0,10);row.meal_id=mealIdMap.get(String(row.meal_id||''))||String(row.meal_id||'');
       const sourceItemId=String(row.meal_item_id||'');
       row.meal_item_id=nutritionItemIdMap.get(sourceItemId)||sourceItemId||`${row.consumed_date}:${row.food_name||'food'}`;row.food_name=String(row.food_name||'Alimento');
       row.item_snapshot=row.item_snapshot&&typeof row.item_snapshot==='object'?row.item_snapshot:{};return row;
     }).filter(row=>/^\d{4}-\d{2}-\d{2}$/.test(row.consumed_date));
     for(let i=0;i<rows.length;i+=100){
+      assertNutritionImportUser();
       const chunk=rows.slice(i,i+100);const {error}=await sb.from('nutrition_consumption_history').upsert(chunk,{onConflict:'user_id,meal_item_id,consumed_date'});
       if(error)throw new Error('Error importando historial nutricional: '+error.message);
+      assertNutritionImportUser();
     }
   }
   if(selected.meals&&(localNutritionIn||preferencesIn.length)){try{document.dispatchEvent(new CustomEvent('agenda:nutrition-preferences-restored',{detail:{replaced:replace}}))}catch(_){}}

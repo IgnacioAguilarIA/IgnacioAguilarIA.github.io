@@ -698,7 +698,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
         <div class="nutrition-food-catalog-search"><label for="nutritionFoodSearch">Buscar alimento</label><input class="input" id="nutritionFoodSearch" autocomplete="off" placeholder="Ej.: arroz, huevo, leche…"/><div class="nutrition-food-autocomplete" id="nutritionFoodAutocomplete" hidden></div></div>
         <button class="nutrition-food-catalog-find" id="nutritionFoodCatalogFind" type="button">Buscar alimento</button>
       </div>
-      <div class="nutrition-advanced-catalog-actions"><button class="nutrition-advanced-secondary" id="nutritionCreateCustomFoodBtn" type="button">＋ Crear alimento propio</button><span>Valores de referencia por 100 g</span></div>
+      <div class="nutrition-advanced-catalog-actions"><div class="nutrition-advanced-catalog-actions-buttons"><button class="nutrition-advanced-secondary" id="nutritionCreateCustomFoodBtn" type="button">＋ Crear alimento propio</button><button class="nutrition-advanced-secondary" id="nutritionManageCustomFoodsBtn" type="button">Mis alimentos</button></div><span>Valores de referencia por 100 g</span></div>
       <div class="nutrition-food-quick-access" id="nutritionFoodQuickAccess">
         <div class="nutrition-food-quick-access-head">
           <div><strong>Accesos rápidos</strong><small>Volvé a usar alimentos que ya cargaste</small></div>
@@ -715,7 +715,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
       <div class="nutrition-food-selection-panel">
         <div class="nutrition-food-selection-heading"><span class="nutrition-entry-step small">03</span><div><strong>Revisá el alimento y la cantidad</strong><small>Confirmá los valores antes de sumarlo a la comida.</small></div></div>
         <div class="nutrition-food-selected" id="nutritionFoodSelected" hidden></div>
-        <div class="nutrition-food-catalog-qty"><label for="nutritionFoodQuantity">Cantidad que vas a agregar</label><div class="nutrition-food-quantity-wrap"><input class="input" id="nutritionFoodQuantity" min="0" step="0.1" inputmode="decimal" type="number" value="100"/><span>g</span></div><small>Los macros se recalculan automáticamente según los gramos.</small></div>
+        <div class="nutrition-food-catalog-qty"><label for="nutritionFoodQuantity">Cantidad que vas a agregar</label><div class="nutrition-food-quantity-wrap"><input class="input" id="nutritionFoodQuantity" min="0.1" step="0.1" inputmode="decimal" type="number" value="100"/><select class="input" id="nutritionFoodQuantityUnit" aria-label="Unidad de cantidad"><option value="g">Gramos (g)</option></select></div><div class="nutrition-food-preparation-field"><label for="nutritionFoodPreparationState">Estado del alimento</label><select class="input" id="nutritionFoodPreparationState"><option value="unspecified">No especificado</option><option value="raw">Crudo</option><option value="cooked">Cocido</option><option value="prepared">Preparado</option></select></div><small>Los nutrientes se guardan por 100 g. Los ml requieren densidad (g/ml) y las unidades o porciones un peso conocido. Cambiar el estado no transforma los nutrientes: seleccioná valores que correspondan al alimento crudo, cocido o preparado.</small></div>
         <div class="nutrition-food-catalog-actions" id="nutritionFoodCatalogActions" hidden>
           <button class="nutrition-food-save" id="nutritionFoodSave" type="button">☆ Guardar en mis alimentos</button>
           <button class="nutrition-food-favorite-toggle" id="nutritionFoodFavoriteToggle" type="button" aria-pressed="false">☆ Agregar a favoritos</button>
@@ -1276,6 +1276,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <link href="./css/76-nutrition-advanced.css" rel="stylesheet"/>
 <link href="./css/77-nutrition-stage5-polish.css" rel="stylesheet"/>
 <link href="./css/78-nutrition-food-entry.css" rel="stylesheet"/>
+<link href="./css/79-nutrition-units-preparation.css" rel="stylesheet"/>
 <script src="./js/46-v98-training-stats-repair.js"></script>
 <script src="./js/47-nutrition-food-catalog.js"></script>
 <script src="./js/48-openfoodfacts-adapter.js"></script>
@@ -1289,5 +1290,11 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <script src="./js/56-nutrition-quick-access.js"></script>
 <script src="./js/57-nutrition-account-sync.js"></script>
 <script src="./js/58-nutrition-advanced.js"></script>
+<link href="./css/80-nutrition-routine-tools.css" rel="stylesheet"/>
+<script src="./js/59-nutrition-routine-tools.js"></script>
+<link href="./css/81-nutrition-accessibility-final.css" rel="stylesheet"/>
+<link href="./css/82-nutrition-final-audit.css" rel="stylesheet"/>
+<script src="./js/60-nutrition-accessibility-final.js"></script>
+<script src="./js/61-nutrition-final-audit.js"></script>
 </body>
 </html>
