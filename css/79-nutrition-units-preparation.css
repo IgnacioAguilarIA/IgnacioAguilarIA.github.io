@@ -1,0 +1,19 @@
+/* Etapa B2: unidades fiables y estados de preparación. Solo afecta a Alimentación. */
+#nutritionOverlay .nutrition-food-quantity-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(132px,.72fr);gap:8px;align-items:center}
+#nutritionOverlay #nutritionFoodQuantityUnit{min-width:0;width:100%}
+#nutritionOverlay .nutrition-food-preparation-field{display:grid;gap:6px;margin-top:12px}
+#nutritionOverlay #nutritionFoodPreparationState{width:100%;min-height:42px}
+#nutritionOverlay .nutrition-food-preparation-chip{display:flex;flex-wrap:wrap;gap:6px;align-items:baseline;margin-top:10px;padding:10px 12px;border:1px solid var(--border-color,rgba(148,163,184,.25));border-radius:12px;font-size:.88rem}
+#nutritionOverlay .nutrition-food-preparation-chip small{display:block;flex-basis:100%;opacity:.78;line-height:1.4}
+#nutritionOverlay .nutrition-food-preparation-mini{display:inline-flex;align-items:center;margin-top:4px;padding:2px 7px;border-radius:999px;background:rgba(59,130,246,.10);font-size:.72rem;font-weight:600}
+#nutritionOverlay .nutrition-unit-warning{grid-column:1/-1;padding:10px 12px;border:1px solid rgba(217,119,6,.35);border-radius:10px;color:var(--text-color,#fbbf24);font-size:.86rem;line-height:1.4}
+#nutritionAdvancedModal .nutrition-advanced-form .field select{width:100%}
+#nutritionAdvancedModal #nutritionCustomFoodDensity,#nutritionAdvancedModal #nutritionCustomFoodUnitWeight,#nutritionAdvancedModal #nutritionRecipeFinishedWeight{width:100%;min-width:0}
+#nutritionAdvancedModal .nutrition-advanced-note{line-height:1.55}
+#nutritionAdvancedModal .nutrition-recipe-editor-item{align-items:center}
+@media(max-width:520px){
+  #nutritionOverlay .nutrition-food-quantity-wrap{grid-template-columns:minmax(0,1fr) minmax(105px,.7fr);gap:6px}
+  #nutritionOverlay .nutrition-food-quantity-wrap input,#nutritionOverlay .nutrition-food-quantity-wrap select{min-width:0;font-size:16px}
+  #nutritionAdvancedModal .nutrition-recipe-editor-item{grid-template-columns:minmax(0,1fr);gap:10px}
+  #nutritionAdvancedModal .nutrition-recipe-editor-quantity{width:100%}
+}

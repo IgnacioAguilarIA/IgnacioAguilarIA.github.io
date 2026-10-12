@@ -1,0 +1,59 @@
+/* Agenda FICH — Etapa C2: estados consistentes y reintento accesible. Solo Alimentación. */
+#nutritionPanel .nutrition-sync-retry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  margin: -6px 0 14px auto;
+  padding: 8px 12px;
+  border: 1px solid var(--border, #cbd5e1);
+  border-radius: 10px;
+  background: var(--surface, #fff);
+  color: var(--text, #1f2937);
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+#nutritionPanel .nutrition-sync-retry:hover:not(:disabled) {
+  border-color: var(--accent, #3b82f6);
+}
+#nutritionPanel .nutrition-sync-retry:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 3px;
+}
+#nutritionPanel .nutrition-sync-retry:disabled {
+  cursor: progress;
+  opacity: .65;
+}
+#nutritionPanel .nutrition-sync-retry[hidden] { display: none !important; }
+#nutritionPanel [class*="status"][data-nutrition-state="error"],
+#nutritionOverlay [class*="status"][data-nutrition-state="error"],
+.nutrition-advanced-overlay [class*="status"][data-nutrition-state="error"],
+.nutrition-routine-overlay [class*="status"][data-nutrition-state="error"] {
+  border-color: rgba(207, 69, 69, .55);
+}
+#nutritionPanel [class*="status"][data-nutrition-state="pending"],
+#nutritionOverlay [class*="status"][data-nutrition-state="pending"],
+.nutrition-advanced-overlay [class*="status"][data-nutrition-state="pending"],
+.nutrition-routine-overlay [class*="status"][data-nutrition-state="pending"] {
+  border-color: rgba(198, 138, 34, .55);
+}
+#nutritionPanel [class*="status"][data-nutrition-state="success"],
+#nutritionOverlay [class*="status"][data-nutrition-state="success"],
+.nutrition-advanced-overlay [class*="status"][data-nutrition-state="success"],
+.nutrition-routine-overlay [class*="status"][data-nutrition-state="success"] {
+  border-color: rgba(36, 148, 91, .45);
+}
+body.light #nutritionPanel .nutrition-sync-retry {
+  background: #fff;
+  color: #172033;
+  border-color: #cbd5e1;
+}
+@media (max-width: 600px) {
+  #nutritionPanel .nutrition-sync-retry { width: 100%; margin: -5px 0 12px; min-height: 44px; }
+}
+@media (forced-colors: active) {
+  #nutritionPanel .nutrition-sync-retry { border: 1px solid ButtonText; }
+  #nutritionPanel .nutrition-sync-retry:focus-visible { outline: 2px solid Highlight; }
+}

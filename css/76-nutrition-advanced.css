@@ -66,3 +66,43 @@
  .nutrition-advanced-catalog-actions .nutrition-advanced-secondary{flex:1}
 }
 @media(prefers-reduced-motion:reduce){.nutrition-advanced-overlay{backdrop-filter:none}}
+
+/* Etapa B1: gestión ligera de alimentos propios y edición de recetas. */
+
+.nutrition-advanced-catalog-actions-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.nutrition-user-food-list{display:grid;gap:9px}
+.nutrition-user-food-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px;border:1px solid rgba(127,127,127,.22);border-radius:13px;background:rgba(127,127,127,.035)}
+.nutrition-user-food-main{display:grid;gap:4px;min-width:0}
+.nutrition-user-food-main strong{font-size:.92rem;overflow-wrap:anywhere}
+.nutrition-user-food-main small,.nutrition-user-food-main span{font-size:.78rem;line-height:1.45;opacity:.75;overflow-wrap:anywhere}
+.nutrition-user-food-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.nutrition-user-food-actions button{min-height:36px;padding:7px 10px}
+.nutrition-recipe-editor-section,.nutrition-recipe-add-ingredient{display:grid;gap:9px;min-width:0}
+.nutrition-recipe-editor-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nutrition-recipe-editor-head strong{font-size:.9rem}
+.nutrition-recipe-editor-head span{font-size:.78rem;opacity:.7}
+.nutrition-recipe-ingredient-editor{display:grid;gap:8px;min-width:0}
+.nutrition-recipe-editor-item{display:grid;grid-template-columns:minmax(0,1fr) minmax(115px,.32fr) auto;align-items:center;gap:10px;padding:10px;border:1px solid rgba(127,127,127,.2);border-radius:11px}
+.nutrition-recipe-editor-item-main{display:grid;gap:4px;min-width:0}
+.nutrition-recipe-editor-item-main strong{font-size:.84rem;overflow-wrap:anywhere}
+.nutrition-recipe-editor-item-main small{font-size:.74rem;line-height:1.4;opacity:.7;overflow-wrap:anywhere}
+.nutrition-recipe-editor-quantity{display:grid;gap:4px;font-size:.74rem;font-weight:650}
+.nutrition-recipe-editor-quantity .input{width:100%;min-width:0}
+.nutrition-recipe-editor-remove{min-height:35px;padding:7px 9px}
+.nutrition-recipe-search-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.nutrition-recipe-search-row button{min-height:42px}
+.nutrition-recipe-search-results{display:grid;gap:6px}
+.nutrition-recipe-search-result{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:10px 12px;border:1px solid rgba(127,127,127,.2);border-radius:10px;background:rgba(127,127,127,.045);color:inherit;text-align:left;cursor:pointer}
+.nutrition-recipe-search-result span:first-child{display:grid;gap:4px;min-width:0}
+.nutrition-recipe-search-result strong{font-size:.84rem;overflow-wrap:anywhere}
+.nutrition-recipe-search-result small{font-size:.75rem;opacity:.7}
+.nutrition-recipe-search-result span:last-child{font-size:1.15rem;flex:0 0 auto}
+.nutrition-recipe-search-result:focus-visible,.nutrition-user-food-actions button:focus-visible,.nutrition-recipe-editor-item button:focus-visible{outline:3px solid color-mix(in srgb,var(--accent,#2563eb) 70%,transparent);outline-offset:2px}
+@media(max-width:560px){
+ .nutrition-advanced-catalog-actions-buttons{width:100%}
+ .nutrition-advanced-catalog-actions-buttons>*{flex:1 1 auto}
+ .nutrition-user-food-card{grid-template-columns:1fr}
+ .nutrition-user-food-actions{display:grid;grid-template-columns:1fr 1fr}
+ .nutrition-recipe-editor-item{grid-template-columns:minmax(0,1fr) minmax(98px,.38fr);gap:8px}
+ .nutrition-recipe-editor-remove{grid-column:1/-1;width:100%}
+}

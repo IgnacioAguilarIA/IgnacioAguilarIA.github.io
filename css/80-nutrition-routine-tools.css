@@ -1,0 +1,55 @@
+/* Agenda FICH — Etapa B3: herramientas cotidianas de Alimentación. */
+#nutritionPanel .nutrition-actions{flex-wrap:wrap;align-items:center}
+#nutritionPanel .nutrition-routine-action{white-space:normal;line-height:1.25}
+.nutrition-routine-overlay{position:fixed;inset:0;z-index:12050;background:rgba(9,15,25,.66);display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto}
+.nutrition-routine-modal{width:min(760px,100%);max-height:min(90vh,850px);overflow:auto;background:var(--card,#fff);color:var(--text,#172033);border:1px solid rgba(127,127,127,.24);border-radius:18px;box-shadow:0 24px 80px rgba(0,0,0,.3)}
+.nutrition-routine-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:18px 20px;border-bottom:1px solid rgba(127,127,127,.2)}
+.nutrition-routine-head h3{font-size:1.15rem;line-height:1.35;margin:0 0 5px}
+.nutrition-routine-head p{margin:0;font-size:.9rem;opacity:.76}
+.nutrition-routine-close{flex:0 0 auto;border:0;border-radius:10px;background:rgba(127,127,127,.13);padding:6px 11px;font-size:1.35rem;line-height:1;cursor:pointer;color:inherit}
+.nutrition-routine-body{display:grid;gap:14px;padding:18px 20px}
+.nutrition-routine-field{display:grid;gap:6px}
+.nutrition-routine-field label,.nutrition-routine-stats-controls label{font-size:.88rem;font-weight:650}
+.nutrition-routine-field select{width:100%;min-height:42px}
+.nutrition-routine-note{margin:0;padding:12px 14px;border-radius:12px;background:rgba(127,127,127,.1);font-size:.88rem;line-height:1.55}
+.nutrition-routine-status{font-size:.88rem;line-height:1.5;min-height:1.4em}
+.nutrition-routine-actions{display:flex;justify-content:flex-end;gap:10px;padding:0 20px 18px}
+.nutrition-routine-actions button,.nutrition-routine-stats-controls button{border:0;border-radius:11px;padding:10px 14px;min-height:40px;cursor:pointer;font:inherit;font-weight:650}
+.nutrition-routine-primary{background:var(--accent,#2563eb);color:#fff}
+.nutrition-routine-secondary{background:rgba(127,127,127,.14);color:inherit}
+.nutrition-routine-actions button:disabled,.nutrition-routine-stats-controls button:disabled{opacity:.6;cursor:not-allowed}
+.nutrition-routine-toast{position:fixed;right:18px;bottom:18px;z-index:12070;display:flex;align-items:center;gap:12px;max-width:min(660px,calc(100vw - 36px));padding:12px 14px;border-radius:14px;background:#172033;color:#fff;box-shadow:0 10px 36px rgba(0,0,0,.25);font-size:.9rem;line-height:1.4}
+.nutrition-routine-undo{justify-content:space-between}
+.nutrition-routine-undo button{flex:0 0 auto;border:1px solid rgba(255,255,255,.35);border-radius:10px;background:#fff;color:#172033;padding:8px 12px;font-weight:750;cursor:pointer}
+.nutrition-routine-undo button:disabled{opacity:.65;cursor:wait}
+.nutrition-routine-stats-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.nutrition-routine-stats-controls select{min-width:170px;flex:1}
+.nutrition-routine-stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.nutrition-routine-stat-card{min-width:0;border:1px solid rgba(127,127,127,.2);border-radius:13px;padding:12px;display:grid;gap:6px;background:rgba(127,127,127,.045)}
+.nutrition-routine-stat-card span{font-size:.82rem;opacity:.8}
+.nutrition-routine-stat-card strong{font-size:1.12rem;overflow-wrap:anywhere}
+.nutrition-routine-stat-card small{font-size:.75rem;opacity:.7;line-height:1.35}
+.nutrition-routine-stats-count{font-size:.88rem;line-height:1.5;margin:0}
+.nutrition-routine-stats-heading{margin:4px 0 0;font-size:1rem}
+.nutrition-routine-table-wrap{max-width:100%;overflow:auto;border:1px solid rgba(127,127,127,.2);border-radius:12px}
+.nutrition-routine-table{width:100%;border-collapse:collapse;font-size:.85rem}
+.nutrition-routine-table th,.nutrition-routine-table td{padding:10px 11px;text-align:left;border-bottom:1px solid rgba(127,127,127,.16);white-space:nowrap}
+.nutrition-routine-table thead{background:rgba(127,127,127,.09)}
+.nutrition-routine-table tbody tr:last-child td{border-bottom:0}
+.nutrition-routine-table .is-recorded{font-weight:650}
+.nutrition-routine-table .is-unrecorded{opacity:.72}
+@media(max-width:600px){
+  #nutritionPanel .nutrition-actions{display:flex;gap:7px}
+  #nutritionPanel .nutrition-actions button{flex:1 1 auto;min-width:calc(50% - 8px)}
+  .nutrition-routine-overlay{padding:8px;align-items:flex-start}
+  .nutrition-routine-modal{margin:auto 0;max-height:94vh;border-radius:15px}
+  .nutrition-routine-head,.nutrition-routine-body{padding:15px}
+  .nutrition-routine-actions{padding:0 15px 15px}
+  .nutrition-routine-stat-grid{grid-template-columns:1fr 1fr}
+  .nutrition-routine-stat-card{padding:10px}
+  .nutrition-routine-stat-card strong{font-size:1rem}
+  .nutrition-routine-toast{left:10px;right:10px;bottom:10px;max-width:none;align-items:flex-start}
+  .nutrition-routine-undo{flex-wrap:wrap}
+  .nutrition-routine-undo button{margin-left:auto}
+}
+@media(prefers-reduced-motion:reduce){.nutrition-routine-modal,.nutrition-routine-toast{scroll-behavior:auto;animation:none!important;transition:none!important}}
