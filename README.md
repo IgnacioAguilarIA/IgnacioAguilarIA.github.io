@@ -2,6 +2,11 @@
 
 Esta versión incluye los cambios de las etapas 1 a 5 y el ajuste visual posterior del menú «Agregar alimentos». Agrega alimentos personalizados, recetas basadas en ingredientes reales, historial de consumo por fecha y un formulario organizado en pasos. Los módulos específicos de Entrenamiento no se modifican. La guía de esta última mejora está en `README-MENU-AGREGAR-ALIMENTOS.md`.
 
+## Etapa D2 — privilegios mínimos de Supabase
+
+La auditoría real encontró que `authenticated` conservaba privilegios innecesarios (`TRUNCATE`, `TRIGGER`, `REFERENCES` y `MAINTAIN`) en las tablas personales. Revisá `README-ETAPA-D2.md` y ejecutá `sql/14-nutrition-minimum-privileges.sql` antes de considerar cerrada la auditoría. La migración limita permisos de tabla sin modificar filas ni políticas RLS, y verifica el resultado antes de confirmar la transacción.
+
+
 ## Cambios de la Etapa 4
 
 - **Crear alimentos propios:** formulario para registrar nombre, marca opcional y calorías/proteínas/carbohidratos/grasas/fibra por 100 g. Se guardan en `user_foods`, aislados por usuario, y pueden buscarse y reutilizarse desde el catálogo.
