@@ -1,0 +1,39 @@
+/* Agenda FICH D5 — editor de planificación fechada; estilos acotados a esta herramienta. */
+.nutrition-plan-entry-btn{white-space:normal;line-height:1.25}
+.nutrition-plan-editor-overlay{position:fixed;inset:0;z-index:12020;display:flex;align-items:center;justify-content:center;padding:clamp(8px,2.5vw,24px);background:rgba(7,12,22,.74);overflow:auto;overscroll-behavior:contain}
+.nutrition-plan-editor-dialog{width:min(1120px,100%);max-height:min(94dvh,960px);overflow:auto;background:var(--card,#111827);color:var(--text,#fff);border:1px solid var(--line,rgba(120,130,150,.26));border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,.3);padding:clamp(14px,2.5vw,24px);outline:none}
+.nutrition-plan-editor-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;border-bottom:1px solid var(--line,rgba(120,130,150,.22));padding-bottom:14px;margin-bottom:14px}
+.nutrition-plan-editor-head h2{margin:0;font-size:clamp(1.2rem,2.2vw,1.7rem);line-height:1.25}
+.nutrition-plan-editor-head p{margin:6px 0 0;color:var(--muted,#94a3b8);font-size:.9rem;line-height:1.5}
+.nutrition-plan-editor-close{border:1px solid var(--line,rgba(120,130,150,.35));border-radius:10px;background:transparent;color:inherit;padding:9px 12px;min-height:42px;font-weight:650;cursor:pointer}
+.nutrition-plan-toolbar{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.nutrition-plan-week-label{display:grid;gap:5px;min-width:190px;flex:1;font-size:.82rem;font-weight:650}
+.nutrition-plan-week-label input{min-height:42px;width:100%;min-width:0}
+.nutrition-plan-editor-status{padding:10px 12px;margin:10px 0 14px;border-radius:10px;background:var(--soft-bg,rgba(100,116,139,.10));color:inherit;font-size:.9rem;line-height:1.45}
+.nutrition-plan-editor-status[hidden]{display:none}
+.nutrition-plan-editor-status[data-state=success]{border-inline-start:3px solid #21845b}
+.nutrition-plan-editor-status[data-state=error]{border-inline-start:3px solid #bf4545}
+.nutrition-plan-week-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.nutrition-plan-day-card{display:flex;flex-direction:column;gap:10px;min-width:0;border:1px solid var(--line,rgba(120,130,150,.25));border-radius:14px;padding:13px;background:var(--surface-card,rgba(120,130,150,.035))}
+.nutrition-plan-day-header{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nutrition-plan-day-header h3{margin:0;font-size:1.02rem}
+.nutrition-plan-count{display:inline-flex;align-items:center;justify-content:center;min-width:26px;padding:3px 8px;border-radius:999px;background:var(--soft-bg,rgba(100,116,139,.12));font-size:.78rem}
+.nutrition-plan-empty{margin:0;color:var(--muted,#94a3b8);font-size:.88rem}
+.nutrition-plan-meal{border-top:1px solid var(--line,rgba(120,130,150,.18));padding-top:9px;display:grid;gap:5px;min-width:0}
+.nutrition-plan-meal strong{overflow-wrap:anywhere}
+.nutrition-plan-meal p{margin:0;color:var(--muted,#94a3b8);font-size:.82rem;line-height:1.45;overflow-wrap:anywhere}
+.nutrition-plan-note{white-space:pre-wrap}
+.nutrition-plan-row-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:2px}
+.nutrition-plan-add-day{margin-top:auto;width:100%;min-height:40px;border:1px dashed var(--line,rgba(120,130,150,.38));border-radius:10px;background:transparent;color:inherit;cursor:pointer;padding:8px}
+.nutrition-plan-edit-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:14px;border:1px solid var(--line,rgba(120,130,150,.28));border-radius:13px;margin:12px 0 16px;background:var(--surface-card,rgba(120,130,150,.035))}
+.nutrition-plan-edit-form[hidden]{display:none}
+.nutrition-plan-field{display:grid;gap:5px;min-width:0;font-size:.82rem;font-weight:650}
+.nutrition-plan-field>span{line-height:1.35}
+.nutrition-plan-field input,.nutrition-plan-field select,.nutrition-plan-field textarea{width:100%;min-width:0;min-height:42px;border:1px solid var(--line,rgba(120,130,150,.35));border-radius:9px;background:var(--card2,transparent);color:inherit;padding:8px 10px;font:inherit;font-weight:400}
+.nutrition-plan-field textarea{resize:vertical}
+.nutrition-plan-field-wide{grid-column:1/-1}
+.nutrition-plan-form-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.nutrition-plan-editor-dialog button:focus-visible,.nutrition-plan-editor-dialog input:focus-visible,.nutrition-plan-editor-dialog select:focus-visible,.nutrition-plan-editor-dialog textarea:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+@media(max-width:720px){.nutrition-plan-editor-overlay{align-items:flex-end;padding:6px}.nutrition-plan-editor-dialog{width:100%;max-height:95dvh;border-radius:18px 18px 12px 12px;padding:13px}.nutrition-plan-week-grid{grid-template-columns:1fr}.nutrition-plan-toolbar>*{flex:1 1 calc(50% - 8px);min-width:0}.nutrition-plan-week-label{flex:1 1 100%}.nutrition-plan-edit-form{grid-template-columns:1fr}.nutrition-plan-field-wide,.nutrition-plan-form-actions{grid-column:1}.nutrition-plan-form-actions>*{flex:1}}
+@media(prefers-reduced-motion:reduce){.nutrition-plan-editor-overlay *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(forced-colors:active){.nutrition-plan-day-card,.nutrition-plan-meal,.nutrition-plan-add-day,.nutrition-plan-editor-close{border:1px solid ButtonText}.nutrition-plan-editor-status[data-state=success],.nutrition-plan-editor-status[data-state=error]{border-inline-start:4px solid CanvasText}}
