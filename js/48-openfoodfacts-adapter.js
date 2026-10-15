@@ -15,7 +15,7 @@
     searchUrl:'https://world.openfoodfacts.org/cgi/search.pl',
     smartSearchUrl:'https://search.openfoodfacts.org/search',
     productBaseUrl:'https://world.openfoodfacts.org/api/v2/product',
-    cachePrefix:'agendaFoodOFF:',
+    cachePrefix:'agendaFoodOFF:v2:',
     cacheTtlMs:24*60*60*1000,
     pageSize:10,
     requestTimeoutMs:8000
@@ -24,10 +24,21 @@
   function text(v){return String(v??'').trim()}
   function num(v){const n=Number(v);return Number.isFinite(n)?n:0}
   function firstNonEmpty(...values){for(const value of values){const s=text(value);if(s)return s}return ''}
+  function hasNumericValue(value){return value!==null&&value!==undefined&&String(value).trim()!==''&&Number.isFinite(Number(value))}
+
+  function missingNutrition(product){
+    const n=product?.nutriments||{};
+    const known={
+      'energía':hasNumericValue(n['energy-kcal_100g'])||hasNumericValue(n['energy_100g'])||hasNumericValue(n['energy-kj_100g']),
+      'proteínas':hasNumericValue(n['proteins_100g']),
+      'carbohidratos':hasNumericValue(n['carbohydrates_100g']),
+      'grasas':hasNumericValue(n['fat_100g'])
+    };
+    return Object.keys(known).filter(label=>!known[label]);
+  }
 
   function energyKcal(product){
     const n=product?.nutriments||{};
-    const hasNumericValue=value=>value!==null&&value!==undefined&&String(value).trim()!==''&&Number.isFinite(Number(value));
     // Usar solo valores normalizados por 100 g. El valor genérico energy-kcal
     // puede corresponder a una porción y no debe tratarse como kcal/100 g.
     if(hasNumericValue(n['energy-kcal_100g']))return num(n['energy-kcal_100g']);
@@ -69,7 +80,8 @@
       nutriScore:firstNonEmpty(product.nutriscore_grade,product.nutrition_grades),
       novaGroup:num(product.nova_group)||null,
       imageUrl:firstNonEmpty(product.image_front_url,product.image_url),
-      source:'Open Food Facts'
+      source:'Open Food Facts',
+      nutritionMissing:missingNutrition(product)
     };
   }
 
@@ -101,21 +113,77 @@
     return text(v).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
   }
 
+  function editDistanceWithin(a,b,maxDistance){
+    if(a===b)return 0;
+    if(Math.abs(a.length-b.length)>maxDistance)return maxDistance+1;
+    if(!a.length)return b.length;
+    if(!b.length)return a.length;
+    let previous=Array.from({length:b.length+1},(_,i)=>i);
+    for(let i=1;i<=a.length;i++){
+      const current=[i];let rowMin=i;
+      for(let j=1;j<=b.length;j++){
+        const cost=a[i-1]===b[j-1]?0:1;
+        const value=Math.min(current[j-1]+1,previous[j]+1,previous[j-1]+cost);
+        current[j]=value;if(value<rowMin)rowMin=value;
+      }
+      if(rowMin>maxDistance)return maxDistance+1;
+      previous=current;
+    }
+    return previous[b.length];
+  }
+
+  function tokenSimilarity(queryToken,nameTokens){
+    if(nameTokens.includes(queryToken))return 1;
+    if(nameTokens.some(token=>token.startsWith(queryToken)||queryToken.startsWith(token)))return .9;
+    if(queryToken.length<4)return 0;
+    const maxDistance=queryToken.length>=8?2:1;
+    let best=0;
+    for(const token of nameTokens){
+      const distance=editDistanceWithin(queryToken,token,maxDistance);
+      if(distance<=maxDistance)best=Math.max(best,1-(distance*.18));
+    }
+    return best;
+  }
+
   function resultScore(item,query){
     const q=normalizedName(query);
     const name=normalizedName(item?.product_name_es||item?.product_name||item?.name||'');
     if(!q||!name)return 0;
     if(name===q)return 1000;
-    if(name.startsWith(q+' '))return 900;
-    if(name.includes(' '+q+' '))return 800;
-    if(name.includes(q))return 700;
+    if(name.startsWith(q+' '))return 940;
+    if(name.includes(' '+q+' '))return 900;
+    if(name.includes(q))return 850;
     const words=q.split(' ').filter(Boolean);
-    const hits=words.filter(w=>name.includes(w)).length;
-    return hits?500+(hits/words.length)*100:0;
+    const nameWords=name.split(' ').filter(Boolean);
+    const similarities=words.map(word=>tokenSimilarity(word,nameWords));
+    const coverage=similarities.filter(score=>score>0).length/words.length;
+    if(!coverage)return 0;
+    const average=similarities.reduce((sum,score)=>sum+score,0)/words.length;
+    return 500+(coverage*100)+(average*60)+(coverage===1?25:0);
   }
 
-  function sortRelevant(products,query){
-    return [...products].sort((a,b)=>resultScore(b,query)-resultScore(a,query));
+  function productQuality(item){
+    const missing=Array.isArray(item?.nutritionMissing)?item.nutritionMissing.length:4;
+    return (item?.brand?3:0)+(item?.imageUrl||item?.image_front_url||item?.image_url?2:0)+(4-missing);
+  }
+
+  function dedupeProducts(products){
+    const map=new Map();
+    for(const item of products){
+      if(!item)continue;
+      const code=text(item.code||item.id||item.gtin||item.barcode||item._id);
+      const name=normalizedName(item.name||item.product_name_es||item.product_name||'');
+      const brand=normalizedName(item.brand||item.brands||'');
+      const quantity=normalizedName(item.quantity||item.serving_size||'');
+      const key=code?`code:${code}`:`name:${name}|brand:${brand}|qty:${quantity}`;
+      const current=map.get(key);
+      if(!current||productQuality(item)>productQuality(current))map.set(key,item);
+    }
+    return [...map.values()];
+  }
+
+  function rankResults(products,query){
+    return dedupeProducts(products).sort((a,b)=>resultScore(b,query)-resultScore(a,query));
   }
 
   async function searchSmart(q,exact=true){
@@ -162,7 +230,7 @@
     if(!CFG.enabled||!q)return [];
 
     const cached=cacheRead(q);
-    if(cached)return cached;
+    if(cached)return rankResults(cached,q).slice(0,CFG.pageSize);
 
     let products=[];
     try{
@@ -177,13 +245,13 @@
     }
 
     let results=products.map(normalizeProduct).filter(Boolean);
-    results=sortRelevant(results,q).slice(0,CFG.pageSize);
+    results=rankResults(results,q).slice(0,CFG.pageSize);
     cacheWrite(q,results);
     return results;
   }
 
   window.AgendaFoodCatalogConfig=CFG;
-  window.AgendaFoodCatalogOFF={normalize:normalizeProduct,search,getProductDetails};
+  window.AgendaFoodCatalogOFF={normalize:normalizeProduct,search,getProductDetails,rankResults,missingNutrition};
 
   /*
    * El catálogo 47 puede estar esperando DOMContentLoaded cuando este archivo 48

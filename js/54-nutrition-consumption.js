@@ -7,6 +7,7 @@
   let renderTimer=null;
   let activeDateKey='';
   const pendingFlushes=new Map();
+  const itemSyncLocks=new Map();
 
   function uid(){return String((typeof currentUser!=='undefined'&&currentUser?.id)||'guest')}
   function cacheKey(mealId,userId=uid()){return `${String(userId)}::${String(mealId)}`}
@@ -26,37 +27,87 @@
   function writeItemCache(mealId,items,userId=uid()){try{localStorage.setItem(localItemsKey(mealId,userId),JSON.stringify({saved_at:Date.now(),items:(items||[]).map(x=>({...x,persisted:!!x.persisted}))}));}catch(_){}}
   function readItemCache(mealId,userId=uid()){try{const parsed=JSON.parse(localStorage.getItem(localItemsKey(mealId,userId))||'null');return Array.isArray(parsed?.items)?parsed.items:[]}catch(_){return []}}
   function notifySync(status,message,userId=uid()){try{document.dispatchEvent(new CustomEvent('agenda:nutrition-consumption-sync-status',{detail:{status,message,userId:String(userId||'')}}))}catch(_){}}
-  function queuePending(item,next,userId=uid()){const queue=readPending(userId);queue[String(item.id)]={consumed:!!next,consumed_at:next?new Date().toISOString():null,queued_at:new Date().toISOString(),meal_id:String(item.meal_id||'')};if(!writePending(queue,userId)){if(uid()===userId)notifySync('error','No se pudo guardar localmente el cambio pendiente de consumo.',userId);return false}if(uid()===userId)notifySync('pending',navigator.onLine?'Cambio de consumo pendiente de sincronización.':'Sin conexión: el cambio quedó guardado en este dispositivo.',userId);return true}
+  function sameQueueEntry(a,b){
+    if(!a&&!b)return true;
+    if(!a||!b)return false;
+    return String(a.queued_at||'')===String(b.queued_at||'')
+      &&!!a.consumed===!!b.consumed
+      &&String(a.consumed_at||'')===String(b.consumed_at||'')
+      &&String(a.meal_id||'')===String(b.meal_id||'');
+  }
+  function withItemSyncLock(userId,itemId,operation){
+    const key=`${String(userId)}::${String(itemId)}`;
+    const previous=itemSyncLocks.get(key)||Promise.resolve();
+    const task=previous.catch(()=>{}).then(operation);
+    const tracked=task.finally(()=>{if(itemSyncLocks.get(key)===tracked)itemSyncLocks.delete(key)});
+    itemSyncLocks.set(key,tracked);
+    return tracked;
+  }
+  function reflectSyncedConsumption(owner,id,entry){
+    for(const [key,value] of cache.entries()){
+      if(!key.startsWith(`${owner}::`))continue;
+      const rows=value?.items;
+      if(Array.isArray(rows)){
+        const item=rows.find(x=>String(x.id)===String(id));
+        if(item){item.consumed=!!entry.consumed;item.consumed_at=entry.consumed?entry.consumed_at:null;writeItemCache(String(item.meal_id||key.slice(key.indexOf('::')+2)),rows,owner)}
+      }
+    }
+  }
+  function queuePending(item,next,userId=uid(),queuedAt=new Date().toISOString(),expectedPrevious=undefined){
+    const queue=readPending(userId);const id=String(item.id);
+    // If another operation changed this item while a request was in flight, keep
+    // that newer queue entry instead of overwriting it with an older failed request.
+    if(expectedPrevious!==undefined&&!sameQueueEntry(queue[id]||null,expectedPrevious||null)){
+      if(uid()===userId)notifySync('pending','Hay un cambio de consumo más reciente pendiente de sincronización.',userId);
+      return true;
+    }
+    queue[id]={consumed:!!next,consumed_at:next?new Date(queuedAt).toISOString():null,queued_at:String(queuedAt),meal_id:String(item.meal_id||'')};
+    if(!writePending(queue,userId)){if(uid()===userId)notifySync('error','No se pudo guardar localmente el cambio pendiente de consumo.',userId);return false}
+    if(uid()===userId)notifySync('pending',navigator.onLine?'Cambio de consumo pendiente de sincronización.':'Sin conexión: el cambio quedó guardado en este dispositivo.',userId);
+    return true;
+  }
   async function flushPending(){
     const owner=uid();
     if(!navigator.onLine||owner==='guest'||!window.AgendaNutritionData?.setMealItemConsumed)return;
     if(pendingFlushes.has(owner))return pendingFlushes.get(owner);
     const task=(async()=>{
-      const queue=readPending(owner);const ids=Object.keys(queue);if(!ids.length)return;
-      let saved=0,failed=null;
+      const initial=readPending(owner);const ids=Object.keys(initial);if(!ids.length)return;
+      let saved=0,failed=null,needsAnotherPass=false;
       for(const id of ids){
         if(uid()!==owner)return;
-        const entry=queue[id];
         try{
-          const result=await window.AgendaNutritionData.setMealItemConsumed(id,!!entry.consumed,entry.consumed_at,entry.queued_at,owner);
-          if(uid()!==owner)return;
-          if(result?.ok===false||result?.skipped)throw new Error('Supabase no confirmó el cambio.');
-          // El estado puede haberse guardado aunque el historial haya fallado.
-          // Conservamos la cola para reintentar la operación idempotente completa.
-          if(result?.historyOk===false)throw new Error(`El consumo se guardó, pero falta confirmar el historial: ${result.historyError||'error de historial'}`);
-          delete queue[id];clearFallback(id,owner);saved++;
-          for(const [key,value] of cache.entries()){
-            if(!key.startsWith(`${owner}::`))continue;
-            const rows=value?.items;if(Array.isArray(rows)){const item=rows.find(x=>String(x.id)===String(id));if(item){item.consumed=!!entry.consumed;item.consumed_at=entry.consumed?entry.consumed_at:null;writeItemCache(String(item.meal_id||key.slice(key.indexOf('::')+2)),rows,owner)}}
-          }
+          const outcome=await withItemSyncLock(owner,id,async()=>{
+            if(uid()!==owner)return {state:'account-changed'};
+            // Read the latest value only after acquiring the per-item lock.
+            const before=readPending(owner);const entry=before[id];
+            if(!entry)return {state:'already-removed'};
+            const result=await window.AgendaNutritionData.setMealItemConsumed(id,!!entry.consumed,entry.consumed_at,entry.queued_at,owner);
+            if(uid()!==owner)return {state:'account-changed'};
+            if(result?.ok===false||result?.skipped)throw new Error('Supabase no confirmó el cambio.');
+            // The row can be saved even if the history upsert failed; do not drop its retry.
+            if(result?.historyOk===false)throw new Error(`El consumo se guardó, pero falta confirmar el historial: ${result.historyError||'error de historial'}`);
+            const after=readPending(owner);
+            if(!sameQueueEntry(after[id]||null,entry))return {state:'superseded'};
+            delete after[id];
+            if(!writePending(after,owner))throw new Error('Supabase recibió el cambio, pero no se pudo actualizar la cola local. El reintento se conserva si el navegador puede escribir el almacenamiento.');
+            clearFallback(id,owner);
+            reflectSyncedConsumption(owner,id,entry);
+            return {state:'saved',entry};
+          });
+          if(outcome?.state==='account-changed')return;
+          if(outcome?.state==='superseded'){needsAnotherPass=true;continue}
+          if(outcome?.state==='saved')saved++;
         }catch(err){failed=err;break}
       }
-      // Nunca escribir una cola de la cuenta anterior bajo la sesión nueva.
+      // Never overwrite the live queue with a stale in-memory snapshot. Each item
+      // is removed only after comparing it with the exact entry confirmed by server.
       if(uid()!==owner)return;
-      if(!writePending(queue,owner)){notifySync('error','No se pudo actualizar la cola local de sincronización.',owner);return}
-      if(Object.keys(queue).length)notifySync('pending',`Quedan ${Object.keys(queue).length} cambio(s) de consumo pendientes. ${failed?.message||''}`.trim(),owner);
+      const remaining=readPending(owner);const remainingIds=Object.keys(remaining);const remainingCount=remainingIds.length;
+      if(!failed&&remainingIds.some(id=>!ids.includes(id)))needsAnotherPass=true;
+      if(remainingCount)notifySync('pending',`Quedan ${remainingCount} cambio(s) de consumo pendientes. ${failed?.message||''}`.trim(),owner);
       else if(saved)notifySync('saved','Los cambios de consumo pendientes se sincronizaron con tu cuenta.',owner);
       if(saved){try{document.dispatchEvent(new CustomEvent('agenda:nutrition-consumption-queue-flushed',{detail:{saved,userId:owner}}))}catch(_){}}
+      if(needsAnotherPass&&remainingCount&&navigator.onLine)setTimeout(()=>{if(uid()===owner)flushPending().catch(()=>{})},250);
     })();
     pendingFlushes.set(owner,task);
     try{return await task}finally{if(pendingFlushes.get(owner)===task)pendingFlushes.delete(owner)}
@@ -224,32 +275,41 @@
 
   async function persistItemConsumption(item,next,owner=uid()){
     if(uid()!==owner)throw new Error('La cuenta activa cambió antes de sincronizar el consumo.');
-    if(item.persisted&&item.id){
+    if(!(item.persisted&&item.id)){if(item.id)writeFallback(item.id,!!next,owner);return {ok:true,local:true}}
+    return withItemSyncLock(owner,item.id,async()=>{
+      if(uid()!==owner)throw new Error('La cuenta activa cambió antes de sincronizar el consumo.');
+      const operationStartedAt=new Date().toISOString();
+      const pendingAtStart=readPending(owner)[String(item.id)]||null;
       if(navigator.onLine){
         try{
           const save=window.AgendaNutritionData?.setMealItemConsumed;
           if(typeof save!=='function')throw new Error('No está disponible el guardado del estado de consumo.');
-          const result=await save(item.id,!!next,null,new Date().toISOString(),owner);
+          const result=await save(item.id,!!next,null,operationStartedAt,owner);
           if(uid()!==owner)throw new Error('La cuenta cambió durante el guardado del consumo; el cambio seguirá pendiente para la cuenta original.');
           if(result?.ok===false||result?.skipped)throw new Error('No se pudo confirmar el guardado del estado de consumo.');
-          const queue=readPending(owner);delete queue[String(item.id)];writePending(queue,owner);clearFallback(item.id,owner);
           if(result?.historyOk===false){
-            if(!queuePending(item,next,owner))throw new Error(`El consumo se guardó, pero no se pudo conservar un reintento del historial: ${result.historyError||'error de historial'}`);
+            if(!queuePending(item,next,owner,operationStartedAt,pendingAtStart))throw new Error(`El consumo se guardó, pero no se pudo conservar un reintento del historial: ${result.historyError||'error de historial'}`);
             notifySync('warning',`Consumo guardado; el historial sigue pendiente y se reintentará. Revisá sql/07-nutrition-advanced.sql. ${result.historyError||''}`.trim(),owner);
             return {ok:true,pending:true,historyPending:true};
           }
-          if(!Object.keys(queue).length)notifySync('saved','Consumo sincronizado con tu cuenta.',owner);
+          // Do not erase an entry written by a newer operation while this request ran.
+          const queue=readPending(owner);
+          if(!sameQueueEntry(queue[String(item.id)]||null,pendingAtStart)) {
+            notifySync('pending','El consumo se guardó, pero hay un cambio más reciente pendiente de sincronización.',owner);
+            return {ok:true,pending:true,superseded:true};
+          }
+          if(pendingAtStart){delete queue[String(item.id)];if(!writePending(queue,owner))throw new Error('El consumo se guardó, pero no se pudo actualizar la cola local.');}
+          clearFallback(item.id,owner);
+          if(!Object.keys(readPending(owner)).length)notifySync('saved','Consumo sincronizado con tu cuenta.',owner);
           return {ok:true};
         }catch(err){
-          if(!queuePending(item,next,owner))throw err;
+          if(!queuePending(item,next,owner,operationStartedAt,pendingAtStart))throw err;
           return {ok:true,pending:true,error:err};
         }
       }
-      if(!queuePending(item,next,owner))throw new Error('No se pudo guardar el cambio sin conexión.');
+      if(!queuePending(item,next,owner,operationStartedAt,pendingAtStart))throw new Error('No se pudo guardar el cambio sin conexión.');
       return {ok:true,pending:true};
-    }
-    if(item.id)writeFallback(item.id,!!next,owner);
-    return {ok:true,local:true};
+    });
   }
 
   async function toggleItem(card,item,next){

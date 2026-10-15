@@ -63,6 +63,7 @@
       protein:safeNumber(n.protein??n.proteins??n.proteins_g??n['proteins_100g']),
       carbs:safeNumber(n.carbs??n.carbohydrates??n.carbs_g??n['carbohydrates_100g']),
       fat:safeNumber(n.fat??n.fat_g??n['fat_100g']),
+      nutritionMissing:Array.isArray(item.nutritionMissing)?item.nutritionMissing.map(String).filter(Boolean).slice(0,4):[],
       quantity:String(item.quantity||''),servingSize:String(item.servingSize||item.serving_size||''),
       servingQuantity:Number.isFinite(serving)&&serving>0?serving:null,
       ingredients:String(item.ingredients||item.ingredients_text||''),categories:String(item.categories||''),
@@ -175,15 +176,19 @@
     const prepNote=prep==='unspecified'?'Indicá el estado si conocés que los valores corresponden a una preparación específica.':`Valores declarados para el alimento ${prepLabels[prep].toLowerCase()}.`;
     const ingredientHtml=ingredients.length?`<div class="nutrition-food-ingredients"><div class="nutrition-food-section-title">🧾 Ingredientes</div><ul>${ingredients.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:`<div class="nutrition-food-ingredients is-empty"><div class="nutrition-food-section-title">🧾 Ingredientes</div><p>Open Food Facts no informó una lista de ingredientes para este producto.</p></div>`;
     const meta=[selectedFood.categories?`<span>${esc(selectedFood.categories)}</span>`:'',selectedFood.labels?`<span>${esc(selectedFood.labels)}</span>`:'',selectedFood.nutriScore?`<span>Nutri-Score: ${esc(selectedFood.nutriScore.toUpperCase())}</span>`:''].filter(Boolean).join('');
+    const missingNutrition=Array.isArray(selectedFood.nutritionMissing)?selectedFood.nutritionMissing:[];
+    const nutritionWarning=missingNutrition.length?`<div class="nutrition-food-data-warning" role="note"><strong>Información nutricional incompleta</strong><span>Open Food Facts no informa: ${esc(missingNutrition.join(', '))}. Los ceros de esos campos no deben interpretarse como valores confirmados; revisá el envase antes de usar los datos.</span></div>`:'';
     box.innerHTML=`
       <div class="nutrition-food-selected-head"><div class="nutrition-food-selected-title"><span class="nutrition-food-check">✓</span><div><strong>${esc(selectedFood.name)}</strong><small>Fuente: ${esc(selectedFood.source||'Catálogo de alimentos')}</small></div></div></div>
       ${details?`<div class="nutrition-food-selected-meta">${details}</div>`:''}
+      ${nutritionWarning}
       <div class="nutrition-food-selected-nutrition"><div><b>${esc(selectedFood.calories)}</b><span>kcal / 100 g</span></div><div><b>${esc(selectedFood.protein)} g</b><span>proteínas</span></div><div><b>${esc(selectedFood.carbs)} g</b><span>carbohidratos</span></div><div><b>${esc(selectedFood.fat)} g</b><span>grasas</span></div></div>
       <div class="nutrition-food-preparation-chip">Estado: <strong>${esc(prepLabels[prep]||prepLabels.unspecified)}</strong><small>${esc(prepNote)}</small></div>
       <div class="nutrition-food-selected-total"><span>Para ${esc(qty)} ${esc(unit)}${totals?.valid?` (≈ ${esc(totals.weightGrams)} g)`:''}</span><b>${totals?.valid?`${totals.calories} kcal · ${totals.protein} g P · ${totals.carbs} g C · ${totals.fat} g G`:'No se puede calcular con fiabilidad: falta una equivalencia en gramos.'}</b></div>
       <details class="nutrition-food-more-details"><summary>Ver ingredientes y detalles del producto</summary><div class="nutrition-food-more-details-body">${ingredientHtml}${meta?`<div class="nutrition-food-selected-tags">${meta}</div>`:''}</div></details>`;
-    if(apply){apply.hidden=false;apply.disabled=!totals?.valid||qty<=0;}
-    if(save){save.hidden=false;save.disabled=false;save.textContent='☆ Guardar en mis alimentos';}
+    if(apply){apply.hidden=false;apply.disabled=!totals?.valid||qty<=0||missingNutrition.length>0;apply.title=missingNutrition.length?'Faltan nutrientes por verificar; no se puede registrar el producto como si esos valores fueran cero.':'';}
+    const incompleteNutrition=missingNutrition.length>0;
+    if(save){save.hidden=false;save.disabled=incompleteNutrition;save.textContent=incompleteNutrition?'Completar nutrientes antes de guardar':'☆ Guardar en mis alimentos';save.title=incompleteNutrition?'Open Food Facts no informa todos los nutrientes principales. Revisá la etiqueta y creá un alimento propio con datos completos.':'';}
     if(actions)actions.hidden=false;
   }
 
@@ -204,6 +209,7 @@
 
   async function saveSelectedToUser(){
     if(!selectedFood)return;
+    if(Array.isArray(selectedFood.nutritionMissing)&&selectedFood.nutritionMissing.length){setStatus(`No se guardó «${selectedFood.name}»: faltan datos de ${selectedFood.nutritionMissing.join(', ')}. Revisá el envase y cargá valores verificados en un alimento propio para evitar registrar desconocidos como cero.`);return}
     const provider=window.AgendaNutritionData;
     if(!provider?.saveUserFood){setStatus('La persistencia de alimentos todavía no está disponible.');return}
     const save=$('nutritionFoodSave');
@@ -222,6 +228,7 @@
 
   function applySelected(){
     if(!selectedFood)return;
+    if(Array.isArray(selectedFood.nutritionMissing)&&selectedFood.nutritionMissing.length){setStatus(`No se agregó «${selectedFood.name}»: faltan datos de ${selectedFood.nutritionMissing.join(', ')}. Revisá la etiqueta y cargá valores verificados en un alimento propio antes de usarlo en los totales.`);return}
     const raw=String($('nutritionFoodQuantity')?.value??'').trim();
     const parsed=raw===''?(selectedFood.defaultQuantity||100):Number(raw);
     const qty=Number.isFinite(parsed)?Math.max(0,parsed):(selectedFood.defaultQuantity||100);
