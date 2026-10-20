@@ -106,3 +106,39 @@
  .nutrition-recipe-editor-item{grid-template-columns:minmax(0,1fr) minmax(98px,.38fr);gap:8px}
  .nutrition-recipe-editor-remove{grid-column:1/-1;width:100%}
 }
+
+/* Etapa E4A: pasos de receta, modo de cocina y registro inmutable de preparaciones. */
+.nutrition-recipe-procedure{display:grid;gap:10px;padding:12px;border:1px solid rgba(127,127,127,.2);border-radius:13px;background:rgba(127,127,127,.035)}
+.nutrition-recipe-procedure textarea{resize:vertical;min-height:120px;line-height:1.5}
+.nutrition-recipe-list-toolbar{display:flex;justify-content:flex-end;gap:8px}
+.nutrition-recipe-cook-mode{display:grid;gap:16px}
+.nutrition-recipe-cook-meta{display:flex;flex-wrap:wrap;gap:8px}
+.nutrition-recipe-cook-meta span{padding:7px 10px;border:1px solid rgba(127,127,127,.2);border-radius:9px;font-size:.78rem;opacity:.85}
+.nutrition-recipe-cook-progress{display:grid;gap:7px}
+.nutrition-recipe-cook-progress>div{height:8px;overflow:hidden;border-radius:99px;background:rgba(127,127,127,.18)}
+.nutrition-recipe-cook-progress>div span{display:block;height:100%;width:0;border-radius:inherit;background:var(--accent,#2563eb);transition:width .18s ease}
+.nutrition-recipe-cook-progress>small{font-size:.79rem;opacity:.7}
+.nutrition-recipe-cook-step{display:grid;gap:12px;min-height:190px;align-content:center;padding:clamp(18px,4vw,30px);border:1px solid rgba(127,127,127,.22);border-radius:16px;background:rgba(127,127,127,.045)}
+.nutrition-recipe-cook-step-label{font-size:.76rem;letter-spacing:.09em;font-weight:800;opacity:.68}
+.nutrition-recipe-cook-step p{margin:0;font-size:clamp(1.15rem,2vw,1.55rem);font-weight:600;line-height:1.55;overflow-wrap:anywhere;white-space:pre-wrap}
+.nutrition-recipe-cook-wake-status{margin:0;font-size:.78rem;line-height:1.45;opacity:.72}
+.nutrition-recipe-cook-actions{justify-content:space-between}
+.nutrition-recipe-preparation-snapshot{display:grid;gap:5px;padding:12px 14px;border-radius:12px;border:1px solid rgba(127,127,127,.2);background:rgba(127,127,127,.045)}
+.nutrition-recipe-preparation-snapshot strong{font-size:.94rem}
+.nutrition-recipe-preparation-snapshot span,.nutrition-recipe-preparation-snapshot small{font-size:.79rem;line-height:1.45;opacity:.76}
+.nutrition-recipe-preparation-history{display:grid;gap:10px}
+.nutrition-recipe-preparation-history-item{display:grid;gap:7px;padding:12px 14px;border:1px solid rgba(127,127,127,.22);border-radius:12px;background:rgba(127,127,127,.035)}
+.nutrition-recipe-preparation-history-item header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.nutrition-recipe-preparation-history-item header strong{font-size:.91rem;overflow-wrap:anywhere}
+.nutrition-recipe-preparation-history-item time,.nutrition-recipe-preparation-history-item p,.nutrition-recipe-preparation-history-item small{font-size:.78rem;line-height:1.45;opacity:.75}
+.nutrition-recipe-preparation-history-item p{margin:0}
+.nutrition-recipe-preparation-history-item blockquote{margin:0;padding:8px 10px;border-left:3px solid rgba(127,127,127,.3);font-size:.82rem;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.nutrition-recipe-cook-mode button:focus-visible,.nutrition-recipe-list-toolbar button:focus-visible{outline:3px solid color-mix(in srgb,var(--accent,#2563eb) 70%,transparent);outline-offset:2px}
+@media(max-width:580px){
+ .nutrition-recipe-list-toolbar,.nutrition-recipe-list-toolbar button{width:100%}
+ .nutrition-recipe-cook-step{min-height:160px}
+ .nutrition-recipe-cook-actions{display:grid;grid-template-columns:1fr 1fr}
+ .nutrition-recipe-cook-actions button:last-child{grid-column:1/-1}
+ .nutrition-recipe-preparation-history-item header{display:grid;gap:3px}
+}
+@media(prefers-reduced-motion:reduce){.nutrition-recipe-cook-progress>div span{transition:none}}

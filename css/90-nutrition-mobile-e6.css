@@ -1,0 +1,519 @@
+/* Agenda FICH — E6: refinamiento responsive, táctil y de accesibilidad.
+   Todo está acotado a Alimentación y sus diálogos; no altera Entrenamiento, Agenda ni Calendario. */
+
+#nutritionPanel,
+#nutritionPanel *,
+#nutritionOverlay .modal,
+#nutritionOverlay .modal *,
+#goalOverlay .modal,
+#goalOverlay .modal *,
+.nutrition-advanced-overlay .nutrition-advanced-modal,
+.nutrition-advanced-overlay .nutrition-advanced-modal *,
+.nutrition-routine-overlay .nutrition-routine-modal,
+.nutrition-routine-overlay .nutrition-routine-modal *,
+.nutrition-week-modal,
+.nutrition-week-modal *,
+.nutrition-plan-editor-dialog,
+.nutrition-plan-editor-dialog *,
+.nutrition-quality-dialog,
+.nutrition-quality-dialog *,
+.nutrition-pantry-modal,
+.nutrition-pantry-modal * {
+  box-sizing: border-box;
+}
+
+/* Los textos de los macros deben ocupar varias líneas en lugar de invadir la tarjeta vecina. */
+#nutritionPanel .nutrition-summary-metric,
+#nutritionPanel .nutrition-summary-metric > span,
+#nutritionPanel .nutrition-summary-block-title,
+#nutritionPanel .nutrition-day-summary-head,
+#nutritionPanel #nutritionSummaryMeals {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+#nutritionPanel .nutrition-summary-metric > span {
+  white-space: normal;
+  line-height: 1.4;
+}
+#nutritionPanel .nutrition-summary-metric strong {
+  max-width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Diálogos: mantiene los formularios dentro del viewport visual y permite desplazar su contenido. */
+#nutritionOverlay .modal,
+#goalOverlay .modal {
+  max-width: 100%;
+  min-width: 0;
+  overscroll-behavior: contain;
+}
+:is(.nutrition-week-modal-overlay, .nutrition-plan-editor-overlay, .nutrition-quality-overlay,
+    .nutrition-advanced-overlay, .nutrition-routine-overlay) {
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+:is(.nutrition-week-modal, .nutrition-plan-editor-dialog, .nutrition-quality-dialog,
+    .nutrition-advanced-modal, .nutrition-routine-modal, .nutrition-pantry-modal) {
+  min-width: 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-block: 16px;
+}
+
+#nutritionPanel :is(button, input, select, textarea, a[href]),
+#nutritionOverlay :is(button, input, select, textarea, a[href]),
+#goalOverlay :is(button, input, select, textarea, a[href]),
+.nutrition-advanced-modal :is(button, input, select, textarea),
+.nutrition-routine-modal :is(button, input, select, textarea),
+.nutrition-week-modal :is(button, input, select, textarea),
+.nutrition-plan-editor-dialog :is(button, input, select, textarea),
+.nutrition-quality-dialog :is(button, input, select, textarea),
+.nutrition-pantry-modal :is(button, input, select, textarea) {
+  scroll-margin-block: 100px;
+}
+
+@media (max-width: 700px) {
+  /* En Alimentación ya existe una acción dedicada; se oculta el FAB global para que no tape las tarjetas nutricionales. */
+  #app:has(.v32-nutrition-pane.v32-section-active) #quickAddFab {
+    display: none !important;
+  }
+
+  /* Día de la semana: en vez de esconder opciones fuera del borde, se muestran en una cuadrícula. */
+  #nutritionPanel #nutritionDays.workout-days {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+    width: 100%;
+    overflow: visible;
+    padding: 2px 0 10px;
+  }
+  #nutritionPanel #nutritionDays .workout-day-btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: 8px 5px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
+  }
+
+  #nutritionPanel #mealTabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  #nutritionPanel #mealTabs .meal-tab {
+    min-width: 0;
+    min-height: 44px;
+    padding: 9px 7px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  /* Acciones principales en dos columnas: evita una cabecera innecesariamente larga. */
+  #nutritionPanel .nutrition-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    width: 100%;
+    gap: 8px;
+  }
+  #nutritionPanel .nutrition-actions .nutrition-goal-btn { grid-column: 1; }
+  #nutritionPanel .nutrition-actions .nutrition-history-btn { grid-column: 2; }
+  #nutritionPanel .nutrition-actions #addMealBtn { grid-column: 1 / -1; }
+  #nutritionPanel .nutrition-actions .nutrition-goal-btn,
+  #nutritionPanel .nutrition-actions .nutrition-history-btn,
+  #nutritionPanel .nutrition-actions #addMealBtn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding-inline: 7px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.25;
+  }
+
+  /* Principales acciones táctiles y controles de cada alimento. */
+  #nutritionPanel .nutrition-actions > button,
+  #nutritionPanel .nutrition-meal-order-toggle,
+  #nutritionPanel .nutrition-meal-order-tools > button,
+  #nutritionPanel #mealList .meal-action,
+  #nutritionPanel .nutrition-consumption-toggle,
+  #nutritionOverlay .nutrition-meal-builder-tool,
+  #nutritionOverlay .nutrition-food-catalog-toggle,
+  #nutritionOverlay .nutrition-food-catalog-find,
+  #nutritionOverlay .nutrition-food-save,
+  #nutritionOverlay .nutrition-food-apply,
+  #nutritionOverlay .nutrition-food-favorite-toggle,
+  #nutritionOverlay .meal-form-actions > button,
+  #goalOverlay .modal button,
+  .nutrition-week-modal button,
+  .nutrition-plan-editor-dialog button,
+  .nutrition-quality-dialog button,
+  .nutrition-pantry-modal button {
+    min-height: 44px;
+  }
+  #nutritionPanel #mealList .meal-action {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+  }
+  #nutritionPanel .nutrition-consumption-item {
+    padding-block: 10px;
+  }
+
+  /* Evita el zoom automático de Safari iOS al enfocar campos con texto menor a 16 px. */
+  #nutritionPanel :is(input, select, textarea),
+  #nutritionOverlay .modal .input,
+  #nutritionOverlay .modal input,
+  #nutritionOverlay .modal select,
+  #nutritionOverlay .modal textarea,
+  #goalOverlay .modal .input,
+  #goalOverlay .modal input,
+  #goalOverlay .modal select,
+  #goalOverlay .modal textarea,
+  .nutrition-advanced-modal .input,
+  .nutrition-advanced-modal input,
+  .nutrition-advanced-modal select,
+  .nutrition-advanced-modal textarea,
+  .nutrition-routine-modal input,
+  .nutrition-routine-modal select,
+  .nutrition-routine-modal textarea,
+  .nutrition-week-modal input,
+  .nutrition-week-modal select,
+  .nutrition-week-modal textarea,
+  .nutrition-plan-editor-dialog input,
+  .nutrition-plan-editor-dialog select,
+  .nutrition-plan-editor-dialog textarea,
+  .nutrition-quality-dialog input,
+  .nutrition-quality-dialog select,
+  .nutrition-quality-dialog textarea,
+  .nutrition-pantry-modal input,
+  .nutrition-pantry-modal select,
+  .nutrition-pantry-modal textarea {
+    max-width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  #nutritionPanel .nutrition-summary-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  #nutritionPanel .nutrition-summary-metric {
+    min-width: 0;
+    padding: 9px 8px;
+  }
+  #nutritionPanel .nutrition-summary-metric > span {
+    min-height: 2.8em;
+    font-size: .78rem;
+  }
+  #nutritionPanel .nutrition-summary-metric strong {
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  /* Un selector histórico con dos IDs fijaba el estado de preparación en 42 px. */
+  #nutritionOverlay #nutritionFoodPreparationState {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  /* Los formularios se convierten en hojas móviles con zona de desplazamiento propia. */
+  #nutritionOverlay,
+  #goalOverlay {
+    align-items: flex-end;
+    justify-content: center;
+    padding: max(6px, env(safe-area-inset-top, 0px))
+             max(6px, env(safe-area-inset-right, 0px))
+             max(6px, env(safe-area-inset-bottom, 0px))
+             max(6px, env(safe-area-inset-left, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  #nutritionOverlay .modal,
+  #goalOverlay .modal {
+    width: 100%;
+    max-width: 760px;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 12px);
+    min-height: 0;
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-radius: 18px 18px 12px 12px;
+    padding: 14px 14px calc(16px + env(safe-area-inset-bottom, 0px)) !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  #nutritionOverlay .modal-head,
+  #goalOverlay .modal-head {
+    position: sticky;
+    top: -1px;
+    z-index: 4;
+    padding: 4px 0 10px;
+    background: var(--card, #111827);
+  }
+  #nutritionOverlay .meal-form-actions {
+    position: sticky !important;
+    bottom: calc(-1 * env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 29 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 8px;
+    margin: 0 -14px;
+    padding: 12px 14px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    border-top: 1px solid var(--line, rgba(148, 163, 184, .22));
+    background: var(--card, #111827) !important;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, .10);
+  }
+  #nutritionOverlay .meal-form-actions > button {
+    width: 100% !important;
+    min-width: 0;
+    min-height: 44px;
+  }
+  #nutritionOverlay .meal-form-actions #saveMealBtn {
+    grid-column: 1 / -1;
+    width: 100% !important;
+  }
+  body.light #nutritionOverlay .meal-form-actions {
+    background: #fff !important;
+    border-top-color: #e2e8f0;
+  }
+  #goalOverlay .nutrition-goal-form-actions {
+    position: sticky;
+    bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
+    z-index: 29;
+    margin: 10px -14px 0;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line, rgba(148, 163, 184, .22));
+    background: var(--card, #111827);
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, .10);
+  }
+  #goalOverlay .nutrition-goal-form-actions #saveGoalsBtn {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+  }
+  body.light #goalOverlay .nutrition-goal-form-actions {
+    background: #fff;
+    border-top-color: #e2e8f0;
+  }
+
+  .nutrition-week-modal-overlay,
+  .nutrition-plan-editor-overlay,
+  .nutrition-quality-overlay,
+  .nutrition-advanced-overlay,
+  .nutrition-routine-overlay {
+    padding-bottom: max(6px, env(safe-area-inset-bottom, 0px));
+  }
+  .nutrition-week-modal,
+  .nutrition-plan-editor-dialog,
+  .nutrition-quality-dialog,
+  .nutrition-advanced-modal,
+  .nutrition-routine-modal {
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px) - 12px);
+  }
+  .nutrition-advanced-actions,
+  .nutrition-routine-actions {
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--card, #111827);
+    border-top: 1px solid var(--line, rgba(148, 163, 184, .22));
+  }
+}
+
+@media (max-width: 380px) {
+  #nutritionPanel #nutritionDays.workout-days {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  #nutritionPanel .nutrition-summary-metric > span {
+    min-height: 3em;
+    font-size: .76rem;
+  }
+  #nutritionPanel .nutrition-summary-block-title {
+    line-height: 1.45;
+  }
+  #nutritionPanel .nutrition-meal-order-tools {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #nutritionPanel .nutrition-meal-order-tools > button {
+    width: 100%;
+  }
+  #nutritionOverlay .nutrition-food-catalog-actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  #nutritionOverlay .nutrition-food-catalog-actions > button {
+    width: 100%;
+  }
+}
+
+/* Tabletas y otros dispositivos táctiles: conserva objetivos amplios aunque el viewport sea mayor. */
+@media (hover: none) and (pointer: coarse) {
+  #nutritionPanel .nutrition-actions .nutrition-goal-btn,
+  #nutritionPanel .nutrition-actions .nutrition-history-btn,
+  #nutritionPanel .nutrition-actions #addMealBtn,
+  #nutritionPanel #nutritionDays .workout-day-btn,
+  #nutritionPanel #mealTabs .meal-tab,
+  #nutritionPanel #mealList .meal-action,
+  #nutritionPanel .nutrition-meal-order-toggle,
+  #nutritionOverlay .modal button,
+  #goalOverlay .modal button,
+  .nutrition-advanced-modal button,
+  .nutrition-routine-modal button,
+  .nutrition-week-modal button,
+  .nutrition-plan-editor-dialog button,
+  .nutrition-quality-dialog button,
+  .nutrition-pantry-modal button {
+    min-height: 44px;
+  }
+  #nutritionPanel #mealList .meal-action { width: 44px; min-width: 44px; }
+}
+
+/* En tabletas táctiles la ventana puede ser alta pero seguir compitiendo con el teclado virtual. */
+@media (hover: none) and (pointer: coarse) and (max-width: 900px) {
+  #nutritionPanel :is(input, select, textarea),
+  #nutritionOverlay .modal :is(input, select, textarea),
+  #goalOverlay .modal :is(input, select, textarea),
+  .nutrition-advanced-modal :is(input, select, textarea),
+  .nutrition-routine-modal :is(input, select, textarea),
+  .nutrition-week-modal :is(input, select, textarea),
+  .nutrition-plan-editor-dialog :is(input, select, textarea),
+  .nutrition-quality-dialog :is(input, select, textarea),
+  .nutrition-pantry-modal :is(input, select, textarea) {
+    max-width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  #nutritionOverlay .modal-head,
+  #goalOverlay .modal-head {
+    position: sticky;
+    top: -1px;
+    z-index: 4;
+    padding: 4px 0 10px;
+    background: var(--card, #111827);
+  }
+  #nutritionOverlay .meal-form-actions {
+    position: sticky !important;
+    bottom: calc(-1 * env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 29 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 8px;
+    margin: 0 -14px;
+    padding: 12px 14px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    border-top: 1px solid var(--line, rgba(148, 163, 184, .22));
+    background: var(--card, #111827) !important;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, .10);
+  }
+  #nutritionOverlay .meal-form-actions > button {
+    width: 100% !important;
+    min-width: 0;
+    min-height: 44px;
+  }
+  #nutritionOverlay .meal-form-actions #saveMealBtn {
+    grid-column: 1 / -1;
+    width: 100% !important;
+  }
+  body.light #nutritionOverlay .meal-form-actions {
+    background: #fff !important;
+    border-top-color: #e2e8f0;
+  }
+  #goalOverlay .nutrition-goal-form-actions {
+    position: sticky;
+    bottom: calc(-1 * env(safe-area-inset-bottom, 0px));
+    z-index: 29;
+    margin: 10px -14px 0;
+    padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--line, rgba(148, 163, 184, .22));
+    background: var(--card, #111827);
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, .10);
+  }
+  #goalOverlay .nutrition-goal-form-actions #saveGoalsBtn {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    margin: 0;
+  }
+  body.light #goalOverlay .nutrition-goal-form-actions {
+    background: #fff;
+    border-top-color: #e2e8f0;
+  }
+}
+
+/* En móvil apaisado prima el espacio vertical; se mantiene desplazamiento interno. */
+@media (max-width: 900px) and (orientation: landscape) {
+  #nutritionOverlay .modal,
+  #goalOverlay .modal,
+  .nutrition-week-modal,
+  .nutrition-plan-editor-dialog,
+  .nutrition-quality-dialog,
+  .nutrition-advanced-modal,
+  .nutrition-routine-modal {
+    max-height: 88dvh;
+  }
+
+  /* En teléfonos apaisados el espacio vertical es escaso; conserva cierre y guardado a mano. */
+  #nutritionOverlay .modal-head {
+    position: sticky;
+    top: -1px;
+    z-index: 4;
+    padding: 4px 0 8px;
+    background: var(--card, #111827);
+  }
+  #nutritionOverlay .meal-form-actions {
+    position: sticky !important;
+    bottom: calc(-1 * env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 29 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 7px;
+    margin: 0 -14px;
+    padding: 9px 14px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+    border-top: 1px solid var(--line, rgba(148, 163, 184, .22));
+    background: var(--card, #111827) !important;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, .10);
+  }
+  #nutritionOverlay .meal-form-actions > button {
+    width: 100% !important;
+    min-width: 0;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  #nutritionOverlay .meal-form-actions #saveMealBtn {
+    grid-column: 1 / -1;
+    width: 100% !important;
+  }
+  body.light #nutritionOverlay .meal-form-actions {
+    background: #fff !important;
+    border-top-color: #e2e8f0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel *, #nutritionOverlay *, #goalOverlay *,
+  .nutrition-week-modal *, .nutrition-plan-editor-dialog *,
+  .nutrition-quality-dialog *, .nutrition-pantry-modal * {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+@media (forced-colors: active) {
+  #nutritionPanel :is(button, input, select, textarea),
+  #nutritionOverlay .modal :is(button, input, select, textarea),
+  #goalOverlay .modal :is(button, input, select, textarea),
+  .nutrition-week-modal button, .nutrition-plan-editor-dialog button,
+  .nutrition-quality-dialog button, .nutrition-pantry-modal button {
+    border: 1px solid ButtonText;
+  }
+  #nutritionPanel :is(button, input, select, textarea):focus-visible,
+  #nutritionOverlay .modal :is(button, input, select, textarea):focus-visible,
+  #goalOverlay .modal :is(button, input, select, textarea):focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
