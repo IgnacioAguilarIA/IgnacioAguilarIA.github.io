@@ -68,7 +68,12 @@
       servingQuantity:Number.isFinite(serving)&&serving>0?serving:null,
       ingredients:String(item.ingredients||item.ingredients_text||''),categories:String(item.categories||''),
       labels:String(item.labels||''),imageUrl:String(item.imageUrl||item.image_front_url||item.image_url||''),
-      source:String(item.source||'Catálogo externo'),nutriScore:String(item.nutriScore||item.nutrition_grades||item.nutriscore_grade||'')
+      source:String(item.source||'Catálogo externo'),
+      sourceLabel:String(item.sourceLabel||item.data_source_label||item.source||'Origen no registrado'),
+      sourceUrl:String(item.sourceUrl||item.source_url||''),
+      nutritionQualityStatus:String(item.nutritionQualityStatus||item.nutrition_quality_status||(Array.isArray(item.nutritionMissing)&&item.nutritionMissing.length?'incomplete':'legacy_unverified')),
+      nutritionVerifiedAt:item.nutritionVerifiedAt||item.nutrition_verified_at||null,
+      nutriScore:String(item.nutriScore||item.nutrition_grades||item.nutriscore_grade||'')
     };
   }
 
@@ -177,10 +182,17 @@
     const ingredientHtml=ingredients.length?`<div class="nutrition-food-ingredients"><div class="nutrition-food-section-title">🧾 Ingredientes</div><ul>${ingredients.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`:`<div class="nutrition-food-ingredients is-empty"><div class="nutrition-food-section-title">🧾 Ingredientes</div><p>Open Food Facts no informó una lista de ingredientes para este producto.</p></div>`;
     const meta=[selectedFood.categories?`<span>${esc(selectedFood.categories)}</span>`:'',selectedFood.labels?`<span>${esc(selectedFood.labels)}</span>`:'',selectedFood.nutriScore?`<span>Nutri-Score: ${esc(selectedFood.nutriScore.toUpperCase())}</span>`:''].filter(Boolean).join('');
     const missingNutrition=Array.isArray(selectedFood.nutritionMissing)?selectedFood.nutritionMissing:[];
-    const nutritionWarning=missingNutrition.length?`<div class="nutrition-food-data-warning" role="note"><strong>Información nutricional incompleta</strong><span>Open Food Facts no informa: ${esc(missingNutrition.join(', '))}. Los ceros de esos campos no deben interpretarse como valores confirmados; revisá el envase antes de usar los datos.</span></div>`:'';
+    const qualityLabels={source_complete:'Datos nutricionales presentes · pendientes de verificar contra el envase',user_verified:'Revisado por vos contra la etiqueta',manual_unverified:'Carga manual · sin verificación registrada',legacy_unverified:'Registro anterior · origen o verificación no confirmados',incomplete:'Faltan datos nutricionales'};
+    const qualityStatus=String(selectedFood.nutritionQualityStatus||'legacy_unverified');
+    const sourceLabel=String(selectedFood.sourceLabel||selectedFood.source||'Origen no registrado');
+    const rawSourceUrl=String(selectedFood.sourceUrl||'');
+    const safeSourceUrl=/^https?:\/\//i.test(rawSourceUrl)?rawSourceUrl:'';
+    const provenanceHtml=`<div class="nutrition-food-provenance"><span><b>Procedencia</b>${esc(sourceLabel)}</span><span><b>Calidad del dato</b>${esc(qualityLabels[qualityStatus]||qualityLabels.legacy_unverified)}</span>${safeSourceUrl?`<a href="${esc(safeSourceUrl)}" target="_blank" rel="noopener noreferrer">Consultar fuente original ↗</a>`:''}</div>`;
+    const nutritionWarning=missingNutrition.length?`<div class="nutrition-food-data-warning" role="note"><strong>Información nutricional incompleta</strong><span>Faltan: ${esc(missingNutrition.join(', '))}. No deben interpretarse esos campos como ceros confirmados; revisá el envase antes de usar los datos.</span></div>`:'';
     box.innerHTML=`
       <div class="nutrition-food-selected-head"><div class="nutrition-food-selected-title"><span class="nutrition-food-check">✓</span><div><strong>${esc(selectedFood.name)}</strong><small>Fuente: ${esc(selectedFood.source||'Catálogo de alimentos')}</small></div></div></div>
       ${details?`<div class="nutrition-food-selected-meta">${details}</div>`:''}
+      ${provenanceHtml}
       ${nutritionWarning}
       <div class="nutrition-food-selected-nutrition"><div><b>${esc(selectedFood.calories)}</b><span>kcal / 100 g</span></div><div><b>${esc(selectedFood.protein)} g</b><span>proteínas</span></div><div><b>${esc(selectedFood.carbs)} g</b><span>carbohidratos</span></div><div><b>${esc(selectedFood.fat)} g</b><span>grasas</span></div></div>
       <div class="nutrition-food-preparation-chip">Estado: <strong>${esc(prepLabels[prep]||prepLabels.unspecified)}</strong><small>${esc(prepNote)}</small></div>

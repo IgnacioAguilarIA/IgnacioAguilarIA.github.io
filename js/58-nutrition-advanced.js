@@ -10,6 +10,8 @@
   let historyDays=30;
   let modalTrigger=null;
   let previousBodyOverflow='';
+  let activeWakeLock=null;
+  let cookingModeActive=false;
 
   function data(){return window.AgendaNutritionData||null}
   function foods(){return window.AgendaFoodCatalog||null}
@@ -21,6 +23,8 @@
   }
   function closeModal(){
     const node=$('nutritionAdvancedModal');
+    cookingModeActive=false;
+    if(activeWakeLock){const lock=activeWakeLock;activeWakeLock=null;try{lock.release().catch(()=>{})}catch(_){}}
     if(node){
       node.remove();
       document.body.style.overflow=previousBodyOverflow;
@@ -166,15 +170,29 @@
   }
   function saveRecipeModal(existingRecipe=null){
     const editing=Boolean(existingRecipe?.id);
-    let editorIngredients=(Array.isArray(editing?existingRecipe.ingredients:pendingFoods())?(editing?existingRecipe.ingredients:pendingFoods()):[])
+    const creatingVariant=Boolean(existingRecipe&&!editing&&(existingRecipe.parent_recipe_id||existingRecipe.parentRecipeId));
+    const sourceIngredients=Array.isArray(existingRecipe?.ingredients)?existingRecipe.ingredients:pendingFoods();
+    let editorIngredients=(Array.isArray(sourceIngredients)?sourceIngredients:[])
       .filter(item=>item&&num(item.quantity)>0)
       .map(item=>({...item,consumed:false,consumed_at:null}));
-    if(!editorIngredients.length&&!editing){notify('Agregá al menos un alimento a la comida antes de guardarla como receta.','warning');return}
-    mountModal(editing?'✏️ Editar receta':'📖 Guardar comida como receta',editing?'Modificá cantidades, quitá ingredientes o buscá otros alimentos. Las comidas guardadas anteriormente no cambian.':'Revisá los ingredientes y sus cantidades antes de guardar esta preparación.',`
+    if(!editorIngredients.length&&!editing){notify('Agregá al menos un alimento a la receta antes de guardarla.','warning');return}
+    const modalTitle=editing?'✏️ Editar receta':creatingVariant?'📚 Crear variante de receta':'📖 Guardar comida como receta';
+    const modalSubtitle=editing?'Modificá ingredientes, instrucciones y tiempos. Las comidas y preparaciones guardadas anteriormente conservan su instantánea.':creatingVariant?'Esta variante se guarda como receta independiente. Los cambios no modifican la receta original.':'Revisá ingredientes, pasos y tiempos antes de guardar esta preparación.';
+    mountModal(modalTitle,modalSubtitle,`
       <form id="nutritionRecipeSaveForm" class="nutrition-advanced-form">
         <div class="nutrition-advanced-recipe-preview" id="nutritionRecipePreview"><strong>Calculando preparación…</strong></div>
         <div class="field"><label for="nutritionRecipeName">Nombre de la receta *</label><input class="input" id="nutritionRecipeName" maxlength="120" required autocomplete="off" placeholder="Ej.: Avena con yogur y banana" value="${esc(existingRecipe?.name||'')}"></div>
-        <div class="field"><label for="nutritionRecipeNotes">Notas o preparación</label><textarea class="input" id="nutritionRecipeNotes" rows="2" maxlength="1000" placeholder="Opcional">${esc(existingRecipe?.notes||'')}</textarea></div>
+        <div class="field"><label for="nutritionRecipeNotes">Notas generales</label><textarea class="input" id="nutritionRecipeNotes" rows="2" maxlength="1000" placeholder="Consejos, sustituciones o notas personales">${esc(existingRecipe?.notes||'')}</textarea></div>
+        <section class="nutrition-recipe-procedure" aria-labelledby="nutritionRecipeInstructionsTitle">
+          <div class="field"><label for="nutritionRecipeInstructions" id="nutritionRecipeInstructionsTitle">Instrucciones paso a paso</label><textarea class="input" id="nutritionRecipeInstructions" rows="5" maxlength="12000" placeholder="Un paso por línea. Ej.:
+1. Lavar y cortar los ingredientes.
+2. Calentar la sartén.
+3. Cocinar hasta el punto deseado.">${esc(Array.isArray(existingRecipe?.instructions)?existingRecipe.instructions.join('\n'):'')}</textarea><small>Se guardan hasta 40 pasos, con un máximo de 1000 caracteres por paso. Las líneas vacías se ignoran.</small></div>
+          <div class="nutrition-advanced-grid">
+            <div class="field"><label for="nutritionRecipePrepTime">Preparación (min)</label><input class="input" id="nutritionRecipePrepTime" type="number" min="0" max="1440" step="1" value="${esc(existingRecipe?.prep_time_minutes??0)}"><small>Tiempo estimado de preparación.</small></div>
+            <div class="field"><label for="nutritionRecipeCookTime">Cocción (min)</label><input class="input" id="nutritionRecipeCookTime" type="number" min="0" max="1440" step="1" value="${esc(existingRecipe?.cook_time_minutes??0)}"><small>Puede quedar en cero si no aplica.</small></div>
+          </div>
+        </section>
         <div class="field"><label for="nutritionRecipeServings">¿Cuántas porciones rinde?</label><input class="input" id="nutritionRecipeServings" type="number" min="0.1" max="1000" step="0.1" value="${esc(existingRecipe?.servings||1)}" required><small>Se usa para calcular cuánto ingrediente agregar al elegir una porción.</small></div>
         <div class="field"><label for="nutritionRecipeFinishedWeight">Peso final preparado (g), opcional</label><input class="input" id="nutritionRecipeFinishedWeight" type="number" min="0.1" max="1000000" step="0.1" value="${esc(existingRecipe?.finished_weight_g||'')}" placeholder="Vacío = estimar sumando los ingredientes"><small>Pesá la preparación terminada y cargá el peso real. Si se deja vacío, la aplicación usa la suma de los ingredientes convertidos a gramos.</small></div>
         <section class="nutrition-recipe-editor-section" aria-labelledby="nutritionRecipeIngredientTitle">
@@ -262,19 +280,127 @@
       if(btn){btn.disabled=true;btn.textContent='Guardando…'}
       try{
         const finishedWeightText=txt($('nutritionRecipeFinishedWeight')?.value);
-        const res=await data().saveRecipe({id:existingRecipe?.id||null,name,notes:txt($('nutritionRecipeNotes')?.value),servings,finishedWeightG:finishedWeightText===''?null:Number(finishedWeightText),ingredients});
-        closeModal();notify(`Receta ${editing?'actualizada':'guardada'}: ${res.recipe.name}`,'success');openRecipesModal();
+        const instructions=txt($('nutritionRecipeInstructions')?.value).split(/\r?\n/).map(step=>step.trim()).filter(Boolean);
+        const prepTimeMinutes=Number($('nutritionRecipePrepTime')?.value||0),cookTimeMinutes=Number($('nutritionRecipeCookTime')?.value||0);
+        const res=await data().saveRecipe({id:existingRecipe?.id||null,parentRecipeId:existingRecipe?.parent_recipe_id||existingRecipe?.parentRecipeId||null,name,notes:txt($('nutritionRecipeNotes')?.value),instructions,prepTimeMinutes,cookTimeMinutes,servings,finishedWeightG:finishedWeightText===''?null:Number(finishedWeightText),ingredients});
+        closeModal();notify(`${editing?'Receta actualizada':creatingVariant?'Variante guardada':'Receta guardada'}: ${res.recipe.name}`,'success');openRecipesModal();
       }catch(err){console.warn('Guardar receta:',err);if(status)status.textContent=`No se pudo guardar la receta. Comprobá la conexión y los permisos de Supabase. ${err?.message||''}`;if(btn){btn.disabled=false;btn.textContent=editing?'Guardar cambios':'Guardar receta'}}
     });
   }
+  function localIsoDate(date=new Date()){
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+  }
+  async function requestCookingWakeLock(statusElement){
+    if(!cookingModeActive)return;
+    if(typeof navigator==='undefined'||!navigator.wakeLock?.request){if(statusElement)statusElement.textContent='El navegador no permite mantener la pantalla activa; podés continuar con el modo paso a paso.';return;}
+    try{
+      const lock=await navigator.wakeLock.request('screen');
+      if(!cookingModeActive){try{await lock.release()}catch(_){};return;}
+      activeWakeLock=lock;
+      lock.addEventListener('release',()=>{if(activeWakeLock===lock)activeWakeLock=null;});
+      if(statusElement)statusElement.textContent='La pantalla permanecerá activa mientras este modo esté abierto.';
+    }catch(_){if(statusElement)statusElement.textContent='No se pudo bloquear la suspensión de pantalla. El modo paso a paso sigue disponible.';}
+  }
+  function openRecipeCookingMode(recipe){
+    const steps=(Array.isArray(recipe.instructions)?recipe.instructions:[]).map(txt).filter(Boolean);
+    if(!steps.length){notify('Esta receta todavía no tiene pasos. Editala para agregarlos.','warning');return;}
+    let index=0;
+    mountModal(`👩‍🍳 ${recipe.name}`,'Modo de cocina: avanzá paso a paso sin modificar la receta guardada.',`
+      <section class="nutrition-recipe-cook-mode" aria-live="polite">
+        <div class="nutrition-recipe-cook-meta"><span>${Math.max(0,num(recipe.prep_time_minutes))} min de preparación</span><span>${Math.max(0,num(recipe.cook_time_minutes))} min de cocción</span></div>
+        <div class="nutrition-recipe-cook-progress"><div id="nutritionRecipeCookProgress" role="progressbar" aria-label="Progreso de preparación" aria-valuemin="0" aria-valuemax="${steps.length}" aria-valuenow="1"><span id="nutritionRecipeCookProgressBar"></span></div><small id="nutritionRecipeCookCounter"></small></div>
+        <article class="nutrition-recipe-cook-step"><span class="nutrition-recipe-cook-step-label" id="nutritionRecipeCookStepLabel"></span><p id="nutritionRecipeCookStepText"></p></article>
+        <p class="nutrition-recipe-cook-wake-status" id="nutritionRecipeCookWakeStatus" role="status" aria-live="polite">Intentando mantener la pantalla activa…</p>
+        <div class="nutrition-advanced-actions nutrition-recipe-cook-actions"><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeCookPrev">Anterior</button><button type="button" class="nutrition-advanced-primary" id="nutritionRecipeCookNext">Siguiente paso</button><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeCookBack">Volver a recetas</button></div>
+      </section>`);
+    cookingModeActive=true;
+    const render=()=>{
+      const progress=$('nutritionRecipeCookProgress'),bar=$('nutritionRecipeCookProgressBar'),counter=$('nutritionRecipeCookCounter'),label=$('nutritionRecipeCookStepLabel'),content=$('nutritionRecipeCookStepText'),previous=$('nutritionRecipeCookPrev'),next=$('nutritionRecipeCookNext');
+      if(!progress||!bar||!counter||!label||!content||!previous||!next)return;
+      const done=index+1;progress.setAttribute('aria-valuenow',String(done));bar.style.width=`${Math.round(done/steps.length*100)}%`;counter.textContent=`Paso ${done} de ${steps.length}`;label.textContent=`PASO ${done}`;content.textContent=steps[index];previous.disabled=index===0;next.textContent=index===steps.length-1?'Terminar preparación':'Siguiente paso';
+    };
+    $('nutritionRecipeCookPrev')?.addEventListener('click',()=>{if(index>0){index--;render()}});
+    $('nutritionRecipeCookNext')?.addEventListener('click',()=>{if(index<steps.length-1){index++;render()}else{closeModal();notify('Terminaste de recorrer las instrucciones. Registrá la preparación cuando quieras guardar el rendimiento real.','success');openRecipesModal()}});
+    $('nutritionRecipeCookBack')?.addEventListener('click',()=>{closeModal();openRecipesModal()});
+    render();requestCookingWakeLock($('nutritionRecipeCookWakeStatus'));
+  }
+  function openRecipePreparationModal(recipe){
+    if(!data()?.recordRecipePreparation){notify('La función de historial de preparaciones no está disponible. Aplicá la migración SQL de E4A.','warning');return}
+    let operationKey='';
+    try{operationKey=window.crypto?.randomUUID?.()||`recipe-prep-${Date.now()}-${Math.random().toString(36).slice(2,18)}`}catch(_){operationKey=`recipe-prep-${Date.now()}-${Math.random().toString(36).slice(2,18)}`}
+    mountModal('🧾 Registrar preparación',`Registrá esta tanda de “${recipe.name}”. Se guardará una instantánea independiente de la receta actual.`,`
+      <form id="nutritionRecipePreparationForm" class="nutrition-advanced-form">
+        <div class="nutrition-recipe-preparation-snapshot"><strong>${esc(recipe.name)}</strong><span>${(Array.isArray(recipe.ingredients)?recipe.ingredients:[]).length} ingredientes · ${Math.max(0,num(recipe.prep_time_minutes))+Math.max(0,num(recipe.cook_time_minutes))} min estimados</span><small>La preparación histórica conservará los ingredientes, instrucciones y datos nutricionales tal como están hoy.</small></div>
+        <div class="nutrition-advanced-grid">
+          <div class="field"><label for="nutritionRecipePreparedOn">Fecha de preparación</label><input class="input" id="nutritionRecipePreparedOn" type="date" value="${localIsoDate()}" required></div>
+          <div class="field"><label for="nutritionRecipeServingsMade">Porciones obtenidas</label><input class="input" id="nutritionRecipeServingsMade" type="number" min="0.1" max="1000" step="0.1" value="${esc(recipe.servings||1)}" required></div>
+          <div class="field"><label for="nutritionRecipeActualWeight">Peso final real (g), opcional</label><input class="input" id="nutritionRecipeActualWeight" type="number" min="0.1" max="100000000" step="0.1" value="${esc(recipe.finished_weight_g||'')}" placeholder="Si lo pesaste"></div>
+        </div>
+        <div class="field"><label for="nutritionRecipePreparationNotes">Notas de esta tanda</label><textarea class="input" id="nutritionRecipePreparationNotes" rows="3" maxlength="2000" placeholder="Cambios, resultado, textura o rendimiento obtenido…"></textarea></div>
+        <p class="nutrition-advanced-note">Registrar la preparación no agrega consumos ficticios ni descuenta automáticamente ingredientes de la despensa.</p>
+        <div class="nutrition-advanced-status" id="nutritionRecipePreparationStatus" role="status" aria-live="polite"></div>
+        <div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipePreparationCancel">Volver a recetas</button><button type="submit" class="nutrition-advanced-primary" id="nutritionRecipePreparationSave">Guardar preparación</button></div>
+      </form>`);
+    $('nutritionRecipePreparationCancel')?.addEventListener('click',()=>{closeModal();openRecipesModal()});
+    $('nutritionRecipePreparationForm')?.addEventListener('submit',async event=>{
+      event.preventDefault();const button=$('nutritionRecipePreparationSave'),status=$('nutritionRecipePreparationStatus');
+      const preparedOn=txt($('nutritionRecipePreparedOn')?.value),servingsMade=Number($('nutritionRecipeServingsMade')?.value),weightText=txt($('nutritionRecipeActualWeight')?.value);
+      if(!preparedOn||!Number.isFinite(Date.parse(`${preparedOn}T00:00:00Z`))||servingsMade<=0){if(status)status.textContent='Revisá la fecha y las porciones obtenidas.';return}
+      if(button){button.disabled=true;button.textContent='Guardando…'}
+      try{
+        const result=await data().recordRecipePreparation({recipeId:recipe.id,operationKey,preparedOn,finishedWeightG:weightText===''?null:Number(weightText),servingsMade,notes:txt($('nutritionRecipePreparationNotes')?.value)});
+        closeModal();notify(result.duplicate?'Esta preparación ya estaba registrada; no se duplicó.':'Preparación guardada con su instantánea histórica.','success');openRecipesModal();
+      }catch(error){console.warn('Registrar preparación:',error);if(status)status.textContent=`No se pudo guardar la preparación. Verificá la migración sql/25-nutrition-recipes-advanced.sql y la conexión. ${error?.message||''}`;if(button){button.disabled=false;button.textContent='Reintentar guardado'}}
+    });
+  }
+  async function openRecipePreparationHistory(recipeId=null,recipeName=''){
+    mountModal('📚 Historial de preparaciones',recipeId?`Tandas registradas para “${recipeName}”. Cada entrada conserva la receta tal como estaba al prepararla.`:'Todas las preparaciones guardadas, incluso las que corresponden a recetas editadas o eliminadas.',`<div class="nutrition-advanced-status" id="nutritionRecipePreparationHistoryStatus" role="status" aria-live="polite">Cargando historial…</div><div class="nutrition-recipe-preparation-history" id="nutritionRecipePreparationHistoryList"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeHistoryBack">Volver a recetas</button></div>`);
+    $('nutritionRecipeHistoryBack')?.addEventListener('click',()=>{closeModal();openRecipesModal()});
+    const status=$('nutritionRecipePreparationHistoryStatus'),host=$('nutritionRecipePreparationHistoryList');
+    try{
+      if(!data()?.loadRecipePreparationHistory)throw new Error('Aplicá la migración de E4A para habilitar el historial.');
+      const rows=await data().loadRecipePreparationHistory({recipeId:recipeId||undefined,limit:100});
+      if(!rows.length){status.textContent=recipeId?'Todavía no hay preparaciones registradas para esta receta.':'Todavía no hay preparaciones registradas.';host.innerHTML='';return}
+      status.textContent=`${rows.length} preparación${rows.length===1?'':'es'} en el historial.`;
+      host.innerHTML=rows.map(row=>{
+        const snap=row.recipe_snapshot&&typeof row.recipe_snapshot==='object'?row.recipe_snapshot:{};
+        const ingredientCount=Array.isArray(snap.ingredients)?snap.ingredients.length:0;
+        const day=txt(row.prepared_on)?new Date(`${row.prepared_on}T12:00:00`).toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'}):'Fecha no disponible';
+        const weight=row.finished_weight_g?`${fmt(row.finished_weight_g)} g reales`:'Peso real no registrado';
+        const nutrition=snap.calories_per_100g!=null?`${fmt(snap.calories_per_100g)} kcal / 100 g · P ${fmt(snap.protein_per_100g)} g · C ${fmt(snap.carbs_per_100g)} g · G ${fmt(snap.fat_per_100g)} g`:'';
+        const steps=Array.isArray(snap.instructions)?snap.instructions.length:0;
+        return `<article class="nutrition-recipe-preparation-history-item"><header><strong>${esc(row.recipe_name||snap.name||'Receta')}</strong><time datetime="${esc(row.prepared_on||'')}">${esc(day)}</time></header><p>${ingredientCount} ingrediente${ingredientCount===1?'':'s'} · ${fmt(row.servings_made)} porciones · ${esc(weight)}${steps?` · ${steps} pasos`:''}</p>${nutrition?`<small>${esc(nutrition)}</small>`:''}${row.notes?`<blockquote>${esc(row.notes)}</blockquote>`:''}</article>`;
+      }).join('');
+    }catch(error){status.textContent=`No se pudo cargar el historial. Comprobá la migración y los permisos de Supabase. ${error?.message||''}`;host.innerHTML='';}
+  }
+
   function showRecipeCards(recipes,statusText=''){
     const host=$('nutritionRecipeList');if(!host)return;
     const status=$('nutritionRecipeListStatus');if(status)status.textContent=statusText;
     if(!recipes.length){host.innerHTML='<div class="nutrition-advanced-empty">Todavía no guardaste recetas. Abrí una comida con alimentos y tocá “Guardar como receta”.</div>';return}
     host.innerHTML=recipes.map(recipe=>{
       const ingredients=Array.isArray(recipe.ingredients)?recipe.ingredients:[];
-      return `<article class="nutrition-recipe-card" data-recipe-card="${esc(recipe.id)}"><div class="nutrition-recipe-card-main"><strong>${esc(recipe.name)}</strong><small>${ingredients.length} ingrediente${ingredients.length===1?'':'s'} · ${recipe.finished_weight_g?`peso final ${fmt(recipe.finished_weight_g)} g`:`peso estimado ${fmt(recipe.total_weight_g)} g`} · rinde ${fmt(recipe.servings)} porción/porciones</small><span>${fmt(recipe.calories_per_100g)} kcal · P ${fmt(recipe.protein_per_100g)} g · C ${fmt(recipe.carbs_per_100g)} g · G ${fmt(recipe.fat_per_100g)} g / 100 g</span>${recipe.notes?`<p>${esc(recipe.notes)}</p>`:''}</div><div class="nutrition-recipe-card-controls"><label>Porciones a agregar<input class="input" type="number" min="0.1" max="100" step="0.1" value="1" data-recipe-portions="${esc(recipe.id)}"></label><button type="button" class="nutrition-advanced-primary" data-recipe-add="${esc(recipe.id)}">Agregar a esta comida</button><button type="button" class="nutrition-advanced-secondary" data-recipe-edit="${esc(recipe.id)}">Editar receta</button><button type="button" class="nutrition-advanced-danger" data-recipe-delete="${esc(recipe.id)}">Eliminar</button></div></article>`;
+      const instructions=Array.isArray(recipe.instructions)?recipe.instructions.filter(step=>txt(step)):[];
+      const prepTime=Math.max(0,num(recipe.prep_time_minutes)),cookTime=Math.max(0,num(recipe.cook_time_minutes));
+      const parent=recipe.parent_recipe_id?recipes.find(item=>String(item.id)===String(recipe.parent_recipe_id)):null;
+      const timeSummary=(prepTime||cookTime)?`<small>Preparación ${prepTime} min · cocción ${cookTime} min · total ${prepTime+cookTime} min</small>`:'';
+      const procedureSummary=instructions.length?`<small>${instructions.length} paso${instructions.length===1?'':'s'} de preparación${parent?` · Variante de ${esc(parent.name)}`:''}</small>`:parent?`<small>Variante de ${esc(parent.name)}</small>`:'';
+      return `<article class="nutrition-recipe-card" data-recipe-card="${esc(recipe.id)}"><div class="nutrition-recipe-card-main"><strong>${esc(recipe.name)}</strong><small>${ingredients.length} ingrediente${ingredients.length===1?'':'s'} · ${recipe.finished_weight_g?`peso final ${fmt(recipe.finished_weight_g)} g`:`peso estimado ${fmt(recipe.total_weight_g)} g`} · rinde ${fmt(recipe.servings)} porción/porciones</small>${timeSummary}${procedureSummary}<span>${fmt(recipe.calories_per_100g)} kcal · P ${fmt(recipe.protein_per_100g)} g · C ${fmt(recipe.carbs_per_100g)} g · G ${fmt(recipe.fat_per_100g)} g / 100 g</span>${recipe.notes?`<p>${esc(recipe.notes)}</p>`:''}</div><div class="nutrition-recipe-card-controls"><label>Porciones a agregar<input class="input" type="number" min="0.1" max="100" step="0.1" value="1" data-recipe-portions="${esc(recipe.id)}"></label><button type="button" class="nutrition-advanced-primary" data-recipe-add="${esc(recipe.id)}">Agregar a esta comida</button><button type="button" class="nutrition-advanced-secondary" data-recipe-cook="${esc(recipe.id)}" ${instructions.length?'':'disabled'}>Cocinar paso a paso</button><button type="button" class="nutrition-advanced-secondary" data-recipe-log="${esc(recipe.id)}">Registrar preparación</button><button type="button" class="nutrition-advanced-secondary" data-recipe-history="${esc(recipe.id)}">Historial</button><button type="button" class="nutrition-advanced-secondary" data-recipe-variant="${esc(recipe.id)}">Crear variante</button><button type="button" class="nutrition-advanced-secondary" data-recipe-edit="${esc(recipe.id)}">Editar receta</button><button type="button" class="nutrition-advanced-danger" data-recipe-delete="${esc(recipe.id)}">Eliminar</button></div></article>`;
     }).join('');
+    host.querySelectorAll('[data-recipe-cook]').forEach(button=>button.addEventListener('click',()=>{
+      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeCook);if(recipe)openRecipeCookingMode(recipe);
+    }));
+    host.querySelectorAll('[data-recipe-log]').forEach(button=>button.addEventListener('click',()=>{
+      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeLog);if(recipe)openRecipePreparationModal(recipe);
+    }));
+    host.querySelectorAll('[data-recipe-history]').forEach(button=>button.addEventListener('click',()=>{
+      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeHistory);if(recipe)openRecipePreparationHistory(recipe.id,recipe.name);
+    }));
+    host.querySelectorAll('[data-recipe-variant]').forEach(button=>button.addEventListener('click',()=>{
+      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeVariant);if(!recipe)return;
+      const baseName=`${recipe.name} — variante`;
+      saveRecipeModal({...recipe,id:null,parent_recipe_id:recipe.id,name:baseName,ingredients:(Array.isArray(recipe.ingredients)?recipe.ingredients:[]).map(item=>({...item})),instructions:[...(Array.isArray(recipe.instructions)?recipe.instructions:[])]});
+    }));
     host.querySelectorAll('[data-recipe-edit]').forEach(button=>button.addEventListener('click',()=>{
       const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeEdit);
       if(recipe)saveRecipeModal(recipe);
@@ -298,8 +424,9 @@
     }));
   }
   async function openRecipesModal(){
-    mountModal('📖 Mis recetas','Guardá preparaciones y agregá porciones calculadas a la comida que estás editando.',`<div class="nutrition-advanced-status" id="nutritionRecipeListStatus" role="status" aria-live="polite">Cargando recetas…</div><div class="nutrition-recipe-list" id="nutritionRecipeList"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
+    mountModal('📖 Mis recetas','Guardá preparaciones, documentá los pasos y registrá cada tanda sin alterar el historial previo.',`<div class="nutrition-recipe-list-toolbar"><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeAllHistoryBtn">Ver historial de preparaciones</button></div><div class="nutrition-advanced-status" id="nutritionRecipeListStatus" role="status" aria-live="polite">Cargando recetas…</div><div class="nutrition-recipe-list" id="nutritionRecipeList"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
     document.querySelectorAll('[data-advanced-close]').forEach(b=>b.addEventListener('click',closeModal));
+    $('nutritionRecipeAllHistoryBtn')?.addEventListener('click',()=>openRecipePreparationHistory());
     try{const recipes=await data().loadRecipes();showRecipeCards(recipes,recipes.length?`${recipes.length} receta${recipes.length===1?'':'s'} guardada${recipes.length===1?'':'s'}.`:'No hay recetas guardadas todavía.');}
     catch(err){console.warn('Cargar recetas:',err);const status=$('nutritionRecipeListStatus');if(status)status.textContent=`No se pudieron cargar las recetas. Ejecutá sql/07-nutrition-advanced.sql y comprobá tu conexión. ${err?.message||''}`;const host=$('nutritionRecipeList');if(host)host.innerHTML='';}
   }
@@ -330,6 +457,7 @@
     $('nutritionMealBuilderSaveRecipe')?.addEventListener('click',saveRecipeModal);
     $('nutritionHistoryBtn')?.addEventListener('click',openHistoryModal);
     document.addEventListener('agenda:nutrition-history-warning',event=>notify(`Consumo guardado, pero falta guardar en el historial. ${event.detail?.message||''}`,'warning'));
+    document.addEventListener('visibilitychange',()=>{if(cookingModeActive&&document.visibilityState==='visible'&&!activeWakeLock)requestCookingWakeLock($('nutritionRecipeCookWakeStatus'))});
   }
   window.AgendaNutritionAdvanced={openCustomFood:customFoodModal,openUserFoods:openUserFoodsModal,openRecipes:openRecipesModal,openHistory:openHistoryModal,saveRecipe:saveRecipeModal};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();

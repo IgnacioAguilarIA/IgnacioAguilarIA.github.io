@@ -36,17 +36,32 @@
     const map=new Map();
     for(const item of Array.isArray(items)?items:[]){
       const name=clean(item?.name);if(!name)continue;
-      const unit=canonicalUnit(item?.unit||'g');
+      const declaredUnit=clean(item?.unit);
+      const unit=canonicalUnit(declaredUnit||'sin unidad');
+      // Una cantidad expresada como "plan" no es una unidad medible y nunca debe
+      // sumarse como si fueran gramos, mililitros o unidades.
       if(unit.toLowerCase()==='plan')continue;
       const brand=clean(item?.brand);const prep=clean(item?.preparation_state)||'unspecified';
-      const qty=safeNumber(item?.quantity);const known=item?.quantity_known!==false&&qty!==null&&qty>=0;
+      const qty=safeNumber(item?.quantity);const known=item?.quantity_known!==false&&qty!==null&&qty>=0&&!!declaredUnit;
       const key=generatedKey({name,brand,preparation_state:prep,unit,quantity:qty,quantity_known:known});
       const amount=known?qty:0;
-      if(!map.has(key))map.set(key,{item_key:key,name,brand,quantity:0,quantity_known:known,unit,preparation_state:prep,category:categoryLabel(item.categories),source:'generated',source_meals:[],checked:false,active:true});
+      if(!map.has(key))map.set(key,{item_key:key,name,brand,quantity:0,quantity_known:known,unit,preparation_state:prep,category:categoryLabel(item.categories||item.category),source:'generated',source_meals:[],checked:false,active:true});
       const row=map.get(key);row.quantity=Math.round((row.quantity+amount)*1000)/1000;row.source_meals.push(String(item.meal_id||''));
-      if(row.category==='Otros'&&categoryLabel(item.categories)!=='Otros')row.category=categoryLabel(item.categories);
+      if(row.category==='Otros'&&categoryLabel(item.categories||item.category)!=='Otros')row.category=categoryLabel(item.categories||item.category);
     }
     return [...map.values()].map(row=>({...row,source_meals:unique(row.source_meals)})).sort((a,b)=>a.category.localeCompare(b.category,'es')||a.name.localeCompare(b.name,'es'));
+  }
+  function sameKnownQuantity(left,right){
+    const a=safeNumber(left?.quantity),b=safeNumber(right?.quantity);
+    const knownA=left?.quantity_known!==false&&a!==null&&a>=0;
+    const knownB=right?.quantity_known!==false&&b!==null&&b>=0;
+    if(knownA!==knownB)return false;
+    if(!knownA)return true;
+    return Math.abs(Math.round(a*1000)/1000-Math.round(b*1000)/1000)<0.0005;
+  }
+  function findPurchasedQuantityConflicts(existing,desired){
+    const desiredByKey=new Map((Array.isArray(desired)?desired:[]).map(row=>[String(row.item_key),row]));
+    return (Array.isArray(existing)?existing:[]).filter(row=>row&&row.source==='generated'&&row.active!==false&&row.checked===true&&desiredByKey.has(String(row.item_key))&&!sameKnownQuantity(row,desiredByKey.get(String(row.item_key))));
   }
 
   function makeModal(id,title,subtitle,closeFn,trigger){
@@ -162,7 +177,7 @@
       for(const row of items){const li=document.createElement('li');li.className='nutrition-shopping-row'+(row.checked?' is-checked':'');li.dataset.name=clean(row.name);li.dataset.brand=clean(row.brand);li.dataset.quantity=row.quantity_known===false?'Cantidad no definida':(safeNumber(row.quantity)??'');li.dataset.quantityKnown=row.quantity_known===false?'false':'true';li.dataset.unit=unitLabel(row.unit);li.dataset.preparation=({raw:'crudo',cooked:'cocido',prepared:'preparado'}[row.preparation_state]||'');li.dataset.category=clean(row.category)||'Otros';const label=document.createElement('label');label.className='nutrition-shopping-check';const check=document.createElement('input');check.type='checkbox';check.checked=!!row.checked;check.setAttribute('aria-label',`${row.checked?'Desmarcar':'Marcar como comprado'}: ${row.name}`);check.addEventListener('change',()=>updateChecked(row,check.checked,check));const text=document.createElement('span');text.className='nutrition-shopping-name';text.textContent=clean(row.name);const meta=document.createElement('small');meta.textContent=[clean(row.brand),quantityLabel(row),clean(row.preparation_state)!=='unspecified'?({raw:'crudo',cooked:'cocido',prepared:'preparado'}[row.preparation_state]||row.preparation_state):''].filter(Boolean).join(' · ');label.append(check,text);li.append(label,meta);
         const del=document.createElement('button');del.type='button';del.className='nutrition-shopping-delete';del.textContent='×';del.setAttribute('aria-label',`Eliminar ${row.name} de la lista`);del.addEventListener('click',()=>deleteShoppingItem(row));li.appendChild(del);ul.appendChild(li)}section.appendChild(ul);host.appendChild(section)}
   }
-  async function updateChecked(row,checked,control){const owner=currentUid();const week=String(row.week_start||selectedWeek);if(!owner||String(row.user_id)!==owner){if(control)control.checked=!checked;return}if(control)control.disabled=true;try{const c=await client();assertOwner(owner);const res=await c.from('nutrition_shopping_items').update({checked:!!checked,updated_at:new Date().toISOString()}).eq('id',String(row.id)).eq('user_id',owner).eq('week_start',week).select('id,checked').single();if(res.error)throw res.error;assertOwner(owner);await loadShoppingRows()}catch(error){if(control)control.checked=!checked;setStatus(shoppingModal?.status,`No se pudo guardar el estado de compra: ${error?.message||'error desconocido'}.`, 'error')}finally{if(control)control.disabled=false}}
+  async function updateChecked(row,checked,control){const owner=currentUid();const week=String(row.week_start||selectedWeek);if(!owner||String(row.user_id)!==owner){if(control)control.checked=!checked;return}if(control)control.disabled=true;try{const c=await client();assertOwner(owner);const res=await c.from('nutrition_shopping_items').update({checked:!!checked,updated_at:new Date().toISOString()}).eq('id',String(row.id)).eq('user_id',owner).eq('week_start',week).select('id,checked').single();if(res.error)throw res.error;assertOwner(owner);await loadShoppingRows();if(checked&&window.AgendaNutritionPantry&&confirm(`Marcaste «${row.name}» como comprado. ¿Querés agregar ${quantityLabel(row)} a la despensa?\n\nSe guardará como un lote separado y no se duplicará si se reintenta la misma operación.`)){try{const result=await window.AgendaNutritionPantry.registerPurchase(row,owner);assertOwner(owner);setStatus(shoppingModal?.status,result?.duplicate?`«${row.name}» ya estaba registrado en la despensa; no se duplicó el stock.`:`«${row.name}» quedó marcado como comprado y se agregó a la despensa.`,result?.duplicate?'info':'success')}catch(pantryError){if(shoppingModal)setStatus(shoppingModal.status,`El producto sí quedó marcado como comprado, pero no se pudo agregar a la despensa: ${pantryError?.message||'error desconocido'}. Podés cargarlo manualmente sin volver a marcar la compra.`, 'error')}}}catch(error){if(control)control.checked=!checked;setStatus(shoppingModal?.status,`No se pudo guardar el estado de compra: ${error?.message||'error desconocido'}.`, 'error')}finally{if(control)control.disabled=false}}
   async function deleteShoppingItem(row){if(!shoppingModal||!confirm(`¿Eliminar «${row.name}» de esta lista de compras?`))return;const owner=currentUid();const week=String(row.week_start||selectedWeek);try{assertOwner(owner);const c=await client();const {error}=await c.from('nutrition_shopping_items').delete().eq('id',String(row.id)).eq('user_id',owner).eq('week_start',week);if(error)throw error;assertOwner(owner);await loadShoppingRows()}catch(error){setStatus(shoppingModal?.status,`No se pudo eliminar el producto: ${error?.message||'error desconocido'}.`,'error')}}
   function toggleManualForm(){if(!shoppingModal)return;shoppingModal.form.hidden=!shoppingModal.form.hidden;if(!shoppingModal.form.hidden)shoppingModal.form.querySelector('[name="name"]')?.focus()}
   async function addManualItem(event){event.preventDefault();if(!shoppingModal||manualSaving||shoppingBusy)return;const form=shoppingModal.form;const owner=currentUid();const name=clean(form.elements.name.value);const quantity=safeNumber(form.elements.quantity.value);if(!name){form.elements.name.focus();return}if(quantity===null||quantity<0){form.elements.quantity.focus();setStatus(shoppingModal.status,'Ingresá una cantidad válida.','error');return}
@@ -178,11 +193,27 @@
       const plan=await weeklyApi.getShoppingSource(owner,week);assertOwner(owner);
       if(!plan.meals.length)throw new Error('No hay comidas planificadas para esta semana. Abrí «Planificar semana» y agregá comidas o importá tu rutina habitual. No se modificó la lista.');
       if(!plan.items.length)throw new Error('El plan de esta semana no tiene ingredientes detallados. La lista no se modificó. Podés añadir productos manualmente.');
-      const grouped=aggregateItems(plan.items);if(!grouped.length)throw new Error('No se encontraron ingredientes con nombre y unidad utilizables. No se modificó la lista.');
+      const originalGrouped=aggregateItems(plan.items);if(!originalGrouped.length)throw new Error('No se encontraron ingredientes con nombre y unidad utilizables. No se modificó la lista.');
+      let grouped=originalGrouped;let pantryCovered=0;let pantryUnavailable=false;
+      if(window.AgendaNutritionPantry&&typeof window.AgendaNutritionPantry.applyShortages==='function'){
+        try{const pantryResult=await window.AgendaNutritionPantry.applyShortages(owner,originalGrouped);assertOwner(owner);grouped=Array.isArray(pantryResult.items)?pantryResult.items:originalGrouped;pantryCovered=Number(pantryResult.fullyCovered)||0}
+        catch(pantryError){if(/nutrition_pantry_items|relation .* does not exist|could not find the table|schema cache/i.test(pantryError?.message||'')){pantryUnavailable=true;grouped=originalGrouped}else throw new Error(`No se pudo comprobar la despensa con seguridad; no se modificó la lista. ${pantryError?.message||'Error desconocido'}`)}
+      }
       const existing=await readShoppingRows(owner,week,true);assertOwner(owner);const byKey=new Map(existing.map(r=>[String(r.item_key),r]));
-      const newRows=[],updates=[];
+      // Si un producto generado ya estaba marcado como comprado y el nuevo plan
+      // cambia su cantidad, se consulta antes de sobrescribir ese dato. La lista
+      // se puede regenerar igualmente: cancelar el diálogo conserva solo esas
+      // cantidades compradas, no cancela los demás cambios del plan.
+      const purchasedConflicts=findPurchasedQuantityConflicts(existing,grouped);
+      const preservePurchased= purchasedConflicts.length>0 && !confirm(`El nuevo plan cambia la cantidad de ${purchasedConflicts.length} producto${purchasedConflicts.length===1?'':'s'} marcado${purchasedConflicts.length===1?'':'s'} como comprado.
+
+Aceptar: actualizar esas cantidades según el plan nuevo, conservando la marca «comprado».
+Cancelar: conservar exactamente las cantidades de esos productos comprados.
+
+La lista se regenerará de todos modos.`);
+      const newRows=[],updates=[];let preservedBought=0;
       for(const item of grouped){const prev=byKey.get(item.item_key);const payload={...item,user_id:owner,week_start:week,active:true,updated_at:new Date().toISOString()};delete payload.checked;
-        if(prev){updates.push({id:prev.id,payload});}else newRows.push({...payload,checked:false});
+        if(prev){if(preservePurchased&&prev.source==='generated'&&prev.checked&&!sameKnownQuantity(prev,item)){preservedBought++;continue}updates.push({id:prev.id,payload});}else newRows.push({...payload,checked:false});
       }
       const c=await client();assertOwner(owner);
       if(newRows.length){const {error}=await c.from('nutrition_shopping_items').upsert(newRows,{onConflict:'user_id,week_start,item_key'});if(error)throw error;assertOwner(owner)}
@@ -192,11 +223,13 @@
       // lo archivamos en vez de eliminarlo. Los artículos manuales y los ya comprados se conservan.
       const desiredKeys=new Set(grouped.map(x=>x.item_key));let archived=0;
       for(const row of existing){if(row.source==='generated'&&!row.checked&&row.active&&!desiredKeys.has(String(row.item_key))){assertOwner(owner);const {error}=await c.from('nutrition_shopping_items').update({active:false,updated_at:new Date().toISOString()}).eq('id',String(row.id)).eq('user_id',owner).eq('week_start',week).eq('checked',false);if(error)throw error;assertOwner(owner);archived++}}
-      await loadShoppingRows();if(shoppingModal===shell)setStatus(shell.status,`Lista actualizada: ${grouped.length} ingredientes agrupados, ${newRows.length} nuevos, ${updatedCount} actualizados${archived?`, ${archived} desactualizados archivados`:''}. Los artículos manuales y los marcados como comprados se conservaron.`, 'success');
+      await loadShoppingRows();if(shoppingModal===shell){
+        const boughtUpdated=purchasedConflicts.length-preservedBought;
+        setStatus(shell.status,`Lista actualizada: ${grouped.length} ingredientes por comprar, ${newRows.length} nuevos, ${updatedCount} actualizados${archived?`, ${archived} desactualizados archivados`:''}${preservedBought?`, ${preservedBought} cantidad${preservedBought===1?'':'es'} comprada${preservedBought===1?' conservada':'s conservadas'} sin cambios`:''}${boughtUpdated?`, ${boughtUpdated} cantidad${boughtUpdated===1?' comprada actualizada':'es compradas actualizadas'} según el plan`:''}${pantryCovered?`. La despensa cubrió ${pantryCovered} producto${pantryCovered===1?'':'s'} completo${pantryCovered===1?'':'s'}`:''}${pantryUnavailable?'. Aviso: la despensa no está instalada; se generó la lista completa sin descontar existencias (ejecutá sql/23-nutrition-pantry.sql).':'. Los artículos manuales se conservaron y las marcas de compra no se desmarcaron.'}`,pantryUnavailable?'info':'success')}
     }catch(error){console.error('No se pudo generar la lista de compras:',error);if(shoppingModal===shell)setStatus(shell.status,`No se completó la generación: ${error?.message||'error desconocido'}. Los cambios confirmados por el servidor se conservan; podés reintentar sin duplicar los ingredientes por su clave única.`, 'error')}
     finally{shoppingBusy=false;if(shoppingModal===shell){shell.generate.disabled=false;shell.add.disabled=false;shell.date.disabled=false;shell.previous.disabled=false;shell.next.disabled=false;shell.exportBtn.disabled=false}}
   }
-  function exportShoppingCsv(){if(!shoppingModal)return;const rows=[...shoppingModal.list.querySelectorAll('.nutrition-shopping-row')];if(!rows.length){setStatus(shoppingModal.status,'No hay productos en la lista para exportar.','info');return}const lines=[['Categoría','Producto','Marca','Cantidad','Unidad','Preparación','Comprado']];for(const li of rows){const d=li.dataset;const check=li.querySelector('input[type="checkbox"]');lines.push([d.category||'Otros',d.name||'',d.brand||'',d.quantity||'',d.unit||'',d.preparation||'',check?.checked?'Sí':'No'])}const csv='\uFEFF'+lines.map(r=>r.map(csvCell).join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-compras-${selectedWeek}.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);setStatus(shoppingModal.status,'CSV preparado para descargar.','success')}
+  function exportShoppingCsv(){if(!shoppingModal)return;const rows=[...shoppingModal.list.querySelectorAll('.nutrition-shopping-row')];if(!rows.length){setStatus(shoppingModal.status,'No hay productos en la lista para exportar.','info');return}const lines=[['Categoría','Producto','Marca','Cantidad','Unidad','Preparación','Comprado']];for(const li of rows){const d=li.dataset;const check=li.querySelector('input[type="checkbox"]');lines.push([d.category||'Otros',d.name||'',d.brand||'',d.quantity||'',d.unit||'',d.preparation||'',check?.checked?'Sí':'No'])}const csv='\uFEFF'+lines.map(r=>r.map(csvCell).join(';')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`agenda-fich-compras-${selectedWeek}.csv`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);setStatus(shoppingModal.status,'CSV preparado para descargar.','success')}
 
   function init(){
     const actions=$('nutritionPanel')?.querySelector('.nutrition-actions');if(actions){
@@ -211,6 +244,6 @@
       },0));
     }
   }
-  window.AgendaNutritionPlanner={aggregateItems,mondayIso,isoAdd,csvCell,generatedKey,canonicalUnit,weekRange,loadPlan:async()=>{const uid=currentUid();if(!uid)throw new Error('Iniciá sesión.');return fetchPlan(uid)},openPlanner,openShopping};
+  window.AgendaNutritionPlanner={aggregateItems,sameKnownQuantity,findPurchasedQuantityConflicts,mondayIso,isoAdd,csvCell,generatedKey,canonicalUnit,weekRange,loadPlan:async()=>{const uid=currentUid();if(!uid)throw new Error('Iniciá sesión.');return fetchPlan(uid)},openPlanner,openShopping};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

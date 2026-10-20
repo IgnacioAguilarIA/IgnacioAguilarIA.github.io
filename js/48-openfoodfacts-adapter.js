@@ -81,6 +81,11 @@
       novaGroup:num(product.nova_group)||null,
       imageUrl:firstNonEmpty(product.image_front_url,product.image_url),
       source:'Open Food Facts',
+      sourceType:'open_food_facts',
+      sourceLabel:'Open Food Facts',
+      sourceUrl:code?`https://world.openfoodfacts.org/product/${encodeURIComponent(code)}`:'',
+      nutritionQualityStatus:missingNutrition(product).length?'incomplete':'source_complete',
+      nutritionVerifiedAt:null,
       nutritionMissing:missingNutrition(product)
     };
   }

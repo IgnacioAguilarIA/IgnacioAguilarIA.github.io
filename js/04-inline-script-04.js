@@ -215,7 +215,8 @@
     // valida antes y después para no mezclar colas de usuarios distintos.
     try{await window.AgendaNutritionConsumption?.flushPending?.()}catch(_){}
     try{assertExportUser()}catch(err){alert(err.message);return}
-    const pendingConsumption=readLocalJSON(`agendaNutritionPendingConsumption:${exportUserId}`,{});
+    const pendingStored=readLocalJSON(`agendaNutritionPendingConsumption:${exportUserId}`,{});
+    const pendingConsumption=pendingStored&&typeof pendingStored==='object'&&!Array.isArray(pendingStored)?pendingStored:{};
     for(const table of optionalTables){
       try{nutritionRows[table]=await fetchAllForCurrentUser(table,exportUserId)}
       catch(err){if(String(currentUser?.id||'')!==exportUserId){alert(err?.message||'La cuenta cambió durante la exportación.');return}warnings.push(`${table}: ${err?.message||'no disponible'}`)}
