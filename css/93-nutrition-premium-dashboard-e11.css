@@ -1,0 +1,695 @@
+/* Agenda FICH — E11: rediseño visual premium de Alimentación.
+   Todos los estilos se limitan al panel nutricional, sus diálogos o la navegación
+   mientras Alimentación está activa. No cambia lógica, datos ni otros paneles. */
+
+#nutritionPanel {
+  --n11-bg: #101a2b;
+  --n11-surface: #152238;
+  --n11-surface-raised: #192941;
+  --n11-surface-soft: #121f32;
+  --n11-border: #2b3b53;
+  --n11-border-strong: #5277a8;
+  --n11-text: #edf3fc;
+  --n11-muted: #a4b2c7;
+  --n11-blue: #6ca7ff;
+  --n11-blue-strong: #3478e5;
+  --n11-green: #48c78e;
+  --n11-green-soft: #14382f;
+  --n11-shadow: 0 22px 54px rgba(0, 0, 0, .22);
+  position: relative;
+  isolation: isolate;
+  padding: clamp(16px, 2.3vw, 28px);
+  color: var(--n11-text);
+  background: linear-gradient(180deg, #101a2b 0%, #0f1929 100%);
+  border: 1px solid var(--n11-border);
+  border-top: 3px solid var(--n11-blue-strong);
+  border-radius: 26px;
+  box-shadow: var(--n11-shadow);
+  font-variant-numeric: lining-nums;
+}
+
+body.light #nutritionPanel {
+  --n11-bg: #f8fafc;
+  --n11-surface: #ffffff;
+  --n11-surface-raised: #ffffff;
+  --n11-surface-soft: #f1f5f9;
+  --n11-border: #dce5ef;
+  --n11-border-strong: #9bbce9;
+  --n11-text: #172338;
+  --n11-muted: #5d6c81;
+  --n11-blue: #2563eb;
+  --n11-blue-strong: #2463d8;
+  --n11-green: #168454;
+  --n11-green-soft: #f0fdf4;
+  --n11-shadow: 0 18px 46px rgba(26, 47, 77, .075);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-color: var(--n11-border);
+  border-top-color: #3478e5;
+  box-shadow: var(--n11-shadow);
+}
+
+/* Encabezado: una etiqueta editorial, título legible y acción principal explícita. */
+#nutritionPanel .nutrition-head {
+  align-items: center;
+  gap: 18px 24px;
+  padding: 3px 0 22px;
+  margin-bottom: 17px;
+  border-bottom: 1px solid var(--n11-border);
+}
+#nutritionPanel .nutrition-head > div:first-child {
+  display: flex;
+  flex: 1 1 360px;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#nutritionPanel .nutrition-head > div:first-child::before {
+  content: "NUTRICIÓN · PLANIFICACIÓN SEMANAL";
+  display: block;
+  order: -1;
+  margin: 0 0 7px 1px;
+  color: var(--n11-blue);
+  font-size: .66rem;
+  font-weight: 850;
+  letter-spacing: .13em;
+  line-height: 1.35;
+}
+#nutritionPanel .nutrition-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0 0 7px;
+  color: var(--n11-text);
+  font-size: clamp(1.35rem, 1.9vw, 1.85rem);
+  font-weight: 820;
+  letter-spacing: -.045em;
+  line-height: 1.18;
+}
+#nutritionPanel .nutrition-head h2::before {
+  width: 43px;
+  height: 43px;
+  flex: 0 0 43px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(67, 157, 130, .28);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(58, 185, 142, .18), rgba(59, 130, 246, .13));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+  font-size: 19px;
+}
+#nutritionPanel .nutrition-head p {
+  max-width: 64ch;
+  margin: 0;
+  color: var(--n11-muted);
+  font-size: .9rem;
+  line-height: 1.6;
+}
+#nutritionPanel .nutrition-actions {
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 9px;
+}
+#nutritionPanel .nutrition-actions > button {
+  min-height: 44px;
+  padding: 10px 15px;
+  border: 1px solid var(--n11-border);
+  border-radius: 12px;
+  background: var(--n11-surface);
+  color: var(--n11-text);
+  box-shadow: 0 3px 9px rgba(0,0,0,.055);
+  font-size: .78rem;
+  font-weight: 760;
+  line-height: 1.25;
+  transition: background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+#nutritionPanel .nutrition-actions #addMealBtn {
+  border-color: #2463d8;
+  background: linear-gradient(135deg, #3478e5, #215fc4);
+  color: #fff;
+  box-shadow: 0 7px 17px rgba(37, 99, 235, .22);
+}
+#nutritionPanel .nutrition-actions #addMealBtn:hover { background: linear-gradient(135deg, #4388f2, #2869d2); }
+#nutritionPanel .nutrition-actions .nutrition-goal-btn,
+#nutritionPanel .nutrition-actions .nutrition-history-btn { border-color: var(--n11-border); }
+#nutritionPanel .nutrition-actions > button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+@media (hover:hover) and (pointer:fine) {
+  #nutritionPanel .nutrition-actions > button:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: var(--n11-border-strong);
+    box-shadow: 0 7px 16px rgba(0,0,0,.09);
+  }
+}
+
+/* El estado de guardado funciona como metadato, no como una tarjeta protagonista. */
+#nutritionPanel .nutrition-sync-status {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 35px;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 18px;
+  padding: 7px 11px;
+  border: 1px solid var(--n11-border);
+  border-radius: 999px;
+  background: var(--n11-surface-soft);
+  color: var(--n11-muted);
+  font-size: .74rem;
+  font-weight: 650;
+  line-height: 1.4;
+}
+#nutritionPanel .nutrition-sync-dot {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-radius: 50%;
+  background: #98a5b7;
+  box-shadow: 0 0 0 3px rgba(148,163,184,.12);
+}
+#nutritionPanel .nutrition-sync-status.is-saved { border-color: rgba(72,199,142,.34); background: rgba(72,199,142,.09); color: #91e6c0; }
+#nutritionPanel .nutrition-sync-status.is-saved .nutrition-sync-dot { background: #48c78e; box-shadow: 0 0 0 3px rgba(72,199,142,.14); }
+#nutritionPanel .nutrition-sync-status.is-pending { border-color: rgba(234,179,8,.34); background: rgba(234,179,8,.08); color: #f4d37b; }
+#nutritionPanel .nutrition-sync-status.is-pending .nutrition-sync-dot { background: #eab308; box-shadow: 0 0 0 3px rgba(234,179,8,.14); }
+#nutritionPanel .nutrition-sync-status.is-warning,
+#nutritionPanel .nutrition-sync-status.is-error { border-color: rgba(248,113,113,.35); background: rgba(248,113,113,.09); color: #ffb1b1; }
+#nutritionPanel .nutrition-sync-status.is-warning .nutrition-sync-dot,
+#nutritionPanel .nutrition-sync-status.is-error .nutrition-sync-dot { background: #f87171; box-shadow: 0 0 0 3px rgba(248,113,113,.14); }
+body.light #nutritionPanel .nutrition-sync-status { background: #f1f5f9; color: #526176; }
+body.light #nutritionPanel .nutrition-sync-status.is-saved { background: #ecfdf5; color: #126943; }
+body.light #nutritionPanel .nutrition-sync-status.is-pending { background: #fffbeb; color: #8a4b0c; }
+body.light #nutritionPanel .nutrition-sync-status.is-warning,
+body.light #nutritionPanel .nutrition-sync-status.is-error { background: #fff1f2; color: #a31535; }
+
+/* Resumen principal: dos capas bien separadas y lectura rápida de las cifras. */
+#nutritionPanel .nutrition-day-summary {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 19px;
+  padding: clamp(14px, 1.8vw, 21px);
+  border: 1px solid var(--n11-border);
+  border-radius: 20px;
+  background: linear-gradient(140deg, #17283e, #132235 72%, #142b31);
+  box-shadow: 0 9px 26px rgba(0,0,0,.085), inset 0 1px 0 rgba(255,255,255,.025);
+}
+#nutritionPanel .nutrition-day-summary::after {
+  width: 174px;
+  height: 174px;
+  top: -90px;
+  right: -35px;
+  border-width: 22px;
+  border-color: rgba(100, 181, 246, .065);
+  opacity: .7;
+}
+#nutritionPanel .nutrition-day-summary-head {
+  position: relative;
+  z-index: 1;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 17px;
+}
+#nutritionPanel .nutrition-day-summary-head > div:first-child { min-width: 0; }
+#nutritionPanel .nutrition-summary-kicker {
+  margin: 0 0 8px;
+  color: #9bb8dc;
+  font-size: .68rem;
+  font-weight: 850;
+  letter-spacing: .12em;
+}
+#nutritionPanel .nutrition-day-summary-head strong {
+  margin-bottom: 5px;
+  color: #f8fbff;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-weight: 820;
+  letter-spacing: -.04em;
+  line-height: 1.2;
+}
+#nutritionPanel #nutritionSummaryMeals { color: #b5c4d7; font-size: .76rem; line-height: 1.5; }
+#nutritionPanel .nutrition-summary-progresses { max-width: min(38%, 270px); min-width: 200px; gap: 10px; }
+#nutritionPanel .nutrition-summary-progress-row { gap: 10px; }
+#nutritionPanel .nutrition-summary-progress-row small { color: #c2d0e3; font-size: .65rem; font-weight: 800; letter-spacing: .1em; }
+#nutritionPanel .nutrition-summary-progress {
+  height: 8px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.12);
+}
+#nutritionPanel .nutrition-summary-progress span { background: linear-gradient(90deg, #60a5fa, #5ee0b0); }
+#nutritionPanel .nutrition-summary-progress.consumed span { background: linear-gradient(90deg, #4ade80, #20b486); }
+#nutritionPanel .nutrition-summary-block {
+  position: relative;
+  z-index: 1;
+  padding: 14px;
+  border: 1px solid rgba(203, 218, 237, .13);
+  border-radius: 15px;
+  background: rgba(7, 16, 29, .33);
+}
+#nutritionPanel .nutrition-summary-block + .nutrition-summary-block { margin-top: 12px; }
+#nutritionPanel .nutrition-summary-block-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 11px;
+  color: #dce8f7;
+  font-size: .75rem;
+  font-weight: 780;
+  line-height: 1.45;
+  letter-spacing: .005em;
+}
+#nutritionPanel .nutrition-summary-metrics { gap: 9px; }
+#nutritionPanel .nutrition-summary-metric {
+  display: flex;
+  min-height: 76px;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid rgba(185, 204, 228, .14);
+  border-radius: 13px;
+  background: rgba(255,255,255,.045);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025);
+}
+#nutritionPanel .nutrition-summary-metric > span {
+  min-height: 0;
+  margin: 0;
+  color: #b6c6d9;
+  font-size: .72rem;
+  font-weight: 620;
+  line-height: 1.4;
+}
+#nutritionPanel .nutrition-summary-metric strong {
+  color: #f5f9ff;
+  font-size: clamp(1rem, 1.2vw, 1.18rem);
+  font-weight: 820;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+#nutritionPanel .nutrition-summary-consumed { border-color: rgba(72,199,142,.26); background: rgba(20,92,65,.15); }
+#nutritionPanel .nutrition-summary-consumed .nutrition-summary-block-title { color: #b1f0d2; }
+#nutritionPanel .nutrition-summary-consumed .nutrition-summary-metric { border-color: rgba(72,199,142,.22); background: rgba(72,199,142,.07); }
+#nutritionPanel .nutrition-summary-consumed .nutrition-summary-metric > span { color: #b1d9c7; }
+
+body.light #nutritionPanel .nutrition-day-summary {
+  border-color: #d7e3f2;
+  background: linear-gradient(135deg, #eef5ff 0%, #f8fbff 62%, #eefaf4 100%);
+  box-shadow: 0 10px 28px rgba(24, 57, 99, .075), inset 0 1px 0 #fff;
+}
+body.light #nutritionPanel .nutrition-day-summary::after { border-color: rgba(59,130,246,.08); }
+body.light #nutritionPanel .nutrition-summary-kicker { color: #3468a8; }
+body.light #nutritionPanel .nutrition-day-summary-head strong { color: #16263b; }
+body.light #nutritionPanel #nutritionSummaryMeals { color: #63748a; }
+body.light #nutritionPanel .nutrition-summary-progress-row small { color: #566c86; }
+body.light #nutritionPanel .nutrition-summary-progress { background: #e0eaf5; border-color: #d6e2f0; }
+body.light #nutritionPanel .nutrition-summary-block { background: rgba(255,255,255,.86); border-color: #dce6f1; }
+body.light #nutritionPanel .nutrition-summary-block-title { color: #3e526b; }
+body.light #nutritionPanel .nutrition-summary-planned .nutrition-summary-metric { background: #f8fafc; border-color: #dbe3ee; }
+body.light #nutritionPanel .nutrition-summary-planned .nutrition-summary-metric > span { color: #53647a; }
+body.light #nutritionPanel .nutrition-summary-planned .nutrition-summary-metric strong { color: #132238; }
+body.light #nutritionPanel .nutrition-summary-consumed { border-color: #c4e6d4; background: #f4fcf7; }
+body.light #nutritionPanel .nutrition-summary-consumed .nutrition-summary-block-title { color: #236c4b; }
+body.light #nutritionPanel .nutrition-summary-consumed .nutrition-summary-metric { background: #f0fdf4; border-color: #bbf7d0; }
+body.light #nutritionPanel .nutrition-summary-consumed .nutrition-summary-metric > span { color: #3e6755; }
+body.light #nutritionPanel .nutrition-summary-consumed .nutrition-summary-metric strong { color: #14532d; }
+
+/* Semana: días con estados activos elegantes y áreas de interacción estables. */
+#nutritionPanel #nutritionDays {
+  gap: 8px;
+  margin: 0 0 17px;
+}
+#nutritionPanel #nutritionDays .workout-day-btn {
+  min-height: 52px;
+  padding: 10px 8px;
+  border: 1px solid var(--n11-border);
+  border-radius: 13px;
+  background: var(--n11-surface);
+  color: var(--n11-muted);
+  font-size: .78rem;
+  font-weight: 760;
+  line-height: 1.25;
+  box-shadow: 0 2px 6px rgba(0,0,0,.04);
+  transition: color .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+#nutritionPanel #nutritionDays .workout-day-btn.active {
+  color: #fff;
+  background: linear-gradient(135deg, #3478e5, #235fc4);
+  border-color: #3478e5;
+  box-shadow: 0 6px 15px rgba(37,99,235,.2);
+}
+#nutritionPanel #nutritionDays .workout-day-btn:focus-visible,
+#nutritionPanel #mealTabs .meal-tab:focus-visible,
+#nutritionPanel .nutrition-actions button:focus-visible,
+#nutritionPanel #mealList .meal-action:focus-visible,
+#nutritionPanel .nutrition-meal-order-toggle:focus-visible {
+  outline: 3px solid var(--n11-blue);
+  outline-offset: 3px;
+}
+
+/* Objetivos diarios: tarjetas limpias y cifras alineadas. */
+#nutritionPanel #nutritionGoals {
+  gap: 10px;
+  margin: 0 0 10px;
+}
+#nutritionPanel #nutritionGoals .goal-card {
+  min-width: 0;
+  min-height: 102px;
+  padding: 14px;
+  border: 1px solid var(--n11-border);
+  border-top: 3px solid #568de1;
+  border-radius: 15px;
+  background: var(--n11-surface);
+  box-shadow: 0 4px 12px rgba(0,0,0,.045);
+  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+#nutritionPanel #nutritionGoals .goal-card:nth-child(2) { border-top-color: #3cb88b; }
+#nutritionPanel #nutritionGoals .goal-card:nth-child(3) { border-top-color: #d79b43; }
+#nutritionPanel #nutritionGoals .goal-card:nth-child(4) { border-top-color: #9a7be7; }
+#nutritionPanel #nutritionGoals .goal-card h4 {
+  margin: 0 0 8px;
+  color: var(--n11-muted);
+  font-size: .73rem;
+  font-weight: 730;
+  line-height: 1.4;
+}
+#nutritionPanel #nutritionGoals .goal-card strong {
+  color: var(--n11-text);
+  font-size: 1.15rem;
+  font-weight: 830;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+#nutritionPanel #nutritionGoals .goal-card span { color: var(--n11-muted); line-height: 1.4; }
+#nutritionPanel #nutritionGoals .goal-bar { height: 7px; margin-top: 10px; background: rgba(148,163,184,.18); }
+#nutritionPanel #nutritionGoals .goal-bar span { background: linear-gradient(90deg, #4a8bea, #39b88d); }
+#nutritionPanel .goal-settings {
+  padding: 11px 13px;
+  margin-bottom: 19px;
+  border: 1px solid var(--n11-border);
+  border-radius: 12px;
+  background: var(--n11-surface-soft);
+  color: var(--n11-muted);
+  font-size: .76rem;
+}
+#nutritionPanel .goal-settings strong { color: var(--n11-text); }
+
+/* Tipos de comida: pestañas claras, accesibles y sin efectos excesivos. */
+#nutritionPanel #mealTabs {
+  gap: 8px;
+  margin: 0 0 15px;
+}
+#nutritionPanel #mealTabs .meal-tab {
+  min-width: 0;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--n11-border);
+  border-radius: 12px;
+  background: var(--n11-surface);
+  color: var(--n11-muted);
+  font-size: .77rem;
+  font-weight: 760;
+  line-height: 1.35;
+  box-shadow: 0 2px 6px rgba(0,0,0,.035);
+  transition: color .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+#nutritionPanel #mealTabs .meal-tab.active {
+  background: #eaf2ff;
+  border-color: #8bb6f1;
+  color: #1d4f98;
+  box-shadow: inset 0 0 0 1px rgba(59,130,246,.08), 0 4px 11px rgba(37,99,235,.08);
+}
+body:not(.light) #nutritionPanel #mealTabs .meal-tab.active {
+  background: #1a365b;
+  border-color: #477bbd;
+  color: #eff6ff;
+  box-shadow: inset 0 0 0 1px rgba(96,165,250,.12);
+}
+
+/* Comidas: tarjetas claras, información secundaria legible y acciones previsibles. */
+#nutritionPanel #mealList {
+  max-height: none;
+  overflow: visible;
+  padding: 1px 1px 4px;
+  gap: 12px;
+}
+#nutritionPanel #mealList .meal-card {
+  min-width: 0;
+  padding: 16px 16px 15px 18px;
+  border: 1px solid var(--n11-border);
+  border-radius: 16px;
+  background: var(--n11-surface);
+  box-shadow: 0 4px 14px rgba(0,0,0,.045);
+  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+#nutritionPanel #mealList .meal-card::before {
+  width: 3px;
+  background: linear-gradient(180deg, #4f91ed, #38b78d);
+}
+#nutritionPanel #mealList .meal-name {
+  color: var(--n11-text);
+  font-size: .98rem;
+  font-weight: 800;
+  letter-spacing: -.012em;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+#nutritionPanel #mealList .meal-description,
+#nutritionPanel #mealList .meal-foods {
+  color: var(--n11-muted);
+  font-size: .78rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+#nutritionPanel #mealList .meal-chip {
+  padding: 5px 9px;
+  border-color: var(--n11-border);
+  border-radius: 999px;
+  background: var(--n11-surface-soft);
+  color: var(--n11-muted);
+  font-size: .69rem;
+  font-weight: 650;
+}
+#nutritionPanel #mealList .meal-actions { opacity: 1; gap: 6px; }
+#nutritionPanel #mealList .meal-action {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  border: 1px solid var(--n11-border);
+  border-radius: 11px;
+  background: var(--n11-surface-soft);
+  color: var(--n11-muted);
+  font-size: .88rem;
+}
+#nutritionPanel #mealList .meal-action.delete { color: #e57373; }
+#nutritionPanel #mealList .meal-empty {
+  min-height: 178px;
+  border: 1px dashed var(--n11-border-strong);
+  border-radius: 16px;
+  background: var(--n11-surface-soft);
+  color: var(--n11-muted);
+}
+body.light #nutritionPanel #mealList .meal-card { background: #fff; border-color: #dce5ef; box-shadow: 0 5px 16px rgba(26,47,77,.045); }
+body.light #nutritionPanel #mealList .meal-chip { background: #f3f6fa; color: #526176; }
+@media (hover:hover) and (pointer:fine) {
+  #nutritionPanel #mealList .meal-card:hover { transform: translateY(-1px); border-color: var(--n11-border-strong); box-shadow: 0 9px 21px rgba(0,0,0,.08); }
+  #nutritionPanel #mealList .meal-action:hover { border-color: var(--n11-border-strong); color: var(--n11-blue); }
+}
+
+/* Formularios y paneles avanzados siguen la misma línea de diseño. */
+#nutritionOverlay .modal,
+#goalOverlay .modal,
+.nutrition-advanced-modal,
+.nutrition-routine-modal,
+.nutrition-week-modal,
+.nutrition-plan-editor-dialog,
+.nutrition-quality-dialog,
+.nutrition-pantry-modal {
+  border: 1px solid var(--n11-border, #dce5ef);
+  border-radius: 22px;
+  box-shadow: 0 28px 80px rgba(0,0,0,.28);
+}
+#nutritionOverlay .modal-head,
+#goalOverlay .modal-head {
+  border-color: var(--n11-border, #dce5ef);
+}
+#nutritionOverlay .nutrition-entry-section {
+  padding: 15px;
+  border: 1px solid var(--n11-border, #dce5ef);
+  border-radius: 16px;
+  background: var(--n11-surface-soft, rgba(148,163,184,.04));
+}
+#nutritionOverlay .nutrition-entry-section + .nutrition-entry-section { margin-top: 13px; }
+#nutritionOverlay .nutrition-entry-section-heading { gap: 11px; margin-bottom: 13px; }
+#nutritionOverlay .nutrition-entry-step {
+  border-radius: 11px;
+  background: rgba(59,130,246,.11);
+  border-color: rgba(59,130,246,.2);
+  color: var(--n11-blue, #3478e5);
+  font-weight: 850;
+}
+#nutritionOverlay .nutrition-entry-section-heading strong { letter-spacing: -.01em; }
+#nutritionOverlay .nutrition-food-catalog-toggle {
+  border: 1px solid var(--n11-border, #dce5ef);
+  border-radius: 13px;
+  background: var(--n11-surface, #fff);
+  box-shadow: 0 3px 10px rgba(0,0,0,.035);
+}
+#nutritionOverlay :is(input, select, textarea),
+#goalOverlay :is(input, select, textarea),
+.nutrition-advanced-modal :is(input, select, textarea),
+.nutrition-routine-modal :is(input, select, textarea),
+.nutrition-week-modal :is(input, select, textarea),
+.nutrition-plan-editor-dialog :is(input, select, textarea),
+.nutrition-quality-dialog :is(input, select, textarea),
+.nutrition-pantry-modal :is(input, select, textarea) {
+  border-radius: 11px;
+}
+#nutritionOverlay :is(input, select, textarea):focus-visible,
+#goalOverlay :is(input, select, textarea):focus-visible,
+.nutrition-advanced-modal :is(input, select, textarea):focus-visible,
+.nutrition-routine-modal :is(input, select, textarea):focus-visible,
+.nutrition-week-modal :is(input, select, textarea):focus-visible,
+.nutrition-plan-editor-dialog :is(input, select, textarea):focus-visible,
+.nutrition-quality-dialog :is(input, select, textarea):focus-visible,
+.nutrition-pantry-modal :is(input, select, textarea):focus-visible {
+  outline: 3px solid var(--n11-blue, #3478e5);
+  outline-offset: 1px;
+}
+body.light #nutritionOverlay .nutrition-entry-section,
+body.light #nutritionOverlay .nutrition-food-catalog-toggle { background: #f8fafc; border-color: #dce5ef; }
+body.light #nutritionOverlay .nutrition-entry-step { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+
+/* Navegación compartida: solamente cambia de aspecto cuando Alimentación está activa. */
+body:has(#nutritionPanel.v32-section-active) #mobileNav.mobile-nav {
+  border: 1px solid rgba(148,163,184,.24);
+  border-radius: 22px;
+  padding: 7px;
+  background: rgba(15, 26, 43, .94);
+  box-shadow: 0 16px 42px rgba(0,0,0,.25);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+}
+body:has(#nutritionPanel.v32-section-active) #mobileNav #mobileNavFood.active {
+  border: 1px solid rgba(108,167,255,.42);
+  border-radius: 15px;
+  background: linear-gradient(145deg, rgba(59,130,246,.2), rgba(56,189,146,.1));
+  color: #f4f8ff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+}
+body.light:has(#nutritionPanel.v32-section-active) #mobileNav.mobile-nav {
+  border-color: #dce5ef;
+  background: rgba(255,255,255,.96);
+  box-shadow: 0 14px 36px rgba(25,48,77,.15);
+}
+body.light:has(#nutritionPanel.v32-section-active) #mobileNav #mobileNavFood.active {
+  border-color: #b9d4ff;
+  background: linear-gradient(145deg, #eff6ff, #f0fdf4);
+  color: #174b94;
+  box-shadow: inset 0 1px 0 #fff;
+}
+body.light:has(#nutritionPanel.v32-section-active) #mobileNav #mobileNavFood.active .nav-sub { color: #315f9b; }
+
+/* Responsive: preserva la jerarquía en teléfono estrecho, tableta y paisaje. */
+@media (min-width: 1100px) {
+  #nutritionPanel #mealList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  #nutritionPanel .nutrition-summary-progresses { max-width: 100%; min-width: 0; flex: 0 1 220px; }
+  #nutritionPanel #nutritionDays { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  #nutritionPanel #nutritionGoals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #nutritionPanel #mealTabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #nutritionPanel #mealList { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  #nutritionPanel { padding: 15px; border-radius: 21px; }
+  #nutritionPanel .nutrition-head { align-items: flex-start; gap: 14px; padding-bottom: 17px; margin-bottom: 13px; }
+  #nutritionPanel .nutrition-head > div:first-child { flex-basis: 100%; }
+  #nutritionPanel .nutrition-head > div:first-child::before { font-size: .61rem; margin-bottom: 6px; }
+  #nutritionPanel .nutrition-head h2 { font-size: 1.34rem; gap: 9px; }
+  #nutritionPanel .nutrition-head h2::before { width: 38px; height: 38px; flex-basis: 38px; border-radius: 12px; }
+  #nutritionPanel .nutrition-head p { font-size: .82rem; line-height: 1.55; }
+  #nutritionPanel .nutrition-actions { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); width: 100%; gap: 8px; }
+  #nutritionPanel .nutrition-actions .nutrition-goal-btn { grid-column: 1; }
+  #nutritionPanel .nutrition-actions .nutrition-history-btn { grid-column: 2; }
+  #nutritionPanel .nutrition-actions #addMealBtn { grid-column: 1 / -1; }
+  #nutritionPanel .nutrition-actions > button { width: 100%; min-width: 0; min-height: 44px; padding: 9px 8px; }
+  #nutritionPanel .nutrition-sync-status { width: 100%; border-radius: 12px; margin-bottom: 14px; padding: 9px 11px; }
+  #nutritionPanel .nutrition-day-summary { padding: 13px; border-radius: 17px; }
+  #nutritionPanel .nutrition-day-summary-head { align-items: flex-start; flex-direction: column; gap: 12px; margin-bottom: 13px; }
+  #nutritionPanel .nutrition-day-summary-head strong { font-size: 1.38rem; }
+  #nutritionPanel .nutrition-summary-progresses { width: 100%; gap: 8px; }
+  #nutritionPanel .nutrition-summary-block { padding: 10px; border-radius: 13px; }
+  #nutritionPanel .nutrition-summary-block-title { align-items: flex-start; font-size: .72rem; margin-bottom: 9px; }
+  #nutritionPanel .nutrition-summary-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  #nutritionPanel .nutrition-summary-metric { min-height: 71px; padding: 10px; gap: 5px; }
+  #nutritionPanel .nutrition-summary-metric > span { font-size: .72rem; }
+  #nutritionPanel .nutrition-summary-metric strong { font-size: 1.02rem; }
+  #nutritionPanel #nutritionDays { grid-template-columns: repeat(4, minmax(0,1fr)); gap: 6px; }
+  #nutritionPanel #nutritionDays .workout-day-btn { min-height: 44px; padding: 8px 5px; font-size: .73rem; }
+  #nutritionPanel #nutritionGoals { gap: 8px; }
+  #nutritionPanel #nutritionGoals .goal-card { min-height: 90px; padding: 11px; border-radius: 13px; }
+  #nutritionPanel #nutritionGoals .goal-card strong { font-size: 1.06rem; }
+  #nutritionPanel #mealTabs { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 7px; }
+  #nutritionPanel #mealTabs .meal-tab { min-height: 46px; padding: 9px; font-size: .74rem; }
+  #nutritionPanel #mealList { max-height: none; overflow: visible; }
+  #nutritionPanel #mealList .meal-card { padding: 14px 12px 13px 15px; border-radius: 14px; }
+  #nutritionPanel #mealList .meal-name { font-size: .93rem; }
+  #nutritionPanel #mealList .meal-action { min-width: 44px; width: 44px; height: 44px; }
+  #nutritionOverlay .nutrition-entry-section { padding: 12px; }
+}
+@media (max-width: 380px) {
+  #nutritionPanel { padding: 12px; }
+  #nutritionPanel .nutrition-head h2 { font-size: 1.22rem; }
+  #nutritionPanel .nutrition-head h2::before { width: 34px; height: 34px; flex-basis: 34px; }
+  #nutritionPanel .nutrition-summary-metric { padding: 9px 8px; }
+  #nutritionPanel .nutrition-summary-metric > span { font-size: .69rem; }
+  #nutritionPanel #nutritionDays { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (orientation: landscape) and (max-height: 520px) {
+  #nutritionPanel .nutrition-head { padding-bottom: 12px; }
+  #nutritionPanel .nutrition-day-summary { padding: 12px; }
+  #nutritionPanel .nutrition-day-summary-head { margin-bottom: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel *, #nutritionOverlay *, #goalOverlay *,
+  .nutrition-advanced-modal *, .nutrition-routine-modal *, .nutrition-week-modal *,
+  .nutrition-plan-editor-dialog *, .nutrition-quality-dialog *, .nutrition-pantry-modal * {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+@media (forced-colors: active) {
+  #nutritionPanel :is(button, a, input, select, textarea):focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+  #nutritionPanel :is(button, input, select, textarea),
+  #nutritionOverlay :is(button, input, select, textarea),
+  #goalOverlay :is(button, input, select, textarea) { border: 1px solid ButtonText; }
+}
+
+/* Último ajuste de composición: las etiquetas de progreso no deben partir una palabra.
+   Se reserva un ancho real para los rótulos y se deja que la barra absorba el espacio restante. */
+#nutritionPanel .nutrition-summary-progresses {
+  width: 270px;
+  max-width: min(38%, 270px);
+  min-width: 225px;
+  flex: 0 0 270px;
+}
+#nutritionPanel .nutrition-summary-progress-row {
+  grid-template-columns: max-content minmax(44px, 1fr);
+}
+#nutritionPanel .nutrition-summary-progress-row small {
+  white-space: nowrap;
+  overflow-wrap: normal;
+  font-size: .62rem;
+  letter-spacing: .075em;
+}
+/* La navegación es flotante; se deja espacio al final para que no tape la última tarjeta. */
+body:has(#nutritionPanel.v32-section-active) main.container {
+  padding-bottom: calc(128px + env(safe-area-inset-bottom, 0px)) !important;
+}
+@media (max-width: 900px) {
+  #nutritionPanel .nutrition-summary-progresses {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex: 0 1 auto;
+  }
+}
