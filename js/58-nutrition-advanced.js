@@ -7,7 +7,51 @@
   const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0};
   const esc=v=>{const d=document.createElement('div');d.textContent=v??'';return d.innerHTML};
   const fmt=v=>{const n=Math.round(num(v)*10)/10;return Number.isInteger(n)?String(n):n.toFixed(1)};
+  const normalizeSearchText=value=>txt(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('es-AR');
+  const categoryKey=value=>{
+    const key=normalizeSearchText(value).replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'');
+    const aliases={breakfast:'breakfast',desayuno:'breakfast',media_manana:'media_manana',mid_morning:'media_manana',media_morning:'media_manana',pre:'pre',pre_entrenamiento:'pre',pre_workout:'pre',post:'post',post_entrenamiento:'post',post_workout:'post',lunch:'lunch',almuerzo:'lunch',snack:'snack',merienda:'snack',dinner:'dinner',cena:'dinner',colacion:'colacion',colacion_nocturna:'colacion',sleep:'sleep',before_sleep:'sleep',antes_de_dormir:'sleep'};
+    return aliases[key]||'other';
+  };
+  function filterHistoryRows(rows,query='',category='all'){
+    const tokens=normalizeSearchText(query).split(/\s+/).filter(Boolean);
+    return (Array.isArray(rows)?rows:[]).filter(row=>{
+      if(category&&category!=='all'&&categoryKey(row?.meal_type)!==category)return false;
+      if(!tokens.length)return true;
+      const snap=row?.item_snapshot&&typeof row.item_snapshot==='object'?row.item_snapshot:{};
+      const haystack=normalizeSearchText([row?.food_name,row?.brand,row?.meal_title,row?.meal_time,row?.consumed_date,row?.unit,snap.name,snap.brand,snap.source,snap.preparation_state,snap.categories].filter(v=>v!==null&&v!==undefined).join(' '));
+      return tokens.every(token=>haystack.includes(token));
+    });
+  }
+  function filterRecipes(recipes,query='',mode='all'){
+    const tokens=normalizeSearchText(query).split(/\s+/).filter(Boolean);
+    return (Array.isArray(recipes)?recipes:[]).filter(recipe=>{
+      const instructions=Array.isArray(recipe?.instructions)?recipe.instructions.filter(txt):[];
+      const hasParent=!!(recipe?.parent_recipe_id||recipe?.parentRecipeId);
+      if(mode==='with_steps'&&!instructions.length)return false;
+      if(mode==='without_steps'&&instructions.length)return false;
+      if(mode==='variants'&&!hasParent)return false;
+      if(mode==='originals'&&hasParent)return false;
+      if(!tokens.length)return true;
+      const ingredients=Array.isArray(recipe?.ingredients)?recipe.ingredients.flatMap(item=>[item?.name,item?.food_name,item?.brand,item?.notes,item?.preparation_state,item?.preparationState]):[];
+      const haystack=normalizeSearchText([recipe?.name,recipe?.notes,...ingredients,...instructions].filter(v=>v!==null&&v!==undefined).join(' '));
+      return tokens.every(token=>haystack.includes(token));
+    });
+  }
+  function filterUserFoods(rows,query='',preparation='all'){
+    const tokens=normalizeSearchText(query).split(/\s+/).filter(Boolean);
+    return (Array.isArray(rows)?rows:[]).filter(food=>{
+      const state=String(food?.preparationState||food?.preparation_state||'unspecified').toLowerCase();
+      if(preparation&&preparation!=='all'&&state!==preparation)return false;
+      if(!tokens.length)return true;
+      const haystack=normalizeSearchText([food?.name,food?.brand,food?.source,food?.recordSource,food?.categories,food?.labels,food?.ingredients,state].filter(v=>v!==null&&v!==undefined).join(' '));
+      return tokens.every(token=>haystack.includes(token));
+    });
+  }
   let historyDays=30;
+  let historyRowsCache=[];
+  let recipeRowsCache=[];
+  let userFoodRowsCache=[];
   let modalTrigger=null;
   let previousBodyOverflow='';
   let activeWakeLock=null;
@@ -130,31 +174,40 @@
 
 
   function renderUserFoodCards(list,statusText=''){
+    userFoodRowsCache=Array.isArray(list)?list:[];
     const host=$('nutritionUserFoodsList'),status=$('nutritionUserFoodsStatus');
-    if(status)status.textContent=statusText;
     if(!host)return;
-    if(!list.length){host.innerHTML='<div class="nutrition-advanced-empty">Todavía no guardaste alimentos personalizados. Podés crear uno y volver acá para editarlo.</div>';return}
-    host.innerHTML=list.map(food=>`<article class="nutrition-user-food-card"><div class="nutrition-user-food-main"><strong>${esc(food.name)}</strong><small>${food.brand?esc(food.brand)+' · ':''}Por 100 g · ${food.preparationState==='raw'?'Crudo':food.preparationState==='cooked'?'Cocido':food.preparationState==='prepared'?'Preparado':'estado no especificado'}</small><span>${fmt(food.calories)} kcal · P ${fmt(food.protein)} g · C ${fmt(food.carbs)} g · G ${fmt(food.fat)} g${food.fiber!=null?' · Fibra '+fmt(food.fiber)+' g':''}</span><small>Porción habitual: ${fmt(food.servingQuantity||100)} g${food.densityGPerMl?` · Densidad ${fmt(food.densityGPerMl)} g/ml`:''}${food.gramsPerUnit?` · Unidad ${fmt(food.gramsPerUnit)} g`:''}${food.gramsPerPortion?` · Porción ${fmt(food.gramsPerPortion)} g`:''}</small></div><div class="nutrition-user-food-actions"><button type="button" class="nutrition-advanced-secondary" data-user-food-edit="${esc(food.userFoodId)}">Editar</button><button type="button" class="nutrition-advanced-danger" data-user-food-delete="${esc(food.userFoodId)}">Eliminar</button></div></article>`).join('');
+    const query=$('nutritionUserFoodsSearch')?.value||'';
+    const preparation=$('nutritionUserFoodsPreparation')?.value||'all';
+    const filtered=filterUserFoods(userFoodRowsCache,query,preparation);
+    if(status)status.textContent=(query.trim()||preparation!=='all')?`Mostrando ${filtered.length} de ${userFoodRowsCache.length} alimentos propios.`:(statusText||`${userFoodRowsCache.length} alimentos propios.`);
+    if(!userFoodRowsCache.length){host.innerHTML='<div class="nutrition-advanced-empty">Todavía no guardaste alimentos personalizados. Podés crear uno y volver acá para editarlo.</div>';return}
+    if(!filtered.length){host.innerHTML='<div class="nutrition-advanced-empty">No encontramos alimentos con esos filtros. Probá otra búsqueda o limpiá los filtros.</div>';return}
+    host.innerHTML=filtered.map(food=>`<article class="nutrition-user-food-card"><div class="nutrition-user-food-main"><strong>${esc(food.name)}</strong><small>${food.brand?esc(food.brand)+' · ':''}Por 100 g · ${food.preparationState==='raw'?'Crudo':food.preparationState==='cooked'?'Cocido':food.preparationState==='prepared'?'Preparado':'estado no especificado'}</small><span>${fmt(food.calories)} kcal · P ${fmt(food.protein)} g · C ${fmt(food.carbs)} g · G ${fmt(food.fat)} g${food.fiber!=null?' · Fibra '+fmt(food.fiber)+' g':''}</span><small>Porción habitual: ${fmt(food.servingQuantity||100)} g${food.densityGPerMl?` · Densidad ${fmt(food.densityGPerMl)} g/ml`:''}${food.gramsPerUnit?` · Unidad ${fmt(food.gramsPerUnit)} g`:''}${food.gramsPerPortion?` · Porción ${fmt(food.gramsPerPortion)} g`:''}</small></div><div class="nutrition-user-food-actions"><button type="button" class="nutrition-advanced-secondary" data-user-food-edit="${esc(food.userFoodId)}">Editar</button><button type="button" class="nutrition-advanced-danger" data-user-food-delete="${esc(food.userFoodId)}">Eliminar</button></div></article>`).join('');
     host.querySelectorAll('[data-user-food-edit]').forEach(button=>button.addEventListener('click',()=>{
-      const food=list.find(item=>String(item.userFoodId)===button.dataset.userFoodEdit);
+      const food=userFoodRowsCache.find(item=>String(item.userFoodId)===button.dataset.userFoodEdit);
       if(food)customFoodModal(food);
     }));
     host.querySelectorAll('[data-user-food-delete]').forEach(button=>button.addEventListener('click',async()=>{
-      const food=list.find(item=>String(item.userFoodId)===button.dataset.userFoodDelete);if(!food)return;
+      const food=userFoodRowsCache.find(item=>String(item.userFoodId)===button.dataset.userFoodDelete);if(!food)return;
       if(!confirm(`¿Eliminar “${food.name}” de Mis alimentos? Las comidas e historiales ya guardados conservarán sus valores registrados.`))return;
       button.disabled=true;
       try{
         await data().deleteUserFood(food.userFoodId);
-        const next=list.filter(item=>String(item.userFoodId)!==String(food.userFoodId));
+        const next=userFoodRowsCache.filter(item=>String(item.userFoodId)!==String(food.userFoodId));
         renderUserFoodCards(next,`Alimento eliminado. Quedan ${next.length} alimentos propios.`);
         notify('Alimento eliminado de Mis alimentos. Los registros anteriores se conservan.','success');
       }catch(err){button.disabled=false;if(status)status.textContent=`No se pudo eliminar el alimento: ${err?.message||'error'}`;}
     }));
   }
   async function openUserFoodsModal(){
-    mountModal('🥗 Mis alimentos','Editá tus alimentos personalizados. Los valores guardados dentro de comidas anteriores se conservan como instantáneas.',`<div class="nutrition-advanced-status" id="nutritionUserFoodsStatus" role="status" aria-live="polite">Cargando tus alimentos…</div><div class="nutrition-user-food-list" id="nutritionUserFoodsList"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" id="nutritionUserFoodCreateBtn">＋ Crear alimento</button><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
+    userFoodRowsCache=[];
+    mountModal('🥗 Mis alimentos','Editá tus alimentos personalizados. Los valores guardados dentro de comidas anteriores se conservan como instantáneas.',`<div class="nutrition-browse-toolbar"><label for="nutritionUserFoodsSearch">Buscar en mis alimentos<input class="input" type="search" id="nutritionUserFoodsSearch" maxlength="160" placeholder="Nombre, marca, ingrediente…" autocomplete="off"></label><label for="nutritionUserFoodsPreparation">Preparación<select class="input" id="nutritionUserFoodsPreparation"><option value="all">Todos los estados</option><option value="raw">Crudo</option><option value="cooked">Cocido</option><option value="prepared">Preparado</option><option value="unspecified">Sin especificar</option></select></label><button type="button" class="nutrition-advanced-secondary" id="nutritionUserFoodsClear">Limpiar</button></div><div class="nutrition-advanced-status" id="nutritionUserFoodsStatus" role="status" aria-live="polite">Cargando tus alimentos…</div><div class="nutrition-user-food-list" id="nutritionUserFoodsList"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" id="nutritionUserFoodCreateBtn">＋ Crear alimento</button><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
     document.querySelectorAll('[data-advanced-close]').forEach(b=>b.addEventListener('click',closeModal));
     $('nutritionUserFoodCreateBtn')?.addEventListener('click',()=>customFoodModal());
+    $('nutritionUserFoodsSearch')?.addEventListener('input',()=>renderUserFoodCards(userFoodRowsCache));
+    $('nutritionUserFoodsPreparation')?.addEventListener('change',()=>renderUserFoodCards(userFoodRowsCache));
+    $('nutritionUserFoodsClear')?.addEventListener('click',()=>{if($('nutritionUserFoodsSearch'))$('nutritionUserFoodsSearch').value='';if($('nutritionUserFoodsPreparation'))$('nutritionUserFoodsPreparation').value='all';renderUserFoodCards(userFoodRowsCache);$('nutritionUserFoodsSearch')?.focus()});
     try{
       if(!data()?.loadUserFoods)throw new Error('El módulo de persistencia todavía no ofrece la lista de alimentos.');
       const list=await data().loadUserFoods();
@@ -375,10 +428,19 @@
   }
 
   function showRecipeCards(recipes,statusText=''){
+    recipeRowsCache=Array.isArray(recipes)?recipes:[];
+    renderRecipeCards(recipeRowsCache,statusText);
+  }
+  function renderRecipeCards(recipes,statusText=''){
     const host=$('nutritionRecipeList');if(!host)return;
-    const status=$('nutritionRecipeListStatus');if(status)status.textContent=statusText;
+    const status=$('nutritionRecipeListStatus');
+    const query=$('nutritionRecipeSearch')?.value||'';
+    const mode=$('nutritionRecipeFilter')?.value||'all';
+    const filtered=filterRecipes(recipes,query,mode);
+    if(status)status.textContent=(query.trim()||mode!=='all')?`Mostrando ${filtered.length} de ${recipes.length} recetas.`:(statusText||`${recipes.length} recetas guardadas.`);
     if(!recipes.length){host.innerHTML='<div class="nutrition-advanced-empty">Todavía no guardaste recetas. Abrí una comida con alimentos y tocá “Guardar como receta”.</div>';return}
-    host.innerHTML=recipes.map(recipe=>{
+    if(!filtered.length){host.innerHTML='<div class="nutrition-advanced-empty">No encontramos recetas con esos filtros. Probá otras palabras o limpiá la búsqueda.</div>';return}
+    host.innerHTML=filtered.map(recipe=>{
       const ingredients=Array.isArray(recipe.ingredients)?recipe.ingredients:[];
       const instructions=Array.isArray(recipe.instructions)?recipe.instructions.filter(step=>txt(step)):[];
       const prepTime=Math.max(0,num(recipe.prep_time_minutes)),cookTime=Math.max(0,num(recipe.cook_time_minutes));
@@ -388,25 +450,25 @@
       return `<article class="nutrition-recipe-card" data-recipe-card="${esc(recipe.id)}"><div class="nutrition-recipe-card-main"><strong>${esc(recipe.name)}</strong><small>${ingredients.length} ingrediente${ingredients.length===1?'':'s'} · ${recipe.finished_weight_g?`peso final ${fmt(recipe.finished_weight_g)} g`:`peso estimado ${fmt(recipe.total_weight_g)} g`} · rinde ${fmt(recipe.servings)} porción/porciones</small>${timeSummary}${procedureSummary}<span>${fmt(recipe.calories_per_100g)} kcal · P ${fmt(recipe.protein_per_100g)} g · C ${fmt(recipe.carbs_per_100g)} g · G ${fmt(recipe.fat_per_100g)} g / 100 g</span>${recipe.notes?`<p>${esc(recipe.notes)}</p>`:''}</div><div class="nutrition-recipe-card-controls"><label>Porciones a agregar<input class="input" type="number" min="0.1" max="100" step="0.1" value="1" data-recipe-portions="${esc(recipe.id)}"></label><button type="button" class="nutrition-advanced-primary" data-recipe-add="${esc(recipe.id)}">Agregar a esta comida</button><button type="button" class="nutrition-advanced-secondary" data-recipe-cook="${esc(recipe.id)}" ${instructions.length?'':'disabled'}>Cocinar paso a paso</button><button type="button" class="nutrition-advanced-secondary" data-recipe-log="${esc(recipe.id)}">Registrar preparación</button><button type="button" class="nutrition-advanced-secondary" data-recipe-history="${esc(recipe.id)}">Historial</button><button type="button" class="nutrition-advanced-secondary" data-recipe-variant="${esc(recipe.id)}">Crear variante</button><button type="button" class="nutrition-advanced-secondary" data-recipe-edit="${esc(recipe.id)}">Editar receta</button><button type="button" class="nutrition-advanced-danger" data-recipe-delete="${esc(recipe.id)}">Eliminar</button></div></article>`;
     }).join('');
     host.querySelectorAll('[data-recipe-cook]').forEach(button=>button.addEventListener('click',()=>{
-      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeCook);if(recipe)openRecipeCookingMode(recipe);
+      const recipe=recipeRowsCache.find(r=>String(r.id)===button.dataset.recipeCook);if(recipe)openRecipeCookingMode(recipe);
     }));
     host.querySelectorAll('[data-recipe-log]').forEach(button=>button.addEventListener('click',()=>{
-      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeLog);if(recipe)openRecipePreparationModal(recipe);
+      const recipe=recipeRowsCache.find(r=>String(r.id)===button.dataset.recipeLog);if(recipe)openRecipePreparationModal(recipe);
     }));
     host.querySelectorAll('[data-recipe-history]').forEach(button=>button.addEventListener('click',()=>{
-      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeHistory);if(recipe)openRecipePreparationHistory(recipe.id,recipe.name);
+      const recipe=recipeRowsCache.find(r=>String(r.id)===button.dataset.recipeHistory);if(recipe)openRecipePreparationHistory(recipe.id,recipe.name);
     }));
     host.querySelectorAll('[data-recipe-variant]').forEach(button=>button.addEventListener('click',()=>{
-      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeVariant);if(!recipe)return;
+      const recipe=recipeRowsCache.find(r=>String(r.id)===button.dataset.recipeVariant);if(!recipe)return;
       const baseName=`${recipe.name} — variante`;
       saveRecipeModal({...recipe,id:null,parent_recipe_id:recipe.id,name:baseName,ingredients:(Array.isArray(recipe.ingredients)?recipe.ingredients:[]).map(item=>({...item})),instructions:[...(Array.isArray(recipe.instructions)?recipe.instructions:[])]});
     }));
     host.querySelectorAll('[data-recipe-edit]').forEach(button=>button.addEventListener('click',()=>{
-      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeEdit);
+      const recipe=recipeRowsCache.find(r=>String(r.id)===button.dataset.recipeEdit);
       if(recipe)saveRecipeModal(recipe);
     }));
     host.querySelectorAll('[data-recipe-add]').forEach(button=>button.addEventListener('click',()=>{
-      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeAdd);if(!recipe)return;
+      const recipe=recipeRowsCache.find(r=>String(r.id)===button.dataset.recipeAdd);if(!recipe)return;
       const portionInput=host.querySelector(`[data-recipe-portions="${CSS.escape(String(recipe.id))}"]`);const portions=num(portionInput?.value);
       if(portions<=0){if(status)status.textContent='Ingresá una cantidad de porciones mayor que cero.';return}
       const servings=Math.max(.1,num(recipe.servings)||1),scale=portions/servings;
@@ -416,39 +478,55 @@
       closeModal();notify(`${recipe.name}: se agregaron ${fmt(portions)} porciones a la comida.`,'success');
     }));
     host.querySelectorAll('[data-recipe-delete]').forEach(button=>button.addEventListener('click',async()=>{
-      const recipe=recipes.find(r=>String(r.id)===button.dataset.recipeDelete);if(!recipe)return;
+      const recipe=recipeRowsCache.find(r=>String(r.id)===button.dataset.recipeDelete);if(!recipe)return;
       if(!confirm(`¿Eliminar la receta “${recipe.name}”? Los ingredientes ya guardados en comidas anteriores no se borrarán.`))return;
       button.disabled=true;
-      try{await data().deleteRecipe(recipe.id);showRecipeCards(recipes.filter(r=>String(r.id)!==String(recipe.id)),'Receta eliminada.');notify('Receta eliminada.','success')}
+      try{await data().deleteRecipe(recipe.id);showRecipeCards(recipeRowsCache.filter(r=>String(r.id)!==String(recipe.id)),'Receta eliminada.');notify('Receta eliminada.','success')}
       catch(err){button.disabled=false;if(status)status.textContent=`No se pudo eliminar la receta: ${err?.message||'error'}`}
     }));
   }
   async function openRecipesModal(){
-    mountModal('📖 Mis recetas','Guardá preparaciones, documentá los pasos y registrá cada tanda sin alterar el historial previo.',`<div class="nutrition-recipe-list-toolbar"><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeAllHistoryBtn">Ver historial de preparaciones</button></div><div class="nutrition-advanced-status" id="nutritionRecipeListStatus" role="status" aria-live="polite">Cargando recetas…</div><div class="nutrition-recipe-list" id="nutritionRecipeList"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
+    recipeRowsCache=[];
+    mountModal('📖 Mis recetas','Buscá por nombre, notas, ingredientes o instrucciones. Los filtros solo cambian la vista; no alteran las recetas guardadas.',`<div class="nutrition-browse-toolbar nutrition-recipe-browse-toolbar"><label for="nutritionRecipeSearch">Buscar recetas<input class="input" type="search" id="nutritionRecipeSearch" maxlength="160" placeholder="Nombre, ingrediente, instrucciones…" autocomplete="off"></label><label for="nutritionRecipeFilter">Mostrar<select class="input" id="nutritionRecipeFilter"><option value="all">Todas las recetas</option><option value="with_steps">Con instrucciones</option><option value="without_steps">Sin instrucciones</option><option value="variants">Variantes</option><option value="originals">Recetas originales</option></select></label><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeClearFilters">Limpiar</button></div><div class="nutrition-recipe-list-toolbar"><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeAllHistoryBtn">Ver historial de preparaciones</button></div><div class="nutrition-advanced-status" id="nutritionRecipeListStatus" role="status" aria-live="polite">Cargando recetas…</div><div class="nutrition-recipe-list" id="nutritionRecipeList"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
     document.querySelectorAll('[data-advanced-close]').forEach(b=>b.addEventListener('click',closeModal));
     $('nutritionRecipeAllHistoryBtn')?.addEventListener('click',()=>openRecipePreparationHistory());
+    $('nutritionRecipeSearch')?.addEventListener('input',()=>renderRecipeCards(recipeRowsCache));
+    $('nutritionRecipeFilter')?.addEventListener('change',()=>renderRecipeCards(recipeRowsCache));
+    $('nutritionRecipeClearFilters')?.addEventListener('click',()=>{if($('nutritionRecipeSearch'))$('nutritionRecipeSearch').value='';if($('nutritionRecipeFilter'))$('nutritionRecipeFilter').value='all';renderRecipeCards(recipeRowsCache);$('nutritionRecipeSearch')?.focus()});
     try{const recipes=await data().loadRecipes();showRecipeCards(recipes,recipes.length?`${recipes.length} receta${recipes.length===1?'':'s'} guardada${recipes.length===1?'':'s'}.`:'No hay recetas guardadas todavía.');}
     catch(err){console.warn('Cargar recetas:',err);const status=$('nutritionRecipeListStatus');if(status)status.textContent=`No se pudieron cargar las recetas. Ejecutá sql/07-nutrition-advanced.sql y comprobá tu conexión. ${err?.message||''}`;const host=$('nutritionRecipeList');if(host)host.innerHTML='';}
   }
   function groupByDate(rows){const map=new Map();for(const row of rows){const key=String(row.consumed_date||'');if(!map.has(key))map.set(key,[]);map.get(key).push(row)}return [...map.entries()]}
+  function renderHistoryResults(){
+    const host=$('nutritionHistoryResults'),status=$('nutritionHistoryStatus');if(!host||!status)return;
+    if(!Array.isArray(historyRowsCache)||!historyRowsCache.length){status.textContent=`No hay consumos registrados en los últimos ${historyDays} días.`;host.innerHTML='<div class="nutrition-advanced-empty">Cuando marques alimentos como consumidos, aparecerán acá con la fecha real del consumo.</div>';return}
+    const query=$('nutritionHistorySearch')?.value||'',category=$('nutritionHistoryCategory')?.value||'all';
+    const rows=filterHistoryRows(historyRowsCache,query,category);
+    if(!rows.length){status.textContent=`No hay resultados para los filtros actuales (${historyRowsCache.length} registros en el período).`;host.innerHTML='<div class="nutrition-advanced-empty">No encontramos consumos que coincidan. Probá otras palabras, cambiá la categoría o limpiá los filtros.</div>';return}
+    status.textContent=(query.trim()||category!=='all')?`Mostrando ${rows.length} de ${historyRowsCache.length} registros del período.`:`${rows.length} registro${rows.length===1?'':'s'} en los últimos ${historyDays} días.`;
+    const groups=groupByDate(rows);
+    host.innerHTML=groups.map(([date,items])=>{
+      const total=items.reduce((a,item)=>({calories:a.calories+num(item.calories),protein:a.protein+num(item.protein_g),carbs:a.carbs+num(item.carbs_g),fat:a.fat+num(item.fat_g)}),{calories:0,protein:0,carbs:0,fat:0});
+      const human=new Date(`${date}T12:00:00`).toLocaleDateString('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+      return `<section class="nutrition-history-day"><header><strong>${esc(human)}</strong><span>${items.length} registro${items.length===1?'':'s'} · ${Math.round(total.calories)} kcal · P ${fmt(total.protein)} g · C ${fmt(total.carbs)} g · G ${fmt(total.fat)} g</span></header><div class="nutrition-history-items">${items.map(item=>`<div class="nutrition-history-item"><div><strong>${esc(item.food_name||'Alimento')}</strong><small>${esc(item.meal_title||'Comida')}${item.meal_time?' · '+esc(item.meal_time):''} · ${fmt(item.quantity)} ${esc(item.unit||'g')}${item.item_snapshot?.preparation_state&&item.item_snapshot.preparation_state!=='unspecified'?' · '+(item.item_snapshot.preparation_state==='raw'?'crudo':item.item_snapshot.preparation_state==='cooked'?'cocido':'preparado'):''}</small></div><span>${fmt(item.calories)} kcal</span></div>`).join('')}</div></section>`;
+    }).join('');
+  }
   async function loadHistory(){
     const host=$('nutritionHistoryResults'),status=$('nutritionHistoryStatus');if(!host||!status)return;
-    host.innerHTML='';status.textContent='Cargando historial…';
+    host.innerHTML='';status.textContent='Cargando historial…';status.setAttribute('aria-busy','true');
     try{
-      const rows=await data().loadConsumptionHistory(historyDays);const groups=groupByDate(rows);
-      if(!rows.length){status.textContent=`No hay consumos registrados en los últimos ${historyDays} días.`;host.innerHTML='<div class="nutrition-advanced-empty">Cuando marques alimentos como consumidos, aparecerán acá con la fecha real del consumo.</div>';return}
-      status.textContent=`${rows.length} registro${rows.length===1?'':'s'} en los últimos ${historyDays} días.`;
-      host.innerHTML=groups.map(([date,items])=>{
-        const total=items.reduce((a,item)=>({calories:a.calories+num(item.calories),protein:a.protein+num(item.protein_g),carbs:a.carbs+num(item.carbs_g),fat:a.fat+num(item.fat_g)}),{calories:0,protein:0,carbs:0,fat:0});
-        const human=new Date(`${date}T12:00:00`).toLocaleDateString('es-AR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
-        return `<section class="nutrition-history-day"><header><strong>${esc(human)}</strong><span>${Math.round(total.calories)} kcal · P ${fmt(total.protein)} g · C ${fmt(total.carbs)} g · G ${fmt(total.fat)} g</span></header><div class="nutrition-history-items">${items.map(item=>`<div class="nutrition-history-item"><div><strong>${esc(item.food_name||'Alimento')}</strong><small>${esc(item.meal_title||'Comida')}${item.meal_time?' · '+esc(item.meal_time):''} · ${fmt(item.quantity)} ${esc(item.unit||'g')}${item.item_snapshot?.preparation_state&&item.item_snapshot.preparation_state!=='unspecified'?' · '+(item.item_snapshot.preparation_state==='raw'?'crudo':item.item_snapshot.preparation_state==='cooked'?'cocido':'preparado'):''}</small></div><span>${fmt(item.calories)} kcal</span></div>`).join('')}</div></section>`;
-      }).join('');
-    }catch(err){console.warn('Historial de consumo:',err);status.textContent=`No se pudo cargar el historial. Ejecutá sql/07-nutrition-advanced.sql. ${err?.message||''}`;host.innerHTML='';}
+      const rows=await data().loadConsumptionHistory(historyDays);historyRowsCache=Array.isArray(rows)?rows:[];status.setAttribute('aria-busy','false');renderHistoryResults();
+    }catch(err){console.warn('Historial de consumo:',err);historyRowsCache=[];status.setAttribute('aria-busy','false');status.textContent=`No se pudo cargar el historial. Ejecutá sql/07-nutrition-advanced.sql. ${err?.message||''}`;host.innerHTML='<div class="nutrition-advanced-empty">No se modificó ningún registro. Comprobá la conexión y volvé a intentar.</div>';}
   }
   function openHistoryModal(){
-    mountModal('📅 Historial de consumo','Consultá lo que marcaste como consumido por fecha. Los valores reflejan los registros guardados, no comidas solamente planificadas.',`<div class="nutrition-advanced-history-toolbar"><label for="nutritionHistoryRange">Período</label><select class="input" id="nutritionHistoryRange"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select></div><div class="nutrition-advanced-status" id="nutritionHistoryStatus" role="status" aria-live="polite">Cargando…</div><div class="nutrition-history-results" id="nutritionHistoryResults"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
+    historyRowsCache=[];
+    mountModal('📅 Historial de consumo','Buscá alimentos o comidas y filtrá por categoría. Estos datos representan consumos registrados, no comidas solamente planificadas.',`<div class="nutrition-advanced-history-toolbar"><label for="nutritionHistoryRange">Período</label><select class="input" id="nutritionHistoryRange"><option value="7">Últimos 7 días</option><option value="30" selected>Últimos 30 días</option><option value="90">Últimos 90 días</option></select></div><div class="nutrition-browse-toolbar nutrition-history-browse-toolbar"><label for="nutritionHistorySearch">Buscar en el historial<input class="input" type="search" id="nutritionHistorySearch" maxlength="160" placeholder="Alimento, comida o marca…" autocomplete="off"></label><label for="nutritionHistoryCategory">Categoría<select class="input" id="nutritionHistoryCategory"><option value="all">Todas las categorías</option><option value="breakfast">Desayuno</option><option value="media_manana">Media mañana</option><option value="pre">Pre entrenamiento</option><option value="post">Post entrenamiento</option><option value="lunch">Almuerzo</option><option value="snack">Merienda</option><option value="dinner">Cena</option><option value="colacion">Colación</option><option value="sleep">Antes de dormir</option><option value="other">Otra / sin categoría</option></select></label><button type="button" class="nutrition-advanced-secondary" id="nutritionHistoryClearFilters">Limpiar</button></div><div class="nutrition-advanced-status" id="nutritionHistoryStatus" role="status" aria-live="polite" aria-busy="true">Cargando…</div><div class="nutrition-history-results" id="nutritionHistoryResults"></div><div class="nutrition-advanced-actions"><button type="button" class="nutrition-advanced-secondary" data-advanced-close>Cerrar</button></div>`);
     document.querySelectorAll('[data-advanced-close]').forEach(b=>b.addEventListener('click',closeModal));
-    $('nutritionHistoryRange')?.addEventListener('change',e=>{historyDays=Number(e.target.value)||30;loadHistory()});historyDays=30;loadHistory();
+    $('nutritionHistoryRange')?.addEventListener('change',e=>{historyDays=Number(e.target.value)||30;loadHistory()});
+    $('nutritionHistorySearch')?.addEventListener('input',renderHistoryResults);
+    $('nutritionHistoryCategory')?.addEventListener('change',renderHistoryResults);
+    $('nutritionHistoryClearFilters')?.addEventListener('click',()=>{if($('nutritionHistorySearch'))$('nutritionHistorySearch').value='';if($('nutritionHistoryCategory'))$('nutritionHistoryCategory').value='all';renderHistoryResults();$('nutritionHistorySearch')?.focus()});
+    historyDays=30;loadHistory();
   }
   function bind(){
     $('nutritionCreateCustomFoodBtn')?.addEventListener('click',()=>customFoodModal());
@@ -459,6 +537,6 @@
     document.addEventListener('agenda:nutrition-history-warning',event=>notify(`Consumo guardado, pero falta guardar en el historial. ${event.detail?.message||''}`,'warning'));
     document.addEventListener('visibilitychange',()=>{if(cookingModeActive&&document.visibilityState==='visible'&&!activeWakeLock)requestCookingWakeLock($('nutritionRecipeCookWakeStatus'))});
   }
-  window.AgendaNutritionAdvanced={openCustomFood:customFoodModal,openUserFoods:openUserFoodsModal,openRecipes:openRecipesModal,openHistory:openHistoryModal,saveRecipe:saveRecipeModal};
+  window.AgendaNutritionAdvanced={openCustomFood:customFoodModal,openUserFoods:openUserFoodsModal,openRecipes:openRecipesModal,openHistory:openHistoryModal,saveRecipe:saveRecipeModal,normalizeSearchText,categoryKey,filterHistoryRows,filterRecipes,filterUserFoods};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
 })();

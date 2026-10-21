@@ -77,15 +77,25 @@
 
   function openCopyDay(){
     if($(COPY_MODAL_ID))return;
-    const names=dayNames();const source=selectedDay();const target=(source+1)%7;
-    const options=names.map((name,index)=>`<option value="${index}" ${index===source?'selected':''}>${esc(name)}</option>`).join('');
-    const body=`<div class="nutrition-routine-field"><label for="nutritionCopyDaySource">Copiar las comidas de</label><select id="nutritionCopyDaySource" class="input">${options}</select></div><div class="nutrition-routine-field"><label for="nutritionCopyDayTarget">Agregar una copia en</label><select id="nutritionCopyDayTarget" class="input">${names.map((name,index)=>`<option value="${index}" ${index===target?'selected':''}>${esc(name)}</option>`).join('')}</select></div><p class="nutrition-routine-note">Se copian las comidas y sus cantidades. Los alimentos quedan <strong>sin marcar como consumidos</strong>. Las comidas que ya existan en el destino se conservan; no se reemplaza ni se borra nada.</p><div id="nutritionCopyDayStatus" class="nutrition-routine-status" role="status" aria-live="polite">La copia necesita conexión para verificar y guardar todos los alimentos.</div>`;
-    createModal(COPY_MODAL_ID,'🔁 Repetir un día','Copiá tu plan a otro día sin alterar el original.',body,'Copiar día',runCopyDay);
+    const names=dayNames();const owner=activeUid();const safety=window.AgendaNutritionMealSaveSafety;
+    let pending=null;let pendingError=null;
+    if(owner&&safety?.readOperation){try{pending=safety.readOperation(owner,'repeat-day')}catch(error){pendingError=error}}
+    const source=pending?Number(pending.payload?.sourceDay):selectedDay();
+    const target=pending?Number(pending.payload?.targetDay):(source+1)%7;
+    const safeSource=Number.isInteger(source)&&source>=0&&source<=6?source:selectedDay();
+    const safeTarget=Number.isInteger(target)&&target>=0&&target<=6&&target!==safeSource?target:(safeSource+1)%7;
+    const options=names.map((name,index)=>`<option value="${index}" ${index===safeSource?'selected':''}>${esc(name)}</option>`).join('');
+    const targetOptions=names.map((name,index)=>`<option value="${index}" ${index===safeTarget?'selected':''}>${esc(name)}</option>`).join('');
+    const message=pendingError?String(pendingError.message||'No se pudo leer el lote pendiente.'):pending?'Se recuperó una copia pendiente. Se reutilizarán las mismas claves para completar sin duplicar las comidas ya guardadas.':'La copia necesita conexión para verificar y guardar todos los alimentos.';
+    const body=`<div class="nutrition-routine-field"><label for="nutritionCopyDaySource">Copiar las comidas de</label><select id="nutritionCopyDaySource" class="input">${options}</select></div><div class="nutrition-routine-field"><label for="nutritionCopyDayTarget">Agregar una copia en</label><select id="nutritionCopyDayTarget" class="input">${targetOptions}</select></div><p class="nutrition-routine-note">Se copian las comidas y sus cantidades. Los alimentos quedan <strong>sin marcar como consumidos</strong>. Las comidas que ya existan en el destino se conservan; no se reemplaza ni se borra nada.</p><div id="nutritionCopyDayStatus" class="nutrition-routine-status" role="status" aria-live="polite">${esc(message)}</div>`;
+    const overlay=createModal(COPY_MODAL_ID,'🔁 Repetir un día','Copiá tu plan a otro día sin alterar el original.',body,pending?'Reanudar copia': 'Copiar día',runCopyDay);
+    if(pending||pendingError){const sourceField=$('nutritionCopyDaySource');const targetField=$('nutritionCopyDayTarget');if(sourceField)sourceField.disabled=true;if(targetField)targetField.disabled=true}
+    if(pendingError){const primary=overlay?.querySelector('[data-routine-primary]');if(primary)primary.disabled=true}
   }
 
   function copiedMealPayload(meal,targetDay,owner){
     const payload={...meal};
-    delete payload.id;delete payload.created_at;delete payload.updated_at;
+    delete payload.id;delete payload.created_at;delete payload.updated_at;delete payload.save_request_id;
     payload.user_id=String(owner);payload.day=Number(targetDay);
     return payload;
   }
@@ -101,69 +111,88 @@
     if(copyBusy)return;
     const owner=activeUid();const sourceDay=Number($('nutritionCopyDaySource')?.value);const targetDay=Number($('nutritionCopyDayTarget')?.value);
     const status=$('nutritionCopyDayStatus');const primary=overlay.querySelector('[data-routine-primary]');
-    const names=dayNames();
+    const names=dayNames();const safety=window.AgendaNutritionMealSaveSafety;
     if(!owner){if(status)status.textContent='Iniciá sesión para repetir un día.';return}
     if(!Number.isInteger(sourceDay)||sourceDay<0||sourceDay>6||!Number.isInteger(targetDay)||targetDay<0||targetDay>6){if(status)status.textContent='Elegí días válidos.';return}
     if(sourceDay===targetDay){if(status)status.textContent='Elegí un día de destino distinto al día de origen.';return}
+    if(!safety?.readOperation||!safety?.saveOperation||!safety?.clearOperation||!safety?.upsertMeal){if(status)status.textContent='Falta el módulo de operaciones seguras. Recargá la página antes de copiar un día.';return}
     copyBusy=true;if(primary){primary.disabled=true;primary.textContent='Preparando copia…'}
-    const created=[];
+    let operation=null;
+    const scope=`${sourceDay}:${targetDay}`;
     try{
       assertOwner(owner);
       const c=client();
-      const sourceRes=await c.from('nutrition_meals').select('*').eq('user_id',owner).eq('day',sourceDay).order('meal_order',{ascending:true}).order('meal_time',{ascending:true});
-      if(sourceRes.error)throw sourceRes.error;
-      assertOwner(owner);
-      const meals=Array.isArray(sourceRes.data)?sourceRes.data:[];
-      if(!meals.length)throw new Error(`No hay comidas guardadas para ${names[sourceDay]}. No se modificó el destino.`);
-      if(status)status.textContent=`Preparando ${meals.length} comida(s) y cargando sus alimentos…`;
-      const api=nutritionApi();
-      const prepared=await Promise.all(meals.map(async meal=>({meal,items:await api.loadMealItems(String(meal.id),owner)})));
-      assertOwner(owner);
-      const targetRes=await c.from('nutrition_meals').select('id').eq('user_id',owner).eq('day',targetDay);
-      if(targetRes.error)throw targetRes.error;
-      assertOwner(owner);
-      const targetCount=Array.isArray(targetRes.data)?targetRes.data.length:0;
-      if(targetCount){
-        const confirmed=window.confirm(`${names[targetDay]} ya tiene ${targetCount} comida(s). Se agregarán ${meals.length} copias, sin reemplazar lo que ya existe. ¿Continuar?`);
-        if(!confirmed){if(status)status.textContent='Copia cancelada. No se modificó ningún dato.';return}
+      operation=safety.readOperation(owner,'repeat-day',scope);
+      if(operation){
+        const sourceField=$('nutritionCopyDaySource');const targetField=$('nutritionCopyDayTarget');
+        if(sourceField)sourceField.disabled=true;if(targetField)targetField.disabled=true;
+        if(status)status.textContent='↻ Se recuperó una copia pendiente. Se reutilizarán las mismas claves y las comidas ya guardadas no se duplicarán.';
+        const entries=operation.payload?.entries;
+        if(Number(operation.payload?.sourceDay)!==sourceDay||Number(operation.payload?.targetDay)!==targetDay)throw new Error('El diario de copia no coincide con los días elegidos. No se realizó ninguna escritura.');
+        if(!Array.isArray(entries)||!entries.length)throw new Error('El lote pendiente no contiene comidas recuperables. No se sobrescribió.');
+        const requestIds=new Set();
+        for(const entry of entries){
+          if(!entry||typeof entry!=='object'||!Array.isArray(entry.sourceItems)||!entry.destinationPayload||typeof entry.destinationPayload!=='object')throw new Error('Una entrada del lote pendiente está incompleta. No se realizó ninguna escritura.');
+          if(!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(entry.requestId||'')))throw new Error('Una comida del lote pendiente no tiene una clave idempotente válida. No se realizó ninguna escritura.');
+          if(Number(entry.destinationPayload.day)!==targetDay||String(entry.destinationPayload.user_id||owner)!==owner||!String(entry.destinationPayload.title||'').trim())throw new Error('Una comida del lote pendiente no coincide con la cuenta, día o título de destino. No se realizó ninguna escritura.');
+          if(requestIds.has(String(entry.requestId)))throw new Error('El lote contiene claves repetidas. No se realizó ninguna escritura.');
+          requestIds.add(String(entry.requestId));
+        }
+      }else{
+        const sourceRes=await c.from('nutrition_meals').select('*').eq('user_id',owner).eq('day',sourceDay).order('meal_order',{ascending:true}).order('meal_time',{ascending:true});
+        if(sourceRes.error)throw sourceRes.error;assertOwner(owner);
+        const meals=Array.isArray(sourceRes.data)?sourceRes.data:[];
+        if(!meals.length)throw new Error(`No hay comidas guardadas para ${names[sourceDay]}. No se modificó el destino.`);
+        if(status)status.textContent=`Preparando ${meals.length} comida(s) y cargando sus alimentos…`;
+        const api=nutritionApi();
+        const prepared=await Promise.all(meals.map(async meal=>({meal,items:await api.loadMealItems(String(meal.id),owner)})));
         assertOwner(owner);
-      }
-      for(let index=0;index<prepared.length;index++){
-        assertOwner(owner);
-        if(status)status.textContent=`Copiando comida ${index+1} de ${prepared.length}…`;
-        const {meal,items}=prepared[index];
-        const inserted=await c.from('nutrition_meals').insert(copiedMealPayload(meal,targetDay,owner)).select('*').single();
-        if(inserted.error)throw inserted.error;
-        assertOwner(owner);
-        const newId=inserted.data?.id;if(!newId)throw new Error('Supabase no devolvió el identificador de una comida nueva.');
-        created.push({id:String(newId),owner});
-        if(items.length){
-          if(!api.persistMealItems)throw new Error('No está disponible el guardado seguro de alimentos detallados.');
-          const result=await api.persistMealItems(String(newId),copiedItemsForMeal(items,newId,owner));
-          if(result?.ok===false)throw new Error('No se pudo guardar el detalle de alimentos de una de las copias.');
+        const targetRes=await c.from('nutrition_meals').select('id').eq('user_id',owner).eq('day',targetDay);
+        if(targetRes.error)throw targetRes.error;assertOwner(owner);
+        const targetCount=Array.isArray(targetRes.data)?targetRes.data.length:0;
+        if(targetCount){
+          const confirmed=window.confirm(`${names[targetDay]} ya tiene ${targetCount} comida(s). Se agregarán ${meals.length} copias, sin reemplazar lo que ya existe. ¿Continuar?`);
+          if(!confirmed){if(status)status.textContent='Copia cancelada. No se modificó ningún dato.';return}
           assertOwner(owner);
         }
+        const entries=prepared.map(({meal,items})=>({
+          sourceMealId:String(meal.id),requestId:safety.newRequestId(),destinationPayload:copiedMealPayload(meal,targetDay,owner),
+          sourceItems:items.map(item=>({...item})),destinationMealId:null,mainSaved:false,itemsSaved:false
+        }));
+        operation={version:1,operationId:safety.newRequestId(),operationType:'repeat-day',userId:owner,scope,createdAt:new Date().toISOString(),payload:{sourceDay,targetDay,entries}};
+        safety.saveOperation(operation);
+        const sourceField=$('nutritionCopyDaySource');const targetField=$('nutritionCopyDayTarget');
+        if(sourceField)sourceField.disabled=true;if(targetField)targetField.disabled=true;
       }
-      const completedCount=created.length;
+      const entries=operation.payload.entries;
+      for(let index=0;index<entries.length;index++){
+        assertOwner(owner);
+        if(status)status.textContent=`Guardando comida ${index+1} de ${entries.length}… Si se interrumpe la conexión, podés reintentar esta misma copia.`;
+        const entry=entries[index];
+        if(!entry?.requestId||!entry?.destinationPayload||!Array.isArray(entry.sourceItems))throw new Error(`La comida ${index+1} del lote pendiente está incompleta. No se creó otra copia.`);
+        const destination=entry.destinationPayload;
+        const saved=await safety.upsertMeal(c,destination,owner,Number(operation.payload.targetDay),entry.requestId,Number(destination.meal_order));
+        assertOwner(owner);
+        if(!saved?.id)throw new Error(`Supabase no devolvió el identificador de la comida ${index+1}. El lote quedó pendiente.`);
+        entry.destinationMealId=String(saved.id);entry.mainSaved=true;safety.saveOperation(operation);
+        const copied=copiedItemsForMeal(entry.sourceItems,entry.destinationMealId,owner);
+        const result=await nutritionApi().persistMealItems(entry.destinationMealId,copied,owner);
+        if(result?.ok===false)throw new Error(`No se pudo confirmar el detalle de la comida ${index+1}.`);
+        assertOwner(owner);
+        entry.itemsSaved=true;safety.saveOperation(operation);
+      }
+      const completedCount=entries.length;
+      if(!safety.clearOperation(owner,'repeat-day',operation.operationId))throw new Error('La copia terminó, pero no se pudo limpiar el diario local. Reintentá la misma operación para confirmar sin duplicar comidas.');
       close();
       showToast(`✓ Se copiaron ${completedCount} comidas de ${names[sourceDay]} a ${names[targetDay]}. Ningún alimento quedó marcado como consumido.`);
       try{
         if(typeof selectNutritionDay==='function')await selectNutritionDay(targetDay);
         else if(typeof loadNutritionMeals==='function')await loadNutritionMeals(targetDay);
-      }catch(refreshError){console.warn('Las comidas se copiaron, pero no se pudo actualizar la vista del día de destino:',refreshError);showToast('Las comidas se copiaron correctamente. Cambiá al día de destino para actualizar la vista.')} 
+      }catch(refreshError){console.warn('Las comidas se copiaron, pero no se pudo actualizar la vista del día de destino:',refreshError);showToast('Las comidas se copiaron correctamente. Cambiá al día de destino para actualizar la vista.')}
     }catch(error){
-      let rollbackErrors=[];
-      for(const entry of [...created].reverse()){
-        try{
-          assertOwner(entry.owner);
-          const {data,error:deleteError}=await client().rpc('delete_nutrition_meal_and_items',{p_meal_id:entry.id});
-          if(deleteError||data!==true)rollbackErrors.push(entry.id);
-        }catch(_){rollbackErrors.push(entry.id)}
-      }
-      const prefix=rollbackErrors.length?` Falló la limpieza de ${rollbackErrors.length} copia(s) (${rollbackErrors.join(', ')}); verificá Alimentación antes de volver a intentar.`:' No se dejó ninguna copia parcial confirmada.';
-      if(status)status.textContent=`No se completó la copia: ${error?.message||'error desconocido'}.${prefix}`;
-      if(primary){primary.disabled=false;primary.textContent='Reintentar copia'}
       console.error('Error al repetir el día de Alimentación:',error);
+      if(status)status.textContent=`No se completó la copia: ${error?.message||'error desconocido'}. ${operation?'El lote queda guardado localmente; «Reintentar copia» reutiliza las mismas claves y no elimina filas a ciegas.':'No se inició ninguna escritura de comidas.'}`;
+      if(primary){primary.disabled=false;primary.textContent=operation?'Reintentar copia pendiente':'Reintentar copia'}
     }finally{
       copyBusy=false;
       const stillOpen=$(COPY_MODAL_ID);const stillPrimary=stillOpen?.querySelector('[data-routine-primary]');
@@ -257,34 +286,69 @@
     undoTimeout=setTimeout(()=>{if(undoToast===toast){toast.remove();undoToast=null;undoSnapshot=null;undoTimeout=null}},30000);
   }
 
+  function comparableValue(value){
+    if(value===null||value===undefined)return '';
+    if(typeof value==='object')return JSON.stringify(value);
+    return String(value);
+  }
+  function rowMatchesSnapshot(row,snapshot,fields){return fields.every(field=>comparableValue(row?.[field])===comparableValue(snapshot?.[field]))}
+  const MEAL_RESTORE_FIELDS=['id','user_id','day','meal_type','meal_order','title','foods','calories','protein_g','carbs_g','fat_g','meal_time','description','save_request_id'];
+  const ITEM_RESTORE_FIELDS=['id','user_id','meal_id','catalog_id','user_food_id','source','external_id','data_source_label','data_source_url','nutrition_quality_status','nutrition_missing_fields','nutrition_verified_at','name','brand','quantity','unit','quantity_in_grams','preparation_state','density_g_per_ml','grams_per_unit','grams_per_portion','serving_size','calories_per_100g','protein_per_100g','carbs_per_100g','fat_per_100g','fiber_per_100g','ingredients','categories','labels','image_url','consumed','consumed_at'];
+
   async function restoreLastDeletion(){
     if(undoBusy||!undoSnapshot)return;undoBusy=true;const snapshot=undoSnapshot;const button=undoToast?.querySelector('button');if(button){button.disabled=true;button.textContent='Restaurando…'}
     try{
       assertOwner(snapshot.owner);const c=client();
-      const found=await c.from('nutrition_meals').select('id').eq('id',String(snapshot.meal.id)).eq('user_id',snapshot.owner).maybeSingle();
+      const mealId=String(snapshot.meal?.id||'');if(!mealId)throw new Error('La copia de recuperación no contiene un ID de comida válido.');
+      const found=await c.from('nutrition_meals').select('*').eq('id',mealId).eq('user_id',snapshot.owner).maybeSingle();
       if(found.error)throw found.error;assertOwner(snapshot.owner);
-      if(found.data)throw new Error('La comida ya existe nuevamente; no se creó otra copia para evitar duplicados.');
-      const mealPayload={...snapshot.meal,user_id:snapshot.owner};delete mealPayload.created_at;delete mealPayload.updated_at;
-      const inserted=await c.from('nutrition_meals').insert(mealPayload).select('*').single();if(inserted.error)throw inserted.error;assertOwner(snapshot.owner);
-      if(snapshot.items.length){
-        const restoredItems=snapshot.items.map(item=>{const row={...item,meal_id:String(snapshot.meal.id),user_id:snapshot.owner};delete row.created_at;delete row.updated_at;return row});
-        const itemsRes=await c.from('nutrition_meal_items').insert(restoredItems);
-        if(itemsRes.error){
-          let cleanupError=null;
-          try{const cleanup=await c.rpc('delete_nutrition_meal_and_items',{p_meal_id:String(snapshot.meal.id)});if(cleanup.error||cleanup.data!==true)cleanupError=cleanup.error||new Error('Supabase no confirmó la eliminación compensatoria.')}catch(error){cleanupError=error}
-          if(cleanupError){console.error('No se pudo revertir completamente una restauración interrumpida:',cleanupError);throw new Error(`${itemsRes.error.message||'Falló el detalle de alimentos'}. Además, no se pudo limpiar la comida incompleta: ${cleanupError.message||'error de limpieza'}. No vuelvas a intentar a ciegas; revisá esa comida en Supabase.`)}
-          throw itemsRes.error;
-        }
-        assertOwner(snapshot.owner);
+      let restoredMeal=found.data||null;
+      if(restoredMeal&&!rowMatchesSnapshot(restoredMeal,{...snapshot.meal,user_id:snapshot.owner},MEAL_RESTORE_FIELDS)){
+        throw new Error('Ya existe una comida con ese ID, pero sus datos no coinciden con la instantánea que se quería restaurar. No la sobrescribí; revisá el registro para evitar perder cambios más recientes.');
       }
-      const restoredMeal=inserted.data||snapshot.meal;
-      document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-saved',{detail:{mealId:String(restoredMeal.id),meal:restoredMeal,day:Number(restoredMeal.day),userId:snapshot.owner,restored:true}}));
+      if(!restoredMeal){
+        const mealPayload={...snapshot.meal,user_id:snapshot.owner};delete mealPayload.created_at;delete mealPayload.updated_at;
+        const inserted=await c.from('nutrition_meals').upsert(mealPayload,{onConflict:'id'}).select('*').single();
+        if(inserted.error)throw inserted.error;assertOwner(snapshot.owner);
+        if(!inserted.data?.id)throw new Error('Supabase no confirmó la comida restaurada. El intento sigue disponible para reintentar con el mismo ID.');
+        restoredMeal=inserted.data;
+      }
+      const originalItems=Array.isArray(snapshot.items)?snapshot.items:[];
+      const ids=originalItems.map(item=>String(item?.id||''));
+      if(originalItems.some((item,index)=>!ids[index])||new Set(ids).size!==ids.length)throw new Error('La instantánea de alimentos contiene identificadores faltantes o repetidos. No se restauró parcialmente.');
+      if(originalItems.length){
+        const existingResult=await c.from('nutrition_meal_items').select('*').eq('user_id',snapshot.owner).in('id',ids);
+        if(existingResult.error)throw existingResult.error;assertOwner(snapshot.owner);
+        const existingRows=Array.isArray(existingResult.data)?existingResult.data:[];
+        const existingById=new Map(existingRows.map(row=>[String(row.id),row]));
+        for(const item of originalItems){
+          const existing=existingById.get(String(item.id));
+          if(existing){
+            if(String(existing.user_id)!==String(snapshot.owner)||String(existing.meal_id)!==mealId)throw new Error(`El alimento ${item.name||item.id} ya está asociado a otro registro. No se lo movió ni sobrescribió.`);
+            if(!rowMatchesSnapshot(existing,{...item,user_id:snapshot.owner,meal_id:mealId},ITEM_RESTORE_FIELDS))throw new Error(`El alimento «${item.name||item.id}» ya existe con datos diferentes. No se sobrescribió una posible edición más reciente.`);
+          }
+        }
+        const missing=originalItems.filter(item=>!existingById.has(String(item.id))).map(item=>{
+          const row={...item,user_id:snapshot.owner,meal_id:mealId};delete row.created_at;delete row.updated_at;return row;
+        });
+        if(missing.length){
+          const restoredItems=await c.from('nutrition_meal_items').insert(missing);
+          if(restoredItems.error)throw restoredItems.error;
+          assertOwner(snapshot.owner);
+        }
+      }
+      const verify=await c.from('nutrition_meal_items').select('id').eq('meal_id',mealId).eq('user_id',snapshot.owner);
+      if(verify.error)throw verify.error;assertOwner(snapshot.owner);
+      const verifiedIds=new Set((Array.isArray(verify.data)?verify.data:[]).map(row=>String(row.id)));
+      const missingAfterVerify=originalItems.filter(item=>!verifiedIds.has(String(item.id)));
+      if(missingAfterVerify.length)throw new Error(`La comida existe, pero faltan ${missingAfterVerify.length} alimento(s) por restaurar. El reintento conserva los mismos identificadores.`);
+      document.dispatchEvent(new CustomEvent('agenda:nutrition-meal-saved',{detail:{mealId,meal:restoredMeal,day:Number(restoredMeal.day),userId:snapshot.owner,restored:true}}));
       undoSnapshot=null;removeUndoToast();
       if(typeof selectNutritionDay==='function')await selectNutritionDay(Number(restoredMeal.day));
-      showToast('✓ Comida y alimentos restaurados. Se conservaron los identificadores para mantener los vínculos del historial.');
+      showToast('✓ Comida y alimentos restaurados. Si se perdió una respuesta, podés reintentar sin duplicar sus identificadores.');
     }catch(error){
       console.error('No se pudo deshacer la eliminación de Alimentación:',error);
-      if(undoToast){const message=undoToast.querySelector('span');if(message)message.textContent=`No se pudo restaurar: ${error?.message||'error desconocido'}. La opción sigue disponible mientras no venza.`;const btn=undoToast.querySelector('button');if(btn){btn.disabled=false;btn.textContent='Reintentar'}}
+      if(undoToast){const message=undoToast.querySelector('span');if(message)message.textContent=`No se pudo confirmar la restauración: ${error?.message||'error desconocido'}. La opción sigue disponible mientras no venza; reintentar no elimina filas para compensar.`;const btn=undoToast.querySelector('button');if(btn){btn.disabled=false;btn.textContent='Reintentar restauración'}}
     }finally{undoBusy=false}
   }
 

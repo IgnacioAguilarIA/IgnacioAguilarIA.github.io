@@ -5,6 +5,8 @@
 (function(){
   'use strict';
   const PREFIX='agendaNutritionMealPendingSave:v1:';
+  const OP_PREFIX='agendaNutritionMultiStepPending:v1:';
+  const OPERATION_TYPES=new Set(['duplicate-meal','repeat-day']);
   const REQUEST_ID=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   const DAY_MIN=0,DAY_MAX=6,MAX_RECORD_CHARS=1_500_000;
   function key(userId,day){return PREFIX+encodeURIComponent(String(userId))+':'+String(Number(day))}
@@ -58,6 +60,56 @@
       localStorage.removeItem(storageKey);return localStorage.getItem(storageKey)===null;
     }catch(_){return false}
   }
+
+  function operationKey(userId,type){
+    if(!userId||!OPERATION_TYPES.has(String(type)))throw new Error('La cuenta o el tipo de operación pendiente no es válido.');
+    return OP_PREFIX+encodeURIComponent(String(userId))+':'+String(type);
+  }
+  function validateOperation(record,userId,type){
+    if(!record||typeof record!=='object'||Array.isArray(record)||record.version!==1)throw new Error('La operación pendiente no tiene una versión compatible. No se sobrescribió.');
+    if(String(record.userId)!==String(userId)||String(record.operationType)!==String(type))throw new Error('La operación pendiente no corresponde a esta cuenta o función. No se mezclaron datos.');
+    if(!REQUEST_ID.test(String(record.operationId||'')))throw new Error('La operación pendiente no tiene una clave segura válida. No se sobrescribió.');
+    if(typeof record.scope!=='string'||!record.scope.trim()||record.scope.length>300)throw new Error('El alcance de la operación pendiente no es válido.');
+    if(!record.payload||typeof record.payload!=='object'||Array.isArray(record.payload))throw new Error('La instantánea de la operación pendiente está incompleta.');
+    if(!record.createdAt||!Number.isFinite(Date.parse(record.createdAt)))throw new Error('La fecha de la operación pendiente no es válida.');
+    return record;
+  }
+  function readOperation(userId,type,scope=null){
+    if(!userId||!OPERATION_TYPES.has(String(type)))return null;
+    let raw;
+    try{raw=localStorage.getItem(operationKey(userId,type))}catch(_){throw new Error('No se pudo leer el diario local de operaciones. La operación no se reinició.')}
+    if(!raw)return null;
+    if(raw.length>MAX_RECORD_CHARS)throw new Error('La operación pendiente supera el tamaño local permitido. No se sobrescribió.');
+    let record;try{record=JSON.parse(raw)}catch(_){throw new Error('El diario de una operación pendiente es ilegible. No se sobrescribió para proteger datos.')}
+    validateOperation(record,userId,type);
+    if(scope!==null&&String(record.scope)!==String(scope))throw new Error('Hay otra operación de esta función todavía pendiente para esta cuenta. Reanudá primero la operación pendiente para evitar duplicados.');
+    return record;
+  }
+  function saveOperation(record){
+    validateOperation(record,record?.userId,record?.operationType);
+    const storageKey=operationKey(record.userId,record.operationType);let priorRaw;
+    try{priorRaw=localStorage.getItem(storageKey)}catch(_){throw new Error('No se pudo leer el diario local. No se inició ni sobrescribió la operación.')}
+    if(priorRaw){
+      let prior;try{prior=JSON.parse(priorRaw)}catch(_){throw new Error('Ya existe una operación pendiente ilegible. No se sobrescribió.')}
+      validateOperation(prior,record.userId,record.operationType);
+      if(String(prior.operationId)!==String(record.operationId)||String(prior.scope)!==String(record.scope))throw new Error('Existe otra operación pendiente de esta función para la cuenta. Completala o revisá su estado antes de comenzar otra.');
+    }
+    let serialized;try{serialized=JSON.stringify(record)}catch(_){throw new Error('No se pudo preparar la instantánea de la operación. No se envió a Supabase.')}
+    if(serialized.length>MAX_RECORD_CHARS)throw new Error('La instantánea supera el tamaño permitido para recuperación local. No se inició la operación.')
+    try{localStorage.setItem(storageKey,serialized)}catch(_){throw new Error('No se pudo guardar el diario local. No se inició la operación para evitar duplicados.')}
+    return true;
+  }
+  function clearOperation(userId,type,operationId){
+    if(!userId||!OPERATION_TYPES.has(String(type))||!REQUEST_ID.test(String(operationId||'')))return false;
+    const storageKey=operationKey(userId,type);
+    try{
+      const raw=localStorage.getItem(storageKey);if(!raw)return true;
+      let record;try{record=JSON.parse(raw)}catch(_){return false}
+      if(String(record?.userId)!==String(userId)||String(record?.operationType)!==String(type)||String(record?.operationId)!==String(operationId))return false;
+      localStorage.removeItem(storageKey);return localStorage.getItem(storageKey)===null;
+    }catch(_){return false}
+  }
+
   async function upsertMeal(client,payload,userId,day,requestId,mealOrder){
     if(!client||typeof client.from!=='function')throw new Error('No está disponible la conexión con Supabase. El borrador local sigue conservado.');
     if(!userId||!REQUEST_ID.test(String(requestId||'')))throw new Error('La cuenta o la clave segura del guardado no es válida.');
@@ -76,5 +128,5 @@
     if(!result?.data?.id)throw new Error('Supabase no devolvió el identificador de la comida. El borrador quedó conservado para reintentar sin duplicar.');
     return result.data;
   }
-  window.AgendaNutritionMealSaveSafety=Object.freeze({newRequestId,readPending,savePending,clearPending,upsertMeal,storageKey:key});
+  window.AgendaNutritionMealSaveSafety=Object.freeze({newRequestId,readPending,savePending,clearPending,upsertMeal,storageKey:key,readOperation,saveOperation,clearOperation,operationStorageKey:operationKey});
 })();

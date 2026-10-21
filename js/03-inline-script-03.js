@@ -754,7 +754,7 @@ $('saveMealBtn').onclick=async()=>{
     if(!window.AgendaNutritionData?.persistMealItems){
       structuredSaveError=new Error('No está disponible el módulo que guarda los alimentos detallados. La comida principal se conservó; recargá la página y reintentá antes de cerrar este formulario.');
     }else if(savedMealId){
-      try{await window.AgendaNutritionData.persistMealItems(savedMealId,structuredFoods)}
+      try{await window.AgendaNutritionData.persistMealItems(savedMealId,structuredFoods,userId)}
       catch(err){structuredSaveError=err;console.warn('La comida principal se guardó, pero falló el detalle de alimentos:',err);window.AgendaNutritionSync?.setStatus('error','La comida se guardó, pero faltan alimentos detallados por sincronizar.')}
     }
     if(String(currentUser?.id||'')!==userId){

@@ -309,9 +309,13 @@
   }
   function itemExactKey(item){return itemBaseKey(item)+'|'+String(num(item?.quantity));}
 
-  function persistMealItems(mealId,items){
-    const uid=currentUserId();
-    if(!uid||!mealId||!Array.isArray(items))return Promise.resolve({ok:true,skipped:true});
+  function persistMealItems(mealId,items,expectedUid=null){
+    const activeUid=currentUserId();
+    const uid=expectedUid===null||expectedUid===undefined?activeUid:String(expectedUid);
+    if(!uid)throw new Error('No hay una cuenta activa para guardar los alimentos detallados. No se omitió el guardado silenciosamente.');
+    if(activeUid!==uid)throw new Error('La cuenta activa cambió antes de guardar los alimentos detallados. Volvé a la cuenta que inició la operación; no se mezclaron datos.');
+    if(!mealId||!String(mealId).trim())throw new Error('Falta el identificador de la comida. No se guardaron alimentos sin una comida asociada.');
+    if(!Array.isArray(items))throw new Error('La lista de alimentos detallados no es válida. No se omitió el guardado.');
     const key=`${uid}::${String(mealId)}`;
     const previous=mealSaveQueues.get(key)||Promise.resolve();
     const operation=previous.catch(()=>{}).then(()=>persistMealItemsUnlocked(mealId,items,uid));
