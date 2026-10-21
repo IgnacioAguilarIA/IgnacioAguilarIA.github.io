@@ -1,0 +1,20 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+const sql = fs.readFileSync(path.join(root, 'sql/15-nutrition-trigger-function-rpc-lockdown.sql'), 'utf8');
+const postcheck = fs.readFileSync(path.join(root, 'sql/16-nutrition-sync-postcheck-readonly.sql'), 'utf8');
+
+assert.match(sql, /BEGIN\s*;/i, 'migration must be transactional');
+assert.match(sql, /p\.prorettype\s*=\s*'trigger'::regtype/i, 'only trigger-returning functions are targeted');
+assert.match(sql, /FROM PUBLIC, anon, authenticated/i, 'revoke direct execute from untrusted API roles');
+assert.match(sql, /has_function_privilege\('anon'/i, 'postflight checks anon effective privilege');
+assert.match(sql, /has_function_privilege\('authenticated'/i, 'postflight checks authenticated effective privilege');
+assert.match(sql, /p\.prosecdef/i, 'preflight excludes SECURITY DEFINER trigger functions pending manual review');
+assert.doesNotMatch(sql, /DELETE\s+FROM\s+public\./i, 'migration must not delete user data');
+assert.doesNotMatch(sql, /UPDATE\s+public\./i, 'migration must not update user data');
+assert.match(postcheck, /'meal_items_without_parent'/i, 'postcheck reports orphan meal detail rows');
+assert.match(postcheck, /'meal_items_with_owner_mismatch'/i, 'postcheck reports parent-owner mismatch counts');
+assert.match(postcheck, /'meal_items_linked_to_other_users_food'/i, 'postcheck reports cross-owner food links');
+assert.match(postcheck, /has_function_privilege\('authenticated'/i, 'postcheck reports trigger function effective privileges');
+console.log('D3 trigger-function lockdown: 11 checks passed');
