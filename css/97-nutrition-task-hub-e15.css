@@ -1,0 +1,277 @@
+/* Agenda FICH — E15: herramientas ordenadas por tarea y tarjetas de comida progresivas.
+   Todos los selectores quedan limitados a Alimentación. */
+
+#nutritionPanel .nutrition-actions .e13-tools-disclosure {
+  display: block !important;
+  flex: 1 0 100%;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--n11-border, rgba(148,163,184,.28));
+  border-radius: 16px;
+  overflow: clip;
+  background: var(--n11-surface, #152238);
+  color: var(--n11-text, #e7edf5);
+}
+#nutritionPanel .nutrition-actions .e13-tools-disclosure > summary {
+  display: flex !important;
+  min-height: 48px;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 13px;
+  cursor: pointer;
+  list-style: none;
+  border-bottom: 1px solid transparent;
+}
+#nutritionPanel .nutrition-actions .e13-tools-disclosure[open] > summary {
+  border-bottom-color: var(--n11-border, rgba(148,163,184,.28));
+}
+#nutritionPanel .nutrition-actions .e13-tools-disclosure > summary::-webkit-details-marker { display: none; }
+#nutritionPanel .nutrition-actions .e13-tools-disclosure > summary:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--n11-blue, #3b82f6) 72%, transparent);
+  outline-offset: -3px;
+}
+#nutritionPanel .e13-tools-summary-text { display: grid; flex: 1; min-width: 0; gap: 2px; }
+#nutritionPanel .e13-tools-count { margin-left: auto; flex: 0 0 auto; }
+#nutritionPanel .e13-tools-summary-text strong { font-size: .88rem; }
+#nutritionPanel .e13-tools-summary-text small { font-size: .7rem; }
+#nutritionPanel .e13-tools-count { min-width: 27px; height: 27px; font-size: .75rem; }
+#nutritionPanel .nutrition-actions .e13-tools-content {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 11px;
+  padding: 12px;
+  border-top: 0;
+}
+#nutritionPanel .e15-tool-group {
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid var(--n11-border, rgba(148,163,184,.22));
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--n11-surface-soft, #1b2b43) 54%, transparent);
+}
+#nutritionPanel .e15-tool-group[hidden] { display: none !important; }
+#nutritionPanel .e15-tool-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 9px;
+}
+#nutritionPanel .e15-tool-group-icon {
+  display: grid;
+  place-items: center;
+  width: 31px;
+  height: 31px;
+  flex: 0 0 31px;
+  border: 1px solid color-mix(in srgb, var(--n11-blue, #3b82f6) 23%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--n11-blue, #3b82f6) 10%, transparent);
+  font-size: .95rem;
+}
+#nutritionPanel .e15-tool-group-title-wrap { flex: 1; min-width: 0; }
+#nutritionPanel .e15-tool-group-title-wrap h4 {
+  margin: 0;
+  color: var(--n11-text, #e7edf5);
+  font-size: .77rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+#nutritionPanel .e15-tool-group-title-wrap small {
+  display: block;
+  margin-top: 2px;
+  color: var(--n11-muted, #94a3b8);
+  font-size: .64rem;
+  line-height: 1.3;
+}
+#nutritionPanel .e15-tool-group-count {
+  color: var(--n11-muted, #94a3b8);
+  font-size: .67rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+#nutritionPanel .e15-tool-group-actions { display: grid; grid-template-columns: minmax(0, 1fr); gap: 7px; }
+#nutritionPanel .nutrition-actions .e15-tool-group-actions > button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  padding: 9px 10px;
+  border: 1px solid var(--n11-border, rgba(148,163,184,.28));
+  border-radius: 10px;
+  background: var(--n11-surface, #152238);
+  color: var(--n11-text, #e7edf5);
+  font: inherit;
+  font-size: .75rem;
+  font-weight: 740;
+  line-height: 1.32;
+  text-align: left;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease, transform .15s ease;
+}
+#nutritionPanel .nutrition-actions .e15-tool-group-actions > button:hover:not(:disabled) {
+  border-color: var(--n11-blue, #60a5fa);
+  background: color-mix(in srgb, var(--n11-blue, #3b82f6) 8%, var(--n11-surface, #152238));
+}
+#nutritionPanel .nutrition-actions .e15-tool-group-actions > button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--n11-blue, #3b82f6) 72%, transparent);
+  outline-offset: 2px;
+}
+#nutritionPanel .nutrition-actions .e15-tool-group-actions > button:disabled { opacity: .6; cursor: not-allowed; }
+
+/* Cards: the title/actions stay visible; supporting detail can be expanded on demand. */
+#nutritionPanel #mealList .meal-card {
+  min-width: 0;
+  overflow: clip;
+  padding: 0;
+  border-radius: 16px;
+  border: 1px solid var(--n11-border, rgba(148,163,184,.26));
+  background: var(--n11-surface, #152238);
+  box-shadow: 0 5px 15px rgba(0,0,0,.07);
+  transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+#nutritionPanel #mealList .meal-card::before { display: none; }
+#nutritionPanel #mealList .meal-card-head {
+  min-width: 0;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 15px;
+}
+#nutritionPanel #mealList .meal-card-head > div:first-child { min-width: 0; flex: 1; }
+#nutritionPanel #mealList .meal-name {
+  margin: 0;
+  color: var(--n11-text, #e7edf5);
+  font-size: .98rem;
+  font-weight: 850;
+  line-height: 1.32;
+  overflow-wrap: anywhere;
+}
+#nutritionPanel #mealList .e15-meal-card-kcal {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 23px;
+  margin-top: 6px;
+  padding: 3px 8px;
+  border: 1px solid rgba(74,163,119,.26);
+  border-radius: 999px;
+  background: rgba(74,163,119,.11);
+  color: var(--n11-text, #d7f4e4);
+  font-size: .69rem;
+  font-weight: 850;
+  font-variant-numeric: tabular-nums;
+}
+#nutritionPanel #mealList .e15-meal-card-preview {
+  margin: 6px 0 0;
+  color: var(--n11-muted, #94a3b8);
+  font-size: .76rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+#nutritionPanel #mealList .meal-actions { align-items: center; gap: 6px; flex-shrink: 0; }
+#nutritionPanel #mealList .meal-actions .meal-action {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  color: var(--n11-text, #e7edf5);
+  background: var(--n11-surface-soft, #1b2b43);
+}
+#nutritionPanel #mealList .e15-meal-details {
+  min-width: 0;
+  border-top: 1px solid var(--n11-border, rgba(148,163,184,.22));
+  background: color-mix(in srgb, var(--n11-surface-soft, #1b2b43) 42%, transparent);
+}
+#nutritionPanel #mealList .e15-meal-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 42px;
+  padding: 9px 15px;
+  color: var(--n11-muted, #a3b1c6);
+  font-size: .74rem;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+#nutritionPanel #mealList .e15-meal-details > summary::-webkit-details-marker { display: none; }
+#nutritionPanel #mealList .e15-meal-details > summary:focus-visible { outline: 3px solid color-mix(in srgb, var(--n11-blue, #3b82f6) 72%, transparent); outline-offset: -3px; }
+#nutritionPanel #mealList .e15-meal-details-chevron { font-size: 1rem; transition: transform .16s ease; }
+#nutritionPanel #mealList .e15-meal-details[open] .e15-meal-details-chevron { transform: rotate(180deg); }
+#nutritionPanel #mealList .e15-meal-details-body { display: grid; gap: 8px; min-width: 0; padding: 0 15px 14px; }
+#nutritionPanel #mealList .e15-meal-details-body .meal-foods,
+#nutritionPanel #mealList .e15-meal-details-body .meal-description { margin: 0; color: var(--n11-muted, #a3b1c6); font-size: .78rem; line-height: 1.5; overflow-wrap: anywhere; white-space: pre-wrap; }
+#nutritionPanel #mealList .e15-meal-details-body .meal-meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; }
+#nutritionPanel #mealList .e15-meal-details-body .meal-chip { border-radius: 999px; }
+
+body.light #nutritionPanel .nutrition-actions .e13-tools-disclosure,
+body.light #nutritionPanel .e15-tool-group { background: #fff; border-color: #dce5ef; color: #172338; }
+body.light #nutritionPanel .e15-tool-group-title-wrap h4 { color: #172338; }
+body.light #nutritionPanel .e15-tool-group-title-wrap small,
+body.light #nutritionPanel .e15-tool-group-count { color: #64748b; }
+body.light #nutritionPanel .e15-tool-group-icon { background: #eff6ff; border-color: #dbeafe; }
+body.light #nutritionPanel .nutrition-actions .e15-tool-group-actions > button { background: #f8fafc; color: #233147; border-color: #dce5ef; }
+body.light #nutritionPanel .nutrition-actions .e15-tool-group-actions > button:hover:not(:disabled) { background: #eff6ff; border-color: #93c5fd; }
+body.light #nutritionPanel #mealList .meal-card { background: #fff; border-color: #dce5ef; box-shadow: 0 5px 17px rgba(15,23,42,.055); }
+body.light #nutritionPanel #mealList .meal-name { color: #172338; }
+body.light #nutritionPanel #mealList .e15-meal-card-kcal { color: #166534; background: #ecfdf5; border-color: #bbf7d0; }
+body.light #nutritionPanel #mealList .e15-meal-card-preview { color: #64748b; }
+body.light #nutritionPanel #mealList .meal-actions .meal-action { color: #334155; background: #f8fafc; border-color: #dce5ef; }
+body.light #nutritionPanel #mealList .e15-meal-details { background: #f8fafc; border-top-color: #e2e8f0; }
+body.light #nutritionPanel #mealList .e15-meal-details > summary { color: #53647a; }
+body.light #nutritionPanel #mealList .e15-meal-details-body .meal-foods,
+body.light #nutritionPanel #mealList .e15-meal-details-body .meal-description { color: #526176; }
+
+@media (min-width: 1000px) {
+  #nutritionPanel .nutrition-actions .e13-tools-content { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (min-width: 701px) and (max-width: 999px) {
+  #nutritionPanel .nutrition-actions .e13-tools-content { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  #nutritionPanel .nutrition-actions .e13-tools-content { grid-template-columns: minmax(0, 1fr) !important; gap: 9px; padding: 10px; }
+  #nutritionPanel .e15-tool-group { padding: 10px; }
+  #nutritionPanel .e15-tool-group-head { margin-bottom: 8px; }
+  #nutritionPanel .e15-tool-group-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #nutritionPanel .nutrition-actions .e15-tool-group-actions > button { min-height: 44px; padding: 9px; font-size: .73rem; }
+  #nutritionPanel #mealList .meal-card-head { padding: 13px 12px; gap: 9px; }
+  #nutritionPanel #mealList .meal-name { font-size: .91rem; }
+  #nutritionPanel #mealList .meal-actions { gap: 5px; }
+  #nutritionPanel #mealList .meal-actions .meal-action { width: 44px; height: 44px; }
+  #nutritionPanel #mealList .e15-meal-card-preview { font-size: .73rem; }
+  #nutritionPanel #mealList .e15-meal-details > summary { min-height: 44px; padding: 10px 12px; }
+  #nutritionPanel #mealList .e15-meal-details-body { padding: 0 12px 12px; }
+}
+@media (max-width: 380px) {
+  #nutritionPanel .e15-tool-group-actions { grid-template-columns: minmax(0, 1fr); }
+}
+@media (hover: hover) and (pointer: fine) {
+  #nutritionPanel #mealList .meal-card:hover { border-color: var(--n11-border-strong, #91a8c5); box-shadow: 0 9px 22px rgba(0,0,0,.09); }
+  #nutritionPanel #mealList .meal-card:hover .meal-actions { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel .nutrition-actions .e15-tool-group-actions > button,
+  #nutritionPanel #mealList .meal-card,
+  #nutritionPanel #mealList .e15-meal-details-chevron { transition: none !important; }
+}
+@media (forced-colors: active) {
+  #nutritionPanel .e15-tool-group,
+  #nutritionPanel .nutrition-actions .e13-tools-disclosure,
+  #nutritionPanel #mealList .meal-card,
+  #nutritionPanel #mealList .e15-meal-details { border: 1px solid CanvasText; }
+}
+
+/* Tablets and phones use the larger touch target even when the viewport is wider than the mobile breakpoint. */
+@media (hover: none) and (pointer: coarse) {
+  #nutritionPanel .nutrition-actions .e15-tool-group-actions > button { min-height: 44px; }
+  #nutritionPanel #mealList .meal-actions .meal-action { width: 44px; height: 44px; }
+}
