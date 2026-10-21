@@ -1,0 +1,239 @@
+{
+  "passed": true,
+  "checks": 8,
+  "failures": [],
+  "results": [
+    {
+      "viewport": "320x740-mobile",
+      "theme": "light",
+      "hasGlance": true,
+      "kcal": "350 kcal",
+      "protein": "Proteína 19 g",
+      "time": "◷ 08:00",
+      "metaPreserved": true,
+      "summaryText": "Ver detalles",
+      "summaryAria": "Mostrar ingredientes, notas y nutrientes de la comida",
+      "controls": "e16-meal-details-meal-e16-body",
+      "directHead": true,
+      "actions": [
+        {
+          "label": "Editar",
+          "height": 44
+        },
+        {
+          "label": "Eliminar",
+          "height": 44
+        }
+      ],
+      "overflow": false,
+      "detailsOpen": false,
+      "editDeleteHandlers": [
+        1,
+        1
+      ]
+    },
+    {
+      "viewport": "320x740-mobile",
+      "theme": "dark",
+      "hasGlance": true,
+      "kcal": "350 kcal",
+      "protein": "Proteína 19 g",
+      "time": "◷ 08:00",
+      "metaPreserved": true,
+      "summaryText": "Ver detalles",
+      "summaryAria": "Mostrar ingredientes, notas y nutrientes de la comida",
+      "controls": "e16-meal-details-meal-e16-body",
+      "directHead": true,
+      "actions": [
+        {
+          "label": "Editar",
+          "height": 44
+        },
+        {
+          "label": "Eliminar",
+          "height": 44
+        }
+      ],
+      "overflow": false,
+      "detailsOpen": false,
+      "editDeleteHandlers": [
+        1,
+        1
+      ]
+    },
+    {
+      "viewport": "390x844-mobile",
+      "theme": "light",
+      "hasGlance": true,
+      "kcal": "350 kcal",
+      "protein": "Proteína 19 g",
+      "time": "◷ 08:00",
+      "metaPreserved": true,
+      "summaryText": "Ver detalles",
+      "summaryAria": "Mostrar ingredientes, notas y nutrientes de la comida",
+      "controls": "e16-meal-details-meal-e16-body",
+      "directHead": true,
+      "actions": [
+        {
+          "label": "Editar",
+          "height": 44
+        },
+        {
+          "label": "Eliminar",
+          "height": 44
+        }
+      ],
+      "overflow": false,
+      "detailsOpen": false,
+      "editDeleteHandlers": [
+        1,
+        1
+      ]
+    },
+    {
+      "viewport": "390x844-mobile",
+      "theme": "dark",
+      "hasGlance": true,
+      "kcal": "350 kcal",
+      "protein": "Proteína 19 g",
+      "time": "◷ 08:00",
+      "metaPreserved": true,
+      "summaryText": "Ver detalles",
+      "summaryAria": "Mostrar ingredientes, notas y nutrientes de la comida",
+      "controls": "e16-meal-details-meal-e16-body",
+      "directHead": true,
+      "actions": [
+        {
+          "label": "Editar",
+          "height": 44
+        },
+        {
+          "label": "Eliminar",
+          "height": 44
+        }
+      ],
+      "overflow": false,
+      "detailsOpen": false,
+      "editDeleteHandlers": [
+        1,
+        1
+      ]
+    },
+    {
+      "viewport": "768x1024-tablet",
+      "theme": "light",
+      "hasGlance": true,
+      "kcal": "350 kcal",
+      "protein": "Proteína 19 g",
+      "time": "◷ 08:00",
+      "metaPreserved": true,
+      "summaryText": "Ocultar detalles",
+      "summaryAria": "Ocultar ingredientes, notas y nutrientes de la comida",
+      "controls": "e16-meal-details-meal-e16-body",
+      "directHead": true,
+      "actions": [
+        {
+          "label": "Editar",
+          "height": 44
+        },
+        {
+          "label": "Eliminar",
+          "height": 44
+        }
+      ],
+      "overflow": false,
+      "detailsOpen": true,
+      "editDeleteHandlers": [
+        1,
+        1
+      ]
+    },
+    {
+      "viewport": "768x1024-tablet",
+      "theme": "dark",
+      "hasGlance": true,
+      "kcal": "350 kcal",
+      "protein": "Proteína 19 g",
+      "time": "◷ 08:00",
+      "metaPreserved": true,
+      "summaryText": "Ocultar detalles",
+      "summaryAria": "Ocultar ingredientes, notas y nutrientes de la comida",
+      "controls": "e16-meal-details-meal-e16-body",
+      "directHead": true,
+      "actions": [
+        {
+          "label": "Editar",
+          "height": 44
+        },
+        {
+          "label": "Eliminar",
+          "height": 44
+        }
+      ],
+      "overflow": false,
+      "detailsOpen": true,
+      "editDeleteHandlers": [
+        1,
+        1
+      ]
+    },
+    {
+      "viewport": "1366x768-desktop",
+      "theme": "light",
+      "hasGlance": true,
+      "kcal": "350 kcal",
+      "protein": "Proteína 19 g",
+      "time": "◷ 08:00",
+      "metaPreserved": true,
+      "summaryText": "Ocultar detalles",
+      "summaryAria": "Ocultar ingredientes, notas y nutrientes de la comida",
+      "controls": "e16-meal-details-meal-e16-body",
+      "directHead": true,
+      "actions": [
+        {
+          "label": "Editar",
+          "height": 44
+        },
+        {
+          "label": "Eliminar",
+          "height": 44
+        }
+      ],
+      "overflow": false,
+      "detailsOpen": true,
+      "editDeleteHandlers": [
+        1,
+        1
+      ]
+    },
+    {
+      "viewport": "1366x768-desktop",
+      "theme": "dark",
+      "hasGlance": true,
+      "kcal": "350 kcal",
+      "protein": "Proteína 19 g",
+      "time": "◷ 08:00",
+      "metaPreserved": true,
+      "summaryText": "Ocultar detalles",
+      "summaryAria": "Ocultar ingredientes, notas y nutrientes de la comida",
+      "controls": "e16-meal-details-meal-e16-body",
+      "directHead": true,
+      "actions": [
+        {
+          "label": "Editar",
+          "height": 44
+        },
+        {
+          "label": "Eliminar",
+          "height": 44
+        }
+      ],
+      "overflow": false,
+      "detailsOpen": true,
+      "editDeleteHandlers": [
+        1,
+        1
+      ]
+    }
+  ]
+}

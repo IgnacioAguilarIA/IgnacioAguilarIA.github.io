@@ -1,0 +1,12 @@
+{
+  "stage": "E15",
+  "html_ids": 529,
+  "unique_html_ids": 529,
+  "duplicate_ids": {},
+  "local_references_checked": 167,
+  "missing_local_references": [],
+  "javascript_files": 71,
+  "javascript_syntax_errors": [],
+  "css_files": 97,
+  "css_brace_imbalances": []
+}

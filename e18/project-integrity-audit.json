@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "javascriptFiles": 74,
+  "javascriptSyntaxErrors": [],
+  "cssFiles": 100,
+  "cssBraceErrors": [],
+  "htmlIdCount": 529,
+  "uniqueHtmlIds": 529,
+  "missingLocalReferences": [],
+  "runtimeAssetsE18": {
+    "js": "js/73-nutrition-view-preferences-e18.js",
+    "css": "css/100-nutrition-view-preferences-e18.css"
+  }
+}

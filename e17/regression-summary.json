@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "node_tests_passed": 121,
+  "node_test_groups": [
+    {
+      "group": "foundation and security",
+      "passed": 24
+    },
+    {
+      "group": "planning, pantry, recipes, reports and synchronization",
+      "passed": 11
+    },
+    {
+      "group": "restore, responsive, quick registration and reliability",
+      "passed": 61
+    },
+    {
+      "group": "guided layout, feedback states, task hub, meal cards and E17",
+      "passed": 25
+    }
+  ],
+  "browser_checks_passed": 8,
+  "browser_failures": [],
+  "browser_viewports": [
+    "320x740",
+    "390x844",
+    "768x1024",
+    "1366x768"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "notes": "La suite completa se ejecutó en grupos. Browser audit usa datos simulados y no prueba Supabase en producción."
+}

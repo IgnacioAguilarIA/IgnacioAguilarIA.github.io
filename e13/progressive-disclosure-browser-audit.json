@@ -1,0 +1,200 @@
+{
+  "audit": "E13 progressive disclosure / beginner layout",
+  "mode": "mocked meal list and tool buttons; no Supabase requests",
+  "viewports": [
+    {
+      "viewport": "320x740-mobile",
+      "mobile": true,
+      "details": {
+        "nutritionDetailsDisclosure": false,
+        "nutritionGoalsDisclosure": false,
+        "nutritionMoreTools": false
+      },
+      "guideVisible": true,
+      "emptyHidden": true,
+      "emptyDisplay": "none",
+      "actionsChildren": [
+        "addMealBtn",
+        "nutritionMoreTools"
+      ],
+      "buttonsInTools": [
+        "nutritionGoalBtn",
+        "nutritionHistoryBtn",
+        "nutritionWeeklyPlannerBtn",
+        "nutritionPantryBtn",
+        "nutritionQualityReportBtn"
+      ],
+      "toolCount": "5",
+      "tabs": [
+        {
+          "text": "Desayuno",
+          "pressed": "true"
+        },
+        {
+          "text": "Almuerzo",
+          "pressed": "false"
+        },
+        {
+          "text": "Cena",
+          "pressed": "false"
+        }
+      ],
+      "days": [
+        "true",
+        "false"
+      ],
+      "docOverflow": false,
+      "addHeight": 48,
+      "toolSummaryHeight": 62,
+      "desktopSummaryHidden": false
+    },
+    {
+      "viewport": "390x844-mobile",
+      "mobile": true,
+      "details": {
+        "nutritionDetailsDisclosure": false,
+        "nutritionGoalsDisclosure": false,
+        "nutritionMoreTools": false
+      },
+      "guideVisible": true,
+      "emptyHidden": true,
+      "emptyDisplay": "none",
+      "actionsChildren": [
+        "addMealBtn",
+        "nutritionMoreTools"
+      ],
+      "buttonsInTools": [
+        "nutritionGoalBtn",
+        "nutritionHistoryBtn",
+        "nutritionWeeklyPlannerBtn",
+        "nutritionPantryBtn",
+        "nutritionQualityReportBtn"
+      ],
+      "toolCount": "5",
+      "tabs": [
+        {
+          "text": "Desayuno",
+          "pressed": "true"
+        },
+        {
+          "text": "Almuerzo",
+          "pressed": "false"
+        },
+        {
+          "text": "Cena",
+          "pressed": "false"
+        }
+      ],
+      "days": [
+        "true",
+        "false"
+      ],
+      "docOverflow": false,
+      "addHeight": 48,
+      "toolSummaryHeight": 62,
+      "desktopSummaryHidden": false
+    },
+    {
+      "viewport": "768x1024-tablet",
+      "mobile": false,
+      "details": {
+        "nutritionDetailsDisclosure": true,
+        "nutritionGoalsDisclosure": true,
+        "nutritionMoreTools": true
+      },
+      "guideVisible": true,
+      "emptyHidden": true,
+      "emptyDisplay": "none",
+      "actionsChildren": [
+        "addMealBtn",
+        "nutritionMoreTools"
+      ],
+      "buttonsInTools": [
+        "nutritionGoalBtn",
+        "nutritionHistoryBtn",
+        "nutritionWeeklyPlannerBtn",
+        "nutritionPantryBtn",
+        "nutritionQualityReportBtn"
+      ],
+      "toolCount": "5",
+      "tabs": [
+        {
+          "text": "Desayuno",
+          "pressed": "true"
+        },
+        {
+          "text": "Almuerzo",
+          "pressed": "false"
+        },
+        {
+          "text": "Cena",
+          "pressed": "false"
+        }
+      ],
+      "days": [
+        "true",
+        "false"
+      ],
+      "docOverflow": false,
+      "addHeight": 44,
+      "toolSummaryHeight": 0,
+      "desktopSummaryHidden": true
+    },
+    {
+      "viewport": "1366x768-desktop",
+      "mobile": false,
+      "details": {
+        "nutritionDetailsDisclosure": true,
+        "nutritionGoalsDisclosure": true,
+        "nutritionMoreTools": true
+      },
+      "guideVisible": true,
+      "emptyHidden": true,
+      "emptyDisplay": "none",
+      "actionsChildren": [
+        "addMealBtn",
+        "nutritionMoreTools"
+      ],
+      "buttonsInTools": [
+        "nutritionGoalBtn",
+        "nutritionHistoryBtn",
+        "nutritionWeeklyPlannerBtn",
+        "nutritionPantryBtn",
+        "nutritionQualityReportBtn"
+      ],
+      "toolCount": "5",
+      "tabs": [
+        {
+          "text": "Desayuno",
+          "pressed": "true"
+        },
+        {
+          "text": "Almuerzo",
+          "pressed": "false"
+        },
+        {
+          "text": "Cena",
+          "pressed": "false"
+        }
+      ],
+      "days": [
+        "true",
+        "false"
+      ],
+      "docOverflow": false,
+      "addHeight": 40,
+      "toolSummaryHeight": 0,
+      "desktopSummaryHidden": true
+    }
+  ],
+  "coverage": [
+    "responsive disclosure defaults",
+    "dynamic secondary action grouping",
+    "stable order and button count",
+    "ARIA pressed state for day and meal selectors",
+    "new-user guide and normal empty state",
+    "first-use button opens existing add-meal action",
+    "no horizontal document overflow"
+  ],
+  "failures": []
+}

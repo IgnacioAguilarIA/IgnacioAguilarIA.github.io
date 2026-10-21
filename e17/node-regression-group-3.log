@@ -1,0 +1,413 @@
+TAP version 13
+# Subtest: E12 search is accent-insensitive, case-insensitive and trims whitespace
+ok 1 - E12 search is accent-insensitive, case-insensitive and trims whitespace
+  ---
+  duration_ms: 5.406673
+  type: 'test'
+  ...
+# Subtest: E12 history filter normalizes Spanish and English meal categories
+ok 2 - E12 history filter normalizes Spanish and English meal categories
+  ---
+  duration_ms: 0.957414
+  type: 'test'
+  ...
+# Subtest: E12 history search finds brand, meal title, date, and snapshot fields
+ok 3 - E12 history search finds brand, meal title, date, and snapshot fields
+  ---
+  duration_ms: 1.020219
+  type: 'test'
+  ...
+# Subtest: E12 recipe search includes notes, ingredients and procedure and supports structure filters
+ok 4 - E12 recipe search includes notes, ingredients and procedure and supports structure filters
+  ---
+  duration_ms: 0.752012
+  type: 'test'
+  ...
+# Subtest: E12 personal food search filters by name, brand, ingredients and preparation
+ok 5 - E12 personal food search filters by name, brand, ingredients and preparation
+  ---
+  duration_ms: 2.886229
+  type: 'test'
+  ...
+# Subtest: E12 controls are added once and styled after E11 without touching global section styles
+ok 6 - E12 controls are added once and styled after E11 without touching global section styles
+  ---
+  duration_ms: 2.69414
+  type: 'test'
+  ...
+# Subtest: E12 filter helpers handle a large cached list without mutating source records
+ok 7 - E12 filter helpers handle a large cached list without mutating source records
+  ---
+  duration_ms: 14.137181
+  type: 'test'
+  ...
+# E9 integrated reliability checks completed.
+# Subtest: el diario E9 guarda y recupera un lote por cuenta y tipo de operación
+ok 8 - el diario E9 guarda y recupera un lote por cuenta y tipo de operación
+  ---
+  duration_ms: 7.924801
+  type: 'test'
+  ...
+# Subtest: el diario rechaza reanudar un lote con ámbito diferente
+ok 9 - el diario rechaza reanudar un lote con ámbito diferente
+  ---
+  duration_ms: 2.296482
+  type: 'test'
+  ...
+# Subtest: el diario no permite sobrescribir una operación pendiente con otra clave
+ok 10 - el diario no permite sobrescribir una operación pendiente con otra clave
+  ---
+  duration_ms: 1.479479
+  type: 'test'
+  ...
+# Subtest: solo se elimina del diario la operación identificada por la misma clave
+ok 11 - solo se elimina del diario la operación identificada por la misma clave
+  ---
+  duration_ms: 1.382582
+  type: 'test'
+  ...
+# Subtest: una instantánea multi-paso ilegible no se sobrescribe
+ok 12 - una instantánea multi-paso ilegible no se sobrescribe
+  ---
+  duration_ms: 6.086422
+  type: 'test'
+  ...
+# Subtest: la persistencia de alimentos detallados exige cuenta activa, comida y lista válida
+ok 13 - la persistencia de alimentos detallados exige cuenta activa, comida y lista válida
+  ---
+  duration_ms: 0.39279
+  type: 'test'
+  ...
+# Subtest: el guardado inicial pasa explícitamente la cuenta capturada al módulo de detalles
+ok 14 - el guardado inicial pasa explícitamente la cuenta capturada al módulo de detalles
+  ---
+  duration_ms: 0.190192
+  type: 'test'
+  ...
+# Subtest: la persistencia real rechaza una cuenta ausente o cambiada antes de consultar Supabase
+ok 15 - la persistencia real rechaza una cuenta ausente o cambiada antes de consultar Supabase
+  ---
+  duration_ms: 3.893352
+  type: 'test'
+  ...
+# Subtest: la copia individual guarda un diario antes de escribir y utiliza upsert idempotente
+ok 16 - la copia individual guarda un diario antes de escribir y utiliza upsert idempotente
+  ---
+  duration_ms: 0.826032
+  type: 'test'
+  ...
+# Subtest: si falla refrescar la vista después de duplicar, no informa falsamente que falló el guardado confirmado
+ok 17 - si falla refrescar la vista después de duplicar, no informa falsamente que falló el guardado confirmado
+  ---
+  duration_ms: 0.872276
+  type: 'test'
+  ...
+# Subtest: repetir un día guarda el lote antes de escribir y no borra copias ante una respuesta incierta
+ok 18 - repetir un día guarda el lote antes de escribir y no borra copias ante una respuesta incierta
+  ---
+  duration_ms: 0.740133
+  type: 'test'
+  ...
+# Subtest: al reabrir repetir día se recupera el origen y destino del diario local
+ok 19 - al reabrir repetir día se recupera el origen y destino del diario local
+  ---
+  duration_ms: 0.21424
+  type: 'test'
+  ...
+# Subtest: deshacer eliminación usa IDs estables y verifica registros existentes antes de insertar los faltantes
+ok 20 - deshacer eliminación usa IDs estables y verifica registros existentes antes de insertar los faltantes
+  ---
+  duration_ms: 0.99732
+  type: 'test'
+  ...
+# Subtest: los módulos E9 siguen cargados en Alimentación sin cargar un segundo helper E8
+ok 21 - los módulos E9 siguen cargados en Alimentación sin cargar un segundo helper E8
+  ---
+  duration_ms: 0.183223
+  type: 'test'
+  ...
+# Subtest: E9 no introduce otra migración SQL ni modifica el esquema de la restauración E8
+ok 22 - E9 no introduce otra migración SQL ni modifica el esquema de la restauración E8
+  ---
+  duration_ms: 1.292538
+  type: 'test'
+  ...
+# Subtest: genera una clave UUID estable para identificar el intento de guardado
+ok 23 - genera una clave UUID estable para identificar el intento de guardado
+  ---
+  duration_ms: 11.278254
+  type: 'test'
+  ...
+# Subtest: guarda y recupera el borrador por cuenta y día
+ok 24 - guarda y recupera el borrador por cuenta y día
+  ---
+  duration_ms: 22.600987
+  type: 'test'
+  ...
+# Subtest: no permite sobrescribir un intento pendiente con otra clave
+ok 25 - no permite sobrescribir un intento pendiente con otra clave
+  ---
+  duration_ms: 2.92537
+  type: 'test'
+  ...
+# Subtest: rechaza borrar un intento con una clave diferente
+ok 26 - rechaza borrar un intento con una clave diferente
+  ---
+  duration_ms: 1.65329
+  type: 'test'
+  ...
+# Subtest: borra solo el intento confirmado con la misma clave
+ok 27 - borra solo el intento confirmado con la misma clave
+  ---
+  duration_ms: 2.345684
+  type: 'test'
+  ...
+# Subtest: rechaza un borrador que pertenezca a otra cuenta o día
+ok 28 - rechaza un borrador que pertenezca a otra cuenta o día
+  ---
+  duration_ms: 1.267206
+  type: 'test'
+  ...
+# Subtest: no interpreta un JSON ilegible ni lo sobrescribe silenciosamente
+ok 29 - no interpreta un JSON ilegible ni lo sobrescribe silenciosamente
+  ---
+  duration_ms: 2.083456
+  type: 'test'
+  ...
+# Subtest: el guardado nuevo usa el helper idempotente y no vuelve a INSERT desde la interfaz
+ok 30 - el guardado nuevo usa el helper idempotente y no vuelve a INSERT desde la interfaz
+  ---
+  duration_ms: 0.609726
+  type: 'test'
+  ...
+# Subtest: el borrador se conserva antes de llamar a Supabase y se elimina solo al cerrar el flujo exitoso
+ok 31 - el borrador se conserva antes de llamar a Supabase y se elimina solo al cerrar el flujo exitoso
+  ---
+  duration_ms: 0.431234
+  type: 'test'
+  ...
+# Subtest: un resultado de red incierto se reintenta con la misma clave y conserva una sola fila
+ok 32 - un resultado de red incierto se reintenta con la misma clave y conserva una sola fila
+  ---
+  duration_ms: 4.918154
+  type: 'test'
+  ...
+# Subtest: no se puede cerrar el diálogo mientras el guardado está en curso
+ok 33 - no se puede cerrar el diálogo mientras el guardado está en curso
+  ---
+  duration_ms: 1.014595
+  type: 'test'
+  ...
+# Subtest: si el módulo de detalle no está cargado, no declara completa una comida parcialmente guardada
+ok 34 - si el módulo de detalle no está cargado, no declara completa una comida parcialmente guardada
+  ---
+  duration_ms: 0.382509
+  type: 'test'
+  ...
+# Subtest: el HTML incluye el helper E8 una única vez
+ok 35 - el HTML incluye el helper E8 una única vez
+  ---
+  duration_ms: 0.928052
+  type: 'test'
+  ...
+# Subtest: la migración es aditiva, exige RLS y crea el índice único
+ok 36 - la migración es aditiva, exige RLS y crea el índice único
+  ---
+  duration_ms: 3.404976
+  type: 'test'
+  ...
+# Subtest: el postcheck es de solo lectura y revisa la unicidad y los permisos
+ok 37 - el postcheck es de solo lectura y revisa la unicidad y los permisos
+  ---
+  duration_ms: 1.521801
+  type: 'test'
+  ...
+# ✓ E6 carga la hoja responsive después de los estilos de Alimentación
+# ✓ La nueva hoja se limita a Alimentación y sus diálogos nutricionales
+# ✓ Los rótulos nutricionales pueden envolver texto en pantallas estrechas
+# ✓ La grilla de días no depende de desplazamiento horizontal en móvil
+# ✓ Las pestañas de comida pueden ajustarse sin desbordar texto
+# ✓ Los controles interactivos importantes alcanzan al menos 44 px en móvil
+# ✓ Los campos de formulario usan 16 px para evitar zoom automático en Safari iOS
+# ✓ Los formularios principales usan áreas seguras y altura del viewport dinámico
+# ✓ La cabecera del editor permanece disponible al recorrer formularios largos
+# ✓ Los diálogos secundarios contemplan pantalla apaisada
+# ✓ E6 conserva movimiento reducido y modo de colores forzados
+# ✓ El HTML conserva la estructura principal de Alimentación y no añade scripts nuevos
+# ✓ Los diálogos de comida y objetivos tienen nombre accesible y modalidad declarada
+# ✓ Los campos de objetivos quedan asociados a sus etiquetas
+# ✓ La acción de guardar permanece legible sobre un fondo opaco en el formulario móvil
+# ✓ Las áreas de toque siguen siendo amplias en dispositivos táctiles tipo tableta
+# ✓ El botón Guardar objetivos queda dentro de una barra accesible en móvil
+# ✓ El botón flotante global no tapa las tarjetas de Alimentación en móvil
+# ✓ Los formularios siguen ofreciendo guardar y cerrar en móviles apaisados
+# ✓ La hoja móvil no cambia el layout global ni define reglas fuera de Alimentación
+# E6: 20 pruebas aprobadas.
+# Subtest: tests/nutrition-mobile-accessibility-e6.test.cjs
+ok 4 - tests/nutrition-mobile-accessibility-e6.test.cjs
+  ---
+  duration_ms: 67.465024
+  type: 'test'
+  ...
+# E11 premium dashboard checks completed.
+# Subtest: E11 loads after the established nutrition styles without duplicate references
+ok 39 - E11 loads after the established nutrition styles without duplicate references
+  ---
+  duration_ms: 1.790262
+  type: 'test'
+  ...
+# Subtest: E11 defines dedicated light and dark design tokens scoped to Nutrition
+ok 40 - E11 defines dedicated light and dark design tokens scoped to Nutrition
+  ---
+  duration_ms: 0.467734
+  type: 'test'
+  ...
+# Subtest: primary action, save status and plan-versus-consumed hierarchy are explicit
+ok 41 - primary action, save status and plan-versus-consumed hierarchy are explicit
+  ---
+  duration_ms: 0.266501
+  type: 'test'
+  ...
+# Subtest: responsive rules keep day, meal, summary and action controls usable
+ok 42 - responsive rules keep day, meal, summary and action controls usable
+  ---
+  duration_ms: 1.84205
+  type: 'test'
+  ...
+# Subtest: shared navigation receives scoped styles only while Nutrition is active
+ok 43 - shared navigation receives scoped styles only while Nutrition is active
+  ---
+  duration_ms: 0.663857
+  type: 'test'
+  ...
+# Subtest: accessibility preferences are preserved
+ok 44 - accessibility preferences are preserved
+  ---
+  duration_ms: 1.603412
+  type: 'test'
+  ...
+# E10 professional finish checks completed.
+# Subtest: E10 se carga después de los ajustes E6 y E7
+ok 45 - E10 se carga después de los ajustes E6 y E7
+  ---
+  duration_ms: 1.796267
+  type: 'test'
+  ...
+# Subtest: el sistema visual incluye tema oscuro y tema claro
+ok 46 - el sistema visual incluye tema oscuro y tema claro
+  ---
+  duration_ms: 1.381949
+  type: 'test'
+  ...
+# Subtest: los estados de sincronización diferencian guardado, pendiente, advertencia y error
+ok 47 - los estados de sincronización diferencian guardado, pendiente, advertencia y error
+  ---
+  duration_ms: 1.083298
+  type: 'test'
+  ...
+# Subtest: controles y tarjetas tienen foco visible y estados activos explícitos
+ok 48 - controles y tarjetas tienen foco visible y estados activos explícitos
+  ---
+  duration_ms: 2.343326
+  type: 'test'
+  ...
+# Subtest: la capa visual respeta movimiento reducido y alto contraste
+ok 49 - la capa visual respeta movimiento reducido y alto contraste
+  ---
+  duration_ms: 1.932715
+  type: 'test'
+  ...
+# Subtest: la hoja no redefine estilos globales de secciones ajenas
+ok 50 - la hoja no redefine estilos globales de secciones ajenas
+  ---
+  duration_ms: 1.653038
+  type: 'test'
+  ...
+# ✓ Una cantidad guardada en gramos se reutiliza con el mismo valor
+# ✓ Se conserva una unidad ml solo si existe densidad válida
+# ✓ Unidad y porción requieren equivalencia positiva a gramos
+# ✓ Los nutrientes incompletos impiden el atajo de agregar
+# ✓ Un estado de calidad incompleto bloquea el atajo incluso si falta la lista detallada
+# ✓ Las cantidades inválidas o desmesuradas se rechazan
+# ✓ Los registros antiguos con unidad de última operación ausente no se reinterpretan
+# ✓ El HTML declara un estado accesible para confirmar el registro rápido
+# ✓ La tarjeta ofrece elegir cantidad y agregar rápidamente con unidad explícita
+# ✓ Los accesos conservan procedencia y marcadores de nutrientes faltantes
+# ✓ El módulo vuelve a leer el almacén de la cuenta activa al mostrar la app
+# ✓ Los botones del atajo cumplen mínimo táctil de 44 px y estados de foco
+# E7: 12 pruebas aprobadas.
+# Subtest: tests/nutrition-quick-registration-e7.test.cjs
+ok 7 - tests/nutrition-quick-registration-e7.test.cjs
+  ---
+  duration_ms: 112.991971
+  type: 'test'
+  ...
+# Subtest: rechaza un formato ajeno antes de hacer consultas o escrituras
+ok 52 - rechaza un formato ajeno antes de hacer consultas o escrituras
+  ---
+  duration_ms: 12.878503
+  type: 'test'
+  ...
+# Subtest: bloquea el reemplazo de un respaldo antiguo incompleto antes de tocar Supabase
+ok 53 - bloquea el reemplazo de un respaldo antiguo incompleto antes de tocar Supabase
+  ---
+  duration_ms: 6.556024
+  type: 'test'
+  ...
+# Subtest: restaura datos, limpia IDs antiguos después del historial y remapea reintentos pendientes
+ok 54 - restaura datos, limpia IDs antiguos después del historial y remapea reintentos pendientes
+  ---
+  duration_ms: 8.227998
+  type: 'test'
+  ...
+# Subtest: valida formato y versión del respaldo cuando Alimentación está seleccionada
+ok 55 - valida formato y versión del respaldo cuando Alimentación está seleccionada
+  ---
+  duration_ms: 1.862837
+  type: 'test'
+  ...
+# Subtest: la confirmación muestra un resumen nutricional y bloquea el reemplazo de copias incompletas
+ok 56 - la confirmación muestra un resumen nutricional y bloquea el reemplazo de copias incompletas
+  ---
+  duration_ms: 1.523947
+  type: 'test'
+  ...
+# Subtest: carga el historial importado antes de limpiar las filas históricas originales
+ok 57 - carga el historial importado antes de limpiar las filas históricas originales
+  ---
+  duration_ms: 0.296893
+  type: 'test'
+  ...
+# Subtest: la exportación siempre serializa la cola pendiente como objeto
+ok 58 - la exportación siempre serializa la cola pendiente como objeto
+  ---
+  duration_ms: 0.290051
+  type: 'test'
+  ...
+# Subtest: la importación restaura consumos pendientes con los IDs nuevos de detalle y comida
+ok 59 - la importación restaura consumos pendientes con los IDs nuevos de detalle y comida
+  ---
+  duration_ms: 0.510821
+  type: 'test'
+  ...
+# Subtest: la paginación de IDs que protege el reemplazo usa un orden estable
+ok 60 - la paginación de IDs que protege el reemplazo usa un orden estable
+  ---
+  duration_ms: 1.940404
+  type: 'test'
+  ...
+# Subtest: la edición conserva la sintaxis JavaScript
+ok 61 - la edición conserva la sintaxis JavaScript
+  ---
+  duration_ms: 105.181765
+  type: 'test'
+  ...
+1..61
+# tests 61
+# suites 0
+# pass 61
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1309.767625

@@ -1,0 +1,60 @@
+{
+  "audit": "E14 nutrition loading/empty/error/success states",
+  "mode": "synthetic meals and statuses; no Supabase requests",
+  "viewports": [
+    {
+      "viewport": "320x740-mobile-light",
+      "feedbackVisible": true,
+      "feedbackTitle": "No pudimos cargar tus comidas",
+      "emptyHidden": true,
+      "guideHidden": true,
+      "retryButton": true,
+      "trainingUntouched": true,
+      "overflow": false,
+      "retryHeight": 44
+    },
+    {
+      "viewport": "390x844-mobile-dark",
+      "feedbackVisible": true,
+      "feedbackTitle": "No pudimos cargar tus comidas",
+      "emptyHidden": true,
+      "guideHidden": true,
+      "retryButton": true,
+      "trainingUntouched": true,
+      "overflow": false,
+      "retryHeight": 44
+    },
+    {
+      "viewport": "768x1024-tablet-light",
+      "feedbackVisible": true,
+      "feedbackTitle": "No pudimos cargar tus comidas",
+      "emptyHidden": true,
+      "guideHidden": true,
+      "retryButton": true,
+      "trainingUntouched": true,
+      "overflow": false,
+      "retryHeight": 44
+    },
+    {
+      "viewport": "1366x768-desktop-dark",
+      "feedbackVisible": true,
+      "feedbackTitle": "No pudimos cargar tus comidas",
+      "emptyHidden": true,
+      "guideHidden": true,
+      "retryButton": true,
+      "trainingUntouched": true,
+      "overflow": false,
+      "retryHeight": 40
+    }
+  ],
+  "failures": [],
+  "checks": [
+    "clear error state for meal loading",
+    "no false empty or first-use message on network failure",
+    "retry uses existing day selector",
+    "status retries for supported history load",
+    "no global training status decoration",
+    "no horizontal overflow",
+    "touch target sizing"
+  ]
+}

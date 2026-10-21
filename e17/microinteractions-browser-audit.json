@@ -1,0 +1,241 @@
+{
+  "passed": true,
+  "checks": 8,
+  "failures": [],
+  "viewports": [
+    "320x740",
+    "390x844",
+    "768x1024",
+    "1366x768"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "results": [
+    {
+      "viewport": "320x740-mobile",
+      "theme": "light",
+      "cardExists": true,
+      "directHeader": true,
+      "overflow": false,
+      "actions": [
+        {
+          "name": "Editar",
+          "height": 44
+        },
+        {
+          "name": "Eliminar",
+          "height": 44
+        }
+      ],
+      "hasFoodInput": true,
+      "detailsInitiallyOpen": false,
+      "handlers": [
+        1,
+        1
+      ],
+      "savePulse": true,
+      "foodFieldPulse": true,
+      "syncPulse": true,
+      "focusAfterKeyboardDelete": "addMealBtn",
+      "detailReveal": true
+    },
+    {
+      "viewport": "320x740-mobile",
+      "theme": "dark",
+      "cardExists": true,
+      "directHeader": true,
+      "overflow": false,
+      "actions": [
+        {
+          "name": "Editar",
+          "height": 44
+        },
+        {
+          "name": "Eliminar",
+          "height": 44
+        }
+      ],
+      "hasFoodInput": true,
+      "detailsInitiallyOpen": false,
+      "handlers": [
+        1,
+        1
+      ],
+      "savePulse": true,
+      "foodFieldPulse": true,
+      "syncPulse": true,
+      "focusAfterKeyboardDelete": "addMealBtn",
+      "detailReveal": true
+    },
+    {
+      "viewport": "390x844-mobile",
+      "theme": "light",
+      "cardExists": true,
+      "directHeader": true,
+      "overflow": false,
+      "actions": [
+        {
+          "name": "Editar",
+          "height": 44
+        },
+        {
+          "name": "Eliminar",
+          "height": 44
+        }
+      ],
+      "hasFoodInput": true,
+      "detailsInitiallyOpen": false,
+      "handlers": [
+        1,
+        1
+      ],
+      "savePulse": true,
+      "foodFieldPulse": true,
+      "syncPulse": true,
+      "focusAfterKeyboardDelete": "addMealBtn",
+      "detailReveal": true
+    },
+    {
+      "viewport": "390x844-mobile",
+      "theme": "dark",
+      "cardExists": true,
+      "directHeader": true,
+      "overflow": false,
+      "actions": [
+        {
+          "name": "Editar",
+          "height": 44
+        },
+        {
+          "name": "Eliminar",
+          "height": 44
+        }
+      ],
+      "hasFoodInput": true,
+      "detailsInitiallyOpen": false,
+      "handlers": [
+        1,
+        1
+      ],
+      "savePulse": true,
+      "foodFieldPulse": true,
+      "syncPulse": true,
+      "focusAfterKeyboardDelete": "addMealBtn",
+      "detailReveal": true
+    },
+    {
+      "viewport": "768x1024-tablet",
+      "theme": "light",
+      "cardExists": true,
+      "directHeader": true,
+      "overflow": false,
+      "actions": [
+        {
+          "name": "Editar",
+          "height": 44
+        },
+        {
+          "name": "Eliminar",
+          "height": 44
+        }
+      ],
+      "hasFoodInput": true,
+      "detailsInitiallyOpen": true,
+      "handlers": [
+        1,
+        1
+      ],
+      "savePulse": true,
+      "foodFieldPulse": true,
+      "syncPulse": true,
+      "focusAfterKeyboardDelete": "addMealBtn",
+      "detailReveal": true
+    },
+    {
+      "viewport": "768x1024-tablet",
+      "theme": "dark",
+      "cardExists": true,
+      "directHeader": true,
+      "overflow": false,
+      "actions": [
+        {
+          "name": "Editar",
+          "height": 44
+        },
+        {
+          "name": "Eliminar",
+          "height": 44
+        }
+      ],
+      "hasFoodInput": true,
+      "detailsInitiallyOpen": true,
+      "handlers": [
+        1,
+        1
+      ],
+      "savePulse": true,
+      "foodFieldPulse": true,
+      "syncPulse": true,
+      "focusAfterKeyboardDelete": "addMealBtn",
+      "detailReveal": true
+    },
+    {
+      "viewport": "1366x768-desktop",
+      "theme": "light",
+      "cardExists": true,
+      "directHeader": true,
+      "overflow": false,
+      "actions": [
+        {
+          "name": "Editar",
+          "height": 44
+        },
+        {
+          "name": "Eliminar",
+          "height": 44
+        }
+      ],
+      "hasFoodInput": true,
+      "detailsInitiallyOpen": true,
+      "handlers": [
+        1,
+        1
+      ],
+      "savePulse": true,
+      "foodFieldPulse": true,
+      "syncPulse": true,
+      "focusAfterKeyboardDelete": "addMealBtn",
+      "detailReveal": true
+    },
+    {
+      "viewport": "1366x768-desktop",
+      "theme": "dark",
+      "cardExists": true,
+      "directHeader": true,
+      "overflow": false,
+      "actions": [
+        {
+          "name": "Editar",
+          "height": 44
+        },
+        {
+          "name": "Eliminar",
+          "height": 44
+        }
+      ],
+      "hasFoodInput": true,
+      "detailsInitiallyOpen": true,
+      "handlers": [
+        1,
+        1
+      ],
+      "savePulse": true,
+      "foodFieldPulse": true,
+      "syncPulse": true,
+      "focusAfterKeyboardDelete": "addMealBtn",
+      "detailReveal": true
+    }
+  ]
+}

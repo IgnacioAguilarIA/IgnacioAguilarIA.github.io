@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "checks": 1,
+  "failures": [],
+  "results": [
+    {
+      "viewport": "390x844-mobile",
+      "theme": "light",
+      "autoDetailsOpen": false,
+      "detailsAfterDetailedMode": true,
+      "daySummaryOpenAfterDetailedMode": true,
+      "newCardUsesPreference": true,
+      "manualTogglePreserved": true,
+      "prefsSavedForAccount": true,
+      "lastToolShortcutWorks": true,
+      "accountIsolation": true,
+      "overflow": false
+    }
+  ]
+}

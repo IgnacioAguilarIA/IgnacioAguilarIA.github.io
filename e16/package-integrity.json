@@ -1,0 +1,18 @@
+{
+  "AgendaFICH_Alimentacion_E16_tarjetas_comidas_profesionales.zip": {
+    "bytes": 16376978,
+    "files": 429,
+    "testzip": null,
+    "entries": []
+  },
+  "AgendaFICH_E16_archivos_para_actualizar.zip": {
+    "bytes": 26928,
+    "files": 3,
+    "testzip": null,
+    "entries": [
+      "index.html",
+      "js/71-nutrition-meal-cards-e16.js",
+      "css/98-nutrition-meal-cards-e16.css"
+    ]
+  }
+}

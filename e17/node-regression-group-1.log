@@ -1,0 +1,239 @@
+TAP version 13
+# OK - la migración es transaccional y falla antes de cambiar permisos si falta el esquema/policy
+# OK - revoca privilegios existentes, también los heredados por PUBLIC y anon
+# OK - el catálogo solo concede lectura a authenticated
+# OK - las tablas personales conceden solo CRUD
+# OK - no revoca ni modifica los privilegios directos de service_role
+# OK - verifica los privilegios efectivos y fuerza rollback si persiste un privilegio excesivo
+# OK - no cambia filas ni elimina policies, funciones, tablas o índices
+# Privilegios mínimos D2: 7 pruebas estáticas aprobadas.
+# Subtest: tests/nutrition-minimum-privileges-d2.test.cjs
+ok 1 - tests/nutrition-minimum-privileges-d2.test.cjs
+  ---
+  duration_ms: 159.046098
+  type: 'test'
+  ...
+# Subtest: serializa dos guardados de detalle para la misma comida y no duplica filas
+ok 2 - serializa dos guardados de detalle para la misma comida y no duplica filas
+  ---
+  duration_ms: 86.938427
+  type: 'test'
+  ...
+# Subtest: aborta después de un cambio de cuenta y no escribe en la cuenta nueva
+ok 3 - aborta después de un cambio de cuenta y no escribe en la cuenta nueva
+  ---
+  duration_ms: 34.946823
+  type: 'test'
+  ...
+# Subtest: un fallo de inserción no deja una fila nueva parcialmente persistida
+ok 4 - un fallo de inserción no deja una fila nueva parcialmente persistida
+  ---
+  duration_ms: 5.589891
+  type: 'test'
+  ...
+# Subtest: el buscador no devuelve alimentos de una cuenta anterior si cambia la sesión durante la búsqueda externa
+ok 5 - el buscador no devuelve alimentos de una cuenta anterior si cambia la sesión durante la búsqueda externa
+  ---
+  duration_ms: 9.738638
+  type: 'test'
+  ...
+# Subtest: la migración preserva policies permisivas, valida el esquema y elimina comida/detalles mediante RPC
+ok 6 - la migración preserva policies permisivas, valida el esquema y elimina comida/detalles mediante RPC
+  ---
+  duration_ms: 19.410155
+  type: 'test'
+  ...
+# Subtest: la exportación completa no descarga un archivo cuando falla alguna tabla nutricional
+ok 7 - la exportación completa no descarga un archivo cuando falla alguna tabla nutricional
+  ---
+  duration_ms: 1.850204
+  type: 'test'
+  ...
+# Subtest: Mis alimentos solo carga registros de la cuenta activa y expone el id real para editar
+ok 8 - Mis alimentos solo carga registros de la cuenta activa y expone el id real para editar
+  ---
+  duration_ms: 3.366695
+  type: 'test'
+  ...
+# Subtest: editar un alimento personalizado actualiza la fila propia en lugar de insertar un duplicado
+ok 9 - editar un alimento personalizado actualiza la fila propia en lugar de insertar un duplicado
+  ---
+  duration_ms: 4.348752
+  type: 'test'
+  ...
+# Subtest: el intento de editar o borrar un alimento de otra cuenta no modifica sus datos
+ok 10 - el intento de editar o borrar un alimento de otra cuenta no modifica sus datos
+  ---
+  duration_ms: 7.199307
+  type: 'test'
+  ...
+# Subtest: el módulo avanzado habilita edición de recetas y edición de alimentos propios sin migración nueva
+ok 11 - el módulo avanzado habilita edición de recetas y edición de alimentos propios sin migración nueva
+  ---
+  duration_ms: 15.772355
+  type: 'test'
+  ...
+# Subtest: editar una receta actualiza su fila y recalcula los valores por 100 g
+ok 12 - editar una receta actualiza su fila y recalcula los valores por 100 g
+  ---
+  duration_ms: 9.857745
+  type: 'test'
+  ...
+# Subtest: la migración prevalidada no modifica filas de usuario
+ok 13 - la migración prevalidada no modifica filas de usuario
+  ---
+  duration_ms: 3.953216
+  type: 'test'
+  ...
+# Subtest: reduce grants de anon/PUBLIC y conserva permisos explícitos de la app y service_role
+ok 14 - reduce grants de anon/PUBLIC y conserva permisos explícitos de la app y service_role
+  ---
+  duration_ms: 0.869732
+  type: 'test'
+  ...
+# Subtest: solo elimina guards redundantes si son idénticos a su policy canónica
+ok 15 - solo elimina guards redundantes si son idénticos a su policy canónica
+  ---
+  duration_ms: 0.693121
+  type: 'test'
+  ...
+# Subtest: la nueva policy valida que user_food_id pertenezca a la cuenta autenticada
+ok 16 - la nueva policy valida que user_food_id pertenezca a la cuenta autenticada
+  ---
+  duration_ms: 1.430962
+  type: 'test'
+  ...
+# Subtest: el informe de integridad es de solo lectura y devuelve solo contadores de anomalías
+ok 17 - el informe de integridad es de solo lectura y devuelve solo contadores de anomalías
+  ---
+  duration_ms: 0.924486
+  type: 'test'
+  ...
+# Subtest: el preflight evita la ambigüedad PL/pgSQL entre variable y columna cmd
+ok 18 - el preflight evita la ambigüedad PL/pgSQL entre variable y columna cmd
+  ---
+  duration_ms: 0.570157
+  type: 'test'
+  ...
+# Subtest: el preflight trata food_catalog como catálogo de solo lectura
+ok 19 - el preflight trata food_catalog como catálogo de solo lectura
+  ---
+  duration_ms: 4.942622
+  type: 'test'
+  ...
+# Etapa B2: 20 pruebas aprobadas.
+# OK - 100 g equivale a 100 g
+# OK - 100 ml usa densidad explícita y no asume 1 g/ml
+# OK - una unidad usa gramos por unidad explícitos
+# OK - una porción usa su propio peso por porción explícito
+# OK - un peso de unidad no se reutiliza como peso de porción
+# OK - un peso de porción no se reutiliza como peso de unidad
+# OK - sin densidad no convierte ml
+# OK - sin peso por unidad no convierte unidad
+# OK - snapshot conserva gramos, densidad y estado
+# OK - nombre explicito arroz cocido detecta estado cocido
+# OK - receta convierte ingredientes antes de calcular macros
+# OK - peso final preparado cambia denominador, no energía total
+# OK - receta no inventa conversión ml desconocida
+# OK - migración es aditiva e incluye equivalencias separadas y snapshots
+# OK - HTML expone unidades y estado sin modificar navegación
+# OK - instantánea de gramos prevalece sobre una densidad futura modificada
+# OK - la validación del consumo carga primero la fila de la cuenta propietaria
+# OK - la etiqueta de porción respeta la unidad de la fuente
+# OK - la migración no propaga conversiones actuales a registros históricos
+# OK - Open Food Facts no usa energía sin unidad por 100 g como kcal/100 g
+# Subtest: tests/nutrition-stage-b2.test.cjs
+ok 4 - tests/nutrition-stage-b2.test.cjs
+  ---
+  duration_ms: 95.942927
+  type: 'test'
+  ...
+# Etapa B3: 13 pruebas aprobadas.
+# OK - día copiado recibe nuevo día/dueño y no reutiliza IDs ni claves idempotentes de la comida original
+# OK - alimentos copiados generan nuevas filas y quedan desmarcados
+# OK - promedios semanales calculan solo días con registros
+# OK - un día con registros cuyos nutrientes suman cero se diferencia de uno sin registros
+# OK - ignora registros fuera del período y fechas inválidas
+# OK - consulta el historial autenticado con paginación por fecha
+# OK - copiar día carga primero todos los detalles y luego guarda mediante la clave idempotente del lote
+# OK - si falla copiar día conserva el lote y no borra filas a ciegas
+# OK - deshacer captura comidas y detalles antes de delegar la eliminación
+# OK - deshacer restaura usando los mismos IDs y un insert reconciliable sin borrar para compensar
+# OK - la copia individual no permite continuar si no pudo cargar alimentos
+# OK - HTML carga solo el nuevo módulo de herramientas de Alimentación
+# OK - los controles nuevos son responsivos y tienen foco de diálogo accesible
+# Subtest: tests/nutrition-stage-b3.test.cjs
+ok 5 - tests/nutrition-stage-b3.test.cjs
+  ---
+  duration_ms: 95.664519
+  type: 'test'
+  ...
+# Etapa C1: 19 pruebas aprobadas.
+# OK - el módulo de accesibilidad se carga después del módulo de rutinas de Alimentación
+# OK - selector de días expone un nombre de grupo accesible
+# OK - selector de días informa qué botón está seleccionado
+# OK - cada día tiene una etiqueta accesible descriptiva
+# OK - categorías de comida se etiquetan como grupo y marcan su selección
+# OK - asocia etiquetas visibles sin for a su único campo
+# OK - diálogo principal está descrito y etiquetado con aria-describedby
+# OK - diálogos estáticos de comida y objetivos añaden Escape y trampa de foco
+# OK - al cerrar un diálogo se devuelve el foco al elemento que lo abrió
+# OK - bloquea desplazamiento de fondo solo mientras el diálogo está abierto
+# OK - diálogo avanzado incluye descripción accesible y foco inicial
+# OK - diálogos de herramientas incorporan texto descriptivo y trampa de foco
+# OK - estados seleccionados se anuncian además del color
+# OK - todos los ámbitos interactivos nutricionales tienen foco visible
+# OK - controles táctiles de uso frecuente tienen un mínimo de 44px
+# OK - tema claro define colores legibles sin depender solo de opacidad
+# OK - respeta movimiento reducido y colores forzados
+# OK - reinicio del manejador de deshacer agrupa mutaciones en requestAnimationFrame
+# OK - el módulo de accesibilidad solo enlaza contenedores de Alimentación
+# Subtest: tests/nutrition-stage-c1.test.cjs
+ok 6 - tests/nutrition-stage-c1.test.cjs
+  ---
+  duration_ms: 104.104061
+  type: 'test'
+  ...
+# Etapa C2: 20 pruebas aprobadas.
+# OK - C2 carga después de sincronización y accesibilidad de Alimentación
+# OK - detecta mensajes claros de error como error
+# OK - detecta estados pendientes y búsquedas en curso
+# OK - detecta confirmaciones positivas sin confundirlas con error
+# OK - texto vacío, validación o ausencia de resultados no se convierten en pendiente
+# OK - los mensajes de sincronización no anuncian éxito desde el botón de reintento
+# OK - el reintento intenta sincronizar preferencias y consumo pendiente
+# OK - el reintento controla el usuario activo antes de proceder y al volver
+# OK - un cambio de cuenta invalida estados visuales de la cuenta anterior
+# OK - no se muestra la acción de reintento sin conexión o con estado guardado
+# OK - los módulos de sincronización ya validan el propietario al informar el estado
+# OK - la búsqueda del catálogo descarta respuestas antiguas
+# OK - el autocompletado administra identificadores de solicitud
+# OK - los estados dinámicos usan roles y atributos de anuncio accesibles
+# OK - evita crear un segundo live region dentro del estado de sincronización existente
+# OK - la interfaz limita los estados nuevos a mensajes de Alimentación
+# OK - el botón de reintento tiene etiqueta accesible y estado de operación
+# OK - el estilo del botón ofrece foco visible y adaptación móvil
+# OK - estados visuales distinguen error, pendiente y éxito con bordes
+# OK - no se añadió una migración SQL nueva en C2
+# Subtest: tests/nutrition-stage-c2.test.cjs
+ok 7 - tests/nutrition-stage-c2.test.cjs
+  ---
+  duration_ms: 85.442634
+  type: 'test'
+  ...
+# D3 trigger-function lockdown: 11 checks passed
+# Subtest: tests/nutrition-trigger-function-lockdown-d3.test.cjs
+ok 8 - tests/nutrition-trigger-function-lockdown-d3.test.cjs
+  ---
+  duration_ms: 98.321142
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1309.505613

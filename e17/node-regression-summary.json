@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "total_tests": 121,
+  "groups": [
+    {
+      "group": 1,
+      "tests": 24,
+      "suites": 0,
+      "passed": 24,
+      "failed": 0
+    },
+    {
+      "group": 2,
+      "tests": 11,
+      "suites": 0,
+      "passed": 11,
+      "failed": 0
+    },
+    {
+      "group": 3,
+      "tests": 61,
+      "suites": 0,
+      "passed": 61,
+      "failed": 0
+    },
+    {
+      "group": 4,
+      "tests": 25,
+      "suites": 0,
+      "passed": 25,
+      "failed": 0
+    }
+  ],
+  "note": "Ejecutadas por grupos para respetar el límite de ejecución del entorno."
+}

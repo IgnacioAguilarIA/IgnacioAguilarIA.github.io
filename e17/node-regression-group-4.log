@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: E14 loads after the current nutrition interface and E13
+ok 1 - E14 loads after the current nutrition interface and E13
+  ---
+  duration_ms: 3.766934
+  type: 'test'
+  ...
+# Subtest: E14 classifies loading, success, empty, warning and failures without treating failures as empty data
+ok 2 - E14 classifies loading, success, empty, warning and failures without treating failures as empty data
+  ---
+  duration_ms: 1.445742
+  type: 'test'
+  ...
+# Subtest: main meal loader publishes explicit error state, cache fallback and success state
+ok 3 - main meal loader publishes explicit error state, cache fallback and success state
+  ---
+  duration_ms: 1.613828
+  type: 'test'
+  ...
+# Subtest: E14 error notice explains when cached data is stale and avoids a false empty state
+ok 4 - E14 error notice explains when cached data is stale and avoids a false empty state
+  ---
+  duration_ms: 4.56707
+  type: 'test'
+  ...
+# Subtest: E14 only offers safe retries for operations with an existing refresh path
+ok 5 - E14 only offers safe retries for operations with an existing refresh path
+  ---
+  duration_ms: 0.894599
+  type: 'test'
+  ...
+# Subtest: E14 keeps its status observer scoped to nutrition panels and nutrition dialogs
+ok 6 - E14 keeps its status observer scoped to nutrition panels and nutrition dialogs
+  ---
+  duration_ms: 0.575669
+  type: 'test'
+  ...
+# Subtest: E14 CSS supports touch-sized retry controls and accessible reduced-motion/forced-colors modes
+ok 7 - E14 CSS supports touch-sized retry controls and accessible reduced-motion/forced-colors modes
+  ---
+  duration_ms: 2.350183
+  type: 'test'
+  ...
+# Subtest: E14 CSS states and feedback are scoped to nutrition components, not global workout/calendar panels
+ok 8 - E14 CSS states and feedback are scoped to nutrition components, not global workout/calendar panels
+  ---
+  duration_ms: 2.409304
+  type: 'test'
+  ...
+# Subtest: E13 groups nutritional detail and objectives without changing existing dynamic IDs
+ok 9 - E13 groups nutritional detail and objectives without changing existing dynamic IDs
+  ---
+  duration_ms: 4.848811
+  type: 'test'
+  ...
+# Subtest: E13 loads only after prior nutrition modules and E12 visual layer
+ok 10 - E13 loads only after prior nutrition modules and E12 visual layer
+  ---
+  duration_ms: 2.923234
+  type: 'test'
+  ...
+# Subtest: E13 CSS stays scoped to Alimentación and honors desktop/mobile breakpoints and accessibility
+ok 11 - E13 CSS stays scoped to Alimentación and honors desktop/mobile breakpoints and accessibility
+  ---
+  duration_ms: 2.361709
+  type: 'test'
+  ...
+# Subtest: E13 progressive script dynamically groups action buttons so modules may still append tools
+ok 12 - E13 progressive script dynamically groups action buttons so modules may still append tools
+  ---
+  duration_ms: 1.153935
+  type: 'test'
+  ...
+# Subtest: E16 loads strictly after E15 and introduces only its scoped runtime and stylesheet
+ok 13 - E16 loads strictly after E15 and introduces only its scoped runtime and stylesheet
+  ---
+  duration_ms: 5.494033
+  type: 'test'
+  ...
+# Subtest: E16 derives visible summary pills from existing nutritional metadata without persistence calls
+ok 14 - E16 derives visible summary pills from existing nutritional metadata without persistence calls
+  ---
+  duration_ms: 2.977739
+  type: 'test'
+  ...
+# Subtest: E16 keeps the E15 detail disclosure, compact labels and accessible action names
+ok 15 - E16 keeps the E15 detail disclosure, compact labels and accessible action names
+  ---
+  duration_ms: 0.747422
+  type: 'test'
+  ...
+# Subtest: E16 CSS is scoped to Alimentación and supports keyboard, reduced motion, forced colors and touch
+ok 16 - E16 CSS is scoped to Alimentación and supports keyboard, reduced motion, forced colors and touch
+  ---
+  duration_ms: 0.363304
+  type: 'test'
+  ...
+# Subtest: E17 loads after E16 and adds exactly one scoped runtime and stylesheet
+ok 17 - E17 loads after E16 and adds exactly one scoped runtime and stylesheet
+  ---
+  duration_ms: 3.601193
+  type: 'test'
+  ...
+# Subtest: E17 gives visual feedback only for confirmed saved meals and respects account ownership
+ok 18 - E17 gives visual feedback only for confirmed saved meals and respects account ownership
+  ---
+  duration_ms: 2.118468
+  type: 'test'
+  ...
+# Subtest: E17 adds tactile and state feedback without replacing existing button handlers
+ok 19 - E17 adds tactile and state feedback without replacing existing button handlers
+  ---
+  duration_ms: 0.61413
+  type: 'test'
+  ...
+# Subtest: E17 restores keyboard focus after a confirmed meal deletion when possible
+ok 20 - E17 restores keyboard focus after a confirmed meal deletion when possible
+  ---
+  duration_ms: 0.401231
+  type: 'test'
+  ...
+# Subtest: E17 CSS keeps motion and focus treatment scoped to Nutrition
+ok 21 - E17 CSS keeps motion and focus treatment scoped to Nutrition
+  ---
+  duration_ms: 1.031582
+  type: 'test'
+  ...
+# Subtest: E15 loads its scoped visual layer after E14 and keeps the original nutrition handlers
+ok 22 - E15 loads its scoped visual layer after E14 and keeps the original nutrition handlers
+  ---
+  duration_ms: 7.005532
+  type: 'test'
+  ...
+# Subtest: E15 groups existing actions without replacing their IDs or creating fake database actions
+ok 23 - E15 groups existing actions without replacing their IDs or creating fake database actions
+  ---
+  duration_ms: 4.843318
+  type: 'test'
+  ...
+# Subtest: E15 meal-card presentation preserves the existing consumption host insertion point
+ok 24 - E15 meal-card presentation preserves the existing consumption host insertion point
+  ---
+  duration_ms: 1.309218
+  type: 'test'
+  ...
+# Subtest: E15 styles are scoped to Alimentación and retain touch, keyboard and reduced-motion support
+ok 25 - E15 styles are scoped to Alimentación and retain touch, keyboard and reduced-motion support
+  ---
+  duration_ms: 3.601552
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 858.430812

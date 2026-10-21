@@ -1,0 +1,11 @@
+{
+  "js_files": 70,
+  "css_files": 96,
+  "html_ids": 529,
+  "unique_html_ids": 529,
+  "local_references": 165,
+  "missing_local_references": [],
+  "duplicate_html_ids": [],
+  "css_brace_imbalances": [],
+  "note": "Static project integrity audit. Dynamic references and authenticated runtime behavior require browser/production testing."
+}

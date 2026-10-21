@@ -1,0 +1,15 @@
+{
+  "stage": "E15",
+  "node_test_subtests_passed": 112,
+  "execution_groups": [
+    32,
+    8,
+    67,
+    5
+  ],
+  "failed": 0,
+  "browser_audit_viewports": 4,
+  "browser_audit_failures": 0,
+  "dynamic_tool_insertion_passed": true,
+  "note": "The E6-E15 and prior regression test files were executed in four grouped Node test runs; Chromium browser audit ran by viewport using mocked data, without Supabase calls."
+}

@@ -1,0 +1,409 @@
+{
+  "audit": "E15 task hub and progressive meal cards",
+  "mode": "mocked actions and meals; no Supabase calls",
+  "viewports": [
+    {
+      "viewport": "320x740-mobile",
+      "groups": [
+        {
+          "key": "plan",
+          "title": "Planificar",
+          "buttons": [
+            {
+              "id": "nutritionGoalBtn",
+              "text": "⚙ Configurar objetivos"
+            },
+            {
+              "id": "nutritionWeeklyPlannerBtn",
+              "text": "🗓️ Ver semana"
+            },
+            {
+              "id": "nutritionCopyDayBtn",
+              "text": "🔁 Copiar día"
+            }
+          ]
+        },
+        {
+          "key": "prepare",
+          "title": "Preparar",
+          "buttons": [
+            {
+              "id": "nutritionE15RecipesBtn",
+              "text": "📖 Mis recetas"
+            }
+          ]
+        },
+        {
+          "key": "organize",
+          "title": "Organizar",
+          "buttons": [
+            {
+              "id": "nutritionShoppingListBtn",
+              "text": "🛒 Lista de compras"
+            },
+            {
+              "id": "nutritionPantryBtn",
+              "text": "🥫 Despensa"
+            }
+          ]
+        },
+        {
+          "key": "review",
+          "title": "Consultar",
+          "buttons": [
+            {
+              "id": "nutritionHistoryBtn",
+              "text": "📅 Historial"
+            },
+            {
+              "id": "nutritionStatsBtn",
+              "text": "📊 Estadísticas"
+            },
+            {
+              "id": "nutritionQualityOpen",
+              "text": "🔎 Calidad y exportar"
+            }
+          ]
+        }
+      ],
+      "totalTools": 9,
+      "count": "9",
+      "detailsOpen": false,
+      "mealDetailsOpen": false,
+      "hasPreview": true,
+      "preview": "Avena 50 g, yogur natural 150 g, banana 80 g",
+      "kcal": "350 kcal",
+      "movedFoods": true,
+      "movedDescription": true,
+      "movedMeta": true,
+      "directHead": true,
+      "actionLabels": [
+        "Editar",
+        "Eliminar"
+      ],
+      "overflow": false,
+      "addHeight": 48,
+      "toolSummaryHeight": 68,
+      "smallestToolHeight": 44,
+      "smallestMealActionHeight": 44,
+      "groupedIds": [
+        "nutritionGoalBtn",
+        "nutritionWeeklyPlannerBtn",
+        "nutritionCopyDayBtn",
+        "nutritionE15RecipesBtn",
+        "nutritionShoppingListBtn",
+        "nutritionPantryBtn",
+        "nutritionHistoryBtn",
+        "nutritionStatsBtn",
+        "nutritionQualityOpen"
+      ]
+    },
+    {
+      "viewport": "390x844-mobile",
+      "groups": [
+        {
+          "key": "plan",
+          "title": "Planificar",
+          "buttons": [
+            {
+              "id": "nutritionGoalBtn",
+              "text": "⚙ Configurar objetivos"
+            },
+            {
+              "id": "nutritionWeeklyPlannerBtn",
+              "text": "🗓️ Ver semana"
+            },
+            {
+              "id": "nutritionCopyDayBtn",
+              "text": "🔁 Copiar día"
+            }
+          ]
+        },
+        {
+          "key": "prepare",
+          "title": "Preparar",
+          "buttons": [
+            {
+              "id": "nutritionE15RecipesBtn",
+              "text": "📖 Mis recetas"
+            }
+          ]
+        },
+        {
+          "key": "organize",
+          "title": "Organizar",
+          "buttons": [
+            {
+              "id": "nutritionShoppingListBtn",
+              "text": "🛒 Lista de compras"
+            },
+            {
+              "id": "nutritionPantryBtn",
+              "text": "🥫 Despensa"
+            }
+          ]
+        },
+        {
+          "key": "review",
+          "title": "Consultar",
+          "buttons": [
+            {
+              "id": "nutritionHistoryBtn",
+              "text": "📅 Historial"
+            },
+            {
+              "id": "nutritionStatsBtn",
+              "text": "📊 Estadísticas"
+            },
+            {
+              "id": "nutritionQualityOpen",
+              "text": "🔎 Calidad y exportar"
+            }
+          ]
+        }
+      ],
+      "totalTools": 9,
+      "count": "9",
+      "detailsOpen": false,
+      "mealDetailsOpen": false,
+      "hasPreview": true,
+      "preview": "Avena 50 g, yogur natural 150 g, banana 80 g",
+      "kcal": "350 kcal",
+      "movedFoods": true,
+      "movedDescription": true,
+      "movedMeta": true,
+      "directHead": true,
+      "actionLabels": [
+        "Editar",
+        "Eliminar"
+      ],
+      "overflow": false,
+      "addHeight": 48,
+      "toolSummaryHeight": 53,
+      "smallestToolHeight": 44,
+      "smallestMealActionHeight": 44,
+      "groupedIds": [
+        "nutritionGoalBtn",
+        "nutritionWeeklyPlannerBtn",
+        "nutritionCopyDayBtn",
+        "nutritionE15RecipesBtn",
+        "nutritionShoppingListBtn",
+        "nutritionPantryBtn",
+        "nutritionHistoryBtn",
+        "nutritionStatsBtn",
+        "nutritionQualityOpen"
+      ]
+    },
+    {
+      "viewport": "768x1024-tablet",
+      "groups": [
+        {
+          "key": "plan",
+          "title": "Planificar",
+          "buttons": [
+            {
+              "id": "nutritionGoalBtn",
+              "text": "⚙ Configurar objetivos"
+            },
+            {
+              "id": "nutritionWeeklyPlannerBtn",
+              "text": "🗓️ Ver semana"
+            },
+            {
+              "id": "nutritionCopyDayBtn",
+              "text": "🔁 Copiar día"
+            }
+          ]
+        },
+        {
+          "key": "prepare",
+          "title": "Preparar",
+          "buttons": [
+            {
+              "id": "nutritionE15RecipesBtn",
+              "text": "📖 Mis recetas"
+            }
+          ]
+        },
+        {
+          "key": "organize",
+          "title": "Organizar",
+          "buttons": [
+            {
+              "id": "nutritionShoppingListBtn",
+              "text": "🛒 Lista de compras"
+            },
+            {
+              "id": "nutritionPantryBtn",
+              "text": "🥫 Despensa"
+            }
+          ]
+        },
+        {
+          "key": "review",
+          "title": "Consultar",
+          "buttons": [
+            {
+              "id": "nutritionHistoryBtn",
+              "text": "📅 Historial"
+            },
+            {
+              "id": "nutritionStatsBtn",
+              "text": "📊 Estadísticas"
+            },
+            {
+              "id": "nutritionQualityOpen",
+              "text": "🔎 Calidad y exportar"
+            }
+          ]
+        }
+      ],
+      "totalTools": 9,
+      "count": "9",
+      "detailsOpen": true,
+      "mealDetailsOpen": true,
+      "hasPreview": true,
+      "preview": "Avena 50 g, yogur natural 150 g, banana 80 g",
+      "kcal": "350 kcal",
+      "movedFoods": true,
+      "movedDescription": true,
+      "movedMeta": true,
+      "directHead": true,
+      "actionLabels": [
+        "Editar",
+        "Eliminar"
+      ],
+      "overflow": false,
+      "addHeight": 44,
+      "toolSummaryHeight": 59,
+      "smallestToolHeight": 44,
+      "smallestMealActionHeight": 44,
+      "groupedIds": [
+        "nutritionGoalBtn",
+        "nutritionWeeklyPlannerBtn",
+        "nutritionCopyDayBtn",
+        "nutritionE15RecipesBtn",
+        "nutritionShoppingListBtn",
+        "nutritionPantryBtn",
+        "nutritionHistoryBtn",
+        "nutritionStatsBtn",
+        "nutritionQualityOpen"
+      ]
+    },
+    {
+      "viewport": "1366x768-desktop",
+      "groups": [
+        {
+          "key": "plan",
+          "title": "Planificar",
+          "buttons": [
+            {
+              "id": "nutritionGoalBtn",
+              "text": "⚙ Configurar objetivos"
+            },
+            {
+              "id": "nutritionWeeklyPlannerBtn",
+              "text": "🗓️ Ver semana"
+            },
+            {
+              "id": "nutritionCopyDayBtn",
+              "text": "🔁 Copiar día"
+            }
+          ]
+        },
+        {
+          "key": "prepare",
+          "title": "Preparar",
+          "buttons": [
+            {
+              "id": "nutritionE15RecipesBtn",
+              "text": "📖 Mis recetas"
+            }
+          ]
+        },
+        {
+          "key": "organize",
+          "title": "Organizar",
+          "buttons": [
+            {
+              "id": "nutritionShoppingListBtn",
+              "text": "🛒 Lista de compras"
+            },
+            {
+              "id": "nutritionPantryBtn",
+              "text": "🥫 Despensa"
+            }
+          ]
+        },
+        {
+          "key": "review",
+          "title": "Consultar",
+          "buttons": [
+            {
+              "id": "nutritionHistoryBtn",
+              "text": "📅 Historial"
+            },
+            {
+              "id": "nutritionStatsBtn",
+              "text": "📊 Estadísticas"
+            },
+            {
+              "id": "nutritionQualityOpen",
+              "text": "🔎 Calidad y exportar"
+            }
+          ]
+        }
+      ],
+      "totalTools": 9,
+      "count": "9",
+      "detailsOpen": true,
+      "mealDetailsOpen": true,
+      "hasPreview": true,
+      "preview": "Avena 50 g, yogur natural 150 g, banana 80 g",
+      "kcal": "350 kcal",
+      "movedFoods": true,
+      "movedDescription": true,
+      "movedMeta": true,
+      "directHead": true,
+      "actionLabels": [
+        "Editar",
+        "Eliminar"
+      ],
+      "overflow": false,
+      "addHeight": 40,
+      "toolSummaryHeight": 59,
+      "smallestToolHeight": 42,
+      "smallestMealActionHeight": 44,
+      "groupedIds": [
+        "nutritionGoalBtn",
+        "nutritionWeeklyPlannerBtn",
+        "nutritionCopyDayBtn",
+        "nutritionE15RecipesBtn",
+        "nutritionShoppingListBtn",
+        "nutritionPantryBtn",
+        "nutritionHistoryBtn",
+        "nutritionStatsBtn",
+        "nutritionQualityOpen"
+      ]
+    }
+  ],
+  "failures": [],
+  "dynamicToolChecks": [
+    {
+      "viewport": "390x844-mobile",
+      "parent": "other",
+      "count": "10",
+      "total": 10,
+      "passed": true
+    }
+  ],
+  "coverage": [
+    "tools grouped into Planificar/Preparar/Organizar/Consultar",
+    "Mis recetas shortcut opens existing recipe list API",
+    "dynamic tool inserted after initialization is grouped and included in count",
+    "meal foods/description/nutrients moved into progressive details without replacing head or edit/delete handlers",
+    "touch targets >=44px on 320/390/768 simulated touch viewports",
+    "no horizontal document overflow at 320/390/768/1366",
+    "mobile details collapsed initially and desktop details expanded initially"
+  ]
+}
