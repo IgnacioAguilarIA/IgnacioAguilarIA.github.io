@@ -1,0 +1,49 @@
+{
+  "fixture": "real quick-access JS + E7 CSS; mocked food catalog/apply handler; no Supabase",
+  "viewports": [
+    {
+      "width": 320,
+      "docWidth": 320,
+      "hostWidth": 248,
+      "cardCount": 1,
+      "quickButton": {
+        "text": "＋ Agregar 65 g",
+        "height": 46,
+        "width": 222
+      },
+      "smallestQuickButtonHeight": 46
+    },
+    {
+      "width": 390,
+      "docWidth": 390,
+      "hostWidth": 318,
+      "cardCount": 1,
+      "quickButton": {
+        "text": "＋ Agregar 65 g",
+        "height": 46,
+        "width": 292
+      },
+      "smallestQuickButtonHeight": 46
+    },
+    {
+      "width": 768,
+      "docWidth": 768,
+      "hostWidth": 696,
+      "cardCount": 1,
+      "quickButton": {
+        "text": "＋ Agregar 65 g",
+        "height": 44,
+        "width": 319
+      },
+      "smallestQuickButtonHeight": 44
+    }
+  ],
+  "quickAddBehavior": {
+    "quantity": 65,
+    "unit": "g",
+    "recentUpdated": true,
+    "status": "✓ Avena arrollada · 65 g agregado al borrador de esta comida. Guardá la comida para conservar el cambio."
+  },
+  "incompleteFoodBlocked": true,
+  "accountIsolation": true
+}

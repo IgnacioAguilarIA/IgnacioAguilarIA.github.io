@@ -1,0 +1,819 @@
+TAP version 13
+# E9 integrated reliability checks completed.
+# Subtest: el diario E9 guarda y recupera un lote por cuenta y tipo de operación
+ok 1 - el diario E9 guarda y recupera un lote por cuenta y tipo de operación
+  ---
+  duration_ms: 3.737437
+  type: 'test'
+  ...
+# Subtest: el diario rechaza reanudar un lote con ámbito diferente
+ok 2 - el diario rechaza reanudar un lote con ámbito diferente
+  ---
+  duration_ms: 1.832139
+  type: 'test'
+  ...
+# Subtest: el diario no permite sobrescribir una operación pendiente con otra clave
+ok 3 - el diario no permite sobrescribir una operación pendiente con otra clave
+  ---
+  duration_ms: 0.665197
+  type: 'test'
+  ...
+# Subtest: solo se elimina del diario la operación identificada por la misma clave
+ok 4 - solo se elimina del diario la operación identificada por la misma clave
+  ---
+  duration_ms: 1.115356
+  type: 'test'
+  ...
+# Subtest: una instantánea multi-paso ilegible no se sobrescribe
+ok 5 - una instantánea multi-paso ilegible no se sobrescribe
+  ---
+  duration_ms: 2.166595
+  type: 'test'
+  ...
+# Subtest: la persistencia de alimentos detallados exige cuenta activa, comida y lista válida
+ok 6 - la persistencia de alimentos detallados exige cuenta activa, comida y lista válida
+  ---
+  duration_ms: 0.231193
+  type: 'test'
+  ...
+# Subtest: el guardado inicial pasa explícitamente la cuenta capturada al módulo de detalles
+ok 7 - el guardado inicial pasa explícitamente la cuenta capturada al módulo de detalles
+  ---
+  duration_ms: 0.092878
+  type: 'test'
+  ...
+# Subtest: la persistencia real rechaza una cuenta ausente o cambiada antes de consultar Supabase
+ok 8 - la persistencia real rechaza una cuenta ausente o cambiada antes de consultar Supabase
+  ---
+  duration_ms: 2.751844
+  type: 'test'
+  ...
+# Subtest: la copia individual guarda un diario antes de escribir y utiliza upsert idempotente
+ok 9 - la copia individual guarda un diario antes de escribir y utiliza upsert idempotente
+  ---
+  duration_ms: 0.402347
+  type: 'test'
+  ...
+# Subtest: si falla refrescar la vista después de duplicar, no informa falsamente que falló el guardado confirmado
+ok 10 - si falla refrescar la vista después de duplicar, no informa falsamente que falló el guardado confirmado
+  ---
+  duration_ms: 0.454535
+  type: 'test'
+  ...
+# Subtest: repetir un día guarda el lote antes de escribir y no borra copias ante una respuesta incierta
+ok 11 - repetir un día guarda el lote antes de escribir y no borra copias ante una respuesta incierta
+  ---
+  duration_ms: 0.178885
+  type: 'test'
+  ...
+# Subtest: al reabrir repetir día se recupera el origen y destino del diario local
+ok 12 - al reabrir repetir día se recupera el origen y destino del diario local
+  ---
+  duration_ms: 0.084586
+  type: 'test'
+  ...
+# Subtest: deshacer eliminación usa IDs estables y verifica registros existentes antes de insertar los faltantes
+ok 13 - deshacer eliminación usa IDs estables y verifica registros existentes antes de insertar los faltantes
+  ---
+  duration_ms: 0.285163
+  type: 'test'
+  ...
+# Subtest: los módulos E9 siguen cargados en Alimentación sin cargar un segundo helper E8
+ok 14 - los módulos E9 siguen cargados en Alimentación sin cargar un segundo helper E8
+  ---
+  duration_ms: 0.15483
+  type: 'test'
+  ...
+# Subtest: E9 no introduce otra migración SQL ni modifica el esquema de la restauración E8
+ok 15 - E9 no introduce otra migración SQL ni modifica el esquema de la restauración E8
+  ---
+  duration_ms: 0.437789
+  type: 'test'
+  ...
+# Subtest: genera una clave UUID estable para identificar el intento de guardado
+ok 16 - genera una clave UUID estable para identificar el intento de guardado
+  ---
+  duration_ms: 2.498118
+  type: 'test'
+  ...
+# Subtest: guarda y recupera el borrador por cuenta y día
+ok 17 - guarda y recupera el borrador por cuenta y día
+  ---
+  duration_ms: 3.077698
+  type: 'test'
+  ...
+# Subtest: no permite sobrescribir un intento pendiente con otra clave
+ok 18 - no permite sobrescribir un intento pendiente con otra clave
+  ---
+  duration_ms: 0.912064
+  type: 'test'
+  ...
+# Subtest: rechaza borrar un intento con una clave diferente
+ok 19 - rechaza borrar un intento con una clave diferente
+  ---
+  duration_ms: 0.933515
+  type: 'test'
+  ...
+# Subtest: borra solo el intento confirmado con la misma clave
+ok 20 - borra solo el intento confirmado con la misma clave
+  ---
+  duration_ms: 0.602754
+  type: 'test'
+  ...
+# Subtest: rechaza un borrador que pertenezca a otra cuenta o día
+ok 21 - rechaza un borrador que pertenezca a otra cuenta o día
+  ---
+  duration_ms: 0.824984
+  type: 'test'
+  ...
+# Subtest: no interpreta un JSON ilegible ni lo sobrescribe silenciosamente
+ok 22 - no interpreta un JSON ilegible ni lo sobrescribe silenciosamente
+  ---
+  duration_ms: 0.741671
+  type: 'test'
+  ...
+# Subtest: el guardado nuevo usa el helper idempotente y no vuelve a INSERT desde la interfaz
+ok 23 - el guardado nuevo usa el helper idempotente y no vuelve a INSERT desde la interfaz
+  ---
+  duration_ms: 0.318573
+  type: 'test'
+  ...
+# Subtest: el borrador se conserva antes de llamar a Supabase y se elimina solo al cerrar el flujo exitoso
+ok 24 - el borrador se conserva antes de llamar a Supabase y se elimina solo al cerrar el flujo exitoso
+  ---
+  duration_ms: 0.432862
+  type: 'test'
+  ...
+# Subtest: un resultado de red incierto se reintenta con la misma clave y conserva una sola fila
+ok 25 - un resultado de red incierto se reintenta con la misma clave y conserva una sola fila
+  ---
+  duration_ms: 1.701726
+  type: 'test'
+  ...
+# Subtest: no se puede cerrar el diálogo mientras el guardado está en curso
+ok 26 - no se puede cerrar el diálogo mientras el guardado está en curso
+  ---
+  duration_ms: 0.229841
+  type: 'test'
+  ...
+# Subtest: si el módulo de detalle no está cargado, no declara completa una comida parcialmente guardada
+ok 27 - si el módulo de detalle no está cargado, no declara completa una comida parcialmente guardada
+  ---
+  duration_ms: 0.287227
+  type: 'test'
+  ...
+# Subtest: el HTML incluye el helper E8 una única vez
+ok 28 - el HTML incluye el helper E8 una única vez
+  ---
+  duration_ms: 0.196601
+  type: 'test'
+  ...
+# Subtest: la migración es aditiva, exige RLS y crea el índice único
+ok 29 - la migración es aditiva, exige RLS y crea el índice único
+  ---
+  duration_ms: 0.234338
+  type: 'test'
+  ...
+# Subtest: el postcheck es de solo lectura y revisa la unicidad y los permisos
+ok 30 - el postcheck es de solo lectura y revisa la unicidad y los permisos
+  ---
+  duration_ms: 1.122796
+  type: 'test'
+  ...
+# OK - la migración es transaccional y falla antes de cambiar permisos si falta el esquema/policy
+# OK - revoca privilegios existentes, también los heredados por PUBLIC y anon
+# OK - el catálogo solo concede lectura a authenticated
+# OK - las tablas personales conceden solo CRUD
+# OK - no revoca ni modifica los privilegios directos de service_role
+# OK - verifica los privilegios efectivos y fuerza rollback si persiste un privilegio excesivo
+# OK - no cambia filas ni elimina policies, funciones, tablas o índices
+# Privilegios mínimos D2: 7 pruebas estáticas aprobadas.
+# Subtest: tests/nutrition-minimum-privileges-d2.test.cjs
+ok 3 - tests/nutrition-minimum-privileges-d2.test.cjs
+  ---
+  duration_ms: 28.55811
+  type: 'test'
+  ...
+# ✓ E6 carga la hoja responsive después de los estilos de Alimentación
+# ✓ La nueva hoja se limita a Alimentación y sus diálogos nutricionales
+# ✓ Los rótulos nutricionales pueden envolver texto en pantallas estrechas
+# ✓ La grilla de días no depende de desplazamiento horizontal en móvil
+# ✓ Las pestañas de comida pueden ajustarse sin desbordar texto
+# ✓ Los controles interactivos importantes alcanzan al menos 44 px en móvil
+# ✓ Los campos de formulario usan 16 px para evitar zoom automático en Safari iOS
+# ✓ Los formularios principales usan áreas seguras y altura del viewport dinámico
+# ✓ La cabecera del editor permanece disponible al recorrer formularios largos
+# ✓ Los diálogos secundarios contemplan pantalla apaisada
+# ✓ E6 conserva movimiento reducido y modo de colores forzados
+# ✓ El HTML conserva la estructura principal de Alimentación y no añade scripts nuevos
+# ✓ Los diálogos de comida y objetivos tienen nombre accesible y modalidad declarada
+# ✓ Los campos de objetivos quedan asociados a sus etiquetas
+# ✓ La acción de guardar permanece legible sobre un fondo opaco en el formulario móvil
+# ✓ Las áreas de toque siguen siendo amplias en dispositivos táctiles tipo tableta
+# ✓ El botón Guardar objetivos queda dentro de una barra accesible en móvil
+# ✓ El botón flotante global no tapa las tarjetas de Alimentación en móvil
+# ✓ Los formularios siguen ofreciendo guardar y cerrar en móviles apaisados
+# ✓ La hoja móvil no cambia el layout global ni define reglas fuera de Alimentación
+# E6: 20 pruebas aprobadas.
+# Subtest: tests/nutrition-mobile-accessibility-e6.test.cjs
+ok 4 - tests/nutrition-mobile-accessibility-e6.test.cjs
+  ---
+  duration_ms: 29.614858
+  type: 'test'
+  ...
+# ✓ Convierte kg a g sin mezclar magnitudes y calcula el faltante parcial
+# ✓ El inventario que cubre todo el requerimiento elimina el producto de compras
+# ✓ No deduce stock vencido ni artículos archivados
+# ✓ Mantiene separados crudo, cocido, marca y dimensiones de unidad
+# ✓ No inventa faltantes numéricos cuando la cantidad o la unidad son desconocidas
+# ✓ Normaliza nombres y unidades habituales del español sin forzar unidades incompatibles
+# ✓ La lista de compras consulta stock antes de guardar y ofrece registrar compras en la despensa
+# ✓ El descuento confirmado usa RPC transaccional y la comida planificada queda protegida contra doble uso
+# ✓ La migración limita acceso a filas propias y cambios de existencias mediante funciones protegidas
+# ✓ El postcheck es estrictamente de solo lectura
+# ✓ El HTML carga la despensa dentro de Alimentación y antes de uso interactivo, con CSS aislado y móvil
+# Etapa E3: 11 pruebas aprobadas.
+# Subtest: tests/nutrition-pantry-stage-e3.test.cjs
+ok 5 - tests/nutrition-pantry-stage-e3.test.cjs
+  ---
+  duration_ms: 33.08987
+  type: 'test'
+  ...
+# E11 premium dashboard checks completed.
+# Subtest: E11 loads after the established nutrition styles without duplicate references
+ok 34 - E11 loads after the established nutrition styles without duplicate references
+  ---
+  duration_ms: 0.820497
+  type: 'test'
+  ...
+# Subtest: E11 defines dedicated light and dark design tokens scoped to Nutrition
+ok 35 - E11 defines dedicated light and dark design tokens scoped to Nutrition
+  ---
+  duration_ms: 0.379083
+  type: 'test'
+  ...
+# Subtest: primary action, save status and plan-versus-consumed hierarchy are explicit
+ok 36 - primary action, save status and plan-versus-consumed hierarchy are explicit
+  ---
+  duration_ms: 0.193637
+  type: 'test'
+  ...
+# Subtest: responsive rules keep day, meal, summary and action controls usable
+ok 37 - responsive rules keep day, meal, summary and action controls usable
+  ---
+  duration_ms: 0.207358
+  type: 'test'
+  ...
+# Subtest: shared navigation receives scoped styles only while Nutrition is active
+ok 38 - shared navigation receives scoped styles only while Nutrition is active
+  ---
+  duration_ms: 0.447384
+  type: 'test'
+  ...
+# Subtest: accessibility preferences are preserved
+ok 39 - accessibility preferences are preserved
+  ---
+  duration_ms: 0.988877
+  type: 'test'
+  ...
+# E10 professional finish checks completed.
+# Subtest: E10 se carga después de los ajustes E6 y E7
+ok 40 - E10 se carga después de los ajustes E6 y E7
+  ---
+  duration_ms: 0.7818
+  type: 'test'
+  ...
+# Subtest: el sistema visual incluye tema oscuro y tema claro
+ok 41 - el sistema visual incluye tema oscuro y tema claro
+  ---
+  duration_ms: 0.497148
+  type: 'test'
+  ...
+# Subtest: los estados de sincronización diferencian guardado, pendiente, advertencia y error
+ok 42 - los estados de sincronización diferencian guardado, pendiente, advertencia y error
+  ---
+  duration_ms: 0.184864
+  type: 'test'
+  ...
+# Subtest: controles y tarjetas tienen foco visible y estados activos explícitos
+ok 43 - controles y tarjetas tienen foco visible y estados activos explícitos
+  ---
+  duration_ms: 0.173127
+  type: 'test'
+  ...
+# Subtest: la capa visual respeta movimiento reducido y alto contraste
+ok 44 - la capa visual respeta movimiento reducido y alto contraste
+  ---
+  duration_ms: 0.204113
+  type: 'test'
+  ...
+# Subtest: la hoja no redefine estilos globales de secciones ajenas
+ok 45 - la hoja no redefine estilos globales de secciones ajenas
+  ---
+  duration_ms: 0.33016
+  type: 'test'
+  ...
+# ✓ Una cantidad guardada en gramos se reutiliza con el mismo valor
+# ✓ Se conserva una unidad ml solo si existe densidad válida
+# ✓ Unidad y porción requieren equivalencia positiva a gramos
+# ✓ Los nutrientes incompletos impiden el atajo de agregar
+# ✓ Un estado de calidad incompleto bloquea el atajo incluso si falta la lista detallada
+# ✓ Las cantidades inválidas o desmesuradas se rechazan
+# ✓ Los registros antiguos con unidad de última operación ausente no se reinterpretan
+# ✓ El HTML declara un estado accesible para confirmar el registro rápido
+# ✓ La tarjeta ofrece elegir cantidad y agregar rápidamente con unidad explícita
+# ✓ Los accesos conservan procedencia y marcadores de nutrientes faltantes
+# ✓ El módulo vuelve a leer el almacén de la cuenta activa al mostrar la app
+# ✓ Los botones del atajo cumplen mínimo táctil de 44 px y estados de foco
+# E7: 12 pruebas aprobadas.
+# Subtest: tests/nutrition-quick-registration-e7.test.cjs
+ok 8 - tests/nutrition-quick-registration-e7.test.cjs
+  ---
+  duration_ms: 35.526496
+  type: 'test'
+  ...
+# ✓ La migración agrega instrucciones, tiempos y vínculo de variante sin eliminar datos previos
+# ✓ La base limita minutos, tipo de lista, cantidad de pasos y longitud de cada paso en servidor
+# ✓ Una variante no puede apuntar a sí misma ni a una receta de otra cuenta
+# ✓ El historial guarda una instantánea de ingredientes, pasos, tiempos y nutrición
+# ✓ La tabla de historial tiene RLS y el cliente autenticado recibe solo SELECT directo
+# ✓ El registro de preparación es RPC SECURITY DEFINER con comprobación explícita de usuario y receta propia
+# ✓ La clave idempotente evita duplicar preparaciones al reintentar una respuesta incierta
+# ✓ El postcheck no modifica la base de datos
+# ✓ El módulo de persistencia valida los pasos y tiempos antes de guardar la receta
+# ✓ El registro de preparación envía una solicitud autenticada al RPC y valida fecha, peso y porciones
+# ✓ La interfaz incluye pasos, tiempos, variante separada y registro de tandas
+# ✓ El modo de cocina avanza, retrocede y solicita Wake Lock cuando el navegador lo admite
+# ✓ El historial presenta los valores de la instantánea y conserva preparaciones tras editar o borrar la receta
+# ✓ El modo de cocina y sus controles tienen estilos adaptables, foco visible y movimiento reducido
+# ✓ La acción para guardar una receta se enlaza una sola vez
+# ✓ El módulo de persistencia se inicializa en un contexto aislado
+# ✓ Prueba dinámica: guardar receta conserva pasos, tiempos y vínculo de variante
+# ✓ Prueba dinámica: una receta con más de 40 pasos es rechazada antes de escribir
+# ✓ Prueba dinámica: se rechaza una fecha inexistente sin llamar a Supabase
+# ✓ Prueba dinámica: registrar preparación envía al RPC los datos validados y la clave idempotente
+# ✓ Prueba dinámica: el historial filtra por usuario y receta
+# Etapa E4A: 21 pruebas aprobadas.
+# Subtest: tests/nutrition-recipes-advanced-e4.test.cjs
+ok 9 - tests/nutrition-recipes-advanced-e4.test.cjs
+  ---
+  duration_ms: 37.496245
+  type: 'test'
+  ...
+# Subtest: rechaza un formato ajeno antes de hacer consultas o escrituras
+ok 48 - rechaza un formato ajeno antes de hacer consultas o escrituras
+  ---
+  duration_ms: 4.690501
+  type: 'test'
+  ...
+# Subtest: bloquea el reemplazo de un respaldo antiguo incompleto antes de tocar Supabase
+ok 49 - bloquea el reemplazo de un respaldo antiguo incompleto antes de tocar Supabase
+  ---
+  duration_ms: 1.56971
+  type: 'test'
+  ...
+# Subtest: restaura datos, limpia IDs antiguos después del historial y remapea reintentos pendientes
+ok 50 - restaura datos, limpia IDs antiguos después del historial y remapea reintentos pendientes
+  ---
+  duration_ms: 3.805368
+  type: 'test'
+  ...
+# Subtest: valida formato y versión del respaldo cuando Alimentación está seleccionada
+ok 51 - valida formato y versión del respaldo cuando Alimentación está seleccionada
+  ---
+  duration_ms: 1.017581
+  type: 'test'
+  ...
+# Subtest: la confirmación muestra un resumen nutricional y bloquea el reemplazo de copias incompletas
+ok 52 - la confirmación muestra un resumen nutricional y bloquea el reemplazo de copias incompletas
+  ---
+  duration_ms: 0.562465
+  type: 'test'
+  ...
+# Subtest: carga el historial importado antes de limpiar las filas históricas originales
+ok 53 - carga el historial importado antes de limpiar las filas históricas originales
+  ---
+  duration_ms: 0.201629
+  type: 'test'
+  ...
+# Subtest: la exportación siempre serializa la cola pendiente como objeto
+ok 54 - la exportación siempre serializa la cola pendiente como objeto
+  ---
+  duration_ms: 0.202661
+  type: 'test'
+  ...
+# Subtest: la importación restaura consumos pendientes con los IDs nuevos de detalle y comida
+ok 55 - la importación restaura consumos pendientes con los IDs nuevos de detalle y comida
+  ---
+  duration_ms: 0.258474
+  type: 'test'
+  ...
+# Subtest: la paginación de IDs que protege el reemplazo usa un orden estable
+ok 56 - la paginación de IDs que protege el reemplazo usa un orden estable
+  ---
+  duration_ms: 0.950931
+  type: 'test'
+  ...
+# Subtest: la edición conserva la sintaxis JavaScript
+ok 57 - la edición conserva la sintaxis JavaScript
+  ---
+  duration_ms: 24.244297
+  type: 'test'
+  ...
+# Subtest: serializa dos guardados de detalle para la misma comida y no duplica filas
+ok 58 - serializa dos guardados de detalle para la misma comida y no duplica filas
+  ---
+  duration_ms: 39.219838
+  type: 'test'
+  ...
+# Subtest: aborta después de un cambio de cuenta y no escribe en la cuenta nueva
+ok 59 - aborta después de un cambio de cuenta y no escribe en la cuenta nueva
+  ---
+  duration_ms: 31.301095
+  type: 'test'
+  ...
+# Subtest: un fallo de inserción no deja una fila nueva parcialmente persistida
+ok 60 - un fallo de inserción no deja una fila nueva parcialmente persistida
+  ---
+  duration_ms: 1.225579
+  type: 'test'
+  ...
+# Subtest: el buscador no devuelve alimentos de una cuenta anterior si cambia la sesión durante la búsqueda externa
+ok 61 - el buscador no devuelve alimentos de una cuenta anterior si cambia la sesión durante la búsqueda externa
+  ---
+  duration_ms: 3.468277
+  type: 'test'
+  ...
+# Subtest: la migración preserva policies permisivas, valida el esquema y elimina comida/detalles mediante RPC
+ok 62 - la migración preserva policies permisivas, valida el esquema y elimina comida/detalles mediante RPC
+  ---
+  duration_ms: 1.029077
+  type: 'test'
+  ...
+# Subtest: la exportación completa no descarga un archivo cuando falla alguna tabla nutricional
+ok 63 - la exportación completa no descarga un archivo cuando falla alguna tabla nutricional
+  ---
+  duration_ms: 0.185425
+  type: 'test'
+  ...
+# Subtest: Mis alimentos solo carga registros de la cuenta activa y expone el id real para editar
+ok 64 - Mis alimentos solo carga registros de la cuenta activa y expone el id real para editar
+  ---
+  duration_ms: 0.861318
+  type: 'test'
+  ...
+# Subtest: editar un alimento personalizado actualiza la fila propia en lugar de insertar un duplicado
+ok 65 - editar un alimento personalizado actualiza la fila propia en lugar de insertar un duplicado
+  ---
+  duration_ms: 1.083678
+  type: 'test'
+  ...
+# Subtest: el intento de editar o borrar un alimento de otra cuenta no modifica sus datos
+ok 66 - el intento de editar o borrar un alimento de otra cuenta no modifica sus datos
+  ---
+  duration_ms: 1.391285
+  type: 'test'
+  ...
+# Subtest: el módulo avanzado habilita edición de recetas y edición de alimentos propios sin migración nueva
+ok 67 - el módulo avanzado habilita edición de recetas y edición de alimentos propios sin migración nueva
+  ---
+  duration_ms: 1.521609
+  type: 'test'
+  ...
+# Subtest: editar una receta actualiza su fila y recalcula los valores por 100 g
+ok 68 - editar una receta actualiza su fila y recalcula los valores por 100 g
+  ---
+  duration_ms: 1.229835
+  type: 'test'
+  ...
+# Subtest: la migración prevalidada no modifica filas de usuario
+ok 69 - la migración prevalidada no modifica filas de usuario
+  ---
+  duration_ms: 1.078561
+  type: 'test'
+  ...
+# Subtest: reduce grants de anon/PUBLIC y conserva permisos explícitos de la app y service_role
+ok 70 - reduce grants de anon/PUBLIC y conserva permisos explícitos de la app y service_role
+  ---
+  duration_ms: 0.287537
+  type: 'test'
+  ...
+# Subtest: solo elimina guards redundantes si son idénticos a su policy canónica
+ok 71 - solo elimina guards redundantes si son idénticos a su policy canónica
+  ---
+  duration_ms: 0.252184
+  type: 'test'
+  ...
+# Subtest: la nueva policy valida que user_food_id pertenezca a la cuenta autenticada
+ok 72 - la nueva policy valida que user_food_id pertenezca a la cuenta autenticada
+  ---
+  duration_ms: 0.251473
+  type: 'test'
+  ...
+# Subtest: el informe de integridad es de solo lectura y devuelve solo contadores de anomalías
+ok 73 - el informe de integridad es de solo lectura y devuelve solo contadores de anomalías
+  ---
+  duration_ms: 0.271824
+  type: 'test'
+  ...
+# Subtest: el preflight evita la ambigüedad PL/pgSQL entre variable y columna cmd
+ok 74 - el preflight evita la ambigüedad PL/pgSQL entre variable y columna cmd
+  ---
+  duration_ms: 0.180738
+  type: 'test'
+  ...
+# Subtest: el preflight trata food_catalog como catálogo de solo lectura
+ok 75 - el preflight trata food_catalog como catálogo de solo lectura
+  ---
+  duration_ms: 1.50948
+  type: 'test'
+  ...
+# Etapa B2: 20 pruebas aprobadas.
+# OK - 100 g equivale a 100 g
+# OK - 100 ml usa densidad explícita y no asume 1 g/ml
+# OK - una unidad usa gramos por unidad explícitos
+# OK - una porción usa su propio peso por porción explícito
+# OK - un peso de unidad no se reutiliza como peso de porción
+# OK - un peso de porción no se reutiliza como peso de unidad
+# OK - sin densidad no convierte ml
+# OK - sin peso por unidad no convierte unidad
+# OK - snapshot conserva gramos, densidad y estado
+# OK - nombre explicito arroz cocido detecta estado cocido
+# OK - receta convierte ingredientes antes de calcular macros
+# OK - peso final preparado cambia denominador, no energía total
+# OK - receta no inventa conversión ml desconocida
+# OK - migración es aditiva e incluye equivalencias separadas y snapshots
+# OK - HTML expone unidades y estado sin modificar navegación
+# OK - instantánea de gramos prevalece sobre una densidad futura modificada
+# OK - la validación del consumo carga primero la fila de la cuenta propietaria
+# OK - la etiqueta de porción respeta la unidad de la fuente
+# OK - la migración no propaga conversiones actuales a registros históricos
+# OK - Open Food Facts no usa energía sin unidad por 100 g como kcal/100 g
+# Subtest: tests/nutrition-stage-b2.test.cjs
+ok 14 - tests/nutrition-stage-b2.test.cjs
+  ---
+  duration_ms: 33.29851
+  type: 'test'
+  ...
+# Etapa B3: 13 pruebas aprobadas.
+# OK - día copiado recibe nuevo día/dueño y no reutiliza IDs ni claves idempotentes de la comida original
+# OK - alimentos copiados generan nuevas filas y quedan desmarcados
+# OK - promedios semanales calculan solo días con registros
+# OK - un día con registros cuyos nutrientes suman cero se diferencia de uno sin registros
+# OK - ignora registros fuera del período y fechas inválidas
+# OK - consulta el historial autenticado con paginación por fecha
+# OK - copiar día carga primero todos los detalles y luego guarda mediante la clave idempotente del lote
+# OK - si falla copiar día conserva el lote y no borra filas a ciegas
+# OK - deshacer captura comidas y detalles antes de delegar la eliminación
+# OK - deshacer restaura usando los mismos IDs y un insert reconciliable sin borrar para compensar
+# OK - la copia individual no permite continuar si no pudo cargar alimentos
+# OK - HTML carga solo el nuevo módulo de herramientas de Alimentación
+# OK - los controles nuevos son responsivos y tienen foco de diálogo accesible
+# Subtest: tests/nutrition-stage-b3.test.cjs
+ok 15 - tests/nutrition-stage-b3.test.cjs
+  ---
+  duration_ms: 30.001597
+  type: 'test'
+  ...
+# Etapa C1: 19 pruebas aprobadas.
+# OK - el módulo de accesibilidad se carga después del módulo de rutinas de Alimentación
+# OK - selector de días expone un nombre de grupo accesible
+# OK - selector de días informa qué botón está seleccionado
+# OK - cada día tiene una etiqueta accesible descriptiva
+# OK - categorías de comida se etiquetan como grupo y marcan su selección
+# OK - asocia etiquetas visibles sin for a su único campo
+# OK - diálogo principal está descrito y etiquetado con aria-describedby
+# OK - diálogos estáticos de comida y objetivos añaden Escape y trampa de foco
+# OK - al cerrar un diálogo se devuelve el foco al elemento que lo abrió
+# OK - bloquea desplazamiento de fondo solo mientras el diálogo está abierto
+# OK - diálogo avanzado incluye descripción accesible y foco inicial
+# OK - diálogos de herramientas incorporan texto descriptivo y trampa de foco
+# OK - estados seleccionados se anuncian además del color
+# OK - todos los ámbitos interactivos nutricionales tienen foco visible
+# OK - controles táctiles de uso frecuente tienen un mínimo de 44px
+# OK - tema claro define colores legibles sin depender solo de opacidad
+# OK - respeta movimiento reducido y colores forzados
+# OK - reinicio del manejador de deshacer agrupa mutaciones en requestAnimationFrame
+# OK - el módulo de accesibilidad solo enlaza contenedores de Alimentación
+# Subtest: tests/nutrition-stage-c1.test.cjs
+ok 16 - tests/nutrition-stage-c1.test.cjs
+  ---
+  duration_ms: 29.495951
+  type: 'test'
+  ...
+# Etapa C2: 20 pruebas aprobadas.
+# OK - C2 carga después de sincronización y accesibilidad de Alimentación
+# OK - detecta mensajes claros de error como error
+# OK - detecta estados pendientes y búsquedas en curso
+# OK - detecta confirmaciones positivas sin confundirlas con error
+# OK - texto vacío, validación o ausencia de resultados no se convierten en pendiente
+# OK - los mensajes de sincronización no anuncian éxito desde el botón de reintento
+# OK - el reintento intenta sincronizar preferencias y consumo pendiente
+# OK - el reintento controla el usuario activo antes de proceder y al volver
+# OK - un cambio de cuenta invalida estados visuales de la cuenta anterior
+# OK - no se muestra la acción de reintento sin conexión o con estado guardado
+# OK - los módulos de sincronización ya validan el propietario al informar el estado
+# OK - la búsqueda del catálogo descarta respuestas antiguas
+# OK - el autocompletado administra identificadores de solicitud
+# OK - los estados dinámicos usan roles y atributos de anuncio accesibles
+# OK - evita crear un segundo live region dentro del estado de sincronización existente
+# OK - la interfaz limita los estados nuevos a mensajes de Alimentación
+# OK - el botón de reintento tiene etiqueta accesible y estado de operación
+# OK - el estilo del botón ofrece foco visible y adaptación móvil
+# OK - estados visuales distinguen error, pendiente y éxito con bordes
+# OK - no se añadió una migración SQL nueva en C2
+# Subtest: tests/nutrition-stage-c2.test.cjs
+ok 17 - tests/nutrition-stage-c2.test.cjs
+  ---
+  duration_ms: 30.443508
+  type: 'test'
+  ...
+# ✓ La búsqueda inteligente prioriza la coincidencia exacta sobre la aproximada
+# ✓ El buscador tolera un error pequeño de escritura sin perder el resultado
+# ✓ La deduplicación conserva la copia con datos nutricionales más completos
+# ✓ La normalización detecta nutrientes desconocidos sin confundirlos con cero
+# ✓ No considera conocido un dato energético por porción sin unidad por 100 g
+# ✓ Normaliza un EAN copiado con espacios y guiones
+# ✓ Admite las longitudes estándar EAN-8, UPC-A, EAN-13 y GTIN-14
+# ✓ Valida dígitos de control habituales
+# ✓ Rechaza entradas con longitud inválida o letras incrustadas
+# ✓ La lista de nutrientes incompletos es conservadora
+# ✓ El catálogo conserva la lista de nutrientes desconocidos del producto externo
+# ✓ No permite guardar ni agregar al registro productos externos con nutrientes principales desconocidos
+# ✓ El HTML carga el lector después del catálogo y su adaptador
+# ✓ El lector mantiene un ingreso manual aunque el navegador no soporte cámara
+# D6: 14 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-d6-search-barcode.test.cjs
+ok 18 - tests/nutrition-stage-d6-search-barcode.test.cjs
+  ---
+  duration_ms: 32.518436
+  type: 'test'
+  ...
+# ✓ CSV neutraliza celdas que podrían ejecutar fórmulas en hojas de cálculo
+# ✓ Estado desconocido se informa como registro previo no verificado
+# ✓ El informe cuenta cada estado sin reinterpretar el valor nutricional cero
+# ✓ La exportación de historial lleva procedencia y datos faltantes desde la instantánea
+# ✓ La exportación de alimentos contiene procedencia, estado de calidad y nutrientes
+# ✓ Los informes paginan datos y filtran cada consulta por el usuario activo
+# ✓ La verificación de etiqueta exige ausencia de campos marcados como faltantes
+# ✓ La instantánea del alimento guarda procedencia, URL, calidad, faltantes y fecha de verificación
+# ✓ La lectura de catálogos carga las nuevas columnas de trazabilidad
+# ✓ La verificación no actualiza alimentos de otra cuenta
+# ✓ Open Food Facts conserva fuente, URL y estado de completitud sin marcarlo como verificado por usuario
+# ✓ La migración D7 es aditiva y registra procedencia sin borrar datos
+# ✓ La migración valida URLs y estados de calidad conocidos
+# ✓ El HTML enlaza el informe después del catálogo y del escáner existente
+# D7: 14 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-d7-quality-report.test.cjs
+ok 19 - tests/nutrition-stage-d7-quality-report.test.cjs
+  ---
+  duration_ms: 31.281466
+  type: 'test'
+  ...
+# ✓ El período por defecto usa el día local del navegador y cubre 30 días
+# ✓ Valida fechas reales, orden y límite de período
+# ✓ El resumen diferencia día sin registros de día con nutrientes registrados en cero
+# ✓ Un nutriente sin dato permanece vacío y no se suma como cero
+# ✓ Múltiples comidas se agregan por día sin mezclar fechas
+# ✓ La descripción del período contabiliza por separado los días vacíos
+# ✓ La exportación incluye todos los días solicitados y el estado de cada uno
+# ✓ La consulta de historial se filtra por usuario y por rango en el servidor
+# ✓ Un período inválido bloquea las exportaciones para no descargar resultados antiguos con fechas nuevas
+# ✓ Cambiar el rango sin aplicarlo desactiva la exportación del historial anterior
+# ✓ Al actualizar o fallar un filtro no deja visible el resumen anterior como si fuera actual
+# ✓ La interfaz tiene filtros de fecha y tres exportaciones separadas
+# ✓ Las celdas CSV siguen neutralizando fórmulas
+# D8: 13 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-d8-period-report.test.cjs
+ok 20 - tests/nutrition-stage-d8-period-report.test.cjs
+  ---
+  duration_ms: 37.261762
+  type: 'test'
+  ...
+# ✓ Calcula el período anterior de igual duración, contiguo y sin solapamiento
+# ✓ La comparación calcula diferencias solo cuando ambos períodos tienen totales completos
+# ✓ La falta de un nutriente en un día impide mostrar una suma completa, pero preserva el subtotal conocido y su denominador
+# ✓ Un período sin registros no se confunde con un total registrado de cero
+# ✓ El filtro de categoría reconoce claves antiguas y nombres en español
+# ✓ Auditoría marca valores negativos, origen ausente y posible discrepancia energética sin corregir el alimento
+# ✓ Auditoría diferencia campos no declarados, estados contradictorios y datos incompletos
+# ✓ Un alimento completo y coherente no genera alertas con las reglas orientativas
+# ✓ Un alimento con macros superiores a 100 g/100 g recibe una advertencia, no se elimina
+# ✓ La exportación de auditoría contiene una fila por hallazgo y un resumen cuando no hay alertas
+# ✓ El informe puede cargar el período comparativo sin volver a descargar el catálogo de alimentos
+# ✓ La interfaz limita filtros y exportaciones al informe cargado, y añade auditoría CSV
+# E4B: 12 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-e4b-quality-comparison.test.cjs
+ok 21 - tests/nutrition-stage-e4b-quality-comparison.test.cjs
+  ---
+  duration_ms: 40.41439
+  type: 'test'
+  ...
+# ✓ La exportación del plan fechado crea una fila resumen y filas estructuradas por ingrediente
+# ✓ La exportación CSV conserva acentos y separadores y neutraliza fórmulas
+# ✓ La exportación de planificación verifica la cuenta activa y se bloquea mientras se carga
+# ✓ La despensa ofrece exportación del inventario, faltantes, uso planificado y movimientos
+# ✓ La exportación del plan dentro de la despensa mantiene las 22 columnas alineadas
+# ✓ El CSV de despensa incluye BOM, separa columnas y neutraliza fórmulas
+# ✓ El estado sin conexión aclara qué datos no se ponen automáticamente en cola
+# ✓ Las herramientas de exportación siguen cargadas en Alimentación sin añadir scripts globales
+# ✓ Las descargas CSV esperan antes de revocar la URL temporal
+# E5: 9 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-e5-final-polish.test.cjs
+ok 22 - tests/nutrition-stage-e5-final-polish.test.cjs
+  ---
+  duration_ms: 32.919638
+  type: 'test'
+  ...
+# OK - no borra una entrada más reciente que se escribió mientras el request estaba en vuelo
+# OK - elimina de la cola solo la entrada exacta confirmada por Supabase
+# OK - si cambia la cuenta durante una solicitud conserva la cola de la cuenta original
+# OK - si Supabase confirma el consumo pero no el historial mantiene el reintento
+# OK - dos flush simultáneos del mismo usuario no envían la misma entrada dos veces
+# OK - si se agrega otra entrada durante el flush se programa una pasada adicional
+# OK - las operaciones directas y el flush comparten el bloqueo por alimento
+# OK - el módulo no escribe una instantánea obsoleta de toda la cola tras un await
+# OK - la auditoría de producción es de solo lectura y cubre RLS, grants y restricciones
+# Sincronización D1: 9 pruebas aprobadas.
+# Subtest: tests/nutrition-sync-hardening-d1.test.cjs
+ok 23 - tests/nutrition-sync-hardening-d1.test.cjs
+  ---
+  duration_ms: 34.57257
+  type: 'test'
+  ...
+# D3 trigger-function lockdown: 11 checks passed
+# Subtest: tests/nutrition-trigger-function-lockdown-d3.test.cjs
+ok 24 - tests/nutrition-trigger-function-lockdown-d3.test.cjs
+  ---
+  duration_ms: 25.711779
+  type: 'test'
+  ...
+# ✓ Escala ingredientes y nutrientes al planificar menos porciones que el rendimiento guardado
+# ✓ Conserva marca, preparación, categoría y metadatos en una instantánea independiente
+# ✓ No mezcla unidades diferentes ni normaliza crudo y cocido como si fueran iguales
+# ✓ Rechaza cantidades de porciones nulas, negativas, no numéricas o superiores al límite
+# ✓ Rechaza recetas sin rendimiento o sin ingredientes detallados
+# ✓ Rechaza ingredientes sin cantidad positiva o sin unidad en lugar de inventar una cantidad
+# ✓ La interfaz usa las recetas autenticadas y guarda origen más instantánea para la compra
+# ✓ El origen de compras lee solo la semana y la cuenta activas y conserva la instantánea de cada comida
+# ✓ La fuente de compras rechaza semanas que no comienzan en lunes y un cambio de cuenta durante la lectura
+# ✓ La generación agrupa solo ingredientes compatibles y no suma unidades ni preparaciones distintas
+# ✓ Detecta cambios de cantidades en productos ya comprados sin marcar como conflicto los productos manuales
+# ✓ El editor usa estilos locales, la tabla mantiene snapshots con RLS y el HTML carga módulos en orden
+# E2: 12 pruebas aprobadas.
+# Subtest: tests/nutrition-week-plan-recipes-e2.test.cjs
+ok 25 - tests/nutrition-week-plan-recipes-e2.test.cjs
+  ---
+  duration_ms: 46.220588
+  type: 'test'
+  ...
+# ✓ Agrupa alimentos iguales y suma cantidad con precisión de tres decimales
+# ✓ Normaliza alias de unidades inequívocos antes de sumar cantidades
+# ✓ No mezcla unidades diferentes ni estados de preparación diferentes
+# ✓ No combina cantidad desconocida con una cantidad conocida del mismo ingrediente
+# ✓ Distingue un cero real de una cantidad desconocida
+# ✓ No incluye una fila auxiliar de unidad plan como ingrediente comprable
+# ✓ Conserva un ingrediente de cantidad cero como cantidad no inventada
+# ✓ La clave generada normaliza tildes y separa marca/unidad/preparación
+# ✓ Normaliza semana a lunes y resuelve cambio de semana sin zona horaria local
+# ✓ Escapa celdas CSV y neutraliza posibles fórmulas de hoja de cálculo
+# ✓ La migración utiliza RLS, un ámbito por cuenta y privilegios CRUD mínimos
+# ✓ El postcheck no intenta consultar el pseudo-rol PUBLIC como si fuera un rol nombrado
+# D4: 10 pruebas aprobadas.
+# Subtest: tests/nutrition-week-planner-d4.test.cjs
+ok 26 - tests/nutrition-week-planner-d4.test.cjs
+  ---
+  duration_ms: 37.805604
+  type: 'test'
+  ...
+# ✓ Rechaza fecha ISO imposible
+# ✓ Normaliza domingo a lunes de la misma semana
+# ✓ Mantiene lunes si ya empieza semana
+# ✓ Suma días sin depender de zona horaria
+# ✓ Filtra ingredientes sin nombre y normaliza snapshots
+# ✓ Construye snapshot de receta plantilla sin compartir referencias mutables
+# ✓ Las claves de plantilla son estables para que un reintento no duplique una comida
+# ✓ Las claves separan el día/categoría para no sobrescribir otra franja planificada
+# ✓ Los ingredientes se guardan como instantánea y no se mutan al editar después
+# ✓ La policy no permite vincular una plantilla de otra cuenta
+# ✓ La migración crea tabla aislada, RLS y privilegios mínimos
+# ✓ El postcheck es de solo lectura
+# ✓ El HTML carga el editor y su CSS después de las herramientas anteriores
+# ✓ El guardado de una comida planificada usa una clave idempotente y solo informa confirmación del servidor
+# ✓ Generación de compras está vinculada a la semana planificada fechada
+# D5: 15 pruebas aprobadas.
+# Subtest: tests/nutrition-week-planner-d5.test.cjs
+ok 27 - tests/nutrition-week-planner-d5.test.cjs
+  ---
+  duration_ms: 33.811942
+  type: 'test'
+  ...
+1..89
+# tests 89
+# suites 0
+# pass 89
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1201.830711

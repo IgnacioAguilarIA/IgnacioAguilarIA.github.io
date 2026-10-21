@@ -1,0 +1,17 @@
+{
+  "stage": "E11",
+  "automated_node_tests": 89,
+  "node_syntax_checked_files": 68,
+  "visual_theme_view_combinations_passed": 14,
+  "mobile_viewports_passed": 7,
+  "quick_registration_browser_audit": "PASS",
+  "html_ids": 523,
+  "duplicate_html_ids": [],
+  "local_resource_references": 160,
+  "missing_local_resources": [],
+  "new_css_braces": {
+    "open": 187,
+    "close": 187
+  },
+  "production_device_test": "not run; Chromium fixture only"
+}

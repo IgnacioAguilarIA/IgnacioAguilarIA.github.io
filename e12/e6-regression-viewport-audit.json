@@ -1,0 +1,675 @@
+{
+  "scope": "CSS/markup visual fixture only; scripts are stripped and Supabase is not contacted.",
+  "viewports": [
+    {
+      "viewport": {
+        "width": 320,
+        "height": 740
+      },
+      "document": {
+        "width": 320,
+        "height": 1613
+      },
+      "panel": {
+        "left": 14,
+        "right": 306,
+        "top": 128,
+        "bottom": 1376.7,
+        "width": 292,
+        "height": 1248.7
+      },
+      "panelOverflow": false,
+      "labelOverflow": [],
+      "outside": [],
+      "dayGrid": "84px 84px 84px",
+      "tabsGrid": "129.5px 129.5px",
+      "summaryHidden": true,
+      "mobileNav": {
+        "rect": {
+          "left": 6,
+          "right": 314,
+          "top": 656.2,
+          "bottom": 734,
+          "width": 308,
+          "height": 77.8
+        },
+        "display": "grid",
+        "activeNutrition": true
+      },
+      "quickAddFabDisplay": "none",
+      "smallTargets": [],
+      "visibleTargets": 4,
+      "modal": {
+        "modal": {
+          "left": 8,
+          "right": 312,
+          "top": 8,
+          "bottom": 732,
+          "width": 304,
+          "height": 724,
+          "maxHeight": "724px",
+          "overflowY": "auto",
+          "scrollHeight": 2128,
+          "clientHeight": 722
+        },
+        "save": {
+          "left": 23,
+          "right": 297,
+          "top": 657,
+          "bottom": 705,
+          "height": 48
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelledby": "nutritionModalTitle",
+        "labelExists": true
+      },
+      "goalModal": {
+        "modal": {
+          "left": 8,
+          "right": 312,
+          "top": 8,
+          "bottom": 588,
+          "height": 580,
+          "scrollHeight": 578,
+          "clientHeight": 578,
+          "overflowY": "auto"
+        },
+        "save": {
+          "top": 515,
+          "bottom": 561,
+          "height": 46,
+          "visible": true
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelExists": true
+      },
+      "size": "320x740"
+    },
+    {
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "document": {
+        "width": 360,
+        "height": 1564
+      },
+      "panel": {
+        "left": 14,
+        "right": 346,
+        "top": 128,
+        "bottom": 1328.2,
+        "width": 332,
+        "height": 1200.2
+      },
+      "panelOverflow": false,
+      "labelOverflow": [],
+      "outside": [],
+      "dayGrid": "97.3281px 97.3281px 97.3281px",
+      "tabsGrid": "149.5px 149.5px",
+      "summaryHidden": true,
+      "mobileNav": {
+        "rect": {
+          "left": 6,
+          "right": 354,
+          "top": 718.2,
+          "bottom": 794,
+          "width": 348,
+          "height": 75.8
+        },
+        "display": "grid",
+        "activeNutrition": true
+      },
+      "quickAddFabDisplay": "none",
+      "smallTargets": [],
+      "visibleTargets": 4,
+      "modal": {
+        "modal": {
+          "left": 8,
+          "right": 352,
+          "top": 8,
+          "bottom": 792,
+          "width": 344,
+          "height": 784,
+          "maxHeight": "784px",
+          "overflowY": "auto",
+          "scrollHeight": 2052,
+          "clientHeight": 782
+        },
+        "save": {
+          "left": 23,
+          "right": 337,
+          "top": 717,
+          "bottom": 765,
+          "height": 48
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelledby": "nutritionModalTitle",
+        "labelExists": true
+      },
+      "goalModal": {
+        "modal": {
+          "left": 8,
+          "right": 352,
+          "top": 8,
+          "bottom": 570,
+          "height": 562,
+          "scrollHeight": 560,
+          "clientHeight": 560,
+          "overflowY": "auto"
+        },
+        "save": {
+          "top": 497,
+          "bottom": 543,
+          "height": 46,
+          "visible": true
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelExists": true
+      },
+      "size": "360x800"
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "document": {
+        "width": 390,
+        "height": 1553
+      },
+      "panel": {
+        "left": 14,
+        "right": 376,
+        "top": 128,
+        "bottom": 1316.5,
+        "width": 362,
+        "height": 1188.5
+      },
+      "panelOverflow": false,
+      "labelOverflow": [],
+      "outside": [],
+      "dayGrid": "77.25px 77.25px 77.25px 77.25px",
+      "tabsGrid": "161.5px 161.5px",
+      "summaryHidden": true,
+      "mobileNav": {
+        "rect": {
+          "left": 6,
+          "right": 384,
+          "top": 766,
+          "bottom": 838,
+          "width": 378,
+          "height": 72
+        },
+        "display": "grid",
+        "activeNutrition": true
+      },
+      "quickAddFabDisplay": "none",
+      "smallTargets": [],
+      "visibleTargets": 4,
+      "modal": {
+        "modal": {
+          "left": 8,
+          "right": 382,
+          "top": 8,
+          "bottom": 836,
+          "width": 374,
+          "height": 828,
+          "maxHeight": "828px",
+          "overflowY": "auto",
+          "scrollHeight": 1937,
+          "clientHeight": 826
+        },
+        "save": {
+          "left": 23,
+          "right": 367,
+          "top": 761,
+          "bottom": 809,
+          "height": 48
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelledby": "nutritionModalTitle",
+        "labelExists": true
+      },
+      "goalModal": {
+        "modal": {
+          "left": 8,
+          "right": 382,
+          "top": 8,
+          "bottom": 547,
+          "height": 539,
+          "scrollHeight": 537,
+          "clientHeight": 537,
+          "overflowY": "auto"
+        },
+        "save": {
+          "top": 474,
+          "bottom": 520,
+          "height": 46,
+          "visible": true
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelExists": true
+      },
+      "size": "390x844"
+    },
+    {
+      "viewport": {
+        "width": 430,
+        "height": 932
+      },
+      "document": {
+        "width": 430,
+        "height": 1516
+      },
+      "panel": {
+        "left": 14,
+        "right": 416,
+        "top": 128,
+        "bottom": 1279.6,
+        "width": 402,
+        "height": 1151.6
+      },
+      "panelOverflow": false,
+      "labelOverflow": [],
+      "outside": [],
+      "dayGrid": "87.25px 87.25px 87.25px 87.25px",
+      "tabsGrid": "181.5px 181.5px",
+      "summaryHidden": true,
+      "mobileNav": {
+        "rect": {
+          "left": 6,
+          "right": 424,
+          "top": 854,
+          "bottom": 926,
+          "width": 418,
+          "height": 72
+        },
+        "display": "grid",
+        "activeNutrition": true
+      },
+      "quickAddFabDisplay": "none",
+      "smallTargets": [],
+      "visibleTargets": 4,
+      "modal": {
+        "modal": {
+          "left": 8,
+          "right": 422,
+          "top": 8,
+          "bottom": 924,
+          "width": 414,
+          "height": 916,
+          "maxHeight": "916px",
+          "overflowY": "auto",
+          "scrollHeight": 1840,
+          "clientHeight": 914
+        },
+        "save": {
+          "left": 23,
+          "right": 407,
+          "top": 849,
+          "bottom": 897,
+          "height": 48
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelledby": "nutritionModalTitle",
+        "labelExists": true
+      },
+      "goalModal": {
+        "modal": {
+          "left": 8,
+          "right": 422,
+          "top": 8,
+          "bottom": 547,
+          "height": 539,
+          "scrollHeight": 537,
+          "clientHeight": 537,
+          "overflowY": "auto"
+        },
+        "save": {
+          "top": 474,
+          "bottom": 520,
+          "height": 46,
+          "visible": true
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelExists": true
+      },
+      "size": "430x932"
+    },
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "document": {
+        "width": 768,
+        "height": 1377
+      },
+      "panel": {
+        "left": 14,
+        "right": 754,
+        "top": 124,
+        "bottom": 1229.1,
+        "width": 740,
+        "height": 1105.1
+      },
+      "panelOverflow": false,
+      "labelOverflow": [],
+      "outside": [],
+      "dayGrid": "169.672px 169.672px 169.672px 169.672px",
+      "tabsGrid": "228.891px 228.891px 228.891px",
+      "summaryHidden": true,
+      "mobileNav": {
+        "rect": {
+          "left": 24,
+          "right": 744,
+          "top": 934,
+          "bottom": 1006,
+          "width": 720,
+          "height": 72
+        },
+        "display": "grid",
+        "activeNutrition": true
+      },
+      "quickAddFabDisplay": "flex",
+      "smallTargets": [],
+      "visibleTargets": 4,
+      "modal": {
+        "modal": {
+          "left": 16,
+          "right": 752,
+          "top": 46.1,
+          "bottom": 977.9,
+          "width": 736,
+          "height": 931.8,
+          "maxHeight": "931.84px",
+          "overflowY": "auto",
+          "scrollHeight": 1482,
+          "clientHeight": 930
+        },
+        "save": {
+          "left": 33.9,
+          "right": 734.1,
+          "top": 902,
+          "bottom": 950,
+          "height": 48
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelledby": "nutritionModalTitle",
+        "labelExists": true
+      },
+      "goalModal": {
+        "modal": {
+          "left": 124,
+          "right": 644,
+          "top": 328.5,
+          "bottom": 695.5,
+          "height": 367,
+          "scrollHeight": 365,
+          "clientHeight": 365,
+          "overflowY": "visible"
+        },
+        "save": {
+          "top": 618.5,
+          "bottom": 664.5,
+          "height": 46,
+          "visible": true
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelExists": true
+      },
+      "size": "768x1024-tablet-touch"
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "document": {
+        "width": 844,
+        "height": 1321
+      },
+      "panel": {
+        "left": 14,
+        "right": 830,
+        "top": 124,
+        "bottom": 1172.6,
+        "width": 816,
+        "height": 1048.6
+      },
+      "panelOverflow": false,
+      "labelOverflow": [],
+      "outside": [],
+      "dayGrid": "187.797px 187.797px 187.797px 187.797px",
+      "tabsGrid": "253.062px 253.062px 253.062px",
+      "summaryHidden": true,
+      "mobileNav": {
+        "rect": {
+          "left": 62,
+          "right": 782,
+          "top": 300,
+          "bottom": 372,
+          "width": 720,
+          "height": 72
+        },
+        "display": "grid",
+        "activeNutrition": true
+      },
+      "quickAddFabDisplay": "flex",
+      "smallTargets": [],
+      "visibleTargets": 4,
+      "modal": {
+        "modal": {
+          "left": 16,
+          "right": 828,
+          "top": 23.4,
+          "bottom": 366.6,
+          "width": 812,
+          "height": 343.2,
+          "maxHeight": "343.2px",
+          "overflowY": "auto",
+          "scrollHeight": 1479,
+          "clientHeight": 341
+        },
+        "save": {
+          "left": 35.6,
+          "right": 808.4,
+          "top": 291,
+          "bottom": 339,
+          "height": 48
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelledby": "nutritionModalTitle",
+        "labelExists": true
+      },
+      "goalModal": {
+        "modal": {
+          "left": 162,
+          "right": 682,
+          "top": 23.4,
+          "bottom": 366.6,
+          "height": 343.2,
+          "scrollHeight": 345,
+          "clientHeight": 341,
+          "overflowY": "visible"
+        },
+        "save": {
+          "top": 313.4,
+          "bottom": 359.4,
+          "height": 46,
+          "visible": true
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelExists": true
+      },
+      "size": "844x390-landscape-touch"
+    },
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "document": {
+        "width": 1366,
+        "height": 1172
+      },
+      "panel": {
+        "left": 71,
+        "right": 1295,
+        "top": 138,
+        "bottom": 1016.1,
+        "width": 1224,
+        "height": 878.1
+      },
+      "panelOverflow": false,
+      "labelOverflow": [],
+      "outside": [],
+      "dayGrid": "159.703px 159.703px 159.703px 159.703px 159.703px 159.703px 159.703px",
+      "tabsGrid": "187.656px 187.656px 187.656px 187.656px 187.656px 187.656px",
+      "summaryHidden": true,
+      "mobileNav": {
+        "rect": {
+          "left": 273,
+          "right": 1093,
+          "top": 674,
+          "bottom": 750,
+          "width": 820,
+          "height": 76
+        },
+        "display": "grid",
+        "activeNutrition": true
+      },
+      "quickAddFabDisplay": "none",
+      "smallTargets": [
+        {
+          "id": "nutritionGoalBtn",
+          "cls": "nutrition-goal-btn",
+          "height": 40,
+          "text": "⚙ Objetivos"
+        },
+        {
+          "id": "nutritionHistoryBtn",
+          "cls": "small-btn nutrition-history-btn",
+          "height": 40,
+          "text": "📅 Historial"
+        },
+        {
+          "id": "addMealBtn",
+          "cls": "small-btn",
+          "height": 40,
+          "text": "＋ Agregar comida"
+        },
+        {
+          "id": "nutritionMealOrderToggle",
+          "cls": "nutrition-meal-order-toggle",
+          "height": 42,
+          "text": "↕ Ordenar comidas"
+        }
+      ],
+      "visibleTargets": 4,
+      "modal": {
+        "modal": {
+          "left": 273,
+          "right": 1093,
+          "top": 34.6,
+          "bottom": 733.4,
+          "width": 820,
+          "height": 698.9,
+          "maxHeight": "698.88px",
+          "overflowY": "auto",
+          "scrollHeight": 1479,
+          "clientHeight": 697
+        },
+        "save": {
+          "left": 298,
+          "right": 1053,
+          "top": 1395.8,
+          "bottom": 1443.8,
+          "height": 48
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelledby": "nutritionModalTitle",
+        "labelExists": true
+      },
+      "goalModal": {
+        "modal": {
+          "left": 423,
+          "right": 943,
+          "top": 221.5,
+          "bottom": 546.5,
+          "height": 325,
+          "scrollHeight": 323,
+          "clientHeight": 323,
+          "overflowY": "visible"
+        },
+        "save": {
+          "top": 479.5,
+          "bottom": 525.5,
+          "height": 46,
+          "visible": true
+        },
+        "dialogRole": "dialog",
+        "ariaModal": "true",
+        "labelExists": true
+      },
+      "size": "1366x768-desktop"
+    }
+  ],
+  "reducedViewport320x400": {
+    "viewport": {
+      "width": 320,
+      "height": 400
+    },
+    "modal": {
+      "left": 8,
+      "right": 312,
+      "top": 8,
+      "bottom": 392,
+      "height": 384,
+      "maxHeight": "384px",
+      "scrollHeight": 2128,
+      "clientHeight": 382,
+      "overflowY": "auto"
+    },
+    "save": {
+      "top": 317,
+      "bottom": 365,
+      "height": 48,
+      "visible": true
+    }
+  },
+  "reducedViewportGoals320x400": {
+    "viewport": {
+      "width": 320,
+      "height": 400
+    },
+    "modal": {
+      "top": 8,
+      "bottom": 392,
+      "height": 384,
+      "scrollHeight": 578,
+      "clientHeight": 382,
+      "overflowY": "auto"
+    },
+    "save": {
+      "top": 319,
+      "bottom": 365,
+      "height": 46,
+      "visible": true
+    }
+  }
+}
