@@ -1,10 +1,15 @@
-# Agenda FICH — Alimentación: etapas 1–6
+# Agenda FICH — Alimentación: etapas 1–10
 
-Esta versión incluye los cambios de las etapas 1 a 5 y el ajuste visual posterior del menú «Agregar alimentos». Agrega alimentos personalizados, recetas basadas en ingredientes reales, historial de consumo por fecha y un formulario organizado en pasos. Los módulos específicos de Entrenamiento no se modifican. La guía de esta última mejora está en `README-MENU-AGREGAR-ALIMENTOS.md`.
+Esta versión conserva las etapas anteriores y sus ajustes posteriores, incluyendo E5–E9, exportaciones, accesibilidad móvil, registro rápido y protección de operaciones de guardado. Agrega alimentos personalizados, recetas basadas en ingredientes reales, historial de consumo por fecha y un formulario organizado en pasos. Los módulos específicos de Entrenamiento no se modifican. La guía histórica del menú de alta está en `README-MENU-AGREGAR-ALIMENTOS.md`.
+
+## Última mejora: Etapa E10 — acabado visual profesional
+
+E10 unifica el estado de sincronización, la jerarquía tipográfica, las tarjetas de resumen, objetivos y comidas, los estados activos, el foco de teclado y el estilo de diálogos de Alimentación. Incluye variantes para tema oscuro/claro, móvil estrecho, movimiento reducido y alto contraste. Los selectores están limitados al panel nutricional y sus propios diálogos; no cambia JavaScript ni requiere migración SQL. Para instalar desde E9, reemplazá `index.html` y agregá `css/92-nutrition-professional-finish-e10.css`. La auditoría visual está en `tests/artifacts/e10/professional-visual-audit.json`; la documentación de instalación y límites está en `README-ETAPA-E10.md`. El fixture de Chromium es estático: no reemplaza la prueba física en iOS/Android ni la validación de Supabase.
 
 
-## Última mejora de Alimentación: Etapa E6 — responsive y accesibilidad móvil
-- Etapa E7: registro rápido de alimentos recientes y favoritos. Ver `README-ETAPA-E7.md`.
+## Etapas anteriores de experiencia móvil
+- Etapa E6: responsive y accesibilidad móvil; ver `README-ETAPA-E6.md`.
+- Etapa E7: registro rápido de alimentos recientes y favoritos; ver `README-ETAPA-E7.md`.
 
 E6 refina las tarjetas nutricionales en pantallas angostas, la cuadrícula de días, las pestañas y los objetivos táctiles; adapta los formularios de comida/objetivos a la altura dinámica del móvil y mantiene el cierre y guardado disponibles al desplazarse, incluso en orientación apaisada y tabletas táctiles. En móvil oculta el FAB genérico solo durante Alimentación para evitar que tape las tarjetas; la acción «Agregar comida» sigue visible. Agrega una auditoría visual en Chromium para 7 tamaños y un viewport reducido de 320×400. No modifica JavaScript ni requiere SQL. Para instalar, reemplazá `index.html` y agregá `css/90-nutrition-mobile-e6.css`. Ver `README-ETAPA-E6.md`, `tests/MANUAL-E6-MOBILE-ACCESSIBILITY-CHECKLIST.md` y `tests/artifacts/e6/viewport-audit.json`. La simulación visual no reemplaza la prueba en un teléfono real.
 
@@ -102,3 +107,21 @@ Se añadió `Agregar rápido` a recientes/favoritos, con última cantidad/unidad
 La creación de comidas ahora usa una clave UUID única por cuenta/operación. Si la conexión se corta después de que la base escriba pero antes de recibir la respuesta, reintentar con la misma clave reutiliza la misma fila en lugar de insertar otra. Antes de enviar a Supabase se conserva un borrador local del formulario y sus alimentos estructurados; si el resultado queda incierto, se ofrece recuperarlo para repetir el intento de forma segura. El borrador se elimina únicamente tras confirmar tanto la comida como sus alimentos detallados.
 
 **Instalación:** después de respaldar datos, ejecutá `sql/27-nutrition-meal-save-idempotency.sql` y comprobá `sql/28-nutrition-meal-save-idempotency-postcheck.sql` antes de publicar el código. La migración es aditiva y exige que la tabla `nutrition_meals` ya exista con RLS activo. Ver `README-ETAPA-E8.md` y `tests/MANUAL-MEAL-SAVE-E8-CHECKLIST.md`. Las pruebas locales no sustituyen la validación con una cuenta real en Supabase.
+
+
+## Etapa E9 — auditoría integrada de Alimentación
+
+Se reforzó el guardado del detalle para que nunca cambie silenciosamente de cuenta y se incorporó un diario local idempotente para operaciones de varios pasos. Tanto la copia individual de comidas como «Repetir un día» conservan una instantánea y claves estables antes de escribir; ante una respuesta incierta no eliminan copias a ciegas y pueden reintentarse con la misma clave. E9 no requiere SQL nuevo, pero depende de que la migración E8 (SQL 27) esté aplicada. Consultá `README-ETAPA-E9.md` y `tests/MANUAL-INTEGRATED-E9-CHECKLIST.md`. La validación de producción sigue pendiente de una prueba real con una cuenta de Supabase.
+
+## Etapa E11 — Rediseño visual premium de Alimentación
+
+Se agregó `css/93-nutrition-premium-dashboard-e11.css` después de los estilos E10. La etapa actualiza jerarquía visual, resumen nutricional, métricas, objetivos, tarjetas de comida, controles y navegación contextual únicamente mientras Alimentación está activa. Es un cambio visual: no requiere SQL ni cambios de lógica. Consultá `README-ETAPA-E11.md` y `tests/MANUAL-E11-PREMIUM-DESIGN-CHECKLIST.md`.
+
+
+## Etapa E12 — búsqueda y filtros profesionales
+
+Se agregó búsqueda por texto y filtros estructurales a Mis recetas; búsqueda y filtro por preparación en Mis alimentos; y búsqueda/filtro por categoría en el historial de consumo. Los términos no distinguen acentos ni mayúsculas. Los filtros son locales sobre la consulta cargada y no cambian los registros. Ver `README-ETAPA-E12.md` y `tests/MANUAL-BROWSE-FILTERS-E12-CHECKLIST.md`. No requiere SQL.
+
+## Etapa E13 — Reorganización guiada para móvil
+
+E13 reduce la información visible de Alimentación en pantallas pequeñas mediante divulgación progresiva: acción principal “Agregar comida”, herramientas secundarias agrupadas, métricas y objetivos plegables, tipos de comida en una fila horizontal y una guía para cuentas sin comidas conocidas. Los mismos IDs dinámicos y callbacks se conservan. No requiere SQL. Ver `README-ETAPA-E13.md` y `tests/MANUAL-GUIDED-LAYOUT-E13-CHECKLIST.md`.

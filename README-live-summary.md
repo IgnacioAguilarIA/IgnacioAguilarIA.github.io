@@ -1,7 +1,7 @@
-# Agenda FICH V98 — Mejora del menú «Agregar alimentos»
+# Agenda FICH — Estado de la última mejora: E10
 
-Esta copia continúa desde la Etapa 5. El formulario de comida se organiza en pasos y el catálogo mejora su búsqueda, recientes/favoritos, resultados, selección, cantidad y acciones. La ficha del alimento muestra primero nutrientes y aporte según los gramos; los ingredientes y etiquetas quedan plegados. En móvil, las acciones de guardar/cancelar dejan de cubrir los resultados mientras el catálogo está abierto.
+La versión conserva E1–E9 y agrega E10: acabado visual profesional acotado a Alimentación. `css/92-nutrition-professional-finish-e10.css` unifica contraste, sincronización, métricas, tarjetas, estados activos, foco de teclado y diálogos nutricionales, con variantes claro/oscuro y accesibilidad. Se actualiza `index.html` para cargar el nuevo CSS.
 
-**No requiere migración SQL nueva.** Los únicos archivos de código cambiados respecto de la Etapa 5 son `index.html`, `css/78-nutrition-food-entry.css` y `js/47-nutrition-food-catalog.js`. Los archivos específicos de Entrenamiento no se modificaron.
+No requiere migración SQL ni cambia la lógica JavaScript. Se verificaron 83 pruebas automatizadas de Node, 68 archivos JavaScript sin errores de sintaxis, las auditorías de Chromium E6/E7 y 14 combinaciones visuales E10 de tema y viewport. El fixture es estático; la app todavía debe probarse en un teléfono físico y con sesión real de Supabase.
 
-Ver `README-MENU-AGREGAR-ALIMENTOS.md` para los detalles y `README-ETAPA5.md` para los límites de las pruebas. La validación local usa Supabase simulado y no sustituye una prueba final con tu cuenta real.
+Para actualizar desde E9, reemplazá `index.html` y agregá `css/92-nutrition-professional-finish-e10.css`. Consultá `README-ETAPA-E10.md` y `tests/MANUAL-E10-VISUAL-POLISH-CHECKLIST.md`.

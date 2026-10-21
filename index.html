@@ -498,10 +498,10 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div class="nutrition-head">
 <div>
 <h2>Plan de alimentación</h2>
-<p>Organizá de lunes a domingo tus comidas y elegí el orden que mejor se adapte a tu rutina. Todo queda guardado en tu cuenta.</p>
+<p>Planificá tus comidas y registrá lo que consumís.</p>
 </div>
 <div class="nutrition-actions">
-<button class="nutrition-goal-btn" id="nutritionGoalBtn">⚙ Objetivos</button>
+<button class="nutrition-goal-btn" id="nutritionGoalBtn">⚙ Configurar objetivos</button>
 <button class="small-btn nutrition-history-btn" id="nutritionHistoryBtn" type="button">📅 Historial</button>
 <button class="small-btn" id="addMealBtn">＋ Agregar comida</button>
 </div>
@@ -519,6 +519,9 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div class="nutrition-summary-progress-row"><small>Consumido</small><div class="nutrition-summary-progress consumed"><span id="nutritionSummaryConsumedBar"></span></div></div>
 </div>
 </div>
+<details class="e13-progressive-disclosure e13-nutrition-details" id="nutritionDetailsDisclosure" data-e13-collapsible aria-label="Desglose de nutrientes del día">
+  <summary><span class="e13-disclosure-title">Ver detalle nutricional</span><span class="e13-disclosure-subtitle">Calorías, proteínas, carbohidratos y grasas</span><span class="e13-disclosure-chevron" aria-hidden="true">⌄</span></summary>
+  <div class="e13-disclosure-body">
 <section class="nutrition-summary-block nutrition-summary-planned" aria-labelledby="nutritionSummaryPlannedTitle">
 <div class="nutrition-summary-block-title" id="nutritionSummaryPlannedTitle">📋 Total planificado · todos los alimentos del día</div>
 <div class="nutrition-summary-metrics">
@@ -537,11 +540,29 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div class="nutrition-summary-metric"><span>🥑 Grasas consumidas</span><strong id="nutritionSummaryFat">0 g</strong></div>
 </div>
 </section>
+  </div>
+</details>
 </div>
-<div class="workout-days" id="nutritionDays"></div>
-<div class="goal-grid" id="nutritionGoals"></div>
-<div class="goal-settings" id="nutritionGoalSummary">Definí tus objetivos diarios para ver el progreso.</div>
-<div class="meal-tabs" id="mealTabs"></div>
+<div class="workout-days" id="nutritionDays" role="group" aria-label="Elegir día de la semana"></div>
+<details class="e13-progressive-disclosure e13-goals-details" id="nutritionGoalsDisclosure" data-e13-collapsible aria-label="Objetivos diarios">
+  <summary><span class="e13-disclosure-title">Objetivos del día</span><span class="e13-disclosure-subtitle">Progreso de calorías y nutrientes · opcional</span><span class="e13-disclosure-chevron" aria-hidden="true">⌄</span></summary>
+  <div class="e13-disclosure-body">
+    <div class="goal-grid" id="nutritionGoals"></div>
+    <div class="goal-settings" id="nutritionGoalSummary">Definí tus objetivos diarios para ver el progreso.</div>
+  </div>
+</details>
+<div class="e13-meal-tabs-hint" id="e13MealTabsHint"><strong>TIPO DE COMIDA</strong><span>Deslizá para ver más <span aria-hidden="true">→</span></span></div>
+<div class="meal-tabs" id="mealTabs" role="group" aria-label="Elegir tipo de comida"></div>
+<aside class="e13-first-use" id="e13FirstUse" hidden aria-labelledby="e13FirstUseTitle">
+  <div class="e13-first-use-icon" aria-hidden="true">🥗</div>
+  <div class="e13-first-use-content">
+    <span class="e13-first-use-eyebrow">EMPEZÁ POR LO ESENCIAL</span>
+    <h3 id="e13FirstUseTitle">Este día todavía está vacío</h3>
+    <p>No necesitás configurar objetivos ni herramientas avanzadas para comenzar. Primero podés planificar una comida.</p>
+    <ol><li>Elegí el tipo de comida.</li><li>Tocá <strong>Agregar comida</strong>.</li><li>Añadí alimentos para calcular sus nutrientes automáticamente.</li></ol>
+    <button type="button" id="e13StartFirstMeal">＋ Agregar comida a este día</button>
+  </div>
+</aside>
 <div class="meal-list" id="mealList"></div>
 <div class="nutrition-meal-order" id="nutritionMealOrder" hidden>
   <div class="nutrition-meal-order-head">
@@ -1308,7 +1329,12 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <link href="./css/88-nutrition-quality-report.css" rel="stylesheet"/>
 <link href="./css/90-nutrition-mobile-e6.css" rel="stylesheet"/>
 <link href="./css/91-nutrition-quick-registration-e7.css" rel="stylesheet"/>
+<link href="./css/92-nutrition-professional-finish-e10.css" rel="stylesheet"/>
+<link href="./css/93-nutrition-premium-dashboard-e11.css" rel="stylesheet"/>
+<link href="./css/94-nutrition-browse-filters-e12.css" rel="stylesheet"/>
+<link href="./css/95-nutrition-guided-layout-e13.css" rel="stylesheet"/>
 <script src="./js/65-nutrition-quality-report.js"></script>
 <script src="./js/67-nutrition-meal-save-safety-e8.js"></script>
+<script src="./js/68-nutrition-guided-layout-e13.js"></script>
 </body>
 </html>
