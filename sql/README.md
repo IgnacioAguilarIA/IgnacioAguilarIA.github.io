@@ -18,3 +18,13 @@ La aplicación sigue funcionando aunque todavía no hayas ejecutado el SQL: en e
 
 - Ejecutá `15-nutrition-trigger-function-rpc-lockdown.sql` después de revisar la auditoría SQL 13. Revoca la ejecución directa de funciones de trigger de Alimentación para `PUBLIC`, `anon` y `authenticated`, sin modificar filas ni los triggers existentes.
 - Después ejecutá `16-nutrition-sync-postcheck-readonly.sql`; devuelve permisos efectivos, RLS, funciones de trigger y conteos de relaciones inconsistentes, sin exponer contenido de comidas o recetas.
+
+## Etapa D7 — calidad y procedencia nutricional
+
+1. Ejecutá `21-nutrition-quality-provenance.sql` antes de publicar los archivos D7. Es una migración aditiva: agrega campos de procedencia/estado en catálogo, alimentos propios y detalle de comidas; los registros anteriores quedan `legacy_unverified` y no se tratan como verificados.
+2. Ejecutá `22-nutrition-quality-postcheck.sql` después para comprobar columnas, RLS, privilegios y contadores de integridad.
+3. Los CSV de D7 incluyen fuente, estado de calidad y campos faltantes disponibles en las instantáneas. Los datos históricos no se reescriben a partir del catálogo actual.
+
+## Etapa E3 — despensa personal
+
+`23-nutrition-pantry.sql` crea el inventario, movimientos y guardas de descuento de comidas planificadas. Requiere `nutrition_weekly_plan_items` de E2. La escritura de cantidades se hace mediante RPC transaccionales con comprobación de cuenta; la interfaz no tiene permisos directos para modificar stock o historial. Ejecutar el archivo una vez y luego inspeccionar `24-nutrition-pantry-postcheck.sql` (solo lectura). No ejecutar sobre una base sin las tablas requeridas de E2.
