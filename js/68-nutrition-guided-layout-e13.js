@@ -95,6 +95,12 @@
     function update() {
       const cards = list.querySelectorAll('.meal-card').length;
       const emptyNode = list.querySelector('.meal-empty');
+      const loadFailed = $('nutritionMealLoadFeedback')?.dataset.state === 'error';
+      if (loadFailed) {
+        guide.hidden = true;
+        if (emptyNode) emptyNode.hidden = true;
+        return;
+      }
       const loading = !!(emptyNode && /cargando/i.test(emptyNode.textContent || ''));
       let noMealsForDay = false;
       let anyKnownMeals = false;

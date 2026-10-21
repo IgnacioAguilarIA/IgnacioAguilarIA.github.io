@@ -625,7 +625,50 @@ let nutritionLoadingDay=null;
 async function selectNutritionDay(day){const target=Number(day);if(!Number.isInteger(target)||target<0||target>=DAYS.length)return;nutritionDay=target;nutritionMeals=[];try{document.dispatchEvent(new CustomEvent('agenda:nutrition-day-changed',{detail:{day:target}}))}catch(_){ }nutritionLoadingDay=target;renderNutritionDays();renderNutritionList();renderNutritionGoals();renderDashboard();try{await loadNutritionMeals(target);}finally{if(Number(nutritionDay)===target){nutritionLoadingDay=null;renderNutritionDays();renderNutritionList();renderNutritionGoals();renderDashboard();}}}
 function renderNutritionDays(){const c=$('nutritionDays');c.innerHTML='';DAYS.forEach((d,i)=>{const b=document.createElement('button');b.className='workout-day-btn'+(i===nutritionDay?' active':'');b.textContent=d;b.setAttribute('aria-busy',nutritionLoadingDay===i?'true':'false');b.onclick=()=>selectNutritionDay(i);c.appendChild(b);});}
 function renderMealTabs(){const c=$('mealTabs');c.innerHTML='';MEAL_TYPES.forEach(m=>{const b=document.createElement('button');b.className='meal-tab'+(m.key===activeMealType?' active':'');b.textContent=m.label;b.onclick=()=>{activeMealType=m.key;renderMealTabs();renderNutritionList();renderNutritionGoals();renderDashboard();};c.appendChild(b);});}
-async function loadNutritionMeals(targetDay=nutritionDay){const requestedDay=Number(targetDay);const requestSeq=++nutritionLoadSeq;const uid=currentUser?.id?String(currentUser.id):'';if(!uid){nutritionMeals=[];if(requestSeq===nutritionLoadSeq)try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meals-loaded',{detail:{day:requestedDay,meals:[]}}))}catch(_){}return}let query=sb.from('nutrition_meals').select('*').eq('day',requestedDay).eq('user_id',uid);const {data,error}=await query.order('meal_order',{ascending:true}).order('meal_time',{ascending:true});if(requestSeq!==nutritionLoadSeq||Number(nutritionDay)!==requestedDay||String(currentUser?.id||'')!==uid)return;if(error){console.error(error);const c=cacheRead('nutritionMealsAll');nutritionMeals=Array.isArray(c)?c.filter(x=>Number(x.day)===requestedDay&&String(x.user_id||'')===uid):[]}else{nutritionMeals=(data||[]).filter(x=>Number(x.day)===requestedDay&&String(x.user_id||uid)===uid);let all=cacheRead('nutritionMealsAll');all=Array.isArray(all)?all:[];all=all.filter(x=>Number(x.day)!==requestedDay);all.push(...nutritionMeals);cacheWrite('nutritionMealsAll',all)}try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meals-loaded',{detail:{day:requestedDay,meals:Array.isArray(nutritionMeals)?nutritionMeals.slice():[]}}))}catch(_){}}
+async function loadNutritionMeals(targetDay=nutritionDay){
+  const requestedDay=Number(targetDay);
+  const requestSeq=++nutritionLoadSeq;
+  const uid=currentUser?.id?String(currentUser.id):'';
+  const publishState=(detail)=>{try{document.dispatchEvent(new CustomEvent('agenda:nutrition-meals-loaded',{detail:{day:requestedDay,...detail}}))}catch(_){}};
+  if(!uid){
+    nutritionMeals=[];
+    if(requestSeq===nutritionLoadSeq)publishState({meals:[],state:'signed-out',userId:null,usedCache:false,count:0});
+    return;
+  }
+  let data=null,error=null;
+  try{
+    const query=sb.from('nutrition_meals').select('*').eq('day',requestedDay).eq('user_id',uid);
+    const result=await query.order('meal_order',{ascending:true}).order('meal_time',{ascending:true});
+    data=result?.data??null;error=result?.error??null;
+  }catch(err){error=err;}
+  if(requestSeq!==nutritionLoadSeq||Number(nutritionDay)!==requestedDay||String(currentUser?.id||'')!==uid)return;
+  let usedCache=false;
+  let cachedCount=0;
+  if(error){
+    console.error('No se pudieron cargar las comidas de Alimentación:',error);
+    const cached=cacheRead('nutritionMealsAll');
+    const cachedForDay=Array.isArray(cached)?cached.filter(x=>Number(x.day)===requestedDay&&String(x.user_id||'')===uid):[];
+    usedCache=cachedForDay.length>0;
+    cachedCount=cachedForDay.length;
+    nutritionMeals=cachedForDay;
+  }else{
+    nutritionMeals=(Array.isArray(data)?data:[]).filter(x=>Number(x.day)===requestedDay&&String(x.user_id||uid)===uid);
+    let all=cacheRead('nutritionMealsAll');
+    all=Array.isArray(all)?all:[];
+    all=all.filter(x=>!(Number(x.day)===requestedDay&&String(x.user_id||'')===uid));
+    all.push(...nutritionMeals);
+    cacheWrite('nutritionMealsAll',all);
+  }
+  publishState({
+    meals:Array.isArray(nutritionMeals)?nutritionMeals.slice():[],
+    state:error?'error':'success',
+    errorMessage:error?String(error.message||error):'',
+    userId:uid,
+    usedCache,
+    cachedCount,
+    count:Array.isArray(nutritionMeals)?nutritionMeals.length:0
+  });
+}
 function mealLabel(key){return MEAL_TYPES.find(m=>m.key===key)?.label||key;}
 function upsertNutritionMealLocal(meal){
   if(!meal||meal.id==null)return;
