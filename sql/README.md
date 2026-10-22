@@ -28,3 +28,8 @@ La aplicación sigue funcionando aunque todavía no hayas ejecutado el SQL: en e
 ## Etapa E3 — despensa personal
 
 `23-nutrition-pantry.sql` crea el inventario, movimientos y guardas de descuento de comidas planificadas. Requiere `nutrition_weekly_plan_items` de E2. La escritura de cantidades se hace mediante RPC transaccionales con comprobación de cuenta; la interfaz no tiene permisos directos para modificar stock o historial. Ejecutar el archivo una vez y luego inspeccionar `24-nutrition-pantry-postcheck.sql` (solo lectura). No ejecutar sobre una base sin las tablas requeridas de E2.
+
+
+### E32 — Plantillas semanales
+
+`29-nutrition-weekly-plan-templates.sql` agrega `weekly_plan_templates` a `nutrition_preferences`, con límites de tamaño y cantidad, y conserva el aislamiento RLS existente por cuenta. Requiere `06-nutrition-account-sync.sql`. Después, inspeccioná `30-nutrition-weekly-plan-templates-postcheck.sql` (solo lectura). La aplicación puede seguir usando el editor semanal si la migración falta, pero el panel de plantillas mostrará un mensaje y no guardará nada.
