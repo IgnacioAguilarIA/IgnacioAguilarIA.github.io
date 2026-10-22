@@ -20,8 +20,22 @@
   function grams(item){return window.AgendaNutritionData?.weightInGrams?window.AgendaNutritionData.weightInGrams(item):((String(item?.unit||'g')==='g')?Math.max(0,num(item?.quantity)):null)}
   function round1(v){return Math.round(num(v)*10)/10}
   function fmt(v,unit){const n=round1(v);return unit==='kcal'?Math.round(n)+' kcal':(Number.isInteger(n)?String(n):n.toFixed(1))+' g'}
+  const MACRO_KEYS=['calories','protein','carbs','fat'];
+  const MACRO_LABELS={calories:'calorías',protein:'proteínas',carbs:'carbohidratos',fat:'grasas'};
   function emptyMacros(){return {calories:0,protein:0,carbs:0,fat:0}}
-  function emptyTotals(){return {planned:emptyMacros(),consumed:emptyMacros(),foodTotal:0,foodConsumed:0,unconvertible:0}}
+  function emptyFlags(){return {calories:false,protein:false,carbs:false,fat:false}}
+  function emptyTotals(){return {planned:emptyMacros(),consumed:emptyMacros(),plannedIncomplete:emptyFlags(),consumedIncomplete:emptyFlags(),foodTotal:0,foodConsumed:0,unconvertible:0}}
+  function missingMetrics(item){
+    try{const helper=window.AgendaNutritionData?.missingMacroMetrics;if(typeof helper==='function')return helper(item)}catch(_){}
+    const fields=Array.isArray(item?.nutrition_missing_fields)?item.nutrition_missing_fields:(Array.isArray(item?.nutritionMissing)?item.nutritionMissing:[]);
+    const normalized=fields.map(value=>String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim());
+    const aliases={calories:['caloria','calorias','calorie','calories','energy','kcal'],protein:['proteina','proteinas','protein','proteins'],carbs:['carbohidrato','carbohidratos','carbohydrate','carbohydrates','carbs'],fat:['grasa','grasas','fat','fats']};
+    if(String(item?.nutrition_quality_status||item?.nutritionQualityStatus||'').toLowerCase()==='incomplete'&&!fields.length)return [...MACRO_KEYS];
+    return MACRO_KEYS.filter(key=>normalized.some(name=>aliases[key].some(alias=>name===alias||name.startsWith(alias+' ')||name.includes(' '+alias+' ')||name.endsWith(' '+alias))));
+  }
+  function markAllIncomplete(flags){MACRO_KEYS.forEach(key=>{flags[key]=true})}
+  function mergeFlags(target,source){MACRO_KEYS.forEach(key=>{target[key]=!!target[key]||!!source?.[key]})}
+  function formatMetric(value,key,unit,incomplete){return incomplete?.[key]?'Datos incompletos':fmt(value,unit)}
   function uid(){return (typeof currentUser!=='undefined'&&currentUser?.id)||'guest'}
   function readFallback(itemId){try{return localStorage.getItem(`agendaNutritionConsumed:${uid()}:${String(itemId)}`)==='1'}catch(_){return false}}
   function clearFallback(itemId){try{localStorage.removeItem(`agendaNutritionConsumed:${uid()}:${String(itemId)}`)}catch(_){ }}
@@ -44,26 +58,30 @@
     };
   }
 
-  function addItemMacros(target,item,factor){
-    target.calories+=num(item.calories_per_100g)*factor;
-    target.protein+=num(item.protein_per_100g)*factor;
-    target.carbs+=num(item.carbs_per_100g)*factor;
-    target.fat+=num(item.fat_per_100g)*factor;
+  function addItemMacros(target,item,factor,incompleteFlags){
+    const missing=new Set(missingMetrics(item));
+    MACRO_KEYS.forEach(key=>{
+      if(missing.has(key))incompleteFlags[key]=true;
+      else target[key]+=num(item[({calories:'calories_per_100g',protein:'protein_per_100g',carbs:'carbs_per_100g',fat:'fat_per_100g'})[key]])*factor;
+    });
   }
 
   function itemTotals(items){
     const totals=emptyTotals();
     (Array.isArray(items)?items:[]).forEach(item=>{
       if(!item||typeof item!=='object')return;
-      const quantity=item.__fallback?100:Math.max(0,num(item.quantity));
       const weight=item.__fallback?null:grams(item);
-      if(!item.__fallback&&weight===null){totals.unconvertible++;totals.foodTotal++;if(consumedValue(item))totals.foodConsumed++;return;}
+      if(!item.__fallback&&weight===null){
+        totals.unconvertible++;totals.foodTotal++;markAllIncomplete(totals.plannedIncomplete);
+        if(consumedValue(item)){totals.foodConsumed++;markAllIncomplete(totals.consumedIncomplete)}
+        return;
+      }
       const factor=item.__fallback?1:weight/100;
       totals.foodTotal++;
-      addItemMacros(totals.planned,item,factor);
+      addItemMacros(totals.planned,item,factor,totals.plannedIncomplete);
       if(consumedValue(item)){
         totals.foodConsumed++;
-        addItemMacros(totals.consumed,item,factor);
+        addItemMacros(totals.consumed,item,factor,totals.consumedIncomplete);
       }
     });
     return totals;
@@ -75,19 +93,22 @@
       const items=cache.get(String(meal.id));
       if(!Array.isArray(items))return;
       const mt=itemTotals(items);
-      ['calories','protein','carbs','fat'].forEach(key=>{
+      MACRO_KEYS.forEach(key=>{
         totals.planned[key]+=mt.planned[key];
         totals.consumed[key]+=mt.consumed[key];
       });
+      mergeFlags(totals.plannedIncomplete,mt.plannedIncomplete);
+      mergeFlags(totals.consumedIncomplete,mt.consumedIncomplete);
       totals.foodTotal+=mt.foodTotal;
       totals.foodConsumed+=mt.foodConsumed;
+      totals.unconvertible+=mt.unconvertible;
     });
     return totals;
   }
 
   function set(id,value){const el=$(id);if(el)el.textContent=value}
 
-  function renderGoalCards(consumed){
+  function renderGoalCards(consumed,incomplete=emptyFlags()){
     const host=$('nutritionGoals');
     if(!host)return;
     const goals=(typeof nutritionGoals!=='undefined'&&nutritionGoals)||{calories:2500,protein:160,carbs:300,fat:70};
@@ -96,15 +117,16 @@
     items.forEach(([icon,label,key,unit])=>{
       const value=num(consumed[key]);
       const target=Math.max(0,num(goals[key]));
+      const unknown=!!incomplete[key];
       const pct=target>0?Math.min(100,value/target*100):0;
       const card=document.createElement('div');
-      card.className='goal-card';
+      card.className='goal-card'+(unknown?' has-incomplete-data':'');
       const heading=document.createElement('h4');heading.textContent=`${icon} ${label} consumidas`;
       const amount=document.createElement('strong');
-      amount.textContent=`${key==='calories'?Math.round(value):round1(value)} / ${target} ${unit}`;
-      const bar=document.createElement('div');bar.className='goal-bar';
+      amount.textContent=unknown?`Datos incompletos · objetivo ${target} ${unit}`:`${key==='calories'?Math.round(value):round1(value)} / ${target} ${unit}`;
+      const bar=document.createElement('div');bar.className='goal-bar';bar.hidden=unknown;bar.setAttribute('aria-hidden',unknown?'true':'false');
       const fill=document.createElement('span');fill.style.width=pct+'%';bar.appendChild(fill);
-      const percent=document.createElement('span');percent.textContent=`${Math.round(pct)}% del objetivo`;
+      const percent=document.createElement('span');percent.textContent=unknown?'Completá los datos del alimento para ver el progreso':`${Math.round(pct)}% del objetivo`;
       card.append(heading,amount,bar,percent);host.appendChild(card);
     });
     const summary=$('nutritionGoalSummary');
@@ -130,23 +152,30 @@
     const planBar=$('nutritionSummaryMealsBar');if(planBar)planBar.style.width=plannedPct+'%';
     const consumedBar=$('nutritionSummaryConsumedBar');if(consumedBar)consumedBar.style.width=foodPct+'%';
 
-    set('nutritionSummaryCaloriesPlanned',fmt(planned.calories,'kcal'));
-    set('nutritionSummaryProteinPlanned',fmt(planned.protein,'g'));
-    set('nutritionSummaryCarbsPlanned',fmt(planned.carbs,'g'));
-    set('nutritionSummaryFatPlanned',fmt(planned.fat,'g'));
-    set('nutritionSummaryCalories',fmt(consumed.calories,'kcal'));
-    set('nutritionSummaryProtein',fmt(consumed.protein,'g'));
-    set('nutritionSummaryCarbs',fmt(consumed.carbs,'g'));
-    set('nutritionSummaryFat',fmt(consumed.fat,'g'));
-    set('nutritionSummaryCaloriesConsumed',`Consumidas: ${fmt(consumed.calories,'kcal')}`);
-    set('nutritionSummaryProteinConsumed',`Consumidas: ${fmt(consumed.protein,'g')}`);
-    set('nutritionSummaryCarbsConsumed',`Consumidos: ${fmt(consumed.carbs,'g')}`);
-    set('nutritionSummaryFatConsumed',`Consumidas: ${fmt(consumed.fat,'g')}`);
-    renderGoalCards(consumed);
+    const value=(target,key,unit,incomplete)=>formatMetric(target[key],key,unit,incomplete);
+    set('nutritionSummaryCaloriesPlanned',value(planned,'calories','kcal',totals.plannedIncomplete));
+    set('nutritionSummaryProteinPlanned',value(planned,'protein','g',totals.plannedIncomplete));
+    set('nutritionSummaryCarbsPlanned',value(planned,'carbs','g',totals.plannedIncomplete));
+    set('nutritionSummaryFatPlanned',value(planned,'fat','g',totals.plannedIncomplete));
+    set('nutritionSummaryCalories',value(consumed,'calories','kcal',totals.consumedIncomplete));
+    set('nutritionSummaryProtein',value(consumed,'protein','g',totals.consumedIncomplete));
+    set('nutritionSummaryCarbs',value(consumed,'carbs','g',totals.consumedIncomplete));
+    set('nutritionSummaryFat',value(consumed,'fat','g',totals.consumedIncomplete));
+    set('nutritionSummaryCaloriesConsumed',`Consumidas: ${value(consumed,'calories','kcal',totals.consumedIncomplete)}`);
+    set('nutritionSummaryProteinConsumed',`Consumidas: ${value(consumed,'protein','g',totals.consumedIncomplete)}`);
+    set('nutritionSummaryCarbsConsumed',`Consumidos: ${value(consumed,'carbs','g',totals.consumedIncomplete)}`);
+    set('nutritionSummaryFatConsumed',`Consumidas: ${value(consumed,'fat','g',totals.consumedIncomplete)}`);
+    const qualityNote=$('e23NutritionDataQualityNote');
+    const plannedUnknown=MACRO_KEYS.filter(key=>totals.plannedIncomplete[key]);
+    const consumedUnknown=MACRO_KEYS.filter(key=>totals.consumedIncomplete[key]);
+    const anyUnknown=plannedUnknown.length>0||consumedUnknown.length>0;
+    if(qualityNote){qualityNote.hidden=!anyUnknown;qualityNote.textContent=anyUnknown?`Hay alimentos con datos nutricionales incompletos. No se muestran como cero: ${[...new Set([...plannedUnknown,...consumedUnknown])].map(key=>MACRO_LABELS[key]).join(', ')}. Revisá los alimentos señalados.`:'';}
+    host.classList.toggle('has-incomplete-data',anyUnknown);
+    renderGoalCards(consumed,totals.consumedIncomplete);
     host.classList.toggle('is-refreshing',refreshing);
     try{
       document.dispatchEvent(new CustomEvent('agenda:nutrition-consumed-summary-updated',{
-        detail:{day:d,totals:{...consumed},planned:{...planned},foodTotal:totals.foodTotal,foodConsumed:totals.foodConsumed,unconvertible:totals.unconvertible}
+        detail:{day:d,totals:{...consumed},planned:{...planned},consumedIncomplete:{...totals.consumedIncomplete},plannedIncomplete:{...totals.plannedIncomplete},foodTotal:totals.foodTotal,foodConsumed:totals.foodConsumed,unconvertible:totals.unconvertible}
       }));
     }catch(_){ }
   }
@@ -231,10 +260,11 @@
     document.addEventListener('agenda:nutrition-meal-deleted',onMealDeleted);
   }
 
+  window.AgendaNutritionLiveSummaryMath={itemTotals,formatMetric,missingMetrics};
   window.AgendaNutritionLiveSummary={
     refresh:()=>schedule(typeof nutritionDay!=='undefined'?nutritionDay:activeDay),
-    getConsumedTotals:(day=activeDay)=>{const t=dayTotals(day);return {...t.consumed,foodTotal:t.foodTotal,foodConsumed:t.foodConsumed}},
-    getPlannedTotals:(day=activeDay)=>{const t=dayTotals(day);return {...t.planned,foodTotal:t.foodTotal,foodConsumed:t.foodConsumed}}
+    getConsumedTotals:(day=activeDay)=>{const t=dayTotals(day);return {...t.consumed,incomplete:{...t.consumedIncomplete},foodTotal:t.foodTotal,foodConsumed:t.foodConsumed}},
+    getPlannedTotals:(day=activeDay)=>{const t=dayTotals(day);return {...t.planned,incomplete:{...t.plannedIncomplete},foodTotal:t.foodTotal,foodConsumed:t.foodConsumed}}
   };
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();

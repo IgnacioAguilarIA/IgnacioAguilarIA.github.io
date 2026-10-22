@@ -56,6 +56,64 @@
     return Number.isFinite(n)?n:0;
   }
 
+  function hasNumericValue(value){
+    return value!==null&&value!==undefined&&String(value).trim()!==''&&Number.isFinite(Number(value));
+  }
+
+  function normalizedQualityToken(value){
+    return text(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
+  }
+
+  const REQUIRED_NUTRIENTS=[
+    {field:'calories_per_100g',label:'calorías',aliases:['caloria','calorias','calories','energy','kcal']},
+    {field:'protein_per_100g',label:'proteínas',aliases:['proteina','proteinas','protein','proteins']},
+    {field:'carbs_per_100g',label:'carbohidratos',aliases:['carbohidrato','carbohidratos','carbohydrate','carbohydrates','carbs']},
+    {field:'fat_per_100g',label:'grasas',aliases:['grasa','grasas','fat','fats']}
+  ];
+
+  function missingNutritionFields(row){
+    const declared=Array.isArray(row?.nutrition_missing_fields)?row.nutrition_missing_fields:
+      (Array.isArray(row?.nutritionMissing)?row.nutritionMissing:[]);
+    const missing=declared.map(text).filter(Boolean);
+    const normalizedDeclared=missing.map(normalizedQualityToken);
+    const declarationCovers=metric=>normalizedDeclared.some(name=>metric.aliases.some(alias=>{
+      const token=normalizedQualityToken(alias);
+      return name===token||name.startsWith(token+' ')||name.includes(' '+token+' ')||name.endsWith(' '+token);
+    }));
+    for(const metric of REQUIRED_NUTRIENTS){
+      if(!hasNumericValue(row?.[metric.field])&&!declarationCovers(metric))missing.push(metric.label);
+    }
+    const quality=String(row?.nutrition_quality_status||row?.nutritionQualityStatus||'').trim().toLowerCase();
+    if(quality==='incomplete'&&!missing.length)missing.push('datos nutricionales por revisar');
+    return [...new Set(missing)];
+  }
+
+  function canonicalUnitKey(value){
+    const unit=normalizedQualityToken(value||'g');
+    if(['g','gram','grams','gramo','gramos'].includes(unit))return 'g';
+    if(['ml','milliliter','milliliters','mililitro','mililitros'].includes(unit))return 'ml';
+    if(['unit','units','unidad','unidades','piece','pieces','pieza','piezas'].includes(unit))return 'unit';
+    if(['portion','portions','porcion','porciones','racion','raciones'].includes(unit))return 'portion';
+    return unit||'g';
+  }
+
+  // Identidad de variante: no fusiona silenciosamente la misma comida en
+  // estado crudo/cocido, con otra unidad o con una porción distinta.
+  function foodVariantKey(food){
+    return [
+      normalizeSearch(food?.name),normalizeSearch(food?.brand),
+      normalizedQualityToken(food?.preparationState||food?.preparation_state||'unspecified'),
+      canonicalUnitKey(food?.unit),normalizeSearch(food?.quantity),normalizeSearch(food?.servingSize||food?.serving_size),
+      hasNumericValue(food?.densityGPerMl??food?.density_g_per_ml)?String(Number(food?.densityGPerMl??food?.density_g_per_ml)):'',
+      hasNumericValue(food?.gramsPerUnit??food?.grams_per_unit)?String(Number(food?.gramsPerUnit??food?.grams_per_unit)):'',
+      hasNumericValue(food?.gramsPerPortion??food?.grams_per_portion)?String(Number(food?.gramsPerPortion??food?.grams_per_portion)):''
+    ].join('|');
+  }
+
+  function activeSuggestionKey(items,index){
+    return index>=0&&items?.[index]?foodVariantKey(items[index]):'';
+  }
+
   function currentUserId(){
     return typeof currentUser!=='undefined'&&currentUser?.id?String(currentUser.id):'';
   }
@@ -108,17 +166,22 @@
       densityGPerMl:num(row.density_g_per_ml)||null,
       gramsPerUnit:num(row.grams_per_unit)||null,
       gramsPerPortion:num(row.grams_per_portion)||null,
-      calories:num(row.calories_per_100g),
-      protein:num(row.protein_per_100g),
-      carbs:num(row.carbs_per_100g),
-      fat:num(row.fat_per_100g),
-      fiber:num(row.fiber_per_100g),
+      calories:hasNumericValue(row.calories_per_100g)?Number(row.calories_per_100g):0,
+      protein:hasNumericValue(row.protein_per_100g)?Number(row.protein_per_100g):0,
+      carbs:hasNumericValue(row.carbs_per_100g)?Number(row.carbs_per_100g):0,
+      fat:hasNumericValue(row.fat_per_100g)?Number(row.fat_per_100g):0,
+      fiber:hasNumericValue(row.fiber_per_100g)?Number(row.fiber_per_100g):0,
       ingredients:text(row.ingredients),
       categories:text(row.category||row.categories),
       labels:text(row.labels),
       imageUrl:text(row.image_url),
       source:'Catálogo propio',
       sourceType:'food_catalog',
+      sourceLabel:text(row.data_source_label||row.source)||'Catálogo propio',
+      sourceUrl:text(row.source_url),
+      nutritionQualityStatus:text(row.nutrition_quality_status)||(missingNutritionFields(row).length?'incomplete':'legacy_unverified'),
+      nutritionMissing:missingNutritionFields(row),
+      nutritionVerifiedAt:row.nutrition_verified_at||null,
       catalogId:row.id||null,
       userFoodId:null,
       externalId:'',
@@ -142,17 +205,22 @@
       densityGPerMl:num(row.density_g_per_ml)||null,
       gramsPerUnit:num(row.grams_per_unit)||null,
       gramsPerPortion:num(row.grams_per_portion)||null,
-      calories:num(row.calories_per_100g),
-      protein:num(row.protein_per_100g),
-      carbs:num(row.carbs_per_100g),
-      fat:num(row.fat_per_100g),
-      fiber:num(row.fiber_per_100g),
+      calories:hasNumericValue(row.calories_per_100g)?Number(row.calories_per_100g):0,
+      protein:hasNumericValue(row.protein_per_100g)?Number(row.protein_per_100g):0,
+      carbs:hasNumericValue(row.carbs_per_100g)?Number(row.carbs_per_100g):0,
+      fat:hasNumericValue(row.fat_per_100g)?Number(row.fat_per_100g):0,
+      fiber:hasNumericValue(row.fiber_per_100g)?Number(row.fiber_per_100g):0,
       ingredients:text(row.ingredients),
       categories:text(row.categories),
       labels:text(row.labels),
       imageUrl:text(row.image_url),
       source:'Mis alimentos',
       sourceType:'user_food',
+      sourceLabel:text(row.data_source_label||row.source)||'Carga manual',
+      sourceUrl:text(row.data_source_url),
+      nutritionQualityStatus:text(row.nutrition_quality_status)||(missingNutritionFields(row).length?'incomplete':'legacy_unverified'),
+      nutritionMissing:missingNutritionFields(row),
+      nutritionVerifiedAt:row.nutrition_verified_at||null,
       catalogId:row.catalog_id||null,
       userFoodId:row.id||null,
       externalId:text(row.external_id),
@@ -174,10 +242,10 @@
         const c=await ensureSupabase();
         const [catalogRes,userRes]=await Promise.all([
           c.from('food_catalog')
-            .select('id,name,brand,category,aliases,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,source,locale,is_generic,active')
+            .select('id,name,brand,category,aliases,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,source,source_url,data_source_label,nutrition_quality_status,nutrition_missing_fields,nutrition_verified_at,locale,is_generic,active')
             .eq('active',true).limit(CONFIG.maxIndexCatalog),
           c.from('user_foods')
-            .select('id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic,updated_at')
+            .select('id,user_id,catalog_id,source,external_id,fingerprint,name,brand,quantity_label,serving_size,serving_quantity,unit,preparation_state,density_g_per_ml,grams_per_unit,grams_per_portion,calories_per_100g,protein_per_100g,carbs_per_100g,fat_per_100g,fiber_per_100g,ingredients,categories,labels,image_url,is_generic,data_source_label,data_source_url,nutrition_quality_status,nutrition_missing_fields,nutrition_verified_at,updated_at')
             .eq('user_id',uid).order('updated_at',{ascending:false}).limit(CONFIG.maxIndexUser)
         ]);
 
@@ -190,7 +258,7 @@
         const seen=new Set();
         const items=[];
         [...user,...catalog].forEach(item=>{
-          const key=[normalizeSearch(item.name),normalizeSearch(item.brand)].join('|');
+          const key=foodVariantKey(item);
           if(seen.has(key))return;
           seen.add(key);
           items.push(item);
@@ -237,33 +305,122 @@
     return [];
   }
 
+  function ensureBoxStructure(box){
+    if(!box)return null;
+    // La caja visual contiene dos regiones hermanas: resultados seleccionables
+    // y un estado de carga/resultado vacío. El estado nunca se presenta como opción.
+    box.removeAttribute('role');
+    let list=[...box.children].find(node=>node.classList?.contains('nutrition-food-autocomplete-list'));
+    if(!list){
+      const existing=[...box.childNodes];
+      list=document.createElement('div');
+      list.className='nutrition-food-autocomplete-list';
+      box.replaceChildren(list);
+      existing.filter(node=>node!==list).forEach(node=>list.appendChild(node));
+    }
+    list.id=`${box.id}-listbox`;
+    list.setAttribute('role','listbox');
+    list.setAttribute('aria-label',box.id==='nutritionMealTitleAutocomplete'?'Sugerencias para el nombre de la comida':'Resultados de búsqueda de alimentos');
+    let status=[...box.children].find(node=>node.classList?.contains('nutrition-food-autocomplete-state'));
+    if(!status){
+      status=document.createElement('div');
+      status.className='nutrition-food-autocomplete-state';
+      status.hidden=true;
+      status.setAttribute('role','status');
+      status.setAttribute('aria-live','polite');
+      status.setAttribute('aria-atomic','true');
+      box.appendChild(status);
+    }
+    return {list,status};
+  }
+
+  function configureCombobox(input,box,expanded=undefined){
+    if(!input||!box)return;
+    const parts=ensureBoxStructure(box);
+    input.setAttribute('role','combobox');
+    input.setAttribute('aria-autocomplete','list');
+    input.setAttribute('aria-haspopup','listbox');
+    input.setAttribute('aria-controls',parts.list.id);
+    if(expanded!==undefined)input.setAttribute('aria-expanded',String(!!expanded));
+    if(expanded===false)input.removeAttribute('aria-activedescendant');
+  }
+
+  function setPopupMessage(box,message,kind='empty'){
+    if(!box)return;
+    const parts=ensureBoxStructure(box);
+    parts.list.replaceChildren();
+    parts.status.className=`nutrition-food-autocomplete-state nutrition-food-autocomplete-${kind}`;
+    parts.status.replaceChildren();
+    if(kind==='loading'){
+      const spinner=document.createElement('span');
+      spinner.className='nutrition-food-autocomplete-spinner';
+      spinner.setAttribute('aria-hidden','true');
+      parts.status.appendChild(spinner);
+    }
+    const copy=document.createElement('span');
+    copy.textContent=message;
+    parts.status.appendChild(copy);
+    parts.status.hidden=false;
+    box.hidden=false;
+    const input=$(box.id==='nutritionMealTitleAutocomplete'?'mealTitle':'nutritionFoodSearch');
+    configureCombobox(input,box,true);
+  }
+
+  function clearPopupMessage(box){
+    if(!box)return;
+    const parts=ensureBoxStructure(box);
+    parts.status.hidden=true;
+    parts.status.replaceChildren();
+  }
+
   function ensureBox(){
     let box=$('nutritionFoodAutocomplete');
-    if(box)return box;
+    if(!box){
+      const input=$('nutritionFoodSearch');
+      const parent=input?.closest('.nutrition-food-catalog-search');
+      if(!parent)return null;
+      box=document.createElement('div');
+      box.id='nutritionFoodAutocomplete';
+      box.className='nutrition-food-autocomplete';
+      box.hidden=true;
+      parent.appendChild(box);
+    }
     const input=$('nutritionFoodSearch');
-    const parent=input?.closest('.nutrition-food-catalog-search');
-    if(!parent)return null;
-    box=document.createElement('div');
-    box.id='nutritionFoodAutocomplete';
-    box.className='nutrition-food-autocomplete';
-    box.hidden=true;
-    parent.appendChild(box);
+    configureCombobox(input,box,box.hidden?false:undefined);
     return box;
   }
 
   function ensureTitleBox(){
     let box=$('nutritionMealTitleAutocomplete');
-    if(box)return box;
+    if(!box){
+      const input=$('mealTitle');
+      const parent=input?.closest('.nutrition-meal-title-wrap');
+      if(!parent)return null;
+      box=document.createElement('div');
+      box.id='nutritionMealTitleAutocomplete';
+      box.className='nutrition-food-autocomplete nutrition-meal-title-autocomplete';
+      box.hidden=true;
+      parent.appendChild(box);
+    }
     const input=$('mealTitle');
-    const parent=input?.closest('.nutrition-meal-title-wrap');
-    if(!parent)return null;
-    box=document.createElement('div');
-    box.id='nutritionMealTitleAutocomplete';
-    box.className='nutrition-food-autocomplete nutrition-meal-title-autocomplete';
-    box.hidden=true;
-    box.setAttribute('role','listbox');
-    parent.appendChild(box);
+    configureCombobox(input,box,box.hidden?false:undefined);
     return box;
+  }
+
+  function syncAccessibleOptions(box,input,activeIndex=-1){
+    if(!box||!input)return;
+    const parts=ensureBoxStructure(box);
+    const options=[...parts.list.querySelectorAll('.nutrition-food-autocomplete-item')];
+    options.forEach(option=>{
+      const index=Number(option.dataset.index);
+      option.id=`${box.id}-option-${Number.isFinite(index)?index:options.indexOf(option)}`;
+      option.setAttribute('role','option');
+      option.setAttribute('aria-selected',String(Number.isFinite(index)&&index===activeIndex));
+      option.setAttribute('tabindex','-1');
+    });
+    const active=options.find(option=>Number(option.dataset.index)===activeIndex);
+    if(active)input.setAttribute('aria-activedescendant',active.id);
+    else input.removeAttribute('aria-activedescendant');
   }
 
   function sourceClass(source){
@@ -277,23 +434,31 @@
     if(!items.length)return '';
     const groupClass=groupType==='online'?'nutrition-food-autocomplete-group online':'nutrition-food-autocomplete-group';
     return `
-      <div class="${groupClass}" data-group="${groupType}">
+      <div class="${groupClass}" data-group="${groupType}" role="group" aria-label="${escapeHtml(label)}">
         <div class="nutrition-food-autocomplete-group-label"><span>${escapeHtml(label)}</span><small>${items.length} resultado${items.length===1?'':'s'}</small></div>
         ${items.map((food,i)=>{
           const idx=offset+i;
           const brand=food.brand?`<span class="nutrition-food-autocomplete-brand">${escapeHtml(food.brand)}</span>`:'';
           const source=sourceClass(food.source);
+          const missing=Array.isArray(food.nutritionMissing)?food.nutritionMissing:[];
+          const incomplete=missing.length>0||String(food.nutritionQualityStatus||'').toLowerCase()==='incomplete';
+          const macros=incomplete
+            ? `<span class="nutrition-food-autocomplete-quality" role="note">Datos incompletos${missing.length?`: faltan ${escapeHtml(missing.join(', '))}`:''}</span>`
+            : `<span class="nutrition-food-autocomplete-macros">
+                <span>${escapeHtml(food.calories)} kcal</span>
+                <span>${escapeHtml(food.protein)} P</span>
+                <span>${escapeHtml(food.carbs)} C</span>
+                <span>${escapeHtml(food.fat)} G</span>
+              </span>`;
+          const prepLabels={raw:'Crudo',cooked:'Cocido',prepared:'Preparado'};
+          const prep=prepLabels[String(food.preparationState||food.preparation_state||'').toLowerCase()];
+          const prepBadge=prep?`<span class="nutrition-food-autocomplete-variant">${prep}</span>`:'';
           return `
             <button type="button" class="nutrition-food-autocomplete-item" data-index="${idx}" data-source="${source}">
               <span class="nutrition-food-autocomplete-main">
                 <span class="nutrition-food-autocomplete-title">${escapeHtml(food.name)}</span>
-                ${brand}
-                <span class="nutrition-food-autocomplete-macros">
-                  <span>${escapeHtml(food.calories)} kcal</span>
-                  <span>${escapeHtml(food.protein)} P</span>
-                  <span>${escapeHtml(food.carbs)} C</span>
-                  <span>${escapeHtml(food.fat)} G</span>
-                </span>
+                ${brand}${prepBadge}
+                ${macros}
               </span>
               <span class="nutrition-food-autocomplete-pill">${escapeHtml(food.source)}</span>
             </button>`;
@@ -304,17 +469,18 @@
   function paint(items,localCount,onlineLoading=false){
     const box=ensureBox();
     if(!box)return;
+    const parts=ensureBoxStructure(box);
+    const previousActiveKey=activeSuggestionKey(lastSuggestionItems,activeIndex);
     const local=Array.isArray(items?.local)?items.local:[];
     const online=Array.isArray(items?.online)?items.online:[];
-    const merged=[];
-    local.forEach(item=>merged.push(item));
-    online.forEach(item=>merged.push(item));
+    const merged=[...local,...online];
     lastSuggestionItems=merged;
-    activeIndex=-1;
+    activeIndex=previousActiveKey?merged.findIndex(item=>foodVariantKey(item)===previousActiveKey):-1;
 
-    if(!merged.length&&!onlineLoading){
-      box.innerHTML='<div class="nutrition-food-autocomplete-empty">No encontré coincidencias. Podés seguir escribiendo o usar “Buscar en Open Food Facts”.</div>';
-      box.hidden=false;
+    if(!merged.length){
+      parts.list.replaceChildren();
+      setPopupMessage(box,onlineLoading?'Buscando coincidencias en el catálogo…':'No encontré coincidencias. Podés seguir escribiendo o usar “Buscar en Open Food Facts”.',onlineLoading?'loading':'empty');
+      syncAccessibleOptions(box,$('nutritionFoodSearch'),-1);
       return;
     }
 
@@ -325,32 +491,43 @@
     if(personal.length){html+=renderGroup('Mis alimentos',personal,'local',offset);offset+=personal.length;}
     if(catalog.length){html+=renderGroup('Catálogo de la aplicación',catalog,'local',offset);offset+=catalog.length;}
     if(online.length)html+=renderGroup('Open Food Facts',online,'online',offset);
+    parts.list.innerHTML=html;
+    clearPopupMessage(box);
     if(onlineLoading){
-      html+=`<div class="nutrition-food-autocomplete-loading"><span class="nutrition-food-autocomplete-spinner" aria-hidden="true"></span><span>Buscando más resultados en Open Food Facts…</span></div>`;
+      const status=parts.status;
+      status.className='nutrition-food-autocomplete-state nutrition-food-autocomplete-loading';
+      status.replaceChildren();
+      const spinner=document.createElement('span');spinner.className='nutrition-food-autocomplete-spinner';spinner.setAttribute('aria-hidden','true');
+      const message=document.createElement('span');message.textContent='Buscando más resultados en Open Food Facts…';
+      status.append(spinner,message);status.hidden=false;
     }
-    box.innerHTML=html;
     box.hidden=false;
+    configureCombobox($('nutritionFoodSearch'),box,true);
+    syncAccessibleOptions(box,$('nutritionFoodSearch'),-1);
 
-    box.querySelectorAll('.nutrition-food-autocomplete-item').forEach(button=>{
-      button.addEventListener('click',()=>{
-        const idx=Number(button.dataset.index);
-        selectSuggestion(idx);
-      });
+    parts.list.querySelectorAll('.nutrition-food-autocomplete-item').forEach(button=>{
+      const idx=Number(button.dataset.index);
+      button.classList.toggle('is-active',idx===activeIndex);
+      button.addEventListener('click',()=>selectSuggestion(idx));
     });
+    syncAccessibleOptions(box,$('nutritionFoodSearch'),activeIndex);
   }
 
   function paintTitle(items,onlineLoading=false){
     const box=ensureTitleBox();
     if(!box)return;
+    const parts=ensureBoxStructure(box);
+    const previousActiveKey=activeSuggestionKey(titleSuggestionItems,titleActiveIndex);
     const local=Array.isArray(items?.local)?items.local:[];
     const online=Array.isArray(items?.online)?items.online:[];
     const merged=[...local,...online];
     titleSuggestionItems=merged;
-    titleActiveIndex=-1;
+    titleActiveIndex=previousActiveKey?merged.findIndex(item=>foodVariantKey(item)===previousActiveKey):-1;
 
-    if(!merged.length&&!onlineLoading){
-      box.innerHTML='<div class="nutrition-food-autocomplete-empty">No encontré coincidencias. Podés seguir escribiendo.</div>';
-      box.hidden=false;
+    if(!merged.length){
+      parts.list.replaceChildren();
+      setPopupMessage(box,onlineLoading?'Buscando coincidencias para el nombre de la comida…':'No encontré coincidencias. Podés escribir el nombre igualmente.',onlineLoading?'loading':'empty');
+      syncAccessibleOptions(box,$('mealTitle'),-1);
       return;
     }
 
@@ -361,14 +538,24 @@
     if(personal.length){html+=renderGroup('Mis alimentos',personal,'local',offset);offset+=personal.length;}
     if(catalog.length){html+=renderGroup('Catálogo de la aplicación',catalog,'local',offset);offset+=catalog.length;}
     if(online.length)html+=renderGroup('Open Food Facts',online,'online',offset);
+    parts.list.innerHTML=html;
+    clearPopupMessage(box);
     if(onlineLoading){
-      html+=`<div class="nutrition-food-autocomplete-loading"><span class="nutrition-food-autocomplete-spinner" aria-hidden="true"></span><span>Buscando alternativas en Open Food Facts…</span></div>`;
+      const status=parts.status;
+      status.className='nutrition-food-autocomplete-state nutrition-food-autocomplete-loading';
+      status.replaceChildren();
+      const spinner=document.createElement('span');spinner.className='nutrition-food-autocomplete-spinner';spinner.setAttribute('aria-hidden','true');
+      const message=document.createElement('span');message.textContent='Buscando alternativas en Open Food Facts…';
+      status.append(spinner,message);status.hidden=false;
     }
-    box.innerHTML=html;
     box.hidden=false;
-    box.querySelectorAll('.nutrition-food-autocomplete-item').forEach(button=>{
-      button.addEventListener('click',()=>selectTitleSuggestion(Number(button.dataset.index)));
+    configureCombobox($('mealTitle'),box,true);
+    parts.list.querySelectorAll('.nutrition-food-autocomplete-item').forEach(button=>{
+      const idx=Number(button.dataset.index);
+      button.classList.toggle('is-active',idx===titleActiveIndex);
+      button.addEventListener('click',()=>selectTitleSuggestion(idx));
     });
+    syncAccessibleOptions(box,$('mealTitle'),titleActiveIndex);
   }
 
   function setStatus(message){
@@ -388,6 +575,7 @@
     if(typeof selector==='function')selector(food);
     const box=ensureBox();
     if(box)box.hidden=true;
+    configureCombobox(input,box,false);
     setStatus(`✓ ${food.name} seleccionado desde ${food.source}. Ajustá la cantidad y agregalo a la comida.`);
     setTimeout(()=>{
       $('nutritionFoodQuantity')?.focus();
@@ -402,33 +590,16 @@
     window.clearTimeout(titleInputTimer);
     window.clearTimeout(titleOnlineTimer);
     const title=$('mealTitle');
-    if(title){
-      title.value=food.name;
-      title.setAttribute('aria-expanded','false');
-    }
-    const search=$('nutritionFoodSearch');
-    if(search)search.value=food.name;
-    const selector=window.AgendaFoodCatalog?.select;
-    if(typeof selector==='function')selector(food);
-    const toggle=$('nutritionFoodCatalogToggle');
-    const panel=$('nutritionFoodCatalog');
-    if(toggle&&panel?.hidden){toggle.click()}
-    const box=ensureTitleBox();
-    if(box)box.hidden=true;
-    setStatus(`✓ ${food.name} seleccionado desde ${food.source}. Revisá la cantidad y agregalo a la comida.`);
-    setTimeout(()=>{
-      const qty=$('nutritionFoodQuantity');
-      if(qty){qty.focus();qty.select?.()}
-    },60);
+    if(title)title.value=food.name;
+    hideTitleAutocomplete();
+    setStatus(`✓ Nombre de comida sugerido: «${food.name}». Para agregar ingredientes, usá “Buscar o elegir alimento”.`);
   }
 
   async function performTitleSearch(query,id){
     const q=text(query);
     if(id!==titleRequestId)return;
     if(q.length<CONFIG.minChars){
-      const box=ensureTitleBox();
-      if(box)box.hidden=true;
-      if($('mealTitle'))$('mealTitle').setAttribute('aria-expanded','false');
+      hideTitleAutocomplete();
       return;
     }
 
@@ -451,11 +622,9 @@
       try{
         const external=await off(q);
         if(onlineId!==titleRequestId)return;
-        const localKeys=new Set(local.map(item=>`${normalizeSearch(item.name)}|${normalizeSearch(item.brand)}`));
-        const online=dedupe(external).filter(item=>{
-          const key=`${normalizeSearch(item.name)}|${normalizeSearch(item.brand)}`;
-          return !localKeys.has(key);
-        }).sort((a,b)=>relevance(b,q)-relevance(a,q)).slice(0,CONFIG.maxOnline);
+        const localKeys=new Set(local.map(foodVariantKey));
+        const online=dedupe(external).filter(item=>!localKeys.has(foodVariantKey(item)))
+          .sort((a,b)=>relevance(b,q)-relevance(a,q)).slice(0,CONFIG.maxOnline);
         paintTitle({local,online},false);
       }catch(err){
         if(onlineId!==titleRequestId)return;
@@ -474,13 +643,11 @@
     const box=ensureTitleBox();
     if(!box)return;
     if(q.length<CONFIG.minChars){
-      box.hidden=true;
-      $('mealTitle')?.setAttribute('aria-expanded','false');
+      hideTitleAutocomplete();
       return;
     }
     box.hidden=false;
-    box.innerHTML='<div class="nutrition-food-autocomplete-loading"><span class="nutrition-food-autocomplete-spinner" aria-hidden="true"></span><span>Buscando en el catálogo de la aplicación…</span></div>';
-    $('mealTitle')?.setAttribute('aria-expanded','true');
+    setPopupMessage(box,'Buscando en el catálogo de la aplicación…','loading');
     titleInputTimer=window.setTimeout(()=>performTitleSearch(q,id),CONFIG.localDebounceMs);
   }
 
@@ -489,8 +656,9 @@
     const buttons=[...box?.querySelectorAll('.nutrition-food-autocomplete-item')||[]];
     if(!buttons.length)return;
     titleActiveIndex=(titleActiveIndex+delta+buttons.length)%buttons.length;
-    buttons.forEach((b,i)=>b.classList.toggle('is-active',i===titleActiveIndex));
-    buttons[titleActiveIndex]?.scrollIntoView({block:'nearest'});
+    buttons.forEach((b,i)=>b.classList.toggle('is-active',Number(b.dataset.index)===titleActiveIndex));
+    syncAccessibleOptions(box,$('mealTitle'),titleActiveIndex);
+    buttons.find(b=>Number(b.dataset.index)===titleActiveIndex)?.scrollIntoView({block:'nearest'});
   }
 
   function onTitleKeyDown(event){
@@ -499,33 +667,45 @@
     if(event.key==='ArrowDown'&&visible){event.preventDefault();setTitleActive(1);return}
     if(event.key==='ArrowUp'&&visible){event.preventDefault();setTitleActive(-1);return}
     if(event.key==='Enter'&&visible&&titleActiveIndex>=0){event.preventDefault();selectTitleSuggestion(titleActiveIndex);return}
-    if(event.key==='Escape'&&visible){event.preventDefault();box.hidden=true;$('mealTitle')?.setAttribute('aria-expanded','false');return}
+    if(event.key==='Escape'&&visible){event.preventDefault();hideTitleAutocomplete();return}
   }
 
   function hideTitleAutocomplete(){
     const box=ensureTitleBox();
     if(box)box.hidden=true;
-    $('mealTitle')?.setAttribute('aria-expanded','false');
+    configureCombobox($('mealTitle'),box,false);
     titleActiveIndex=-1;
+    box?.querySelectorAll('.nutrition-food-autocomplete-item.is-active').forEach(option=>option.classList.remove('is-active'));
+    syncAccessibleOptions(box,$('mealTitle'),-1);
   }
 
   function hide(){
     const box=ensureBox();
     if(box)box.hidden=true;
+    configureCombobox($('nutritionFoodSearch'),box,false);
     activeIndex=-1;
+    box?.querySelectorAll('.nutrition-food-autocomplete-item.is-active').forEach(option=>option.classList.remove('is-active'));
+    syncAccessibleOptions(box,$('nutritionFoodSearch'),-1);
   }
 
   function show(){
     const box=ensureBox();
-    if(box&&box.innerHTML.trim())box.hidden=false;
+    if(!box)return;
+    const parts=ensureBoxStructure(box);
+    if(parts.list.querySelector('.nutrition-food-autocomplete-item')||(!parts.status.hidden&&parts.status.textContent.trim())){
+      box.hidden=false;
+      configureCombobox($('nutritionFoodSearch'),box,true);
+    }
   }
 
   function setActive(delta){
-    const buttons=[...ensureBox()?.querySelectorAll('.nutrition-food-autocomplete-item')||[]];
+    const box=ensureBox();
+    const buttons=[...box?.querySelectorAll('.nutrition-food-autocomplete-item')||[]];
     if(!buttons.length)return;
     activeIndex=(activeIndex+delta+buttons.length)%buttons.length;
-    buttons.forEach((b,i)=>b.classList.toggle('is-active',i===activeIndex));
-    buttons[activeIndex]?.scrollIntoView({block:'nearest'});
+    buttons.forEach(b=>b.classList.toggle('is-active',Number(b.dataset.index)===activeIndex));
+    syncAccessibleOptions(box,$('nutritionFoodSearch'),activeIndex);
+    buttons.find(b=>Number(b.dataset.index)===activeIndex)?.scrollIntoView({block:'nearest'});
   }
 
   async function performSearch(query,id){
@@ -557,11 +737,9 @@
       try{
         const external=await off(q);
         if(onlineId!==requestId)return;
-        const localKeys=new Set(local.map(item=>`${normalizeSearch(item.name)}|${normalizeSearch(item.brand)}`));
-        const online=dedupe(external).filter(item=>{
-          const key=`${normalizeSearch(item.name)}|${normalizeSearch(item.brand)}`;
-          return !localKeys.has(key);
-        }).sort((a,b)=>relevance(b,q)-relevance(a,q)).slice(0,CONFIG.maxOnline);
+        const localKeys=new Set(local.map(foodVariantKey));
+        const online=dedupe(external).filter(item=>!localKeys.has(foodVariantKey(item)))
+          .sort((a,b)=>relevance(b,q)-relevance(a,q)).slice(0,CONFIG.maxOnline);
         paint({local,online},local.length,false);
         setStatus(`${local.length} del catálogo de la aplicación + ${online.length} de Open Food Facts.`);
       }catch(err){
@@ -588,10 +766,7 @@
     }
 
     const box=ensureBox();
-    if(box){
-      box.hidden=false;
-      box.innerHTML='<div class="nutrition-food-autocomplete-loading"><span class="nutrition-food-autocomplete-spinner" aria-hidden="true"></span><span>Buscando en el catálogo de la aplicación…</span></div>';
-    }
+    if(box)setPopupMessage(box,'Buscando en el catálogo de la aplicación…','loading');
     inputTimer=window.setTimeout(()=>performSearch(q,id),CONFIG.localDebounceMs);
   }
 
@@ -610,7 +785,7 @@
     if(!input)return;
     bound=true;
     const box=ensureBox();
-    if(box)box.setAttribute('role','listbox');
+    configureCombobox(input,box,false);
     input.addEventListener('input',onInput);
     input.addEventListener('keydown',onKeyDown);
     input.addEventListener('focus',()=>{show();void loadLocalIndex();});
@@ -628,7 +803,7 @@
       titleInput.addEventListener('input',onTitleInput);
       titleInput.addEventListener('keydown',onTitleKeyDown);
       titleInput.addEventListener('focus',()=>{void loadLocalIndex();});
-      titleInput.setAttribute('aria-expanded','false');
+      configureCombobox(titleInput,ensureTitleBox(),false);
     }
 
     // Precarga el catálogo una vez, sin bloquear el formulario.

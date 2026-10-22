@@ -219,7 +219,30 @@
     if(data()?.calculateRecipe)return data().calculateRecipe(items,finishedWeightG);
     const weight=(items||[]).reduce((s,x)=>s+Math.max(0,num(x.quantity_in_grams??x.quantity)),0);
     const total=(items||[]).reduce((a,x)=>{const f=Math.max(0,num(x.quantity_in_grams??x.quantity))/100;a.calories+=num(x.calories_per_100g)*f;a.protein+=num(x.protein_per_100g)*f;a.carbs+=num(x.carbs_per_100g)*f;a.fat+=num(x.fat_per_100g)*f;return a},{calories:0,protein:0,carbs:0,fat:0});
-    const factor=weight?100/weight:0;return {total_weight_g:weight,calories_per_100g:total.calories*factor,protein_per_100g:total.protein*factor,carbs_per_100g:total.carbs*factor,fat_per_100g:total.fat*factor,total_calories:total.calories,total_protein_g:total.protein,total_carbs_g:total.carbs,total_fat_g:total.fat};
+    const factor=weight?100/weight:0;return {total_weight_g:weight,calories_per_100g:total.calories*factor,protein_per_100g:total.protein*factor,carbs_per_100g:total.carbs*factor,fat_per_100g:total.fat*factor,total_calories:total.calories,total_protein_g:total.protein,total_carbs_g:total.carbs,total_fat_g:total.fat,unknownMetrics:[]};
+  }
+  const RECIPE_METRICS={calories:{label:'energía',unit:'kcal',total:'total_calories',per100:'calories_per_100g'},protein:{label:'proteínas',unit:'g',total:'total_protein_g',per100:'protein_per_100g'},carbs:{label:'carbohidratos',unit:'g',total:'total_carbs_g',per100:'carbs_per_100g'},fat:{label:'grasas',unit:'g',total:'total_fat_g',per100:'fat_per_100g'},fiber:{label:'fibra',unit:'g',total:'total_fiber_g',per100:'fiber_per_100g'}};
+  function recipeMetricUnknown(total,key){return Array.isArray(total?.unknownMetrics)&&total.unknownMetrics.includes(key)}
+  function recipeMetricValue(total,key,amount,per100=false){const metric=RECIPE_METRICS[key];if(!metric)return '—';if(recipeMetricUnknown(total,key))return 'Datos incompletos';return `${fmt(amount)} ${metric.unit}`}
+  function recipeNutritionSummary(recipe){
+    const items=Array.isArray(recipe?.ingredients)?recipe.ingredients:[];
+    try{
+      const total=recipeTotals(items,recipe?.finished_weight_g??null);
+      const keys=['calories','protein','carbs','fat'];
+      const parts=keys.map(key=>`${RECIPE_METRICS[key].label}: ${recipeMetricValue(total,key,total[RECIPE_METRICS[key].per100],true)}`);
+      if(recipeMetricUnknown(total,'fiber'))parts.push('fibra: Datos incompletos');
+      return `${parts.join(' · ')} / 100 g`;
+    }catch(_){return 'Información nutricional no calculable: revisá cantidades y equivalencias.'}
+  }
+  function recipeIngredientMetricUnknown(item,key){
+    const api=data();
+    if(typeof api?.recipeIngredientMissingMetrics==='function')return api.recipeIngredientMissingMetrics(item).has(key);
+    if(typeof api?.missingMacroMetrics==='function'&&api.missingMacroMetrics(item).includes(key))return true;
+    return false;
+  }
+  function recipeIngredientNutritionSummary(item){
+    const fields=[['calories','calories_per_100g','kcal'],['protein','protein_per_100g','g'],['carbs','carbs_per_100g','g'],['fat','fat_per_100g','g']];
+    return fields.map(([key,field,unit])=>`${RECIPE_METRICS[key].label}: ${recipeIngredientMetricUnknown(item,key)?'No informado':`${fmt(item[field]??item[key])} ${unit}`}`).join(' · ')+' / 100 g';
   }
   function saveRecipeModal(existingRecipe=null){
     const editing=Boolean(existingRecipe?.id);
@@ -251,6 +274,7 @@
         <section class="nutrition-recipe-editor-section" aria-labelledby="nutritionRecipeIngredientTitle">
           <div class="nutrition-recipe-editor-head"><strong id="nutritionRecipeIngredientTitle">Ingredientes y cantidades</strong><span id="nutritionRecipeIngredientCount"></span></div>
           <div id="nutritionRecipeIngredientEditor" class="nutrition-recipe-ingredient-editor"></div>
+          <div class="e25-recipe-undo" id="nutritionRecipeUndo" hidden role="status" aria-live="polite"><span id="nutritionRecipeUndoText">Ingrediente quitado.</span><button type="button" class="nutrition-advanced-secondary" id="nutritionRecipeUndoBtn">Deshacer</button></div>
         </section>
         <section class="nutrition-recipe-add-ingredient" aria-label="Agregar un ingrediente">
           <label for="nutritionRecipeIngredientSearch">Agregar ingrediente</label>
@@ -264,6 +288,29 @@
     const ingredientHost=$('nutritionRecipeIngredientEditor');
     const preview=$('nutritionRecipePreview');
     const status=$('nutritionRecipeSaveStatus');
+    const undoHost=$('nutritionRecipeUndo'),undoText=$('nutritionRecipeUndoText'),undoButton=$('nutritionRecipeUndoBtn');
+    const removedIngredients=[];
+    let undoTimer=0,recipeSaving=false,baselineSignature='';
+    const recipeEditorSignature=()=>JSON.stringify({name:txt($('nutritionRecipeName')?.value),notes:txt($('nutritionRecipeNotes')?.value),instructions:txt($('nutritionRecipeInstructions')?.value),prep:txt($('nutritionRecipePrepTime')?.value),cook:txt($('nutritionRecipeCookTime')?.value),servings:txt($('nutritionRecipeServings')?.value),finishedWeight:txt($('nutritionRecipeFinishedWeight')?.value),ingredients:editorIngredients});
+    const hasRecipeChanges=()=>Boolean(baselineSignature)&&recipeEditorSignature()!==baselineSignature;
+    function cleanupRecipeEditorGuards(){
+      if(undoTimer){clearTimeout(undoTimer);undoTimer=0;}
+      if(typeof window!=='undefined'&&window.__agendaE25RecipeBeforeUnload){window.removeEventListener('beforeunload',window.__agendaE25RecipeBeforeUnload);window.__agendaE25RecipeBeforeUnload=null;}
+    }
+    function recipeUndoRender(){
+      if(undoTimer){clearTimeout(undoTimer);undoTimer=0;}
+      const now=Date.now();while(removedIngredients.length&&removedIngredients[removedIngredients.length-1].expiresAt<=now)removedIngredients.pop();
+      const last=removedIngredients[removedIngredients.length-1];
+      if(undoHost)undoHost.hidden=!last;
+      if(last&&undoText)undoText.textContent=`«${last.item.name||'Ingrediente'}» se quitó. Podés recuperarlo durante unos segundos.`;
+      if(last)undoTimer=setTimeout(recipeUndoRender,Math.max(20,last.expiresAt-Date.now()+10));
+    }
+    if(undoButton)undoButton.addEventListener('click',()=>{
+      recipeUndoRender();const removed=removedIngredients.pop();if(!removed)return;
+      editorIngredients.splice(Math.min(removed.index,editorIngredients.length),0,removed.item);
+      renderIngredientEditor();recipeUndoRender();
+      if(status)status.textContent=`Se restauró «${removed.item.name||'el ingrediente'}».`;
+    });
     function updatePreview(){
       const finishedRaw=txt($('nutritionRecipeFinishedWeight')?.value);
       let total;
@@ -271,7 +318,12 @@
       catch(err){total=null;if(status)status.textContent=err?.message||'No se puede calcular una equivalencia fiable a gramos.';}
       if(preview){
         if(!total)preview.innerHTML='<strong>No se puede calcular la receta con las unidades actuales.</strong><span>Revisá las equivalencias de los ingredientes en Mis alimentos.</span>';
-        else preview.innerHTML=`<strong>${editorIngredients.length} ingrediente${editorIngredients.length===1?'':'s'} · ${fmt(total.ingredient_weight_g??total.total_weight_g)} g en ingredientes · ${total.finished_weight_g?`peso final: ${fmt(total.finished_weight_g)} g`:`peso estimado: ${fmt(total.total_weight_g)} g`}</strong><span>${fmt(total.total_calories)} kcal · P ${fmt(total.total_protein_g)} g · C ${fmt(total.total_carbs_g)} g · G ${fmt(total.total_fat_g)} g para toda la preparación · nutrientes por 100 g calculados con ${total.finished_weight_g?'el peso final':'el peso estimado'}</span>`;
+        else {
+          const macroText=['calories','protein','carbs','fat'].map(key=>`${RECIPE_METRICS[key].label}: ${recipeMetricValue(total,key,total[RECIPE_METRICS[key].total])}`).join(' · ');
+          const unknown=(Array.isArray(total.unknownMetrics)?total.unknownMetrics:[]).filter(key=>RECIPE_METRICS[key]);
+          const warning=unknown.length?`<span class="e25-recipe-data-warning" role="status">Datos incompletos: ${unknown.map(key=>RECIPE_METRICS[key].label).join(', ')}. Completá los nutrientes del alimento para calcular un total fiable.</span>`:'';
+          preview.innerHTML=`<strong>${editorIngredients.length} ingrediente${editorIngredients.length===1?'':'s'} · ${fmt(total.ingredient_weight_g??total.total_weight_g)} g en ingredientes · ${total.finished_weight_g?`peso final: ${fmt(total.finished_weight_g)} g`:`peso estimado: ${fmt(total.total_weight_g)} g`}</strong><span>${macroText} para toda la preparación · valores por 100 g calculados con ${total.finished_weight_g?'el peso final':'el peso estimado'}</span>${warning}`;
+        }
       }
       const count=$('nutritionRecipeIngredientCount');if(count)count.textContent=`${editorIngredients.length} elemento${editorIngredients.length===1?'':'s'}`;
     }
@@ -279,7 +331,7 @@
     function renderIngredientEditor(){
       if(!ingredientHost)return;
       if(!editorIngredients.length){ingredientHost.innerHTML='<div class="nutrition-advanced-empty">No hay ingredientes. Buscá uno abajo para agregarlo.</div>';updatePreview();return}
-      ingredientHost.innerHTML=editorIngredients.map((item,index)=>`<article class="nutrition-recipe-editor-item"><div class="nutrition-recipe-editor-item-main"><strong>${esc(item.name||'Alimento')}</strong><small>${item.brand?esc(item.brand)+' · ':''}${item.preparation_state&&item.preparation_state!=='unspecified'?(item.preparation_state==='raw'?'Crudo · ':item.preparation_state==='cooked'?'Cocido · ':'Preparado · '):''}${fmt(item.calories_per_100g)} kcal · P ${fmt(item.protein_per_100g)} g · C ${fmt(item.carbs_per_100g)} g · G ${fmt(item.fat_per_100g)} g / 100 g</small></div><label class="nutrition-recipe-editor-quantity">Cantidad (${esc(item.unit||'g')})<input class="input" type="number" min="0.1" max="100000" step="0.1" value="${esc(fmt(item.quantity))}" data-recipe-ingredient-qty="${index}"></label><button type="button" class="nutrition-advanced-danger nutrition-recipe-editor-remove" data-recipe-ingredient-remove="${index}" aria-label="Quitar ${esc(item.name||'ingrediente')}">Quitar</button></article>`).join('');
+      ingredientHost.innerHTML=editorIngredients.map((item,index)=>`<article class="nutrition-recipe-editor-item"><div class="nutrition-recipe-editor-item-main"><strong>${esc(item.name||'Alimento')}</strong><small>${item.brand?esc(item.brand)+' · ':''}${item.preparation_state&&item.preparation_state!=='unspecified'?(item.preparation_state==='raw'?'Crudo · ':item.preparation_state==='cooked'?'Cocido · ':'Preparado · '):''}${esc(recipeIngredientNutritionSummary(item))}</small></div><label class="nutrition-recipe-editor-quantity">Cantidad (${esc(item.unit||'g')})<input class="input" type="number" min="0.1" max="100000" step="0.1" value="${esc(fmt(item.quantity))}" data-recipe-ingredient-qty="${index}"></label><button type="button" class="nutrition-advanced-danger nutrition-recipe-editor-remove" data-recipe-ingredient-remove="${index}" aria-label="Quitar ${esc(item.name||'ingrediente')}">Quitar</button></article>`).join('');
       ingredientHost.querySelectorAll('[data-recipe-ingredient-qty]').forEach(input=>input.addEventListener('change',()=>{
         const index=Number(input.dataset.recipeIngredientQty),quantity=Number(input.value);
         if(!Number.isFinite(quantity)||quantity<=0){if(status)status.textContent='Cada ingrediente debe tener una cantidad mayor que cero.';input.value=fmt(editorIngredients[index]?.quantity||100);return}
@@ -290,13 +342,35 @@
         if(status)status.textContent='';updatePreview();
       }));
       ingredientHost.querySelectorAll('[data-recipe-ingredient-remove]').forEach(button=>button.addEventListener('click',()=>{
-        const index=Number(button.dataset.recipeIngredientRemove);
+        const index=Number(button.dataset.recipeIngredientRemove),item=editorIngredients[index];
+        if(!item)return;
+        removedIngredients.push({item:{...item},index,expiresAt:Date.now()+8000});
         editorIngredients=editorIngredients.filter((_,i)=>i!==index);
-        renderIngredientEditor();
+        renderIngredientEditor();recipeUndoRender();
+        if(status)status.textContent=`Se quitó «${item.name||'el ingrediente'}». Podés deshacerlo durante 8 segundos.`;
       }));
       updatePreview();
     }
     renderIngredientEditor();
+    baselineSignature=recipeEditorSignature();
+    const recipeOverlay=$('nutritionAdvancedModal');
+    if(recipeOverlay){
+      const onRecipeCloseAttempt=event=>{
+        const wantsClose=event.type==='keydown'&&event.key==='Escape'||event.type==='click'&&(event.target===recipeOverlay||event.target?.closest?.('#nutritionAdvancedClose,[data-advanced-close]'));
+        if(!wantsClose||recipeSaving)return;
+        if(hasRecipeChanges()){
+          const discard=window.confirm('¿Descartar los cambios de la receta?\n\nLos ingredientes, cantidades o instrucciones que modificaste no se guardaron.');
+          if(!discard){event.preventDefault();event.stopPropagation();event.stopImmediatePropagation?.();return;}
+        }
+        cleanupRecipeEditorGuards();
+      };
+      recipeOverlay.addEventListener('click',onRecipeCloseAttempt,true);
+      recipeOverlay.addEventListener('keydown',onRecipeCloseAttempt,true);
+    }
+    if(typeof window!=='undefined'){
+      const beforeUnload=event=>{if(hasRecipeChanges()&&!recipeSaving){event.preventDefault();event.returnValue='';return ''}};
+      window.__agendaE25RecipeBeforeUnload=beforeUnload;window.addEventListener('beforeunload',beforeUnload);
+    }
     $('nutritionRecipeFinishedWeight')?.addEventListener('input',updatePreview);
     $('nutritionRecipeName')?.focus();document.querySelectorAll('[data-advanced-close]').forEach(b=>b.addEventListener('click',closeModal));
     const searchButton=$('nutritionRecipeIngredientSearchBtn');
@@ -330,14 +404,15 @@
       if(!name||servings<=0){if(status)status.textContent='Ingresá un nombre y una cantidad de porciones válida.';return}
       if(!ingredients.length){if(status)status.textContent='La receta debe contener al menos un ingrediente con cantidad.';return}
       if(!data()?.saveRecipe){if(status)status.textContent='La función de recetas no está disponible.';return}
+      recipeSaving=true;
       if(btn){btn.disabled=true;btn.textContent='Guardando…'}
       try{
         const finishedWeightText=txt($('nutritionRecipeFinishedWeight')?.value);
         const instructions=txt($('nutritionRecipeInstructions')?.value).split(/\r?\n/).map(step=>step.trim()).filter(Boolean);
         const prepTimeMinutes=Number($('nutritionRecipePrepTime')?.value||0),cookTimeMinutes=Number($('nutritionRecipeCookTime')?.value||0);
         const res=await data().saveRecipe({id:existingRecipe?.id||null,parentRecipeId:existingRecipe?.parent_recipe_id||existingRecipe?.parentRecipeId||null,name,notes:txt($('nutritionRecipeNotes')?.value),instructions,prepTimeMinutes,cookTimeMinutes,servings,finishedWeightG:finishedWeightText===''?null:Number(finishedWeightText),ingredients});
-        closeModal();notify(`${editing?'Receta actualizada':creatingVariant?'Variante guardada':'Receta guardada'}: ${res.recipe.name}`,'success');openRecipesModal();
-      }catch(err){console.warn('Guardar receta:',err);if(status)status.textContent=`No se pudo guardar la receta. Comprobá la conexión y los permisos de Supabase. ${err?.message||''}`;if(btn){btn.disabled=false;btn.textContent=editing?'Guardar cambios':'Guardar receta'}}
+        cleanupRecipeEditorGuards();closeModal();notify(`${editing?'Receta actualizada':creatingVariant?'Variante guardada':'Receta guardada'}: ${res.recipe.name}`,'success');openRecipesModal();
+      }catch(err){recipeSaving=false;console.warn('Guardar receta:',err);if(status)status.textContent=`No se pudo guardar la receta. Comprobá la conexión y los permisos de Supabase. ${err?.message||''}`;if(btn){btn.disabled=false;btn.textContent=editing?'Guardar cambios':'Guardar receta'}}
     });
   }
   function localIsoDate(date=new Date()){
@@ -420,7 +495,7 @@
         const ingredientCount=Array.isArray(snap.ingredients)?snap.ingredients.length:0;
         const day=txt(row.prepared_on)?new Date(`${row.prepared_on}T12:00:00`).toLocaleDateString('es-AR',{day:'2-digit',month:'long',year:'numeric'}):'Fecha no disponible';
         const weight=row.finished_weight_g?`${fmt(row.finished_weight_g)} g reales`:'Peso real no registrado';
-        const nutrition=snap.calories_per_100g!=null?`${fmt(snap.calories_per_100g)} kcal / 100 g · P ${fmt(snap.protein_per_100g)} g · C ${fmt(snap.carbs_per_100g)} g · G ${fmt(snap.fat_per_100g)} g`:'';
+        const nutrition=Array.isArray(snap.ingredients)&&snap.ingredients.length?recipeNutritionSummary(snap):(snap.calories_per_100g!=null?`${fmt(snap.calories_per_100g)} kcal / 100 g · P ${fmt(snap.protein_per_100g)} g · C ${fmt(snap.carbs_per_100g)} g · G ${fmt(snap.fat_per_100g)} g`:'');
         const steps=Array.isArray(snap.instructions)?snap.instructions.length:0;
         return `<article class="nutrition-recipe-preparation-history-item"><header><strong>${esc(row.recipe_name||snap.name||'Receta')}</strong><time datetime="${esc(row.prepared_on||'')}">${esc(day)}</time></header><p>${ingredientCount} ingrediente${ingredientCount===1?'':'s'} · ${fmt(row.servings_made)} porciones · ${esc(weight)}${steps?` · ${steps} pasos`:''}</p>${nutrition?`<small>${esc(nutrition)}</small>`:''}${row.notes?`<blockquote>${esc(row.notes)}</blockquote>`:''}</article>`;
       }).join('');
@@ -447,7 +522,7 @@
       const parent=recipe.parent_recipe_id?recipes.find(item=>String(item.id)===String(recipe.parent_recipe_id)):null;
       const timeSummary=(prepTime||cookTime)?`<small>Preparación ${prepTime} min · cocción ${cookTime} min · total ${prepTime+cookTime} min</small>`:'';
       const procedureSummary=instructions.length?`<small>${instructions.length} paso${instructions.length===1?'':'s'} de preparación${parent?` · Variante de ${esc(parent.name)}`:''}</small>`:parent?`<small>Variante de ${esc(parent.name)}</small>`:'';
-      return `<article class="nutrition-recipe-card" data-recipe-card="${esc(recipe.id)}"><div class="nutrition-recipe-card-main"><strong>${esc(recipe.name)}</strong><small>${ingredients.length} ingrediente${ingredients.length===1?'':'s'} · ${recipe.finished_weight_g?`peso final ${fmt(recipe.finished_weight_g)} g`:`peso estimado ${fmt(recipe.total_weight_g)} g`} · rinde ${fmt(recipe.servings)} porción/porciones</small>${timeSummary}${procedureSummary}<span>${fmt(recipe.calories_per_100g)} kcal · P ${fmt(recipe.protein_per_100g)} g · C ${fmt(recipe.carbs_per_100g)} g · G ${fmt(recipe.fat_per_100g)} g / 100 g</span>${recipe.notes?`<p>${esc(recipe.notes)}</p>`:''}</div><div class="nutrition-recipe-card-controls"><label>Porciones a agregar<input class="input" type="number" min="0.1" max="100" step="0.1" value="1" data-recipe-portions="${esc(recipe.id)}"></label><button type="button" class="nutrition-advanced-primary" data-recipe-add="${esc(recipe.id)}">Agregar a esta comida</button><button type="button" class="nutrition-advanced-secondary" data-recipe-cook="${esc(recipe.id)}" ${instructions.length?'':'disabled'}>Cocinar paso a paso</button><button type="button" class="nutrition-advanced-secondary" data-recipe-log="${esc(recipe.id)}">Registrar preparación</button><button type="button" class="nutrition-advanced-secondary" data-recipe-history="${esc(recipe.id)}">Historial</button><button type="button" class="nutrition-advanced-secondary" data-recipe-variant="${esc(recipe.id)}">Crear variante</button><button type="button" class="nutrition-advanced-secondary" data-recipe-edit="${esc(recipe.id)}">Editar receta</button><button type="button" class="nutrition-advanced-danger" data-recipe-delete="${esc(recipe.id)}">Eliminar</button></div></article>`;
+      return `<article class="nutrition-recipe-card" data-recipe-card="${esc(recipe.id)}"><div class="nutrition-recipe-card-main"><strong>${esc(recipe.name)}</strong><small>${ingredients.length} ingrediente${ingredients.length===1?'':'s'} · ${recipe.finished_weight_g?`peso final ${fmt(recipe.finished_weight_g)} g`:`peso estimado ${fmt(recipe.total_weight_g)} g`} · rinde ${fmt(recipe.servings)} porción/porciones</small>${timeSummary}${procedureSummary}<span class="e25-recipe-nutrition-summary">${esc(recipeNutritionSummary(recipe))}</span>${recipe.notes?`<p>${esc(recipe.notes)}</p>`:''}</div><div class="nutrition-recipe-card-controls"><label>Porciones a agregar<input class="input" type="number" min="0.1" max="100" step="0.1" value="1" data-recipe-portions="${esc(recipe.id)}"></label><button type="button" class="nutrition-advanced-primary" data-recipe-add="${esc(recipe.id)}">Agregar a esta comida</button><button type="button" class="nutrition-advanced-secondary" data-recipe-cook="${esc(recipe.id)}" ${instructions.length?'':'disabled'}>Cocinar paso a paso</button><button type="button" class="nutrition-advanced-secondary" data-recipe-log="${esc(recipe.id)}">Registrar preparación</button><button type="button" class="nutrition-advanced-secondary" data-recipe-history="${esc(recipe.id)}">Historial</button><button type="button" class="nutrition-advanced-secondary" data-recipe-variant="${esc(recipe.id)}">Crear variante</button><button type="button" class="nutrition-advanced-secondary" data-recipe-edit="${esc(recipe.id)}">Editar receta</button><button type="button" class="nutrition-advanced-danger" data-recipe-delete="${esc(recipe.id)}">Eliminar</button></div></article>`;
     }).join('');
     host.querySelectorAll('[data-recipe-cook]').forEach(button=>button.addEventListener('click',()=>{
       const recipe=recipeRowsCache.find(r=>String(r.id)===button.dataset.recipeCook);if(recipe)openRecipeCookingMode(recipe);

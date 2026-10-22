@@ -139,6 +139,14 @@
   function esc(v){const d=document.createElement('div');d.textContent=v??'';return d.innerHTML}
   function fmt(v){const n=Math.round((Number(v)||0)*10)/10;return Number.isInteger(n)?String(n):n.toFixed(1)}
   function grams(item){return window.AgendaNutritionData?.weightInGrams?window.AgendaNutritionData.weightInGrams(item):((String(item?.unit||'g')==='g')?Math.max(0,Number(item?.quantity)||0):null)}
+  function missingMetrics(item){
+    try{const helper=window.AgendaNutritionData?.missingMacroMetrics;if(typeof helper==='function')return helper(item)}catch(_){}
+    const fields=Array.isArray(item?.nutrition_missing_fields)?item.nutrition_missing_fields:(Array.isArray(item?.nutritionMissing)?item.nutritionMissing:[]);
+    const normalized=fields.map(value=>String(value||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim());
+    const aliases={calories:['caloria','calorias','calorie','calories','energy','kcal'],protein:['proteina','proteinas','protein','proteins'],carbs:['carbohidrato','carbohidratos','carbohydrate','carbohydrates','carbs'],fat:['grasa','grasas','fat','fats']};
+    if(String(item?.nutrition_quality_status||item?.nutritionQualityStatus||'').toLowerCase()==='incomplete'&&!fields.length)return ['calories','protein','carbs','fat'];
+    return Object.keys(aliases).filter(key=>normalized.some(name=>aliases[key].some(alias=>name===alias||name.startsWith(alias+' ')||name.includes(' '+alias+' ')||name.endsWith(' '+alias))));
+  }
 
   async function getItems(mealId,force=false){
     if(!mealId)return [];
@@ -240,10 +248,17 @@
           const factor=item.__fallback?1:(weight===null?0:weight/100);
           const prep=item.preparation_state&&item.preparation_state!=='unspecified'?(item.preparation_state==='raw'?' · Crudo':item.preparation_state==='cooked'?' · Cocido':' · Preparado'):'';
           const qtyLabel=item.__fallback?'Plan completo':`${fmt(qty)} ${esc(unit)}${weight!==null?` (≈ ${fmt(weight)} g)`:''}${prep}`;
-          const plannedMacros=valid?`${fmt(calories*factor)} kcal · P ${fmt(protein*factor)} g · C ${fmt(carbs*factor)} g · G ${fmt(fat*factor)} g`:'No calculable: falta una equivalencia fiable a gramos.';
+          const missing=new Set(missingMetrics(item));
+          const plannedMacros=valid?[
+            missing.has('calories')?'Calorías: dato faltante':`${fmt(calories*factor)} kcal`,
+            missing.has('protein')?'Proteínas: dato faltante':`P ${fmt(protein*factor)} g`,
+            missing.has('carbs')?'Carbohidratos: dato faltante':`C ${fmt(carbs*factor)} g`,
+            missing.has('fat')?'Grasas: dato faltante':`G ${fmt(fat*factor)} g`
+          ].join(' · ')+(missing.size?' · Datos incompletos':''):'No calculable: falta una equivalencia fiable a gramos.';
+          const sourceLabel=String(item.data_source_label||item.sourceLabel||'').trim();
           const macroLabel=checked
-            ? plannedMacros
-            : `${qtyLabel} · ${plannedMacros} · Pendiente`;
+            ? `${plannedMacros}${sourceLabel?` · Procedencia: ${esc(sourceLabel)}`:''}`
+            : `${qtyLabel} · ${plannedMacros}${sourceLabel?` · Procedencia: ${esc(sourceLabel)}`:''} · Pendiente`;
           return `<div class="nutrition-consumption-item ${checked?'is-consumed':''}">
             <span class="nutrition-consumption-check" aria-hidden="true">${checked?'✓':''}</span>
             <span class="nutrition-consumption-name"><strong>${esc(item.name||'Alimento')}</strong><small>${macroLabel}</small></span>

@@ -757,7 +757,8 @@ $('saveMealBtn').onclick=async()=>{
   const draftDay=Number(nutritionMealDraftDay??nutritionDay);
   if(!Number.isInteger(draftDay)||draftDay<0||draftDay>6){alert('El día de la comida no es válido. Cerrá el formulario y volvé a abrirlo.');return}
   const meal_type=$('mealType').value;
-  const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:Number($('mealCalories').value)||null,protein_g:Number($('mealProtein').value)||null,carbs_g:Number($('mealCarbs').value)||null,fat_g:Number($('mealFat').value)||null,meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};
+  const numericOrNull=value=>{const raw=String(value??'').trim();if(raw==='')return null;const number=Number(raw);return Number.isFinite(number)&&number>=0?number:null};
+  const payload={meal_type,title:$('mealTitle').value.trim(),foods:$('mealFoods').value.trim(),calories:numericOrNull($('mealCalories').value),protein_g:numericOrNull($('mealProtein').value),carbs_g:numericOrNull($('mealCarbs').value),fat_g:numericOrNull($('mealFat').value),meal_time:$('mealTime').value||null,description:$('mealDescription').value.trim()};
   if(!payload.title){alert('Escribí el nombre de la comida.');return}
   const targetEditingId=editingMealId;
   const structuredFoods=window.AgendaFoodCatalog?.getPendingMealFoods?.()||[];

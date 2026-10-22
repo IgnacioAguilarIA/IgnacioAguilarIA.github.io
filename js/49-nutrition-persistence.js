@@ -89,9 +89,49 @@
     return ensureSupabase();
   }
 
+  function hasNumericValue(value){return value!==null&&value!==undefined&&String(value).trim()!==''&&Number.isFinite(Number(value))}
+  function normalizedMissingToken(value){return text(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim()}
+  function inferredNutritionMissing(row){
+    const declared=Array.isArray(row?.nutrition_missing_fields)?row.nutrition_missing_fields.map(text).filter(Boolean):(Array.isArray(row?.nutritionMissing)?row.nutritionMissing.map(text).filter(Boolean):[]);
+    const normalized=declared.map(normalizedMissingToken);
+    const metrics=[
+      {field:'calories_per_100g',label:'calorías',aliases:['caloria','calorias','calories','energy','kcal']},
+      {field:'protein_per_100g',label:'proteínas',aliases:['proteina','proteinas','protein','proteins']},
+      {field:'carbs_per_100g',label:'carbohidratos',aliases:['carbohidrato','carbohidratos','carbohydrate','carbohydrates','carbs']},
+      {field:'fat_per_100g',label:'grasas',aliases:['grasa','grasas','fat','fats']}
+    ];
+    for(const metric of metrics){
+      const declaredForMetric=normalized.some(name=>metric.aliases.some(alias=>{const token=normalizedMissingToken(alias);return name===token||name.startsWith(token+' ')||name.includes(' '+token+' ')||name.endsWith(' '+token)}));
+      if(!hasNumericValue(row?.[metric.field])&&!declaredForMetric)declared.push(metric.label);
+    }
+    if(String(row?.nutrition_quality_status||row?.nutritionQualityStatus||'').toLowerCase()==='incomplete'&&!declared.length)declared.push('datos nutricionales por revisar');
+    return [...new Set(declared)];
+  }
+
+  // Fuente única para interpretar nutrientes ausentes en editor, consumo y resumen.
+  // Un cero numérico explícito no se considera ausente; la procedencia se decide
+  // mediante la lista de campos faltantes y el estado de calidad de la instantánea.
+  function missingMacroMetrics(row){
+    const declared=inferredNutritionMissing(row).map(normalizedMissingToken);
+    const status=String(row?.nutrition_quality_status||row?.nutritionQualityStatus||'').trim().toLowerCase();
+    const genericIncomplete=declared.some(value=>/datos nutricionales por revisar|nutricion incompleta|nutrientes? sin verificar|nutrition data incomplete/.test(value));
+    const metrics=[
+      {key:'calories',aliases:['caloria','calorias','calorie','calories','energy','kcal']},
+      {key:'protein',aliases:['proteina','proteinas','protein','proteins']},
+      {key:'carbs',aliases:['carbohidrato','carbohidratos','carbohydrate','carbohydrates','carbs']},
+      {key:'fat',aliases:['grasa','grasas','fat','fats']}
+    ];
+    if(status==='incomplete'&&genericIncomplete)return metrics.map(metric=>metric.key);
+    return metrics.filter(metric=>declared.some(name=>metric.aliases.some(alias=>{
+      const token=normalizedMissingToken(alias);
+      return name===token||name.startsWith(token+' ')||name.includes(' '+token+' ')||name.endsWith(' '+token);
+    }))).map(metric=>metric.key);
+  }
+
   function toFood(row,kind){
     if(!row)return null;
     const userFood=kind==='user';
+    const nutritionMissing=inferredNutritionMissing(row);
     return {
       id:String(row.external_id||row.id||row.catalog_id||row.food_id||''),
       code:String(row.external_id||row.code||''),
@@ -120,8 +160,8 @@
       recordSource:text(row.source),
       sourceLabel:text(row.data_source_label||row.source)||'Origen no registrado',
       sourceUrl:text(row.data_source_url||row.source_url),
-      nutritionQualityStatus:text(row.nutrition_quality_status)||'legacy_unverified',
-      nutritionMissing:Array.isArray(row.nutrition_missing_fields)?row.nutrition_missing_fields.map(String).filter(Boolean):[],
+      nutritionQualityStatus:text(row.nutrition_quality_status)||(nutritionMissing.length?'incomplete':'legacy_unverified'),
+      nutritionMissing,
       nutritionVerifiedAt:row.nutrition_verified_at||null,
       catalogId:row.catalog_id??(kind==='catalog'?row.id:null),
       userFoodId:userFood?row.id:null,
@@ -561,15 +601,28 @@
     return Array.isArray(data)?data:[];
   }
 
+  function recipeIngredientMissingMetrics(item){
+    const missing=new Set(typeof missingMacroMetrics==='function'?missingMacroMetrics(item):[]);
+    const declared=Array.isArray(item?.nutrition_missing_fields)?item.nutrition_missing_fields.map(text):Array.isArray(item?.nutritionMissing)?item.nutritionMissing.map(text):[];
+    const normalized=declared.map(value=>value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim());
+    const quality=text(item?.nutrition_quality_status||item?.nutritionQualityStatus).toLowerCase();
+    const genericIncomplete=normalized.some(value=>/datos nutricionales por revisar|nutricion incompleta|nutrientes? sin verificar|nutrition data incomplete/.test(value));
+    if(normalized.some(value=>/(^| )(fibra|fibras|fiber|dietary fiber)( |$)/.test(value))||(quality==='incomplete'&&(genericIncomplete||normalized.length===0)))missing.add('fiber');
+    return missing;
+  }
+
   function calculateRecipe(ingredients,finishedWeightG=null){
     const list=(Array.isArray(ingredients)?ingredients:[]).filter(x=>x&&Number(x.quantity)>0);
-    if(!list.length)return {total_weight_g:0,ingredient_weight_g:0,finished_weight_g:null,total_calories:0,total_protein_g:0,total_carbs_g:0,total_fat_g:0,total_fiber_g:0,calories_per_100g:0,protein_per_100g:0,carbs_per_100g:0,fat_per_100g:0,fiber_per_100g:0};
+    if(!list.length)return {total_weight_g:0,ingredient_weight_g:0,finished_weight_g:null,total_calories:0,total_protein_g:0,total_carbs_g:0,total_fat_g:0,total_fiber_g:0,calories_per_100g:0,protein_per_100g:0,carbs_per_100g:0,fat_per_100g:0,fiber_per_100g:0,unknownMetrics:[]};
     let ingredientWeight=0;
+    const unknownMetrics=new Set();
     const total=list.reduce((acc,x)=>{
       const grams=weightInGrams(x);
       if(grams===null)throw new Error(`No se puede calcular la receta: “${text(x.name)||'un ingrediente'}” está en ${normalizeUnit(x.unit||'g')} sin una conversión fiable a gramos.`);
       ingredientWeight+=grams;
       const factor=grams/100;
+      const missing=recipeIngredientMissingMetrics(x);
+      for(const key of missing)unknownMetrics.add(key);
       acc.calories+=num(x.calories_per_100g??x.calories)*factor;
       acc.protein+=num(x.protein_per_100g??x.protein)*factor;
       acc.carbs+=num(x.carbs_per_100g??x.carbs)*factor;
@@ -583,7 +636,13 @@
     if(!(effectiveWeight>0))throw new Error('La receta debe tener un peso total mayor que cero. Revisá las cantidades y las unidades.');
     const per100=100/effectiveWeight;
     const round=v=>Math.round(v*10)/10;
-    return {total_weight_g:round(effectiveWeight),ingredient_weight_g:round(ingredientWeight),finished_weight_g:requested,total_calories:round(total.calories),total_protein_g:round(total.protein),total_carbs_g:round(total.carbs),total_fat_g:round(total.fat),total_fiber_g:round(total.fiber),calories_per_100g:round(total.calories*per100),protein_per_100g:round(total.protein*per100),carbs_per_100g:round(total.carbs*per100),fat_per_100g:round(total.fat*per100),fiber_per_100g:round(total.fiber*per100)};
+    // nutrition_recipes aún requiere columnas numéricas NOT NULL. Para un nutriente
+    // incompleto se guarda un cero técnico, pero también se devuelve unknownMetrics;
+    // la interfaz debe mostrar «Datos incompletos» y no presentar ese cero como real.
+    const value=(key,raw)=>unknownMetrics.has(key)?0:round(raw);
+    return {total_weight_g:round(effectiveWeight),ingredient_weight_g:round(ingredientWeight),finished_weight_g:requested,
+      total_calories:value('calories',total.calories),total_protein_g:value('protein',total.protein),total_carbs_g:value('carbs',total.carbs),total_fat_g:value('fat',total.fat),total_fiber_g:value('fiber',total.fiber),
+      calories_per_100g:value('calories',total.calories*per100),protein_per_100g:value('protein',total.protein*per100),carbs_per_100g:value('carbs',total.carbs*per100),fat_per_100g:value('fat',total.fat*per100),fiber_per_100g:value('fiber',total.fiber*per100),unknownMetrics:[...unknownMetrics]};
   }
 
   async function saveRecipe(recipe){
@@ -800,8 +859,10 @@
     recordRecipePreparation,
     loadRecipePreparationHistory,
     calculateRecipe,
+    recipeIngredientMissingMetrics,
     normalizeUnit,
     normalizePreparationState,
+    missingMacroMetrics,
     quantityToGrams,
     weightInGrams,
     defaultUnit,

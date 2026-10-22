@@ -20,43 +20,71 @@
   function getItems(){return provider()?.getPendingMealFoods?.()||[]}
   function setItems(items){const p=provider();p?.setPendingMealFoods?.(items);if(!p?.setPendingMealFoods?.__builderWrapped)render()}
 
+  const MACRO_KEYS=['calories','protein','carbs','fat'];
+  const MACRO_LABELS={calories:'calorías',protein:'proteínas',carbs:'carbohidratos',fat:'grasas'};
+  function missingMetrics(item){
+    try{
+      const data=window.AgendaNutritionData;
+      if(typeof data?.missingMacroMetrics==='function')return data.missingMacroMetrics(item);
+    }catch(_){}
+    const fields=Array.isArray(item?.nutrition_missing_fields)?item.nutrition_missing_fields:(Array.isArray(item?.nutritionMissing)?item.nutritionMissing:[]);
+    const normalized=fields.map(value=>text(value).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim());
+    const aliases={calories:['caloria','calorias','calorie','calories','energy','kcal'],protein:['proteina','proteinas','protein','proteins'],carbs:['carbohidrato','carbohidratos','carbohydrate','carbohydrates','carbs'],fat:['grasa','grasas','fat','fats']};
+    if(String(item?.nutrition_quality_status||item?.nutritionQualityStatus||'').toLowerCase()==='incomplete'&&!fields.length)return [...MACRO_KEYS];
+    return MACRO_KEYS.filter(key=>normalized.some(name=>aliases[key].some(alias=>name===alias||name.startsWith(alias+' ')||name.includes(' '+alias+' ')||name.endsWith(' '+alias))));
+  }
+
   function macroTotal(items){
-    const totals=(Array.isArray(items)?items:[]).reduce((acc,item)=>{
+    const totals={calories:0,protein:0,carbs:0,fat:0,unconvertible:[],unknownMetrics:[]};
+    const unknown=new Set();
+    (Array.isArray(items)?items:[]).forEach(item=>{
       const weight=grams(item);
-      if(weight===null){acc.unconvertible.push(text(item?.name)||'Alimento');return acc;}
+      if(weight===null){
+        totals.unconvertible.push(text(item?.name)||'Alimento');
+        MACRO_KEYS.forEach(key=>unknown.add(key));
+        return;
+      }
       const factor=weight/100;
-      acc.calories+=num(item?.calories_per_100g)*factor;acc.protein+=num(item?.protein_per_100g)*factor;acc.carbs+=num(item?.carbs_per_100g)*factor;acc.fat+=num(item?.fat_per_100g)*factor;
-      return acc;
-    },{calories:0,protein:0,carbs:0,fat:0,unconvertible:[]});
+      missingMetrics(item).forEach(key=>{if(MACRO_KEYS.includes(key))unknown.add(key)});
+      totals.calories+=num(item?.calories_per_100g)*factor;
+      totals.protein+=num(item?.protein_per_100g)*factor;
+      totals.carbs+=num(item?.carbs_per_100g)*factor;
+      totals.fat+=num(item?.fat_per_100g)*factor;
+    });
+    totals.unknownMetrics=[...unknown];
     return totals;
   }
+  // API pequeña para que las reglas de cálculo puedan probarse sin abrir Supabase.
+  window.AgendaNutritionMealBuilderMath={macroTotal,missingMetrics};
 
   function round1(v){return Math.round(v*10)/10}
   function fmt(v){const n=round1(v);return Number.isInteger(n)?String(n):n.toFixed(1)}
 
   function syncSummary(items,totals){
     const foods=$('mealFoods');
-    const calories=$('mealCalories'),protein=$('mealProtein'),carbs=$('mealCarbs'),fat=$('mealFat');
+    const fields={calories:$('mealCalories'),protein:$('mealProtein'),carbs:$('mealCarbs'),fat:$('mealFat')};
     const has=items.length>0;
     if(has){
       if(!manualBackup){
-        manualBackup={calories:calories?.value??'',protein:protein?.value??'',carbs:carbs?.value??'',fat:fat?.value??''};
+        manualBackup=Object.fromEntries(Object.entries(fields).map(([key,el])=>[key,el?.value??'']));
       }
       const summary=items.map(item=>`${text(item.name)||'Alimento'} · ${fmt(num(item.quantity)||0)} ${text(item.unit)||'g'}`).join(', ');
       if(foods){foods.value=summary;foods.readOnly=true;foods.classList.add('nutrition-auto-field');foods.title='Se genera automáticamente a partir de los alimentos cargados.';}
-      if(calories)calories.value=fmt(totals.calories);
-      if(protein)protein.value=fmt(totals.protein);
-      if(carbs)carbs.value=fmt(totals.carbs);
-      if(fat)fat.value=fmt(totals.fat);
-      [calories,protein,carbs,fat].forEach(el=>{if(el){el.readOnly=true;el.classList.add('nutrition-auto-field');el.setAttribute('aria-readonly','true');}});
+      Object.entries(fields).forEach(([key,el])=>{
+        if(!el)return;
+        const incomplete=totals.unknownMetrics.includes(key);
+        el.value=incomplete?'':fmt(totals[key]);
+        el.dataset.nutritionValueStatus=incomplete?'incomplete':'calculated';
+        el.classList.toggle('nutrition-data-incomplete',incomplete);
+        el.title=incomplete?`No se puede calcular ${MACRO_LABELS[key]} con certeza porque al menos un alimento no informa ese nutriente.`:'Calculado a partir de los alimentos de esta comida.';
+        el.setAttribute('aria-label',incomplete?`${MACRO_LABELS[key]}: dato incompleto`:`${MACRO_LABELS[key]} calculadas: ${el.value}`);
+        el.readOnly=true;el.classList.add('nutrition-auto-field');el.setAttribute('aria-readonly','true');
+      });
     }else{
       if(foods){foods.readOnly=false;foods.classList.remove('nutrition-auto-field');foods.removeAttribute('title');}
-      [calories,protein,carbs,fat].forEach(el=>{if(el){el.readOnly=false;el.classList.remove('nutrition-auto-field');el.removeAttribute('aria-readonly');}});
+      Object.entries(fields).forEach(([key,el])=>{if(el){el.readOnly=false;el.classList.remove('nutrition-auto-field','nutrition-data-incomplete');el.removeAttribute('aria-readonly');el.removeAttribute('title');el.removeAttribute('aria-label');delete el.dataset.nutritionValueStatus;}});
       if(manualBackup){
-        if(calories)calories.value=manualBackup.calories;
-        if(protein)protein.value=manualBackup.protein;
-        if(carbs)carbs.value=manualBackup.carbs;
-        if(fat)fat.value=manualBackup.fat;
+        Object.entries(fields).forEach(([key,el])=>{if(el)el.value=manualBackup[key]??'';});
         manualBackup=null;
       }
     }
@@ -65,12 +93,15 @@
   function renderTotals(items){
     const totalsHost=$('nutritionMealBuilderTotals');
     const totals=macroTotal(items);
-    if(totalsHost)totalsHost.innerHTML=`
-      <div><span>🔥 Calorías planificadas</span><strong>${fmt(totals.calories)} kcal</strong></div>
-      <div><span>🥩 Proteínas</span><strong>${fmt(totals.protein)} g</strong></div>
-      <div><span>🍚 Carbohidratos</span><strong>${fmt(totals.carbs)} g</strong></div>
-      <div><span>🥑 Grasas</span><strong>${fmt(totals.fat)} g</strong></div>
-      ${totals.unconvertible.length?`<div class="nutrition-unit-warning" role="alert">No se puede calcular con fiabilidad: ${esc(totals.unconvertible.join(', '))}. Elegí gramos o definí su equivalencia en Mis alimentos.</div>`:''}`;
+    const cards=[
+      ['calories','🔥 Calorías','kcal'],['protein','🥩 Proteínas','g'],['carbs','🍚 Carbohidratos','g'],['fat','🥑 Grasas','g']
+    ];
+    if(totalsHost)totalsHost.innerHTML=cards.map(([key,label,unit])=>{
+      const incomplete=totals.unknownMetrics.includes(key);
+      return `<div class="${incomplete?'has-incomplete-value':''}"><span>${label}</span><strong${incomplete?' class="nutrition-incomplete-value" title="Hay al menos un alimento sin este dato nutricional."':''}>${incomplete?'Dato incompleto':`${fmt(totals[key])} ${unit}`}</strong></div>`;
+    }).join('')+
+      `${totals.unknownMetrics.length?`<div class="nutrition-data-incomplete-warning" role="note"><strong>Totales parciales no presentados como exactos.</strong><span>Faltan datos de ${esc(totals.unknownMetrics.map(key=>MACRO_LABELS[key]).join(', '))}. Revisá los alimentos señalados; esos nutrientes no se cuentan como cero.</span></div>`:''}`+
+      `${totals.unconvertible.length?`<div class="nutrition-unit-warning" role="alert">No se puede convertir con fiabilidad: ${esc(totals.unconvertible.join(', '))}. Elegí gramos o definí su equivalencia en Mis alimentos.</div>`:''}`;
     syncSummary(items,totals);
     return totals;
   }
@@ -89,7 +120,7 @@
     const item=preview[index];
     const totalNode=row?.querySelector('.nutrition-meal-builder-item-total-value');
     const weight=grams(item,qty);
-    if(totalNode)totalNode.textContent=weight===null?'Revisar unidad':`${fmt(num(item?.calories_per_100g)*weight/100)} kcal`;
+    if(totalNode)totalNode.textContent=weight===null?'Revisar unidad':(missingMetrics(item).includes('calories')?'Dato incompleto':`${fmt(num(item?.calories_per_100g)*weight/100)} kcal`);
     renderTotals(preview);
   }
 
@@ -105,17 +136,25 @@
     items.forEach((item,index)=>{
       const row=document.createElement('div');
       row.className='nutrition-meal-builder-item';
+      const itemMissing=missingMetrics(item);
+      const macroField={calories:'calories_per_100g',protein:'protein_per_100g',carbs:'carbs_per_100g',fat:'fat_per_100g'};
+      const macroChip=(key,label,unit)=>itemMissing.includes(key)
+        ? `<span class="nutrition-item-macro-missing" title="Este dato no fue informado por la fuente.">${label}: dato faltante</span>`
+        : `<span>${label}: ${fmt(num(item[macroField[key]]))} ${unit}/100 g</span>`;
+      const sourceLabel=text(item.data_source_label||item.sourceLabel||item.source||item.recordSource);
       row.innerHTML=`
         <div class="nutrition-meal-builder-item-main">
           <div class="nutrition-meal-builder-item-name">${esc(item.name||'Alimento')}</div>
           ${item.preparation_state&&item.preparation_state!=='unspecified'?`<span class="nutrition-food-preparation-mini">${item.preparation_state==='raw'?'Crudo':item.preparation_state==='cooked'?'Cocido':'Preparado'}</span>`:''}
           ${item.brand?`<div class="nutrition-meal-builder-item-brand">${esc(item.brand)}</div>`:''}
+          ${sourceLabel?`<div class="nutrition-meal-builder-item-source">Procedencia: ${esc(sourceLabel)}</div>`:''}
           <div class="nutrition-meal-builder-item-macros">
-            <span>${fmt(num(item.calories_per_100g))} kcal/100</span>
-            <span>${fmt(num(item.protein_per_100g))} P</span>
-            <span>${fmt(num(item.carbs_per_100g))} C</span>
-            <span>${fmt(num(item.fat_per_100g))} G</span>
+            ${macroChip('calories','Calorías','kcal')}
+            ${macroChip('protein','Proteínas','g')}
+            ${macroChip('carbs','Carbohidratos','g')}
+            ${macroChip('fat','Grasas','g')}
           </div>
+          ${itemMissing.length?`<div class="nutrition-meal-builder-item-quality" role="note">Datos nutricionales incompletos: ${esc(itemMissing.map(key=>MACRO_LABELS[key]).join(', '))}. No se interpretan como cero.</div>`:''}
         </div>
         <div class="nutrition-meal-builder-item-qty">
           <label>Cantidad</label>
@@ -132,7 +171,7 @@
         </div>`;
       const totalNode=row.querySelector('.nutrition-meal-builder-item-total-value');
       const weight=grams(item);
-      if(totalNode)totalNode.textContent=weight===null?'Revisar unidad':`${fmt(num(item.calories_per_100g)*weight/100)} kcal`;
+      if(totalNode)totalNode.textContent=weight===null?'Revisar unidad':(itemMissing.includes('calories')?'Dato incompleto':`${fmt(num(item.calories_per_100g)*weight/100)} kcal`);
       const qtyInput=row.querySelector('.nutrition-meal-builder-qty');
       qtyInput?.addEventListener('input',event=>previewQuantity(index,event.target.value,row));
       qtyInput?.addEventListener('change',event=>{
@@ -165,11 +204,13 @@
 
     renderTotals(items);
     const invalidItems=items.filter(item=>grams(item)===null);
+    const totals=macroTotal(items);
     if(status){
-      status.textContent=loadingRestore?'Cargando los alimentos guardados de esta comida…':invalidItems.length?`Hay ${invalidItems.length} alimento(s) sin una conversión fiable a gramos. Corregilos antes de guardar.`:items.length?`${items.length} alimento${items.length===1?'':'s'} · cantidades convertidas a gramos para calcular los macros`:'Agregá alimentos para calcular la comida automáticamente.';
+      status.textContent=loadingRestore?'Cargando los alimentos guardados de esta comida…':invalidItems.length?`Hay ${invalidItems.length} alimento(s) sin una conversión fiable a gramos. Corregilos antes de guardar.`:totals.unknownMetrics.length?`${items.length} alimento${items.length===1?'':'s'} · faltan datos de ${totals.unknownMetrics.map(key=>MACRO_LABELS[key]).join(', ')}. Los totales afectados no se cuentan como cero.`:items.length?`${items.length} alimento${items.length===1?'':'s'} · cantidades convertidas a gramos para calcular los macros`:'Agregá alimentos para calcular la comida automáticamente.';
       status.classList.toggle('is-loading',loadingRestore);
-      status.classList.toggle('is-ready',!loadingRestore&&items.length>0&&!invalidItems.length);
+      status.classList.toggle('is-ready',!loadingRestore&&items.length>0&&!invalidItems.length&&!totals.unknownMetrics.length);
       status.classList.toggle('has-unit-error',invalidItems.length>0);
+      status.classList.toggle('has-data-warning',!loadingRestore&&totals.unknownMetrics.length>0);
     }
     const save=$('saveMealBtn');if(save){save.disabled=loadingRestore||invalidItems.length>0;save.title=invalidItems.length?'Corregí las unidades sin equivalencia a gramos antes de guardar.':'';}
   }
