@@ -1,0 +1,18 @@
+AgendaFICH E32 — Resumen de validación
+
+Estado: todas las pruebas indicadas abajo se ejecutaron en el código de E32 y finalizaron sin fallos.
+
+- Suite Node.js: `node --test tests/*.test.cjs` — 179/179 aprobadas.
+- E32 lógica pura: 10/10.
+- E32 auditoría de navegador (Chromium): 13/13.
+- Regresiones de navegador: E31 18/18; E30 29/29; E29 20/20; E28 12/12; E27 15/15; E26 9/9; E25 5/5; E24 8/8; E23 7/7; E20 7/7; E19 8/8; E18 8/8; E17 8/8; E16 8/8.
+- E15, E14 y E13 terminaron sin fallos; E12 28/28; E10 14/14; E7 aprobado en anchos 320, 390 y 768 px; E6 aprobó siete viewports y pruebas de diálogos.
+- JavaScript: 76 archivos pasaron `node --check`.
+- Recursos locales de `index.html`: 188 referencias, 0 ausentes.
+- Archivos SQL existentes respecto de E31: sin modificaciones; se añadieron solo las migraciones E32 y se actualizó `sql/README.md`.
+- Archivos existentes JavaScript/CSS respecto de E31: solo `js/63-nutrition-week-plan-editor.js` modificado; se agregó `css/113-nutrition-week-templates-e32.css`.
+- Instalación del parche sobre copia limpia de E31: validada en las pruebas previas al empaquetado.
+
+Alcance de las pruebas: las auditorías de navegador usan datos y proveedores simulados. No certifican la instancia real de Supabase, RLS real entre cuentas ni conectividad real. Antes de publicar, ejecutar `sql/29-nutrition-weekly-plan-templates.sql`, verificar con el postcheck `sql/30-nutrition-weekly-plan-templates-postcheck.sql` y completar `tests/MANUAL-E32-WEEK-TEMPLATES-CHECKLIST.md`.
+
+Entrenamiento: no se modificó ningún archivo JavaScript o CSS existente de esa sección. E32 modifica el editor semanal de Alimentación y agrega un CSS separado.

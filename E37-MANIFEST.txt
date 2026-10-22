@@ -1,0 +1,25 @@
+AgendaFICH E37 — SHA-256 manifest
+The manifest does not hash itself. Paths are relative to the E37 patch folder.
+
+8fcc7e4af9dbcec3a71aeef9337023e1323818e33fe8011adfdabb3e315ac322  E37-VALIDACION.txt
+f579d83e174cd8475763053e2620660b8064c4b2080fc7d9ceaf11b53dbf19fc  README-ETAPA-E37.md
+29a05d1ee62fb6ec5b984180efaac52d2697e8613f4cf76d0b23cb933fd8d94f  README-INSTALACION-E37.md
+50f6d1070507936f5c483b1a093386ddf1b632e704fb2ab4bb2c0e1a35f9f267  README.md
+18405447ba7fb955015aa95ae13401ca478183a11f2e8bedf42f60e9b4a803cf  css/118-nutrition-week-template-target-day-e37.css
+69384f9a2888f311659799ff312a985558f0e99b16454b46b6c27ef02787e95a  index.html
+7c136d91180e54181c6e9bb132c492a737a66575a7c295bae65589d02ea21778  js/63-nutrition-week-plan-editor.js
+e3c88af741ea4d640b1d1f96be66ea955c2d0deec5e06d00949fa601059a6ab6  tests/MANUAL-E37-WEEK-TEMPLATE-TARGET-DAY-CHECKLIST.md
+995549877f96517af553f021d8e54a3ddef9c9a75c30d1e8d3c32bdfcceef7e7  tests/artifacts/e37/weekly-template-target-day-browser-audit.json
+dbb34484b3baf1b253a470ca847ba8dfc6320ecdd397624781ffc4d8ab039540  tests/artifacts/e37/weekly-template-target-day-mobile-light.png
+5081087848eb4f4ba65ab72e3f67575ef3162cd5bd802b5918befd011b3f2f02  tests/artifacts/e37/weekly-template-target-day-mobile.png
+82e1fdef82021799c2c0efb95c6253db238ad1accbf63adbf2e54f094df0b268  tests/e37_week_template_target_day_browser_audit.py
+6cabed474f99fbce69500c9694b8df600dc666ab9b1d9437660c9c15731981f3  tests/nutrition-recipe-quality-e25.test.cjs
+58fffb3469218eb98a434fb2a8b09a844e05e279cc46d2cbf3cbc6ba618e177a  tests/nutrition-week-copy-day-e31.test.cjs
+30f5a5dcdf40b0a356e94e8c9bdb5db0251bbc03e1ec5db29ea588d71cd858f5  tests/nutrition-week-plan-portion-adjustment-e30.test.cjs
+3291716f98b36266a7b31699f61cb13610e5e9b33e79b78abf126dad06c09238  tests/nutrition-week-plan-quick-actions-e29.test.cjs
+281d868817c1b2a6437275a8a18968a6b2054b53f326993816afe6cef551119a  tests/nutrition-week-template-comparison-e35.test.cjs
+24db11142f850ca58393f97f75ed60f21aca2d5681ff49f4e46c50f28b72a440  tests/nutrition-week-template-management-e34.test.cjs
+68c5c8c8c56c4ea8333a86b1d530f92618e9117e7dab3b56272689dd87e93c09  tests/nutrition-week-template-merge-e33.test.cjs
+01e1ac16eed94ff845ae93aab413e0b9523331d456368aa6df0691bc8f7ec56c  tests/nutrition-week-template-selective-apply-e36.test.cjs
+4339cbfb11c52af2db48547b5a72ce9070c8a1f55adaef480575aa561cc380a9  tests/nutrition-week-template-target-day-e37.test.cjs
+aeb97b2c24a8b3a44e5e6a4757c6583dbd127fc093d85b85e407fa3f8c27a4d1  tests/nutrition-week-templates-e32.test.cjs

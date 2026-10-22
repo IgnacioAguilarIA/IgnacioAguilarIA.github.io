@@ -1,0 +1,33 @@
+AgendaFICH — Etapa E25
+Base: E24 comprobada en este ciclo de trabajo.
+Alcance: integridad nutricional de recetas, protección del editor y propagación de datos incompletos al plan semanal.
+Entrenamiento: sin cambios.
+SQL: sin cambios; no se requiere migración nueva.
+
+Archivos de ejecución modificados/agregados:
+- index.html
+- js/49-nutrition-persistence.js
+- js/58-nutrition-advanced.js
+- js/63-nutrition-week-plan-editor.js
+- css/106-nutrition-recipe-quality-e25.css (nuevo)
+
+Pruebas automatizadas:
+- node --test tests/*.test.cjs: 172 aprobadas, 0 fallidas.
+- 76 archivos JavaScript pasan node --check.
+- E25 browser audit: 5/5.
+- E23 browser audit: 7/7.
+- E24 browser audit: 8/8.
+- E20 browser audit: 7/7.
+- E19/E18/E17/E16 visual/interaction audits: 8/8 cada una.
+- E12 browser audit: 28/28.
+- E10 visual audit: 14/14.
+- E6 viewport audit: 7 tamaños; sin desbordamiento horizontal.
+- HTML: 181 referencias locales comprobadas, 0 ausentes.
+- 29 archivos JS/CSS de Entrenamiento comparados contra E24; 0 cambiados.
+
+SHA-256 de los archivos de ejecución:
+5ceae7ab8d60a6f275ac64292ed7f43ac4df8db28ed30391e92338bae0f27de6  index.html
+06efff5e3b6781eeaa4b5c7d0cbb23de6450522849b25f67ff07fd4e1f3565c0  js/49-nutrition-persistence.js
+51494da9dcaa124f45c41952d3bc58a08d5119b21c9a1f5aa901cbde2792bdfd  js/58-nutrition-advanced.js
+d5d39762263214e7fa7dd45f8270ce781b26f059da637fe8baaa2522668e5dfb  js/63-nutrition-week-plan-editor.js
+f8e302d7b51bc131c866894e070030c3df01f7d4c3d53be8c00fdfb88eaa241a  css/106-nutrition-recipe-quality-e25.css

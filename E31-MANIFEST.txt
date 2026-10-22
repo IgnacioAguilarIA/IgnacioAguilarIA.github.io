@@ -1,0 +1,18 @@
+AgendaFICH E31 — SHA-256 manifest
+Format: SHA256  relative/path
+The manifest file itself is intentionally excluded.
+
+29bd78daef3c3a2728abcd4c57e254a83a79ddac96652cd8c5712f5869ba5496  README-ETAPA-E31.md
+e1d301d2d5c14beca37cda2e8b51b1d64dbd90bccaac455b80703083c6630dfa  README-INSTALACION-E31.md
+d2bc545d32b00e1ae0b61621e8a8f494692f2c4a141013ea02369ba22649c631  css/112-nutrition-week-plan-copy-day-e31.css
+08edef4a426320f800ac69e2d62942454af3e7c5be9a1f997dafff31f2a107a0  index.html
+360b2e8deef167ed357bdc19f039dc5a8615257cacbab015c5ded1d8def5bc83  js/63-nutrition-week-plan-editor.js
+830f41304f36c2574ffecf43b46931f3106e83e7bd85d254dfea99a8edefb69e  tests/MANUAL-E31-COPY-DAY-CHECKLIST.md
+6a6af8eac55f9ffb2ffbf4f0734cc4ff172e392d770a337daa150eeb784f157c  tests/artifacts/e31/copy-day-browser-audit.json
+8311b6a39e48268528a1a3fede40dfd38fa2a4829c96999f8fedd7ff789a7bd7  tests/artifacts/e31/copy-day-mobile.png
+5279f607825c5e0742e5edc33af9803756f3d51d82743a309d7f0ccaccc39f15  tests/artifacts/e31/copy-day-preview-mobile.png
+31b0c98e2aec2d6f4bbcaa3cbacfb9d3d297d10dd5556527aa95316f192f3fde  tests/e31_copy_day_browser_audit.py
+d31e830e3cce89437204c50850811499786998db73d0de3dbe7695b79a45c85a  tests/nutrition-recipe-quality-e25.test.cjs
+691d470a6c4f47818048632d4c529a887c479c81b6da94fcaaf72de73af33c35  tests/nutrition-week-copy-day-e31.test.cjs
+6709b8ea572bfcafe05a11f95067ffe2f8a0feecabe80a12a385237c5cf4d984  tests/nutrition-week-plan-portion-adjustment-e30.test.cjs
+44c1990fa0476beced1f7d28eec41b36e15ce4375dc4dc7c01820312e0c139b3  tests/nutrition-week-plan-quick-actions-e29.test.cjs

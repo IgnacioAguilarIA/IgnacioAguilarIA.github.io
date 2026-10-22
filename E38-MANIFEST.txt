@@ -1,0 +1,26 @@
+# E38 — manifiesto SHA-256
+# Rutas relativas a la raíz del proyecto tras extraer el ZIP.
+# El propio archivo de manifiesto no se incluye en su lista de hashes.
+
+db435737bee53fcdc91993caf7196fd535517fc66e9daafdd28c984411336278  E38-VALIDACION.txt
+919e75e49df929b704bc6ed79bd95cc96ffdd6458c18cc84f719b9c5833dc799  README-ETAPA-E38.md
+6f364aa7d8837407e00eee6a4a3a82e50eeee8c04641156d8530d4d4c6710b90  README-INSTALACION-E38.md
+439f215912af1c0e9f1bab1e0c6bd0bf1691832e51d4516235aeaf286e696ebf  css/119-nutrition-week-template-bulk-target-e38.css
+18d221f160f0a4d35ae41717dccbb2f26359cf841e79472220683fc639c4bce5  index.html
+70438321ca4e9c9e0c39bfab8226f14d851f12c420ea22b8cb22d33a8038cfd7  js/63-nutrition-week-plan-editor.js
+b49593aba276c8a551ac400ecf215f13f2f9384f81d05e1879ca34119cfd0381  tests/MANUAL-E38-BULK-TARGET-CHECKLIST.md
+043ff9e376ae2593acd4ce4d0ecc0db877219e3245e12c9149210145f0113d19  tests/artifacts/e38/weekly-template-bulk-actions-mobile-light.png
+9e422ad33589509acdd108c04e36b672a88f003cab25fe35de63ec34a895d0f1  tests/artifacts/e38/weekly-template-bulk-actions-mobile.png
+da1f5bec8e1e56a8711346b9c0935c4b67515c0202a5c24fa36306119d871fbc  tests/artifacts/e38/weekly-template-bulk-target-browser-audit.json
+7ba73aed4ff0651e47d433f3b59f30e2a9e1e6c618271dc58e4ca98858ff1cb7  tests/e38_week_template_bulk_target_browser_audit.py
+6d97fd5b84c0a29e5059f76006528242d8d44b83310df215552b40c6c6670445  tests/nutrition-recipe-quality-e25.test.cjs
+95ecc9a0058d6dcde322b4c84a6ed9330b0f6e2f9d8de83c1d8567f0f04cf172  tests/nutrition-week-copy-day-e31.test.cjs
+f90ab9cc6df7c93b54082d897b9c9f341fd04c1e4a79778edbb9be77df8a2eee  tests/nutrition-week-plan-portion-adjustment-e30.test.cjs
+32a93ee36ed5bf198ace169bb7fb742e9dd8e6cf1d95a93f8084bb691ca47e40  tests/nutrition-week-plan-quick-actions-e29.test.cjs
+ef2bc833a6eda81fe48b4b2dd1f615d99e3c67c9879cbdee87b5e07527ea40d8  tests/nutrition-week-template-bulk-target-e38.test.cjs
+cd501dd27a8afc34079b8dfb09177e72174b4cae599cb8449a8149f289a50c53  tests/nutrition-week-template-comparison-e35.test.cjs
+1b60f554b8315ee25cea65158e5e7a39f492b0d2ff4a70bfb3827f43db471261  tests/nutrition-week-template-management-e34.test.cjs
+f8b486d8d32e0a2f4f5809783600cec01d239cc4284d47f422177ac4fdb7bef9  tests/nutrition-week-template-merge-e33.test.cjs
+f0cbd37a19c7d7a36b80a58449a0884fe4ffb145b3d51f81514b5daae6494d13  tests/nutrition-week-template-selective-apply-e36.test.cjs
+d575a82bb44770cbca0154749fda48198856dd56c7b74c75fa6ea71a1adb8835  tests/nutrition-week-template-target-day-e37.test.cjs
+40fb1305ae01971175dadbc0b6cad941cc79ee15edcafe4c479844641765ebba  tests/nutrition-week-templates-e32.test.cjs

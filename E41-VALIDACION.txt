@@ -1,0 +1,18 @@
+AgendaFICH E41 — informe final de validación
+==========================================
+
+Pruebas y verificaciones ejecutadas:
+- Tests Node: 57/57 archivos `tests/*.test.cjs` aprobados individualmente en el proyecto final y en una instalación limpia desde el parche.
+- Auditoría Chromium E41: 52/52 comprobaciones aprobadas.
+- Auditoría de impacto de compras E40: 48/48 comprobaciones aprobadas.
+- Regresiones de navegador de las etapas cercanas, ejecutadas por separado: E39 42/42; E38 33/33; E37 26/26; E36 21/21; E35 33/33; E34 25/25; E33 19/19; E32 13/13; E31 18/18. E30 y E29 también finalizaron sin fallos en ejecuciones aisladas.
+- Regresiones anteriores relacionadas con compras, recetas, accesibilidad y presentación móvil completadas sin fallos; las verificaciones con cifras disponibles están en `README-ETAPA-E41.md`.
+- Sintaxis JavaScript: 76/76 archivos.
+- Referencias locales de `index.html`: 197 comprobadas, 0 faltantes.
+- Instalación limpia: se extrajo el ZIP completo E40 y se aplicó únicamente el ZIP incremental E41; luego pasaron otra vez los 57 archivos de pruebas, E41 (52/52), E40 (48/48), la sintaxis JS y la auditoría de recursos HTML.
+- Integridad: los ZIP completos y el parche pasan `unzip -t`; los hashes SHA-256 del manifiesto se calcularon a partir de los archivos del parche.
+- Alcance: no hay cambios en archivos SQL y ningún archivo JS/CSS existente de Entrenamiento se modificó.
+
+Límites de validación:
+- Las auditorías de sincronización utilizan Supabase simulado. No certifican la instancia real de producción, sus políticas RLS efectivas ni el aislamiento entre cuentas.
+- Aplicar una plantilla guarda el plan pero no sincroniza compras automáticamente. Abrir compras tampoco escribe datos: la lista mantiene su vista previa y confirmación independiente.

@@ -1,0 +1,24 @@
+AgendaFICH — Etapa E26
+Base: E25
+Alcance: UX y confiabilidad de la lista de compras en Alimentación
+SQL/migraciones: sin cambios
+Entrenamiento: sin archivos modificados
+
+Archivos de ejecución modificados/agregados:
+- index.html (cache-bust de módulo 62 y carga de CSS E26)
+- js/62-nutrition-week-planner-shopping.js (resumen, filtros, búsqueda y exportación de vista)
+- css/107-nutrition-shopping-workflow-e26.css (nuevo; resumen y filtros responsive/accesibles)
+
+Pruebas:
+- node --test tests/*.test.cjs: 173 passed, 0 failed
+- E26 pure utility tests: 8/8
+- E26 Chromium mobile browser audit: 9/9
+- JavaScript syntax: 76/76
+- HTML local resources: 182 references, 0 missing
+- E25, E24, E23, E20, E19, E18, E17, E16, E15, E12, E10, E6 browser/regression audits passed
+- Supabase real instance: not tested; provider mocked for browser audit
+
+SHA-256 de archivos de ejecución:
+dd65c7d70cd2f20e5b19340c8d41fc9facec4cec56677572050b4eb8a10d427c  index.html
+d4eaa7f87306ca3ea7ce837cce66a00d87cccb4f50782ad0104a9737a333466e  js/62-nutrition-week-planner-shopping.js
+ef5f4f582c96d0543bf15c16aa6b4c437999ef8c57470a357f4aed4dd0402bc5  css/107-nutrition-shopping-workflow-e26.css

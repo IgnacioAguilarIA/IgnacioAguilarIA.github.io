@@ -1,0 +1,54 @@
+AgendaFICH — Etapa E40
+Resultado de validación automatizada (datos de prueba)
+======================================================
+
+Suite Node.js completa:
+  187 tests, 187 aprobados, 0 fallidos.
+
+Auditoría de navegador específica E40:
+  48 comprobaciones, 48 aprobadas, 0 fallidas.
+
+Regresiones de navegador aprobadas en esta ejecución:
+  E39 revisión consolidada de cambios: 42/42
+  E38 acciones masivas de destino: 33/33
+  E37 día de destino por comida: 26/26
+  E36 selección de comidas: 21/21
+  E35 comparación de plantillas: 33/33
+  E34 gestión de plantillas: 25/25
+  E33 combinación de plantillas: 19/19
+  E32 plantillas semanales: 13/13
+  E31 copia de día: 18/18
+  E30 ajuste de porciones: 29/29
+  E29 acciones rápidas de planificación: 20/20
+  E28 recuperación/edición de compras: 12/12
+  E27 revisión de compras: 15/15
+  E26 flujo de compras: 9/9
+  E23 integridad de cálculos nutricionales: 7/7
+  E20 accesibilidad del autocompletado: 7/7
+  E19 consistencia visual: 8/8
+  E18 preferencias de vista: 8/8 (pasó al ejecutarse de forma aislada)
+  E17 microinteracciones: 8/8
+  E16 tarjetas de comidas: 8/8
+
+Código y recursos:
+  76/76 archivos JavaScript pasan `node --check`.
+  197 referencias locales del HTML revisadas; ninguna ausente.
+  No se modificó ningún archivo SQL.
+  Los cambios de ejecución respecto de E39 se limitan a index.html, js/62-nutrition-week-planner-shopping.js, js/63-nutrition-week-plan-editor.js y la nueva hoja css/121-nutrition-week-template-shopping-impact-e40.css.
+  No se modificaron archivos JavaScript/CSS existentes de Entrenamiento.
+
+Advertencia de cobertura:
+  La auditoría histórica E15 no finalizó en esta ejecución por timeout de Playwright al interactuar con el navegador; no se cuenta como aprobada en este informe. No corresponde al flujo E40. La E40 y las auditorías de plantillas/compras indicadas arriba sí finalizaron correctamente.
+
+Limitaciones:
+  Las pruebas usan datos controlados y un proveedor Supabase simulado. No certifican la conexión ni las políticas efectivas de la instancia real de producción. Esa comprobación debe hacerse en el entorno real antes de considerar producción validada.
+
+Archivos nuevos de prueba:
+  tests/nutrition-week-template-shopping-impact-e40.test.cjs
+  tests/e40_week_template_shopping_impact_browser_audit.py
+  tests/artifacts/e40/weekly-template-shopping-impact-browser-audit.json
+
+Instalación limpia del parche:
+  Se extrajo el ZIP original E39 en un directorio limpio y se aplicó únicamente AgendaFICH_Alimentacion_E40_patch.zip.
+  En esa instalación: 187/187 pruebas Node aprobadas; auditoría E40 48/48 aprobada; regresión E39 42/42 aprobada.
+  Los ZIP finales se verificaron con ZipFile.testzip() sin errores.

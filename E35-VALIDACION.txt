@@ -1,0 +1,22 @@
+AgendaFICH E35 — informe de validación
+Fecha: 2026-10-21
+Base de actualización: E34
+
+Resultados ejecutados sobre una copia limpia de E34 con el parche E35 aplicado:
+- Suite Node.js completa: 182/182 pruebas aprobadas.
+- Auditoría Chromium específica E35: 33/33 comprobaciones aprobadas.
+- Regresiones de navegador tras instalación: E34 25/25; E33 19/19; E32 13/13; E31 18/18; E30 29/29; E29 20/20; E28 12/12; E27 15/15; E26 9/9.
+- Sintaxis JavaScript: 76/76 archivos pasan node --check.
+- Referencias locales de index.html: 191 comprobadas, ninguna ausente.
+- Archivos SQL: sin cambios frente a E34.
+- Archivos JavaScript/CSS existentes de Entrenamiento: sin cambios frente a E34.
+- ZIP incremental y proyecto completo: integridad comprobada.
+
+Alcance de E35:
+- index.html: agrega el CSS E35 y actualiza la versión de caché del editor semanal a v=e35.
+- js/63-nutrition-week-plan-editor.js: comparación de dos plantillas semanales, diferencias de comidas/ingredientes/nutrientes y controles accesibles.
+- css/116-nutrition-week-template-comparison-e35.css: hoja de estilos aislada para la comparación.
+
+La comparación es de solo lectura: no modifica el plan ni las preferencias. Distingue los nutrientes desconocidos de los ceros explícitos y muestra comidas idénticas, cambiadas o exclusivas de cada plantilla.
+
+Limitación: las auditorías de navegador usan datos y proveedores controlados. No certifican credenciales, políticas RLS ni sincronización de producción contra la instancia real de Supabase. Se recomienda completar la lista manual incluida con dos plantillas reales.

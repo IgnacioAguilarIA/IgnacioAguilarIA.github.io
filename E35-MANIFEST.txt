@@ -1,0 +1,23 @@
+AgendaFICH E35 — manifiesto SHA-256
+Las rutas son relativas a la raíz del repositorio. El manifiesto no se calcula a sí mismo.
+
+e478b0040c7fc3b06072bf1e97b9db7542018c3cef562caf480471b75513738f  E35-VALIDACION.txt  (1598 bytes)
+495c7be9f02f49ff3a3aa501091a09cb337f9d2b6eeb69ac95e2a4c7e6faa889  README-ETAPA-E35.md  (1858 bytes)
+e1c9037738182e97d16a9fbece30bf794a374fc4c33cd57c1b9a5ad319195b76  README-INSTALACION-E35.md  (1485 bytes)
+cb3644dc6dbb5d50526f8f4cdf2d827ef71b54a12d5df39629cad16470604955  README.md  (8206 bytes)
+4bbbcf44835f7144f23abb08551f649d247c7ae37955c81c9cd24d45cb1db7d3  css/116-nutrition-week-template-comparison-e35.css  (5155 bytes)
+2547a5d99bf7ca22bfb698d8523976cf86c8f1fd75d13dcc3e385db6fd51baea  index.html  (101807 bytes)
+13b53d1bc15733fc5a61b29637d7784f5a665e94a10c8528b024dd6abbc6beb3  js/63-nutrition-week-plan-editor.js  (140488 bytes)
+9eebe507f78bd5de7c582d38bce8c62fd7093548c42a25181ad758772434fbd7  tests/MANUAL-E35-WEEK-TEMPLATE-COMPARISON-CHECKLIST.md  (1213 bytes)
+fffa067e7d9625a60e9eec47618416568f3e364333971e68293f09009d382033  tests/artifacts/e35/weekly-template-comparison-browser-audit.json  (9930 bytes)
+85880aa65908591346a6f395f81b985132b9a17b3f054ade2316217102bff27c  tests/artifacts/e35/weekly-template-comparison-mobile-light.png  (60423 bytes)
+14719430875e0d46b945e3b03699b78ca2eee38fe4514b14669dcb5995a07db4  tests/artifacts/e35/weekly-template-comparison-mobile.png  (59999 bytes)
+b8b77eb9732b4dcdb57ccf5b06bfcd688a2dd772c0cc8df2c711b39f2a9fc057  tests/e35_week_template_comparison_browser_audit.py  (25062 bytes)
+b31732ec47b1f5704a191bfca608aebe0c4095e128ec2f0b7b601581068d8a91  tests/nutrition-recipe-quality-e25.test.cjs  (5130 bytes)
+8d4c504ab18cbc70b297b3eb8064f0d45e99b01e1d2eccf101dc43253fb441ad  tests/nutrition-week-copy-day-e31.test.cjs  (8211 bytes)
+1b689d0b5f8854c23653f505ce6870a586b30e5c57ea4746797416028df9829d  tests/nutrition-week-plan-portion-adjustment-e30.test.cjs  (7958 bytes)
+41af9e9f98cabfa9d21713ff4518a64ddedcfb85ddf0d45473ecf7da49c5333c  tests/nutrition-week-plan-quick-actions-e29.test.cjs  (5573 bytes)
+ae768bbaad61d771f73c32464c381658ac8edce54611df66ba92d270bddea665  tests/nutrition-week-template-comparison-e35.test.cjs  (6170 bytes)
+06f5545d61b71f1e89d76f7ea871140c9c7e499b07da4b246ad31f021aded89e  tests/nutrition-week-template-management-e34.test.cjs  (6609 bytes)
+47f9582a5ac8cc9018d434e1f75acb8c55f08c21575a8e14ac2c269ea7fb5cf5  tests/nutrition-week-template-merge-e33.test.cjs  (5602 bytes)
+18345d50a0f667009824b7471b6b50671eb23ee580890967e2906e538b2a1601  tests/nutrition-week-templates-e32.test.cjs  (9883 bytes)

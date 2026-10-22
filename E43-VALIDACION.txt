@@ -1,0 +1,36 @@
+AgendaFICH E43 — Informe de validación
+======================================
+Base: E42
+Alcance de ejecución: editor semanal de Alimentación y nuevo CSS del informe exportable.
+
+Pruebas automatizadas
+---------------------
+Comando: node --test tests/*.test.cjs
+Resultado: 190/190 pruebas aprobadas, 59 suites/archivos de prueba, 0 fallos.
+
+Auditorías de navegador (Chromium)
+----------------------------------
+E43 — Copia y descarga del informe: 68/68 aprobadas.
+E42 — Recibo de impacto posterior: 61/61 aprobadas.
+E41 — Enlace guiado hacia compras: 52/52 aprobadas.
+E40 — Estimación de impacto antes de aplicar plantilla: 48/48 aprobadas.
+E39 — Revisión consolidada: 42/42 aprobadas.
+E38 — Acciones masivas de destino: 33/33 aprobadas.
+E37 — Destinos individuales: 26/26 aprobadas.
+
+Comprobaciones estáticas
+------------------------
+Sintaxis JavaScript: 76/76 archivos válidos.
+Referencias locales de index.html: 200 verificadas, ninguna ausente.
+Archivos SQL: sin modificaciones respecto de E42.
+Archivos existentes de Entrenamiento: sin modificaciones respecto de E42.
+
+Instalación limpia
+------------------
+Se extrajo el proyecto completo E42, se aplicaron solo los archivos del parche E43 y se repitieron las pruebas automatizadas y las auditorías E43, E42, E41 y E40. Las verificaciones volvieron a aprobar.
+
+Alcance y limitaciones
+---------------------
+Las pruebas usan datos controlados y un proveedor Supabase simulado. No certifican la sincronización contra la instancia real de producción, las políticas efectivas ni el aislamiento entre cuentas reales. Se recomienda ejecutar la lista MANUAL-E43-SHOPPING-REPORT-CHECKLIST.md en una rama de prueba.
+
+El CSV/texto exportado es un informe de impacto estimado capturado antes de guardar el plan. No es la lista oficial sincronizada y exportarlo/copiarlo no escribe en Supabase.

@@ -1,0 +1,22 @@
+AgendaFICH — Etapa E24
+Base declarada: AgendaFICH_Alimentacion_E23_completo.zip
+Alcance: protección del editor de Alimentación, validación de cantidad y deshacer ingredientes.
+No se agregan migraciones ni se modifican archivos de Entrenamiento.
+
+Archivos necesarios para ejecutar:
+- index.html (referencias a recursos E24)
+- css/105-nutrition-safe-editor-e24.css
+- js/75-nutrition-safe-editor-e24.js
+
+Hashes SHA-256 de runtime:
+31ed37c9512427fe60ce45de4f49f1f90aefb085234611411f00f021f748dfad  index.html
+f262d45b35d50af0bc14b72e68a3c21f0bb900518bd26d53054be14cce70e9fe  css/105-nutrition-safe-editor-e24.css
+7dbed12281555a5de17aabd7b4435b3a395c4bdf0dec733c9a673334b7b0f9fd  js/75-nutrition-safe-editor-e24.js
+
+Pruebas:
+- node --test tests/*.test.cjs: 167 aprobadas, 0 fallidas.
+- tests/e24_safe_editor_browser_audit.py: 8/8.
+- node --check en todos los JS: aprobado.
+- Auditoría de recursos del index.html: 181 referencias, 0 rutas locales ausentes.
+
+Limitación: no se verificó Supabase de producción; las pruebas de navegador usan datos locales.

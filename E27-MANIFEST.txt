@@ -1,0 +1,16 @@
+AgendaFICH E27 — MANIFIESTO SHA-256
+Base de actualización: E26
+Alcance: Alimentación / revisión segura antes de sincronizar compras
+SQL: sin cambios
+Entrenamiento: los archivos existentes de JS/CSS permanecen idénticos a E26
+
+SHA-256  ARCHIVO
+17600a177ae913b143c4999132bb3948bcb065bb8e86e8f213e3e10d549db7c3  index.html
+2a757cc51627e87512d89c28030f5fce081f6327d801b1a8192f7b12ba9dee6a  js/62-nutrition-week-planner-shopping.js
+0c846aa523fab5c96ce57da3fb088ecd0477d81f2e1d85d9bc41b54442727236  css/108-nutrition-shopping-review-e27.css
+475b0f84e4eca8a1507461d330a925409212b5debf0e4f980f98ba57ca51ade8  tests/nutrition-shopping-review-e27.test.cjs
+610ec1f5fafacbc19d932bce6726513ea1a5aaa3668ca355bf1b0f0dffca0d80  tests/e27_shopping_review_browser_audit.py
+cbdc6709f41d052ee6be9dc282655c9c8acc5aa88fdb8e7d5431d253f539befc  tests/nutrition-shopping-workflow-e26.test.cjs
+089a270328cb41ab484e9cb39e971efac32e8562481adacda268e646e49231dc  tests/nutrition-week-plan-recipes-e2.test.cjs
+1e6e62a9c7eabf926493fdce4b45843d21047c80389da8a566dde04688c74b57  tests/artifacts/e27/shopping-review-browser-audit.json
+ef69ad627faef5e0ad46711fa61ba61ebdbac954cb7eb4a5db9b99b86f3aa048  README-ETAPA-E27.md

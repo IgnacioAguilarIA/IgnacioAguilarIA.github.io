@@ -1,0 +1,10 @@
+AgendaFICH E33 — informe de validación
+
+Suite Node: 180/180 pruebas, fallos: 0; 180 archivos de prueba registrados por Node.
+Pruebas puras específicas E33: 6/6.
+Auditorías navegador: E33 19/19; E32 13/13; E31 18/18; E30 29/29; E29 20/20; E23 7/7; E20 7/7; E19 8/8; E18 8/8.
+Sintaxis JavaScript: 76/76 archivos válidos.
+Referencias locales de index.html: 189 comprobadas; 0 ausentes.
+SQL respecto de E32: sin cambios.
+Recursos JS/CSS existentes: solo cambió js/63-nutrition-week-plan-editor.js; se agregó css/114-nutrition-week-template-merge-e33.css.
+Las pruebas de integración usan un proveedor Supabase simulado. La verificación con la instancia real de producción y con dos cuentas queda pendiente como prueba manual.

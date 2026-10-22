@@ -1,0 +1,20 @@
+AgendaFICH E30 - manifest de entrega
+
+Base de instalación: AgendaFICH E29.
+Alcance: Alimentación, editor de planificación semanal.
+Migraciones SQL nuevas: ninguna.
+Archivos existentes de Entrenamiento modificados: ninguno.
+
+SHA-256 de los archivos relevantes del parche (rutas relativas a la raíz del repositorio):
+89721f5bb2519cf1651a2923f98b8ffb1c93199cad2ae6a26b3188534886262c  index.html
+f08c8142807e90cbd98591c592dec0022ecc29bfeb3b7d80e1878fec1899198a  js/63-nutrition-week-plan-editor.js
+187a281c28c16de72c0541e82341f513060e2bee07dda9aafe7af5ab45008239  css/111-nutrition-recipe-portion-adjustment-e30.css
+900ecb098c41e8f6f703baacdbdc3a75547d1843a93cffea91951445d8a0454b  README-ETAPA-E30.md
+f8c9db783d9d352ef5f3fd7f2ee4ed5f6b52c285c06525bb52aac076fe4c11bf  tests/nutrition-week-plan-portion-adjustment-e30.test.cjs
+b706226dac0939106960d9cdbf97da4c7cfca85c6253afc481efa6972db13a71  tests/e30_recipe_portion_adjustment_browser_audit.py
+a34c6493f77f866b0465fe52dbc40e30b22b91608d96919533f567b9a7969c85  tests/MANUAL-E30-RECIPE-PORTION-ADJUSTMENT-CHECKLIST.md
+46bc63f854bfbf614064e1dc450c0fabe7ef135079dfd4236e53ed0c86adfff8  tests/nutrition-recipe-quality-e25.test.cjs
+dd9d9d7ce849f0fe5a7c1b1aa54bcc50b8daeac06aa93357c9494e7e53a72e15  tests/nutrition-week-plan-quick-actions-e29.test.cjs
+d9ba46510e3a21928e929c273e06d90451b2162ba9aa9548c5758b2b95fd17d6  tests/artifacts/e30/recipe-portion-adjustment-browser-audit.json
+da9b9871dc6e46f0b4f63df28d16e5733ba36e7b3f664cc3d8ed283ce2b6509b  tests/artifacts/e30/e30-recipe-portion-adjustment-mobile.png
+89ce6455fd6964d9fdaa1253d3623ed96fa9237ed423de9974529e2485874415  tests/artifacts/e30/e30-recipe-portion-adjustment-desktop.png

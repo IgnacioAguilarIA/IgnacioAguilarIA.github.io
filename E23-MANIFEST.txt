@@ -1,0 +1,30 @@
+AgendaFICH Alimentación — E23
+Base requerida: AgendaFICH E22
+Tipo de actualización: código frontend + pruebas; sin migración SQL nueva
+
+Archivos reemplazados:
+index.html
+js/03-inline-script-03.js
+js/49-nutrition-persistence.js
+js/52-nutrition-meal-builder.js
+js/54-nutrition-consumption.js
+js/55-nutrition-live-summary.js
+
+Archivos nuevos:
+js/74-nutrition-data-integrity-e23.js
+css/104-nutrition-calculation-integrity-e23.css
+tests/nutrition-calculation-integrity-e23.test.cjs
+tests/e23_calculation_integrity_browser_audit.py
+tests/artifacts/e23/calculation-integrity-browser-audit.json
+README-ETAPA-E23.md
+
+Validación:
+- Suite Node.js: 162 passed, 0 failed
+- E23 browser audit: 7/7
+- E20 autocomplete accessibility: 7/7
+- E16 meal cards: 8/8
+- E17 microinteractions: 8/8
+- E18 view preferences: 8/8
+- E19 visual consistency: 8/8
+- JavaScript syntax checks: passed
+- Supabase production integration: not verified in this environment; user should perform connected smoke test

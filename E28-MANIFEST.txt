@@ -1,0 +1,22 @@
+AgendaFICH — MANIFIESTO SHA-256 E28
+Base: E27
+Alcance: recuperación de productos archivados y edición segura de productos manuales en Alimentación.
+SQL: sin cambios.
+Entrenamiento: no se modificó ningún archivo JS/CSS existente de Entrenamiento.
+Hashes calculados sobre los bytes finales del proyecto. Este manifiesto se omite a sí mismo.
+
+SHA-256  ARCHIVO
+a1709470b628b1ee31d73730e987bbca3f89edf8b29ac03df6e56c1aa3a5733b  index.html
+5fbecb46e3257ce56b102031e1dd3c87718cc1f8f013501b1377a7c05e46c8ac  js/62-nutrition-week-planner-shopping.js
+84523bf7d2422838df8b91170d1f0a10497a16da4d2d54648ce4328ee7d2793b  css/109-nutrition-shopping-recovery-e28.css
+8342670610ed4c0aa41617cc8b8818c67ddf82ca925445fa4c41f05f75d03db5  README-ETAPA-E28.md
+04c1963a5c68ded51bbb19755e73923e09121ca7425b0bb14151a4f7d07da4ef  tests/nutrition-shopping-recovery-e28.test.cjs
+9db2384443d7ff24630a365c8cf08aa1479e5da3f66c6419f9b1aa9c347b7a52  tests/e28_shopping_recovery_browser_audit.py
+a475ddbf3d59e4d03026668ce6c67c659c6d8b526ea760b183b6648004992e98  tests/nutrition-shopping-review-e27.test.cjs
+ba679b4476619f2ec3b20bc8cbde4ffa878195195d7e687526e03423e2b0093f  tests/nutrition-shopping-workflow-e26.test.cjs
+b1f9be192247587ae52f9fd4e3df720be4d23a398b20ffc036ee44f2e04950c8  tests/MANUAL-SHOPPING-RECOVERY-E28-CHECKLIST.md
+f75255eb0127b1f162b56a95c1c25954238ea49f505734eda1d36feab3d8b1d0  tests/artifacts/e28/shopping-recovery-browser-audit.json
+939447a8a042cb4e93493d40d3a7ccf65cd8c18faf637b49b868eec385ba85c0  tests/artifacts/e28/e28-shopping-archive-panel-mobile.png
+b40d1dc4f219bbb28db63e499a0231bef88036e1ef1e2486348b957cf432918d  tests/artifacts/e28/e28-shopping-inline-edit-mobile.png
+20d465e84fa6a1220675080376261a04dff108d67990a5fdf167c68d583445d9  tests/artifacts/e28/e28-shopping-recovery-mobile.png
+f584b746ebe8a44976893d372e52761fda4dc53f58b8635abe985d6dcb8ffe69  tests/artifacts/e28/e28-shopping-recovery-desktop.png

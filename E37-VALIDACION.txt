@@ -1,0 +1,64 @@
+AgendaFICH — Informe de validación E37
+=====================================
+
+Mejora
+------
+E37 permite definir un día de destino diferente para cada comida seleccionada desde una plantilla semanal, con previsualización no destructiva, invalidación de vistas previas obsoletas y protección para no mover/duplicar silenciosamente una comida ya aplicada en otro día.
+
+Pruebas de la suite
+-------------------
+Comando: node --test tests/*.test.cjs
+Resultado: 184/184 tests passed, 0 failed.
+
+Sintaxis y recursos
+-------------------
+- node --check: 76/76 archivos JavaScript aprobados.
+- Referencias locales en index.html: 193 comprobadas, 0 ausentes.
+- SQL: sin archivos SQL modificados; E37 no requiere migración.
+- Archivos existentes JS/CSS de Entrenamiento: sin cambios respecto de E36.
+
+Auditorías de navegador completadas
+-----------------------------------
+- E37 selector de día de destino: 26/26.
+- E36 aplicación selectiva de comidas: 21/21.
+- E35 comparación de plantillas: 33/33.
+- E34 gestión de plantillas: 25/25.
+- E33 combinación de plantillas: 19/19.
+- E32 guardar/aplicar plantillas: 13/13.
+- E31 copiar día: 18/18.
+- E30 ajuste de porciones: 29/29.
+- E29 acciones rápidas del plan semanal: 20/20.
+- E28 recuperación y edición de compras: 12/12.
+- E27 vista previa segura de compras: 15/15.
+- E26 flujo de compras: 9/9.
+- E25 editor de recetas: 5/5.
+- E24 editor seguro: 8/8.
+- E23 integridad nutricional: 7/7.
+- E20 accesibilidad de autocompletado: 7/7.
+- E19 consistencia visual: 8/8.
+- E18 preferencias de visualización: 8/8.
+- E17 microinteracciones: 8/8.
+- E16 tarjetas de comidas: 8/8.
+- E12 filtros del catálogo: 28/28.
+- También terminaron sin error las auditorías E15, E14, E13 y E7; esos informes no exponen un total numérico uniforme.
+
+Pruebas visuales
+----------------
+- Capturas revisadas en móvil (390 × 844) en tema claro y oscuro.
+- No se detectó desbordamiento horizontal en la auditoría E37.
+- Verificados foco visible, etiquetas de selectores, tema claro/oscuro, forced-colors y prefers-reduced-motion.
+
+Límites
+-------
+Las pruebas de navegador usan Chromium y un proveedor Supabase simulado/datos controlados. No certifican la conexión real de producción, RLS real ni el aislamiento entre dos cuentas de Supabase. Antes de publicar globalmente, ejecutar tests/MANUAL-E37-WEEK-TEMPLATE-TARGET-DAY-CHECKLIST.md contra una instancia de prueba real.
+
+Instalación limpia del parche E37
+---------------------------------
+Se extrajo el ZIP completo E36 en un directorio de verificación y se aplicó el ZIP incremental E37, sin copiar la carpeta de desarrollo.
+- node --test tests/*.test.cjs sobre la instalación resultante: 184/184, 0 fallos.
+- Auditoría E37 sobre la instalación resultante: 26/26.
+- Regresión E36 sobre la instalación resultante: 21/21.
+- Sintaxis JS sobre la instalación resultante: 76/76.
+- Recursos locales de HTML sobre la instalación resultante: 193 comprobados, 0 ausentes.
+- Recursos JavaScript/CSS existentes relacionados con Entrenamiento comparados con E36: 34/34 idénticos.
+- Manifiesto SHA-256 del parche: 22/22 archivos verificados.

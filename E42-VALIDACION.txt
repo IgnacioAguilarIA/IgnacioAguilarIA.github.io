@@ -1,0 +1,47 @@
+AgendaFICH E42 — Informe final de validación
+===========================================
+Base: E41 extraída desde `AgendaFICH_Alimentacion_E41_completo.zip`.
+
+Cambio de ejecución:
+- `index.html`: carga CSS E42 y aumenta el cache-busting del editor semanal a v=e42.
+- `js/63-nutrition-week-plan-editor.js`: agrega el desglose detallado del impacto estimado en compras al panel posterior a aplicar una plantilla.
+- `css/123-nutrition-week-template-post-apply-impact-e42.css`: nueva hoja de estilos aislada para el recibo de impacto.
+- No hay cambios SQL. No se modifican archivos de ejecución de Entrenamiento.
+
+Pruebas confirmadas sobre el proyecto E42:
+- Node: 58/58 archivos `tests/*.test.cjs` aprobados individualmente.
+- Contrato E42: 16/16 comprobaciones.
+- Auditoría de navegador E42: 61/61.
+- Auditoría E41 (handoff separado): 52/52.
+- Auditoría E40 (impacto previo de compras): 48/48.
+- Auditoría E39 (revisión consolidada): 42/42.
+- Auditoría E38 (acciones en bloque): 33/33.
+- Auditoría E37 (destino por comida): 26/26.
+- Auditoría E36 (selección parcial): 21/21.
+- Auditoría E35 (comparación de plantillas): 33/33.
+- Auditoría E34 (gestión de plantillas): 25/25.
+- Auditoría E33 (combinación segura): 19/19.
+- Auditoría E32 (plantillas base): 13/13.
+- Auditoría E31 (copiar día): 18/18.
+- Auditoría E30 (porciones): 29/29.
+- Auditoría E29 (acciones rápidas): 20/20.
+- Auditoría E28 (compras/recuperación): 12/12.
+- Auditoría E20 (accesibilidad del autocompletado): 7/7.
+- Auditoría E19 (consistencia visual): 8/8.
+- Auditoría E18 (preferencias visuales): 8/8.
+- Sintaxis JavaScript: 76/76 archivos.
+- Referencias locales del HTML: 197 comprobadas, 0 ausentes.
+
+Instalación limpia del parche:
+- Se extrajo E41 desde el ZIP completo, se aplicó únicamente el parche E42 y se volvieron a ejecutar los 58 tests Node (58/58), 76 chequeos de sintaxis JS y la auditoría E42 (61/61) y E41 (52/52).
+- Referencias locales del HTML en la instalación limpia: 197, 0 ausentes.
+- ZIP incremental y ZIP completo pasan la prueba de integridad ZIP.
+- El manifiesto SHA-256 se generó desde los archivos incluidos en el parche; se excluye el propio manifiesto de su lista de hashes.
+
+Alcance verificado:
+- Comparación E41 vs E42: de los 75 archivos JS existentes no autorizados para cambio, 0 diferencias; de los 122 CSS existentes, 0 diferencias.
+- 34 archivos SQL comparados, 0 diferencias.
+
+Limitaciones:
+- Las pruebas de navegador usan fixtures controlados y un proveedor Supabase simulado; no certifican el entorno real de producción.
+- Antes de publicar en producción, comprobar persistencia, permisos e aislamiento entre cuentas con tu instancia real de Supabase.

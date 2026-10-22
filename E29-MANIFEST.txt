@@ -1,0 +1,15 @@
+AGENDAFICH E29 — MANIFIESTO DE INTEGRIDAD
+Base de trabajo: E28 completo; sin migraciones SQL nuevas.
+Los hashes SHA-256 siguientes corresponden a rutas relativas al directorio de este manifiesto.
+
+74be31b495dea32d92dfe7725a2edbdc6fc142f598dca74a117068830bd8fa17  index.html
+cbfbf3564bb018b5842ff10682b200970de03d0269ac4df8debecd1bec9fe5d9  js/63-nutrition-week-plan-editor.js
+65a4a89300f65c1d9805ac53f20d47eccb9fa88bf8bed37c5cb70dc5ed9209a0  css/110-nutrition-week-plan-quick-actions-e29.css
+a6313aac1b8a74e5f572a75786241bb0c76ab8f102f7be143bb199006bb92b22  tests/nutrition-week-plan-quick-actions-e29.test.cjs
+fca0b02375b5762d372dc7c5041e707acd0913eaf1e39d2fccf2cef848bd98be  tests/e29_week_plan_quick_actions_browser_audit.py
+50a2c0b2bf2495cc2367229144cf602c9639d1edc38815e4fa0f141c80201087  tests/nutrition-recipe-quality-e25.test.cjs
+6952cb586c4a2e0c4ef54053e3e71fb1ada17ee554ee7c28068b66c8ce423e11  tests/MANUAL-E29-WEEK-PLAN-QUICK-ACTIONS-CHECKLIST.md
+dcd9e183ef3302219248018027dd1fe6c95a6e37581569bf81f04f57ace66971  tests/artifacts/e29/week-plan-quick-actions-browser-audit.json
+3092a8bde2c0f14c334a693af7c8337caf2d55bd39e97eb17573e0165e912058  tests/artifacts/e29/e29-week-plan-quick-actions-mobile.png
+6b81eba5ff94618c103835631c66ff895cbf123bdd41a81967498bce351a5d6f  tests/artifacts/e29/e29-week-plan-quick-actions-desktop.png
+0d9bc49231fd47895c7111ceb71f2ed319ddb31a4bd93e30d21f669aebfb85ac  README-ETAPA-E29.md
