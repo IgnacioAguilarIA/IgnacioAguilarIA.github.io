@@ -1,0 +1,51 @@
+TAP version 13
+# ✓ Agrupa alimentos iguales y suma cantidad con precisión de tres decimales
+# ✓ Normaliza alias de unidades inequívocos antes de sumar cantidades
+# ✓ No mezcla unidades diferentes ni estados de preparación diferentes
+# ✓ No combina cantidad desconocida con una cantidad conocida del mismo ingrediente
+# ✓ Distingue un cero real de una cantidad desconocida
+# ✓ No incluye una fila auxiliar de unidad plan como ingrediente comprable
+# ✓ Conserva un ingrediente de cantidad cero como cantidad no inventada
+# ✓ La clave generada normaliza tildes y separa marca/unidad/preparación
+# ✓ Normaliza semana a lunes y resuelve cambio de semana sin zona horaria local
+# ✓ Escapa celdas CSV y neutraliza posibles fórmulas de hoja de cálculo
+# ✓ La migración utiliza RLS, un ámbito por cuenta y privilegios CRUD mínimos
+# ✓ El postcheck no intenta consultar el pseudo-rol PUBLIC como si fuera un rol nombrado
+# D4: 10 pruebas aprobadas.
+# Subtest: tests/nutrition-week-planner-d4.test.cjs
+ok 1 - tests/nutrition-week-planner-d4.test.cjs
+  ---
+  duration_ms: 60.940766
+  type: 'test'
+  ...
+# ✓ Rechaza fecha ISO imposible
+# ✓ Normaliza domingo a lunes de la misma semana
+# ✓ Mantiene lunes si ya empieza semana
+# ✓ Suma días sin depender de zona horaria
+# ✓ Filtra ingredientes sin nombre y normaliza snapshots
+# ✓ Construye snapshot de receta plantilla sin compartir referencias mutables
+# ✓ Las claves de plantilla son estables para que un reintento no duplique una comida
+# ✓ Las claves separan el día/categoría para no sobrescribir otra franja planificada
+# ✓ Los ingredientes se guardan como instantánea y no se mutan al editar después
+# ✓ La policy no permite vincular una plantilla de otra cuenta
+# ✓ La migración crea tabla aislada, RLS y privilegios mínimos
+# ✓ El postcheck es de solo lectura
+# ✓ El HTML carga el editor y su CSS después de las herramientas anteriores
+# ✓ El guardado de una comida planificada usa una clave idempotente y solo informa confirmación del servidor
+# ✓ Generación de compras está vinculada a la semana planificada fechada
+# D5: 15 pruebas aprobadas.
+# Subtest: tests/nutrition-week-planner-d5.test.cjs
+ok 2 - tests/nutrition-week-planner-d5.test.cjs
+  ---
+  duration_ms: 51.400194
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 122.355837

@@ -1,0 +1,168 @@
+TAP version 13
+# Subtest: E16 loads strictly after E15 and introduces only its scoped runtime and stylesheet
+ok 1 - E16 loads strictly after E15 and introduces only its scoped runtime and stylesheet
+  ---
+  duration_ms: 2.988418
+  type: 'test'
+  ...
+# Subtest: E16 derives visible summary pills from existing nutritional metadata without persistence calls
+ok 2 - E16 derives visible summary pills from existing nutritional metadata without persistence calls
+  ---
+  duration_ms: 0.483457
+  type: 'test'
+  ...
+# Subtest: E16 keeps the E15 detail disclosure, compact labels and accessible action names
+ok 3 - E16 keeps the E15 detail disclosure, compact labels and accessible action names
+  ---
+  duration_ms: 1.457324
+  type: 'test'
+  ...
+# Subtest: E16 CSS is scoped to Alimentación and supports keyboard, reduced motion, forced colors and touch
+ok 4 - E16 CSS is scoped to Alimentación and supports keyboard, reduced motion, forced colors and touch
+  ---
+  duration_ms: 0.770249
+  type: 'test'
+  ...
+# Subtest: genera una clave UUID estable para identificar el intento de guardado
+ok 5 - genera una clave UUID estable para identificar el intento de guardado
+  ---
+  duration_ms: 5.784407
+  type: 'test'
+  ...
+# Subtest: guarda y recupera el borrador por cuenta y día
+ok 6 - guarda y recupera el borrador por cuenta y día
+  ---
+  duration_ms: 8.936913
+  type: 'test'
+  ...
+# Subtest: no permite sobrescribir un intento pendiente con otra clave
+ok 7 - no permite sobrescribir un intento pendiente con otra clave
+  ---
+  duration_ms: 1.681651
+  type: 'test'
+  ...
+# Subtest: rechaza borrar un intento con una clave diferente
+ok 8 - rechaza borrar un intento con una clave diferente
+  ---
+  duration_ms: 1.709704
+  type: 'test'
+  ...
+# Subtest: borra solo el intento confirmado con la misma clave
+ok 9 - borra solo el intento confirmado con la misma clave
+  ---
+  duration_ms: 1.353387
+  type: 'test'
+  ...
+# Subtest: rechaza un borrador que pertenezca a otra cuenta o día
+ok 10 - rechaza un borrador que pertenezca a otra cuenta o día
+  ---
+  duration_ms: 1.963626
+  type: 'test'
+  ...
+# Subtest: no interpreta un JSON ilegible ni lo sobrescribe silenciosamente
+ok 11 - no interpreta un JSON ilegible ni lo sobrescribe silenciosamente
+  ---
+  duration_ms: 2.930562
+  type: 'test'
+  ...
+# Subtest: el guardado nuevo usa el helper idempotente y no vuelve a INSERT desde la interfaz
+ok 12 - el guardado nuevo usa el helper idempotente y no vuelve a INSERT desde la interfaz
+  ---
+  duration_ms: 0.23312
+  type: 'test'
+  ...
+# Subtest: el borrador se conserva antes de llamar a Supabase y se elimina solo al cerrar el flujo exitoso
+ok 13 - el borrador se conserva antes de llamar a Supabase y se elimina solo al cerrar el flujo exitoso
+  ---
+  duration_ms: 0.37903
+  type: 'test'
+  ...
+# Subtest: un resultado de red incierto se reintenta con la misma clave y conserva una sola fila
+ok 14 - un resultado de red incierto se reintenta con la misma clave y conserva una sola fila
+  ---
+  duration_ms: 2.710991
+  type: 'test'
+  ...
+# Subtest: no se puede cerrar el diálogo mientras el guardado está en curso
+ok 15 - no se puede cerrar el diálogo mientras el guardado está en curso
+  ---
+  duration_ms: 0.248985
+  type: 'test'
+  ...
+# Subtest: si el módulo de detalle no está cargado, no declara completa una comida parcialmente guardada
+ok 16 - si el módulo de detalle no está cargado, no declara completa una comida parcialmente guardada
+  ---
+  duration_ms: 0.290407
+  type: 'test'
+  ...
+# Subtest: el HTML incluye el helper E8 una única vez
+ok 17 - el HTML incluye el helper E8 una única vez
+  ---
+  duration_ms: 0.602156
+  type: 'test'
+  ...
+# Subtest: la migración es aditiva, exige RLS y crea el índice único
+ok 18 - la migración es aditiva, exige RLS y crea el índice único
+  ---
+  duration_ms: 1.904567
+  type: 'test'
+  ...
+# Subtest: el postcheck es de solo lectura y revisa la unicidad y los permisos
+ok 19 - el postcheck es de solo lectura y revisa la unicidad y los permisos
+  ---
+  duration_ms: 0.483277
+  type: 'test'
+  ...
+# Subtest: E17 loads after E16 and adds exactly one scoped runtime and stylesheet
+ok 20 - E17 loads after E16 and adds exactly one scoped runtime and stylesheet
+  ---
+  duration_ms: 1.85359
+  type: 'test'
+  ...
+# Subtest: E17 gives visual feedback only for confirmed saved meals and respects account ownership
+ok 21 - E17 gives visual feedback only for confirmed saved meals and respects account ownership
+  ---
+  duration_ms: 0.363917
+  type: 'test'
+  ...
+# Subtest: E17 adds tactile and state feedback without replacing existing button handlers
+ok 22 - E17 adds tactile and state feedback without replacing existing button handlers
+  ---
+  duration_ms: 0.296015
+  type: 'test'
+  ...
+# Subtest: E17 restores keyboard focus after a confirmed meal deletion when possible
+ok 23 - E17 restores keyboard focus after a confirmed meal deletion when possible
+  ---
+  duration_ms: 0.18611
+  type: 'test'
+  ...
+# Subtest: E17 CSS keeps motion and focus treatment scoped to Nutrition
+ok 24 - E17 CSS keeps motion and focus treatment scoped to Nutrition
+  ---
+  duration_ms: 0.413002
+  type: 'test'
+  ...
+# OK - la migración es transaccional y falla antes de cambiar permisos si falta el esquema/policy
+# OK - revoca privilegios existentes, también los heredados por PUBLIC y anon
+# OK - el catálogo solo concede lectura a authenticated
+# OK - las tablas personales conceden solo CRUD
+# OK - no revoca ni modifica los privilegios directos de service_role
+# OK - verifica los privilegios efectivos y fuerza rollback si persiste un privilegio excesivo
+# OK - no cambia filas ni elimina policies, funciones, tablas o índices
+# Privilegios mínimos D2: 7 pruebas estáticas aprobadas.
+# Subtest: tests/nutrition-minimum-privileges-d2.test.cjs
+ok 4 - tests/nutrition-minimum-privileges-d2.test.cjs
+  ---
+  duration_ms: 52.007093
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 362.349398

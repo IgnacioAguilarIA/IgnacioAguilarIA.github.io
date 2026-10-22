@@ -1,0 +1,165 @@
+TAP version 13
+# Subtest: serializa dos guardados de detalle para la misma comida y no duplica filas
+ok 1 - serializa dos guardados de detalle para la misma comida y no duplica filas
+  ---
+  duration_ms: 39.799111
+  type: 'test'
+  ...
+# Subtest: aborta después de un cambio de cuenta y no escribe en la cuenta nueva
+ok 2 - aborta después de un cambio de cuenta y no escribe en la cuenta nueva
+  ---
+  duration_ms: 32.373504
+  type: 'test'
+  ...
+# Subtest: un fallo de inserción no deja una fila nueva parcialmente persistida
+ok 3 - un fallo de inserción no deja una fila nueva parcialmente persistida
+  ---
+  duration_ms: 1.408059
+  type: 'test'
+  ...
+# Subtest: el buscador no devuelve alimentos de una cuenta anterior si cambia la sesión durante la búsqueda externa
+ok 4 - el buscador no devuelve alimentos de una cuenta anterior si cambia la sesión durante la búsqueda externa
+  ---
+  duration_ms: 4.054233
+  type: 'test'
+  ...
+# Subtest: la migración preserva policies permisivas, valida el esquema y elimina comida/detalles mediante RPC
+ok 5 - la migración preserva policies permisivas, valida el esquema y elimina comida/detalles mediante RPC
+  ---
+  duration_ms: 1.527079
+  type: 'test'
+  ...
+# Subtest: la exportación completa no descarga un archivo cuando falla alguna tabla nutricional
+ok 6 - la exportación completa no descarga un archivo cuando falla alguna tabla nutricional
+  ---
+  duration_ms: 0.3122
+  type: 'test'
+  ...
+# Subtest: Mis alimentos solo carga registros de la cuenta activa y expone el id real para editar
+ok 7 - Mis alimentos solo carga registros de la cuenta activa y expone el id real para editar
+  ---
+  duration_ms: 1.479176
+  type: 'test'
+  ...
+# Subtest: editar un alimento personalizado actualiza la fila propia en lugar de insertar un duplicado
+ok 8 - editar un alimento personalizado actualiza la fila propia en lugar de insertar un duplicado
+  ---
+  duration_ms: 1.533268
+  type: 'test'
+  ...
+# Subtest: el intento de editar o borrar un alimento de otra cuenta no modifica sus datos
+ok 9 - el intento de editar o borrar un alimento de otra cuenta no modifica sus datos
+  ---
+  duration_ms: 1.54768
+  type: 'test'
+  ...
+# Subtest: el módulo avanzado habilita edición de recetas y edición de alimentos propios sin migración nueva
+ok 10 - el módulo avanzado habilita edición de recetas y edición de alimentos propios sin migración nueva
+  ---
+  duration_ms: 3.372006
+  type: 'test'
+  ...
+# Subtest: editar una receta actualiza su fila y recalcula los valores por 100 g
+ok 11 - editar una receta actualiza su fila y recalcula los valores por 100 g
+  ---
+  duration_ms: 1.609363
+  type: 'test'
+  ...
+# Subtest: la migración prevalidada no modifica filas de usuario
+ok 12 - la migración prevalidada no modifica filas de usuario
+  ---
+  duration_ms: 1.48116
+  type: 'test'
+  ...
+# Subtest: reduce grants de anon/PUBLIC y conserva permisos explícitos de la app y service_role
+ok 13 - reduce grants de anon/PUBLIC y conserva permisos explícitos de la app y service_role
+  ---
+  duration_ms: 0.489086
+  type: 'test'
+  ...
+# Subtest: solo elimina guards redundantes si son idénticos a su policy canónica
+ok 14 - solo elimina guards redundantes si son idénticos a su policy canónica
+  ---
+  duration_ms: 0.231909
+  type: 'test'
+  ...
+# Subtest: la nueva policy valida que user_food_id pertenezca a la cuenta autenticada
+ok 15 - la nueva policy valida que user_food_id pertenezca a la cuenta autenticada
+  ---
+  duration_ms: 0.746353
+  type: 'test'
+  ...
+# Subtest: el informe de integridad es de solo lectura y devuelve solo contadores de anomalías
+ok 16 - el informe de integridad es de solo lectura y devuelve solo contadores de anomalías
+  ---
+  duration_ms: 0.310006
+  type: 'test'
+  ...
+# Subtest: el preflight evita la ambigüedad PL/pgSQL entre variable y columna cmd
+ok 17 - el preflight evita la ambigüedad PL/pgSQL entre variable y columna cmd
+  ---
+  duration_ms: 0.322235
+  type: 'test'
+  ...
+# Subtest: el preflight trata food_catalog como catálogo de solo lectura
+ok 18 - el preflight trata food_catalog como catálogo de solo lectura
+  ---
+  duration_ms: 0.609948
+  type: 'test'
+  ...
+# Etapa B2: 20 pruebas aprobadas.
+# OK - 100 g equivale a 100 g
+# OK - 100 ml usa densidad explícita y no asume 1 g/ml
+# OK - una unidad usa gramos por unidad explícitos
+# OK - una porción usa su propio peso por porción explícito
+# OK - un peso de unidad no se reutiliza como peso de porción
+# OK - un peso de porción no se reutiliza como peso de unidad
+# OK - sin densidad no convierte ml
+# OK - sin peso por unidad no convierte unidad
+# OK - snapshot conserva gramos, densidad y estado
+# OK - nombre explicito arroz cocido detecta estado cocido
+# OK - receta convierte ingredientes antes de calcular macros
+# OK - peso final preparado cambia denominador, no energía total
+# OK - receta no inventa conversión ml desconocida
+# OK - migración es aditiva e incluye equivalencias separadas y snapshots
+# OK - HTML expone unidades y estado sin modificar navegación
+# OK - instantánea de gramos prevalece sobre una densidad futura modificada
+# OK - la validación del consumo carga primero la fila de la cuenta propietaria
+# OK - la etiqueta de porción respeta la unidad de la fuente
+# OK - la migración no propaga conversiones actuales a registros históricos
+# OK - Open Food Facts no usa energía sin unidad por 100 g como kcal/100 g
+# Subtest: tests/nutrition-stage-b2.test.cjs
+ok 3 - tests/nutrition-stage-b2.test.cjs
+  ---
+  duration_ms: 42.018191
+  type: 'test'
+  ...
+# Etapa B3: 13 pruebas aprobadas.
+# OK - día copiado recibe nuevo día/dueño y no reutiliza IDs ni claves idempotentes de la comida original
+# OK - alimentos copiados generan nuevas filas y quedan desmarcados
+# OK - promedios semanales calculan solo días con registros
+# OK - un día con registros cuyos nutrientes suman cero se diferencia de uno sin registros
+# OK - ignora registros fuera del período y fechas inválidas
+# OK - consulta el historial autenticado con paginación por fecha
+# OK - copiar día carga primero todos los detalles y luego guarda mediante la clave idempotente del lote
+# OK - si falla copiar día conserva el lote y no borra filas a ciegas
+# OK - deshacer captura comidas y detalles antes de delegar la eliminación
+# OK - deshacer restaura usando los mismos IDs y un insert reconciliable sin borrar para compensar
+# OK - la copia individual no permite continuar si no pudo cargar alimentos
+# OK - HTML carga solo el nuevo módulo de herramientas de Alimentación
+# OK - los controles nuevos son responsivos y tienen foco de diálogo accesible
+# Subtest: tests/nutrition-stage-b3.test.cjs
+ok 4 - tests/nutrition-stage-b3.test.cjs
+  ---
+  duration_ms: 52.023067
+  type: 'test'
+  ...
+1..20
+# tests 20
+# suites 0
+# pass 20
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 328.464464

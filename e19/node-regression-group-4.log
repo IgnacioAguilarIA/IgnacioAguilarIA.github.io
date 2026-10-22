@@ -1,0 +1,117 @@
+TAP version 13
+# ✓ Una cantidad guardada en gramos se reutiliza con el mismo valor
+# ✓ Se conserva una unidad ml solo si existe densidad válida
+# ✓ Unidad y porción requieren equivalencia positiva a gramos
+# ✓ Los nutrientes incompletos impiden el atajo de agregar
+# ✓ Un estado de calidad incompleto bloquea el atajo incluso si falta la lista detallada
+# ✓ Las cantidades inválidas o desmesuradas se rechazan
+# ✓ Los registros antiguos con unidad de última operación ausente no se reinterpretan
+# ✓ El HTML declara un estado accesible para confirmar el registro rápido
+# ✓ La tarjeta ofrece elegir cantidad y agregar rápidamente con unidad explícita
+# ✓ Los accesos conservan procedencia y marcadores de nutrientes faltantes
+# ✓ El módulo vuelve a leer el almacén de la cuenta activa al mostrar la app
+# ✓ Los botones del atajo cumplen mínimo táctil de 44 px y estados de foco
+# E7: 12 pruebas aprobadas.
+# Subtest: tests/nutrition-quick-registration-e7.test.cjs
+ok 1 - tests/nutrition-quick-registration-e7.test.cjs
+  ---
+  duration_ms: 48.288731
+  type: 'test'
+  ...
+# ✓ La migración agrega instrucciones, tiempos y vínculo de variante sin eliminar datos previos
+# ✓ La base limita minutos, tipo de lista, cantidad de pasos y longitud de cada paso en servidor
+# ✓ Una variante no puede apuntar a sí misma ni a una receta de otra cuenta
+# ✓ El historial guarda una instantánea de ingredientes, pasos, tiempos y nutrición
+# ✓ La tabla de historial tiene RLS y el cliente autenticado recibe solo SELECT directo
+# ✓ El registro de preparación es RPC SECURITY DEFINER con comprobación explícita de usuario y receta propia
+# ✓ La clave idempotente evita duplicar preparaciones al reintentar una respuesta incierta
+# ✓ El postcheck no modifica la base de datos
+# ✓ El módulo de persistencia valida los pasos y tiempos antes de guardar la receta
+# ✓ El registro de preparación envía una solicitud autenticada al RPC y valida fecha, peso y porciones
+# ✓ La interfaz incluye pasos, tiempos, variante separada y registro de tandas
+# ✓ El modo de cocina avanza, retrocede y solicita Wake Lock cuando el navegador lo admite
+# ✓ El historial presenta los valores de la instantánea y conserva preparaciones tras editar o borrar la receta
+# ✓ El modo de cocina y sus controles tienen estilos adaptables, foco visible y movimiento reducido
+# ✓ La acción para guardar una receta se enlaza una sola vez
+# ✓ El módulo de persistencia se inicializa en un contexto aislado
+# ✓ Prueba dinámica: guardar receta conserva pasos, tiempos y vínculo de variante
+# ✓ Prueba dinámica: una receta con más de 40 pasos es rechazada antes de escribir
+# ✓ Prueba dinámica: se rechaza una fecha inexistente sin llamar a Supabase
+# ✓ Prueba dinámica: registrar preparación envía al RPC los datos validados y la clave idempotente
+# ✓ Prueba dinámica: el historial filtra por usuario y receta
+# Etapa E4A: 21 pruebas aprobadas.
+# Subtest: tests/nutrition-recipes-advanced-e4.test.cjs
+ok 2 - tests/nutrition-recipes-advanced-e4.test.cjs
+  ---
+  duration_ms: 59.629478
+  type: 'test'
+  ...
+# Subtest: rechaza un formato ajeno antes de hacer consultas o escrituras
+ok 3 - rechaza un formato ajeno antes de hacer consultas o escrituras
+  ---
+  duration_ms: 13.200961
+  type: 'test'
+  ...
+# Subtest: bloquea el reemplazo de un respaldo antiguo incompleto antes de tocar Supabase
+ok 4 - bloquea el reemplazo de un respaldo antiguo incompleto antes de tocar Supabase
+  ---
+  duration_ms: 4.249968
+  type: 'test'
+  ...
+# Subtest: restaura datos, limpia IDs antiguos después del historial y remapea reintentos pendientes
+ok 5 - restaura datos, limpia IDs antiguos después del historial y remapea reintentos pendientes
+  ---
+  duration_ms: 7.931169
+  type: 'test'
+  ...
+# Subtest: valida formato y versión del respaldo cuando Alimentación está seleccionada
+ok 6 - valida formato y versión del respaldo cuando Alimentación está seleccionada
+  ---
+  duration_ms: 2.170357
+  type: 'test'
+  ...
+# Subtest: la confirmación muestra un resumen nutricional y bloquea el reemplazo de copias incompletas
+ok 7 - la confirmación muestra un resumen nutricional y bloquea el reemplazo de copias incompletas
+  ---
+  duration_ms: 0.579412
+  type: 'test'
+  ...
+# Subtest: carga el historial importado antes de limpiar las filas históricas originales
+ok 8 - carga el historial importado antes de limpiar las filas históricas originales
+  ---
+  duration_ms: 0.209095
+  type: 'test'
+  ...
+# Subtest: la exportación siempre serializa la cola pendiente como objeto
+ok 9 - la exportación siempre serializa la cola pendiente como objeto
+  ---
+  duration_ms: 0.273452
+  type: 'test'
+  ...
+# Subtest: la importación restaura consumos pendientes con los IDs nuevos de detalle y comida
+ok 10 - la importación restaura consumos pendientes con los IDs nuevos de detalle y comida
+  ---
+  duration_ms: 0.302435
+  type: 'test'
+  ...
+# Subtest: la paginación de IDs que protege el reemplazo usa un orden estable
+ok 11 - la paginación de IDs que protege el reemplazo usa un orden estable
+  ---
+  duration_ms: 1.14239
+  type: 'test'
+  ...
+# Subtest: la edición conserva la sintaxis JavaScript
+ok 12 - la edición conserva la sintaxis JavaScript
+  ---
+  duration_ms: 50.875415
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 346.894136

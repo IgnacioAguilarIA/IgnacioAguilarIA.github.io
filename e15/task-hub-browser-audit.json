@@ -387,7 +387,6 @@
       ]
     }
   ],
-  "failures": [],
   "dynamicToolChecks": [
     {
       "viewport": "390x844-mobile",
@@ -397,13 +396,5 @@
       "passed": true
     }
   ],
-  "coverage": [
-    "tools grouped into Planificar/Preparar/Organizar/Consultar",
-    "Mis recetas shortcut opens existing recipe list API",
-    "dynamic tool inserted after initialization is grouped and included in count",
-    "meal foods/description/nutrients moved into progressive details without replacing head or edit/delete handlers",
-    "touch targets >=44px on 320/390/768 simulated touch viewports",
-    "no horizontal document overflow at 320/390/768/1366",
-    "mobile details collapsed initially and desktop details expanded initially"
-  ]
+  "failures": []
 }

@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "javascriptFiles": 74,
+  "javascriptSyntaxErrors": [],
+  "cssFiles": 101,
+  "cssBraceErrors": [],
+  "htmlIdCount": 529,
+  "uniqueHtmlIds": 529,
+  "duplicateHtmlIds": {},
+  "localReferencesChecked": 175,
+  "missingLocalReferences": [],
+  "e19StylesScoped": true,
+  "browserAuditChecks": 8,
+  "browserAuditPassed": true
+}

@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: E19 stylesheet loads once after E18 and does not add a runtime dependency
+ok 1 - E19 stylesheet loads once after E18 and does not add a runtime dependency
+  ---
+  duration_ms: 2.03261
+  type: 'test'
+  ...
+# Subtest: E19 tokens are defined for panel and standalone nutrition dialogs in both themes
+ok 2 - E19 tokens are defined for panel and standalone nutrition dialogs in both themes
+  ---
+  duration_ms: 0.313923
+  type: 'test'
+  ...
+# Subtest: E19 unifies form fields and visible focus without styling unrelated sections
+ok 3 - E19 unifies form fields and visible focus without styling unrelated sections
+  ---
+  duration_ms: 1.066015
+  type: 'test'
+  ...
+# Subtest: E19 has consistent disabled states, reduced-motion and forced-colors fallbacks
+ok 4 - E19 has consistent disabled states, reduced-motion and forced-colors fallbacks
+  ---
+  duration_ms: 1.249601
+  type: 'test'
+  ...
+# Subtest: E19 table styles are limited to nutrition reports and routine statistics
+ok 5 - E19 table styles are limited to nutrition reports and routine statistics
+  ---
+  duration_ms: 0.314714
+  type: 'test'
+  ...
+# Subtest: E19 is a presentation-only layer and retains all E18/runtime entry points
+ok 6 - E19 is a presentation-only layer and retains all E18/runtime entry points
+  ---
+  duration_ms: 0.712583
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 77.685853

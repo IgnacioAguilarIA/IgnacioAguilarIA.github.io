@@ -1,0 +1,81 @@
+TAP version 13
+# ✓ El período por defecto usa el día local del navegador y cubre 30 días
+# ✓ Valida fechas reales, orden y límite de período
+# ✓ El resumen diferencia día sin registros de día con nutrientes registrados en cero
+# ✓ Un nutriente sin dato permanece vacío y no se suma como cero
+# ✓ Múltiples comidas se agregan por día sin mezclar fechas
+# ✓ La descripción del período contabiliza por separado los días vacíos
+# ✓ La exportación incluye todos los días solicitados y el estado de cada uno
+# ✓ La consulta de historial se filtra por usuario y por rango en el servidor
+# ✓ Un período inválido bloquea las exportaciones para no descargar resultados antiguos con fechas nuevas
+# ✓ Cambiar el rango sin aplicarlo desactiva la exportación del historial anterior
+# ✓ Al actualizar o fallar un filtro no deja visible el resumen anterior como si fuera actual
+# ✓ La interfaz tiene filtros de fecha y tres exportaciones separadas
+# ✓ Las celdas CSV siguen neutralizando fórmulas
+# D8: 13 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-d8-period-report.test.cjs
+ok 1 - tests/nutrition-stage-d8-period-report.test.cjs
+  ---
+  duration_ms: 66.401387
+  type: 'test'
+  ...
+# ✓ Calcula el período anterior de igual duración, contiguo y sin solapamiento
+# ✓ La comparación calcula diferencias solo cuando ambos períodos tienen totales completos
+# ✓ La falta de un nutriente en un día impide mostrar una suma completa, pero preserva el subtotal conocido y su denominador
+# ✓ Un período sin registros no se confunde con un total registrado de cero
+# ✓ El filtro de categoría reconoce claves antiguas y nombres en español
+# ✓ Auditoría marca valores negativos, origen ausente y posible discrepancia energética sin corregir el alimento
+# ✓ Auditoría diferencia campos no declarados, estados contradictorios y datos incompletos
+# ✓ Un alimento completo y coherente no genera alertas con las reglas orientativas
+# ✓ Un alimento con macros superiores a 100 g/100 g recibe una advertencia, no se elimina
+# ✓ La exportación de auditoría contiene una fila por hallazgo y un resumen cuando no hay alertas
+# ✓ El informe puede cargar el período comparativo sin volver a descargar el catálogo de alimentos
+# ✓ La interfaz limita filtros y exportaciones al informe cargado, y añade auditoría CSV
+# E4B: 12 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-e4b-quality-comparison.test.cjs
+ok 2 - tests/nutrition-stage-e4b-quality-comparison.test.cjs
+  ---
+  duration_ms: 48.46477
+  type: 'test'
+  ...
+# ✓ La exportación del plan fechado crea una fila resumen y filas estructuradas por ingrediente
+# ✓ La exportación CSV conserva acentos y separadores y neutraliza fórmulas
+# ✓ La exportación de planificación verifica la cuenta activa y se bloquea mientras se carga
+# ✓ La despensa ofrece exportación del inventario, faltantes, uso planificado y movimientos
+# ✓ La exportación del plan dentro de la despensa mantiene las 22 columnas alineadas
+# ✓ El CSV de despensa incluye BOM, separa columnas y neutraliza fórmulas
+# ✓ El estado sin conexión aclara qué datos no se ponen automáticamente en cola
+# ✓ Las herramientas de exportación siguen cargadas en Alimentación sin añadir scripts globales
+# ✓ Las descargas CSV esperan antes de revocar la URL temporal
+# E5: 9 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-e5-final-polish.test.cjs
+ok 3 - tests/nutrition-stage-e5-final-polish.test.cjs
+  ---
+  duration_ms: 35.390649
+  type: 'test'
+  ...
+# OK - no borra una entrada más reciente que se escribió mientras el request estaba en vuelo
+# OK - elimina de la cola solo la entrada exacta confirmada por Supabase
+# OK - si cambia la cuenta durante una solicitud conserva la cola de la cuenta original
+# OK - si Supabase confirma el consumo pero no el historial mantiene el reintento
+# OK - dos flush simultáneos del mismo usuario no envían la misma entrada dos veces
+# OK - si se agrega otra entrada durante el flush se programa una pasada adicional
+# OK - las operaciones directas y el flush comparten el bloqueo por alimento
+# OK - el módulo no escribe una instantánea obsoleta de toda la cola tras un await
+# OK - la auditoría de producción es de solo lectura y cubre RLS, grants y restricciones
+# Sincronización D1: 9 pruebas aprobadas.
+# Subtest: tests/nutrition-sync-hardening-d1.test.cjs
+ok 4 - tests/nutrition-sync-hardening-d1.test.cjs
+  ---
+  duration_ms: 46.146941
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 211.134613

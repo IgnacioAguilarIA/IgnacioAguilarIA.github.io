@@ -1,0 +1,105 @@
+TAP version 13
+# Etapa C1: 19 pruebas aprobadas.
+# OK - el módulo de accesibilidad se carga después del módulo de rutinas de Alimentación
+# OK - selector de días expone un nombre de grupo accesible
+# OK - selector de días informa qué botón está seleccionado
+# OK - cada día tiene una etiqueta accesible descriptiva
+# OK - categorías de comida se etiquetan como grupo y marcan su selección
+# OK - asocia etiquetas visibles sin for a su único campo
+# OK - diálogo principal está descrito y etiquetado con aria-describedby
+# OK - diálogos estáticos de comida y objetivos añaden Escape y trampa de foco
+# OK - al cerrar un diálogo se devuelve el foco al elemento que lo abrió
+# OK - bloquea desplazamiento de fondo solo mientras el diálogo está abierto
+# OK - diálogo avanzado incluye descripción accesible y foco inicial
+# OK - diálogos de herramientas incorporan texto descriptivo y trampa de foco
+# OK - estados seleccionados se anuncian además del color
+# OK - todos los ámbitos interactivos nutricionales tienen foco visible
+# OK - controles táctiles de uso frecuente tienen un mínimo de 44px
+# OK - tema claro define colores legibles sin depender solo de opacidad
+# OK - respeta movimiento reducido y colores forzados
+# OK - reinicio del manejador de deshacer agrupa mutaciones en requestAnimationFrame
+# OK - el módulo de accesibilidad solo enlaza contenedores de Alimentación
+# Subtest: tests/nutrition-stage-c1.test.cjs
+ok 1 - tests/nutrition-stage-c1.test.cjs
+  ---
+  duration_ms: 43.902964
+  type: 'test'
+  ...
+# Etapa C2: 20 pruebas aprobadas.
+# OK - C2 carga después de sincronización y accesibilidad de Alimentación
+# OK - detecta mensajes claros de error como error
+# OK - detecta estados pendientes y búsquedas en curso
+# OK - detecta confirmaciones positivas sin confundirlas con error
+# OK - texto vacío, validación o ausencia de resultados no se convierten en pendiente
+# OK - los mensajes de sincronización no anuncian éxito desde el botón de reintento
+# OK - el reintento intenta sincronizar preferencias y consumo pendiente
+# OK - el reintento controla el usuario activo antes de proceder y al volver
+# OK - un cambio de cuenta invalida estados visuales de la cuenta anterior
+# OK - no se muestra la acción de reintento sin conexión o con estado guardado
+# OK - los módulos de sincronización ya validan el propietario al informar el estado
+# OK - la búsqueda del catálogo descarta respuestas antiguas
+# OK - el autocompletado administra identificadores de solicitud
+# OK - los estados dinámicos usan roles y atributos de anuncio accesibles
+# OK - evita crear un segundo live region dentro del estado de sincronización existente
+# OK - la interfaz limita los estados nuevos a mensajes de Alimentación
+# OK - el botón de reintento tiene etiqueta accesible y estado de operación
+# OK - el estilo del botón ofrece foco visible y adaptación móvil
+# OK - estados visuales distinguen error, pendiente y éxito con bordes
+# OK - no se añadió una migración SQL nueva en C2
+# Subtest: tests/nutrition-stage-c2.test.cjs
+ok 2 - tests/nutrition-stage-c2.test.cjs
+  ---
+  duration_ms: 49.753105
+  type: 'test'
+  ...
+# ✓ La búsqueda inteligente prioriza la coincidencia exacta sobre la aproximada
+# ✓ El buscador tolera un error pequeño de escritura sin perder el resultado
+# ✓ La deduplicación conserva la copia con datos nutricionales más completos
+# ✓ La normalización detecta nutrientes desconocidos sin confundirlos con cero
+# ✓ No considera conocido un dato energético por porción sin unidad por 100 g
+# ✓ Normaliza un EAN copiado con espacios y guiones
+# ✓ Admite las longitudes estándar EAN-8, UPC-A, EAN-13 y GTIN-14
+# ✓ Valida dígitos de control habituales
+# ✓ Rechaza entradas con longitud inválida o letras incrustadas
+# ✓ La lista de nutrientes incompletos es conservadora
+# ✓ El catálogo conserva la lista de nutrientes desconocidos del producto externo
+# ✓ No permite guardar ni agregar al registro productos externos con nutrientes principales desconocidos
+# ✓ El HTML carga el lector después del catálogo y su adaptador
+# ✓ El lector mantiene un ingreso manual aunque el navegador no soporte cámara
+# D6: 14 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-d6-search-barcode.test.cjs
+ok 3 - tests/nutrition-stage-d6-search-barcode.test.cjs
+  ---
+  duration_ms: 68.491298
+  type: 'test'
+  ...
+# ✓ CSV neutraliza celdas que podrían ejecutar fórmulas en hojas de cálculo
+# ✓ Estado desconocido se informa como registro previo no verificado
+# ✓ El informe cuenta cada estado sin reinterpretar el valor nutricional cero
+# ✓ La exportación de historial lleva procedencia y datos faltantes desde la instantánea
+# ✓ La exportación de alimentos contiene procedencia, estado de calidad y nutrientes
+# ✓ Los informes paginan datos y filtran cada consulta por el usuario activo
+# ✓ La verificación de etiqueta exige ausencia de campos marcados como faltantes
+# ✓ La instantánea del alimento guarda procedencia, URL, calidad, faltantes y fecha de verificación
+# ✓ La lectura de catálogos carga las nuevas columnas de trazabilidad
+# ✓ La verificación no actualiza alimentos de otra cuenta
+# ✓ Open Food Facts conserva fuente, URL y estado de completitud sin marcarlo como verificado por usuario
+# ✓ La migración D7 es aditiva y registra procedencia sin borrar datos
+# ✓ La migración valida URLs y estados de calidad conocidos
+# ✓ El HTML enlaza el informe después del catálogo y del escáner existente
+# D7: 14 pruebas aprobadas.
+# Subtest: tests/nutrition-stage-d7-quality-report.test.cjs
+ok 4 - tests/nutrition-stage-d7-quality-report.test.cjs
+  ---
+  duration_ms: 57.137566
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 237.887861

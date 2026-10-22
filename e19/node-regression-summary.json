@@ -1,0 +1,144 @@
+{
+  "passed": true,
+  "groupCount": 10,
+  "tests": 133,
+  "pass": 133,
+  "fail": 0,
+  "groups": [
+    {
+      "group": 1,
+      "files": [
+        "nutrition-browse-filters-e12.test.cjs",
+        "nutrition-feedback-states-e14.test.cjs",
+        "nutrition-guided-layout-e13.test.cjs",
+        "nutrition-integrated-reliability-e9.test.cjs"
+      ],
+      "tests": 34,
+      "pass": 34,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-1.log"
+    },
+    {
+      "group": 2,
+      "files": [
+        "nutrition-meal-cards-e16.test.cjs",
+        "nutrition-meal-save-idempotency-e8.test.cjs",
+        "nutrition-microinteractions-e17.test.cjs",
+        "nutrition-minimum-privileges-d2.test.cjs"
+      ],
+      "tests": 25,
+      "pass": 25,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-2.log"
+    },
+    {
+      "group": 3,
+      "files": [
+        "nutrition-mobile-accessibility-e6.test.cjs",
+        "nutrition-pantry-stage-e3.test.cjs",
+        "nutrition-premium-dashboard-e11.test.cjs",
+        "nutrition-professional-finish-e10.test.cjs"
+      ],
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-3.log"
+    },
+    {
+      "group": 4,
+      "files": [
+        "nutrition-quick-registration-e7.test.cjs",
+        "nutrition-recipes-advanced-e4.test.cjs",
+        "nutrition-restore-flow-e1.test.cjs",
+        "nutrition-restore-hardening-e1.test.cjs"
+      ],
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-4.log"
+    },
+    {
+      "group": 5,
+      "files": [
+        "nutrition-stage-a.test.cjs",
+        "nutrition-stage-a2.test.cjs",
+        "nutrition-stage-b2.test.cjs",
+        "nutrition-stage-b3.test.cjs"
+      ],
+      "tests": 20,
+      "pass": 20,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-5.log"
+    },
+    {
+      "group": 6,
+      "files": [
+        "nutrition-stage-c1.test.cjs",
+        "nutrition-stage-c2.test.cjs",
+        "nutrition-stage-d6-search-barcode.test.cjs",
+        "nutrition-stage-d7-quality-report.test.cjs"
+      ],
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-6.log"
+    },
+    {
+      "group": 7,
+      "files": [
+        "nutrition-stage-d8-period-report.test.cjs",
+        "nutrition-stage-e4b-quality-comparison.test.cjs",
+        "nutrition-stage-e5-final-polish.test.cjs",
+        "nutrition-sync-hardening-d1.test.cjs"
+      ],
+      "tests": 4,
+      "pass": 4,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-7.log"
+    },
+    {
+      "group": 8,
+      "files": [
+        "nutrition-task-hub-e15.test.cjs",
+        "nutrition-trigger-function-lockdown-d3.test.cjs",
+        "nutrition-view-preferences-e18.test.cjs",
+        "nutrition-week-plan-recipes-e2.test.cjs"
+      ],
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-8.log"
+    },
+    {
+      "group": 9,
+      "files": [
+        "nutrition-week-planner-d4.test.cjs",
+        "nutrition-week-planner-d5.test.cjs"
+      ],
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-9.log"
+    },
+    {
+      "group": 10,
+      "files": [
+        "nutrition-visual-consistency-e19.test.cjs"
+      ],
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "returncode": 0,
+      "log": "tests/artifacts/e19/node-regression-group-10.log"
+    }
+  ]
+}

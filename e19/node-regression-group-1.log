@@ -1,0 +1,215 @@
+TAP version 13
+# Subtest: E12 search is accent-insensitive, case-insensitive and trims whitespace
+ok 1 - E12 search is accent-insensitive, case-insensitive and trims whitespace
+  ---
+  duration_ms: 3.398937
+  type: 'test'
+  ...
+# Subtest: E12 history filter normalizes Spanish and English meal categories
+ok 2 - E12 history filter normalizes Spanish and English meal categories
+  ---
+  duration_ms: 0.401695
+  type: 'test'
+  ...
+# Subtest: E12 history search finds brand, meal title, date, and snapshot fields
+ok 3 - E12 history search finds brand, meal title, date, and snapshot fields
+  ---
+  duration_ms: 0.208824
+  type: 'test'
+  ...
+# Subtest: E12 recipe search includes notes, ingredients and procedure and supports structure filters
+ok 4 - E12 recipe search includes notes, ingredients and procedure and supports structure filters
+  ---
+  duration_ms: 0.517149
+  type: 'test'
+  ...
+# Subtest: E12 personal food search filters by name, brand, ingredients and preparation
+ok 5 - E12 personal food search filters by name, brand, ingredients and preparation
+  ---
+  duration_ms: 1.524525
+  type: 'test'
+  ...
+# Subtest: E12 controls are added once and styled after E11 without touching global section styles
+ok 6 - E12 controls are added once and styled after E11 without touching global section styles
+  ---
+  duration_ms: 1.265515
+  type: 'test'
+  ...
+# Subtest: E12 filter helpers handle a large cached list without mutating source records
+ok 7 - E12 filter helpers handle a large cached list without mutating source records
+  ---
+  duration_ms: 14.676393
+  type: 'test'
+  ...
+# Subtest: E14 loads after the current nutrition interface and E13
+ok 8 - E14 loads after the current nutrition interface and E13
+  ---
+  duration_ms: 1.399597
+  type: 'test'
+  ...
+# Subtest: E14 classifies loading, success, empty, warning and failures without treating failures as empty data
+ok 9 - E14 classifies loading, success, empty, warning and failures without treating failures as empty data
+  ---
+  duration_ms: 0.652032
+  type: 'test'
+  ...
+# Subtest: main meal loader publishes explicit error state, cache fallback and success state
+ok 10 - main meal loader publishes explicit error state, cache fallback and success state
+  ---
+  duration_ms: 0.875678
+  type: 'test'
+  ...
+# Subtest: E14 error notice explains when cached data is stale and avoids a false empty state
+ok 11 - E14 error notice explains when cached data is stale and avoids a false empty state
+  ---
+  duration_ms: 1.510413
+  type: 'test'
+  ...
+# Subtest: E14 only offers safe retries for operations with an existing refresh path
+ok 12 - E14 only offers safe retries for operations with an existing refresh path
+  ---
+  duration_ms: 0.49802
+  type: 'test'
+  ...
+# Subtest: E14 keeps its status observer scoped to nutrition panels and nutrition dialogs
+ok 13 - E14 keeps its status observer scoped to nutrition panels and nutrition dialogs
+  ---
+  duration_ms: 0.167943
+  type: 'test'
+  ...
+# Subtest: E14 CSS supports touch-sized retry controls and accessible reduced-motion/forced-colors modes
+ok 14 - E14 CSS supports touch-sized retry controls and accessible reduced-motion/forced-colors modes
+  ---
+  duration_ms: 0.263937
+  type: 'test'
+  ...
+# Subtest: E14 CSS states and feedback are scoped to nutrition components, not global workout/calendar panels
+ok 15 - E14 CSS states and feedback are scoped to nutrition components, not global workout/calendar panels
+  ---
+  duration_ms: 0.577279
+  type: 'test'
+  ...
+# Subtest: E13 groups nutritional detail and objectives without changing existing dynamic IDs
+ok 16 - E13 groups nutritional detail and objectives without changing existing dynamic IDs
+  ---
+  duration_ms: 3.271254
+  type: 'test'
+  ...
+# Subtest: E13 loads only after prior nutrition modules and E12 visual layer
+ok 17 - E13 loads only after prior nutrition modules and E12 visual layer
+  ---
+  duration_ms: 0.792102
+  type: 'test'
+  ...
+# Subtest: E13 CSS stays scoped to Alimentación and honors desktop/mobile breakpoints and accessibility
+ok 18 - E13 CSS stays scoped to Alimentación and honors desktop/mobile breakpoints and accessibility
+  ---
+  duration_ms: 0.836039
+  type: 'test'
+  ...
+# Subtest: E13 progressive script dynamically groups action buttons so modules may still append tools
+ok 19 - E13 progressive script dynamically groups action buttons so modules may still append tools
+  ---
+  duration_ms: 0.341194
+  type: 'test'
+  ...
+# E9 integrated reliability checks completed.
+# Subtest: el diario E9 guarda y recupera un lote por cuenta y tipo de operación
+ok 20 - el diario E9 guarda y recupera un lote por cuenta y tipo de operación
+  ---
+  duration_ms: 4.194824
+  type: 'test'
+  ...
+# Subtest: el diario rechaza reanudar un lote con ámbito diferente
+ok 21 - el diario rechaza reanudar un lote con ámbito diferente
+  ---
+  duration_ms: 0.820956
+  type: 'test'
+  ...
+# Subtest: el diario no permite sobrescribir una operación pendiente con otra clave
+ok 22 - el diario no permite sobrescribir una operación pendiente con otra clave
+  ---
+  duration_ms: 1.252685
+  type: 'test'
+  ...
+# Subtest: solo se elimina del diario la operación identificada por la misma clave
+ok 23 - solo se elimina del diario la operación identificada por la misma clave
+  ---
+  duration_ms: 1.939219
+  type: 'test'
+  ...
+# Subtest: una instantánea multi-paso ilegible no se sobrescribe
+ok 24 - una instantánea multi-paso ilegible no se sobrescribe
+  ---
+  duration_ms: 0.902759
+  type: 'test'
+  ...
+# Subtest: la persistencia de alimentos detallados exige cuenta activa, comida y lista válida
+ok 25 - la persistencia de alimentos detallados exige cuenta activa, comida y lista válida
+  ---
+  duration_ms: 0.384669
+  type: 'test'
+  ...
+# Subtest: el guardado inicial pasa explícitamente la cuenta capturada al módulo de detalles
+ok 26 - el guardado inicial pasa explícitamente la cuenta capturada al módulo de detalles
+  ---
+  duration_ms: 0.097336
+  type: 'test'
+  ...
+# Subtest: la persistencia real rechaza una cuenta ausente o cambiada antes de consultar Supabase
+ok 27 - la persistencia real rechaza una cuenta ausente o cambiada antes de consultar Supabase
+  ---
+  duration_ms: 2.011388
+  type: 'test'
+  ...
+# Subtest: la copia individual guarda un diario antes de escribir y utiliza upsert idempotente
+ok 28 - la copia individual guarda un diario antes de escribir y utiliza upsert idempotente
+  ---
+  duration_ms: 0.512962
+  type: 'test'
+  ...
+# Subtest: si falla refrescar la vista después de duplicar, no informa falsamente que falló el guardado confirmado
+ok 29 - si falla refrescar la vista después de duplicar, no informa falsamente que falló el guardado confirmado
+  ---
+  duration_ms: 0.694615
+  type: 'test'
+  ...
+# Subtest: repetir un día guarda el lote antes de escribir y no borra copias ante una respuesta incierta
+ok 30 - repetir un día guarda el lote antes de escribir y no borra copias ante una respuesta incierta
+  ---
+  duration_ms: 0.32579
+  type: 'test'
+  ...
+# Subtest: al reabrir repetir día se recupera el origen y destino del diario local
+ok 31 - al reabrir repetir día se recupera el origen y destino del diario local
+  ---
+  duration_ms: 0.093661
+  type: 'test'
+  ...
+# Subtest: deshacer eliminación usa IDs estables y verifica registros existentes antes de insertar los faltantes
+ok 32 - deshacer eliminación usa IDs estables y verifica registros existentes antes de insertar los faltantes
+  ---
+  duration_ms: 0.380292
+  type: 'test'
+  ...
+# Subtest: los módulos E9 siguen cargados en Alimentación sin cargar un segundo helper E8
+ok 33 - los módulos E9 siguen cargados en Alimentación sin cargar un segundo helper E8
+  ---
+  duration_ms: 0.218709
+  type: 'test'
+  ...
+# Subtest: E9 no introduce otra migración SQL ni modifica el esquema de la restauración E8
+ok 34 - E9 no introduce otra migración SQL ni modifica el esquema de la restauración E8
+  ---
+  duration_ms: 0.711972
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 370.879643

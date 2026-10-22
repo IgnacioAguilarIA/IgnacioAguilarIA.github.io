@@ -1,0 +1,125 @@
+{
+  "passed": true,
+  "totalChecks": 7,
+  "passedChecks": 7,
+  "failures": [],
+  "checks": [
+    {
+      "name": "food input combobox contract",
+      "passed": true,
+      "result": {
+        "role": "combobox",
+        "expanded": "false",
+        "controls": "nutritionFoodAutocomplete-listbox",
+        "hasControl": true
+      }
+    },
+    {
+      "name": "food results, arrow navigation and Enter",
+      "passed": true,
+      "result": {
+        "semantics": {
+          "expanded": "true",
+          "listRole": "listbox",
+          "name": "Avena integral",
+          "selected": "false",
+          "groupRole": "group",
+          "busy": "Buscando más resultados en Open Food Facts…"
+        },
+        "active": {
+          "exists": true,
+          "selected": "true",
+          "classActive": true,
+          "role": "option"
+        },
+        "picked": {
+          "selected": "Avena integral",
+          "expanded": "false",
+          "active": null,
+          "hidden": true
+        }
+      }
+    },
+    {
+      "name": "empty state announcement and Escape",
+      "passed": true,
+      "result": {
+        "empty": {
+          "expanded": "true",
+          "boxHidden": false,
+          "listRole": "listbox",
+          "optionCount": 0,
+          "statusRole": "status",
+          "status": "No encontré coincidencias. Podés seguir escribiendo o usar “Buscar en Open Food Facts”."
+        },
+        "escaped": {
+          "expanded": "false",
+          "active": null,
+          "hidden": true
+        }
+      }
+    },
+    {
+      "name": "incomplete nutritional values are labeled and metadata is preserved",
+      "passed": true,
+      "result": {
+        "view": {
+          "quality": "Datos incompletos: faltan proteínas",
+          "macros": false,
+          "text": "\n              \n                Producto incompleto\n                Marca de prueba\n                Datos incompletos: faltan proteínas\n              \n              Catálogo propio\n            "
+        },
+        "selected": {
+          "name": "Producto incompleto",
+          "missing": [
+            "proteínas"
+          ]
+        }
+      }
+    },
+    {
+      "name": "meal title suggestions fill only the title and never add an ingredient",
+      "passed": true,
+      "result": {
+        "active": {
+          "exists": true,
+          "selected": "true",
+          "role": "option"
+        },
+        "picked": {
+          "selected": "",
+          "value": "Avena integral",
+          "foodSearch": "arroz existente",
+          "quantity": "37",
+          "activeElement": "mealTitle",
+          "expanded": "false",
+          "active": null,
+          "hidden": true
+        }
+      }
+    },
+    {
+      "name": "keyboard selection survives asynchronous provider refresh",
+      "passed": true,
+      "result": {
+        "before": "nutritionMealTitleAutocomplete-option-0",
+        "after": "nutritionMealTitleAutocomplete-option-0",
+        "state": {
+          "exists": true,
+          "selected": "true",
+          "name": "Avena integral"
+        }
+      }
+    },
+    {
+      "name": "meal title Escape cleanup",
+      "passed": true,
+      "result": {
+        "expanded": "false",
+        "active": null,
+        "hidden": true,
+        "activeClass": false
+      }
+    }
+  ],
+  "scope": "nutrition autocompletes only; stubbed local/online providers; no Supabase production access"
+}

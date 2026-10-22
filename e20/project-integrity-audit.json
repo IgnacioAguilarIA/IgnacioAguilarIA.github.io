@@ -1,0 +1,19 @@
+{
+  "stage": "E20",
+  "staticHtmlIdCount": 529,
+  "duplicateIds": {},
+  "localAssetReferencesChecked": 175,
+  "missingLocalAssets": [],
+  "javascriptFilesChecked": 74,
+  "javascriptSyntaxErrors": [],
+  "cssFilesChecked": 102,
+  "cssStructuralErrors": [],
+  "runtimeFilesChangedAgainstE19": [
+    "css/102-nutrition-autocomplete-accessibility-e20.css",
+    "index.html",
+    "js/50-nutrition-food-autocomplete.js"
+  ],
+  "unexpectedRuntimeFileChangesAgainstE19": [],
+  "changedFilesAgainstE19IncludingDocsTestsArtifacts": 28,
+  "passed": true
+}

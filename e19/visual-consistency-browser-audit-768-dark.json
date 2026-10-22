@@ -1,0 +1,145 @@
+{
+  "passed": true,
+  "checks": 1,
+  "failures": [],
+  "results": [
+    {
+      "viewport": {
+        "width": 768,
+        "height": 1024,
+        "scrollWidth": 768
+      },
+      "theme": "dark",
+      "dialogs": [
+        {
+          "selector": "#nutritionOverlay .modal",
+          "exists": true,
+          "bg": "rgb(21, 34, 56)",
+          "color": "rgb(237, 243, 252)",
+          "borderRadius": "20px",
+          "borderColor": "rgb(43, 59, 83)",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "minHeight": "0px"
+        },
+        {
+          "selector": "#goalOverlay .modal",
+          "exists": true,
+          "bg": "rgb(21, 34, 56)",
+          "color": "rgb(237, 243, 252)",
+          "borderRadius": "20px",
+          "borderColor": "rgb(43, 59, 83)",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "minHeight": "0px"
+        },
+        {
+          "selector": ".nutrition-advanced-modal",
+          "exists": true,
+          "bg": "rgb(21, 34, 56)",
+          "color": "rgb(237, 243, 252)",
+          "borderRadius": "20px",
+          "borderColor": "rgb(43, 59, 83)",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "minHeight": "0px"
+        },
+        {
+          "selector": ".nutrition-routine-modal",
+          "exists": true,
+          "bg": "rgb(21, 34, 56)",
+          "color": "rgb(237, 243, 252)",
+          "borderRadius": "20px",
+          "borderColor": "rgb(43, 59, 83)",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "minHeight": "0px"
+        },
+        {
+          "selector": ".nutrition-week-modal",
+          "exists": true,
+          "bg": "rgb(21, 34, 56)",
+          "color": "rgb(237, 243, 252)",
+          "borderRadius": "20px",
+          "borderColor": "rgb(43, 59, 83)",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "minHeight": "0px"
+        },
+        {
+          "selector": ".nutrition-plan-editor-dialog",
+          "exists": true,
+          "bg": "rgb(21, 34, 56)",
+          "color": "rgb(237, 243, 252)",
+          "borderRadius": "20px",
+          "borderColor": "rgb(43, 59, 83)",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "minHeight": "0px"
+        },
+        {
+          "selector": ".nutrition-quality-dialog",
+          "exists": true,
+          "bg": "rgb(21, 34, 56)",
+          "color": "rgb(237, 243, 252)",
+          "borderRadius": "20px",
+          "borderColor": "rgb(43, 59, 83)",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "minHeight": "0px"
+        },
+        {
+          "selector": ".nutrition-pantry-modal",
+          "exists": true,
+          "bg": "rgb(21, 34, 56)",
+          "color": "rgb(237, 243, 252)",
+          "borderRadius": "20px",
+          "borderColor": "rgb(43, 59, 83)",
+          "outlineStyle": "none",
+          "outlineWidth": "0px",
+          "minHeight": "0px"
+        },
+        {
+          "selector": ".e18-view-preferences-dialog",
+          "exists": false
+        }
+      ],
+      "input": {
+        "bg": "rgb(16, 26, 43)",
+        "color": "rgb(237, 243, 252)",
+        "borderRadius": "11px",
+        "borderColor": "rgb(43, 59, 83)",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "minHeight": "42px"
+      },
+      "tableHeader": {
+        "bg": "rgb(16, 26, 43)",
+        "color": "rgb(237, 243, 252)",
+        "borderRadius": "0px",
+        "borderColor": "rgb(237, 243, 252) rgb(237, 243, 252) rgb(43, 59, 83)",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "minHeight": "0px"
+      },
+      "tableWrap": {
+        "overflowX": "auto",
+        "borderRadius": "13px"
+      },
+      "modal": {
+        "bg": "rgb(21, 34, 56)",
+        "color": "rgb(237, 243, 252)",
+        "borderRadius": "20px",
+        "borderColor": "rgb(43, 59, 83)",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "minHeight": "0px"
+      },
+      "focusedControl": {
+        "width": "3px",
+        "style": "solid",
+        "radius": "11px"
+      }
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+TAP version 13
+# ✓ E6 carga la hoja responsive después de los estilos de Alimentación
+# ✓ La nueva hoja se limita a Alimentación y sus diálogos nutricionales
+# ✓ Los rótulos nutricionales pueden envolver texto en pantallas estrechas
+# ✓ La grilla de días no depende de desplazamiento horizontal en móvil
+# ✓ Las pestañas de comida pueden ajustarse sin desbordar texto
+# ✓ Los controles interactivos importantes alcanzan al menos 44 px en móvil
+# ✓ Los campos de formulario usan 16 px para evitar zoom automático en Safari iOS
+# ✓ Los formularios principales usan áreas seguras y altura del viewport dinámico
+# ✓ La cabecera del editor permanece disponible al recorrer formularios largos
+# ✓ Los diálogos secundarios contemplan pantalla apaisada
+# ✓ E6 conserva movimiento reducido y modo de colores forzados
+# ✓ El HTML conserva la estructura principal de Alimentación y no añade scripts nuevos
+# ✓ Los diálogos de comida y objetivos tienen nombre accesible y modalidad declarada
+# ✓ Los campos de objetivos quedan asociados a sus etiquetas
+# ✓ La acción de guardar permanece legible sobre un fondo opaco en el formulario móvil
+# ✓ Las áreas de toque siguen siendo amplias en dispositivos táctiles tipo tableta
+# ✓ El botón Guardar objetivos queda dentro de una barra accesible en móvil
+# ✓ El botón flotante global no tapa las tarjetas de Alimentación en móvil
+# ✓ Los formularios siguen ofreciendo guardar y cerrar en móviles apaisados
+# ✓ La hoja móvil no cambia el layout global ni define reglas fuera de Alimentación
+# E6: 20 pruebas aprobadas.
+# Subtest: tests/nutrition-mobile-accessibility-e6.test.cjs
+ok 1 - tests/nutrition-mobile-accessibility-e6.test.cjs
+  ---
+  duration_ms: 44.60164
+  type: 'test'
+  ...
+# ✓ Convierte kg a g sin mezclar magnitudes y calcula el faltante parcial
+# ✓ El inventario que cubre todo el requerimiento elimina el producto de compras
+# ✓ No deduce stock vencido ni artículos archivados
+# ✓ Mantiene separados crudo, cocido, marca y dimensiones de unidad
+# ✓ No inventa faltantes numéricos cuando la cantidad o la unidad son desconocidas
+# ✓ Normaliza nombres y unidades habituales del español sin forzar unidades incompatibles
+# ✓ La lista de compras consulta stock antes de guardar y ofrece registrar compras en la despensa
+# ✓ El descuento confirmado usa RPC transaccional y la comida planificada queda protegida contra doble uso
+# ✓ La migración limita acceso a filas propias y cambios de existencias mediante funciones protegidas
+# ✓ El postcheck es estrictamente de solo lectura
+# ✓ El HTML carga la despensa dentro de Alimentación y antes de uso interactivo, con CSS aislado y móvil
+# Etapa E3: 11 pruebas aprobadas.
+# Subtest: tests/nutrition-pantry-stage-e3.test.cjs
+ok 2 - tests/nutrition-pantry-stage-e3.test.cjs
+  ---
+  duration_ms: 42.243315
+  type: 'test'
+  ...
+# E11 premium dashboard checks completed.
+# Subtest: E11 loads after the established nutrition styles without duplicate references
+ok 3 - E11 loads after the established nutrition styles without duplicate references
+  ---
+  duration_ms: 0.775137
+  type: 'test'
+  ...
+# Subtest: E11 defines dedicated light and dark design tokens scoped to Nutrition
+ok 4 - E11 defines dedicated light and dark design tokens scoped to Nutrition
+  ---
+  duration_ms: 0.31229
+  type: 'test'
+  ...
+# Subtest: primary action, save status and plan-versus-consumed hierarchy are explicit
+ok 5 - primary action, save status and plan-versus-consumed hierarchy are explicit
+  ---
+  duration_ms: 0.32528
+  type: 'test'
+  ...
+# Subtest: responsive rules keep day, meal, summary and action controls usable
+ok 6 - responsive rules keep day, meal, summary and action controls usable
+  ---
+  duration_ms: 0.900034
+  type: 'test'
+  ...
+# Subtest: shared navigation receives scoped styles only while Nutrition is active
+ok 7 - shared navigation receives scoped styles only while Nutrition is active
+  ---
+  duration_ms: 0.462366
+  type: 'test'
+  ...
+# Subtest: accessibility preferences are preserved
+ok 8 - accessibility preferences are preserved
+  ---
+  duration_ms: 2.058178
+  type: 'test'
+  ...
+# E10 professional finish checks completed.
+# Subtest: E10 se carga después de los ajustes E6 y E7
+ok 9 - E10 se carga después de los ajustes E6 y E7
+  ---
+  duration_ms: 2.853115
+  type: 'test'
+  ...
+# Subtest: el sistema visual incluye tema oscuro y tema claro
+ok 10 - el sistema visual incluye tema oscuro y tema claro
+  ---
+  duration_ms: 0.323647
+  type: 'test'
+  ...
+# Subtest: los estados de sincronización diferencian guardado, pendiente, advertencia y error
+ok 11 - los estados de sincronización diferencian guardado, pendiente, advertencia y error
+  ---
+  duration_ms: 0.238219
+  type: 'test'
+  ...
+# Subtest: controles y tarjetas tienen foco visible y estados activos explícitos
+ok 12 - controles y tarjetas tienen foco visible y estados activos explícitos
+  ---
+  duration_ms: 0.359441
+  type: 'test'
+  ...
+# Subtest: la capa visual respeta movimiento reducido y alto contraste
+ok 13 - la capa visual respeta movimiento reducido y alto contraste
+  ---
+  duration_ms: 0.23887
+  type: 'test'
+  ...
+# Subtest: la hoja no redefine estilos globales de secciones ajenas
+ok 14 - la hoja no redefine estilos globales de secciones ajenas
+  ---
+  duration_ms: 1.552567
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 240.963606

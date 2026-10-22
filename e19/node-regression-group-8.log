@@ -1,0 +1,96 @@
+TAP version 13
+# Subtest: E15 loads its scoped visual layer after E14 and keeps the original nutrition handlers
+ok 1 - E15 loads its scoped visual layer after E14 and keeps the original nutrition handlers
+  ---
+  duration_ms: 1.582382
+  type: 'test'
+  ...
+# Subtest: E15 groups existing actions without replacing their IDs or creating fake database actions
+ok 2 - E15 groups existing actions without replacing their IDs or creating fake database actions
+  ---
+  duration_ms: 0.480163
+  type: 'test'
+  ...
+# Subtest: E15 meal-card presentation preserves the existing consumption host insertion point
+ok 3 - E15 meal-card presentation preserves the existing consumption host insertion point
+  ---
+  duration_ms: 1.112054
+  type: 'test'
+  ...
+# Subtest: E15 styles are scoped to Alimentación and retain touch, keyboard and reduced-motion support
+ok 4 - E15 styles are scoped to Alimentación and retain touch, keyboard and reduced-motion support
+  ---
+  duration_ms: 1.327228
+  type: 'test'
+  ...
+# D3 trigger-function lockdown: 11 checks passed
+# Subtest: tests/nutrition-trigger-function-lockdown-d3.test.cjs
+ok 2 - tests/nutrition-trigger-function-lockdown-d3.test.cjs
+  ---
+  duration_ms: 37.959622
+  type: 'test'
+  ...
+# Subtest: E18 loads after E17 and adds its own presentation assets exactly once
+ok 6 - E18 loads after E17 and adds its own presentation assets exactly once
+  ---
+  duration_ms: 1.439888
+  type: 'test'
+  ...
+# Subtest: E18 stores only view preferences under a per-account local key and validates values
+ok 7 - E18 stores only view preferences under a per-account local key and validates values
+  ---
+  duration_ms: 0.397578
+  type: 'test'
+  ...
+# Subtest: E18 applies detail display mode to day summary and meal details without changing nutrient data
+ok 8 - E18 applies detail display mode to day summary and meal details without changing nutrient data
+  ---
+  duration_ms: 0.409676
+  type: 'test'
+  ...
+# Subtest: E18 dialog supports Escape, a focus trap, save/cancel/reset and accessible labels
+ok 9 - E18 dialog supports Escape, a focus trap, save/cancel/reset and accessible labels
+  ---
+  duration_ms: 1.354609
+  type: 'test'
+  ...
+# Subtest: E18 last-tool shortcut is opt-in, excludes its own settings button, and is account scoped
+ok 10 - E18 last-tool shortcut is opt-in, excludes its own settings button, and is account scoped
+  ---
+  duration_ms: 0.241183
+  type: 'test'
+  ...
+# Subtest: E18 style remains scoped to Alimentación and supports keyboard, touch, light/dark, reduced motion and forced colors
+ok 11 - E18 style remains scoped to Alimentación and supports keyboard, touch, light/dark, reduced motion and forced colors
+  ---
+  duration_ms: 0.32602
+  type: 'test'
+  ...
+# ✓ Escala ingredientes y nutrientes al planificar menos porciones que el rendimiento guardado
+# ✓ Conserva marca, preparación, categoría y metadatos en una instantánea independiente
+# ✓ No mezcla unidades diferentes ni normaliza crudo y cocido como si fueran iguales
+# ✓ Rechaza cantidades de porciones nulas, negativas, no numéricas o superiores al límite
+# ✓ Rechaza recetas sin rendimiento o sin ingredientes detallados
+# ✓ Rechaza ingredientes sin cantidad positiva o sin unidad en lugar de inventar una cantidad
+# ✓ La interfaz usa las recetas autenticadas y guarda origen más instantánea para la compra
+# ✓ El origen de compras lee solo la semana y la cuenta activas y conserva la instantánea de cada comida
+# ✓ La fuente de compras rechaza semanas que no comienzan en lunes y un cambio de cuenta durante la lectura
+# ✓ La generación agrupa solo ingredientes compatibles y no suma unidades ni preparaciones distintas
+# ✓ Detecta cambios de cantidades en productos ya comprados sin marcar como conflicto los productos manuales
+# ✓ El editor usa estilos locales, la tabla mantiene snapshots con RLS y el HTML carga módulos en orden
+# E2: 12 pruebas aprobadas.
+# Subtest: tests/nutrition-week-plan-recipes-e2.test.cjs
+ok 4 - tests/nutrition-week-plan-recipes-e2.test.cjs
+  ---
+  duration_ms: 55.741779
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 241.786889

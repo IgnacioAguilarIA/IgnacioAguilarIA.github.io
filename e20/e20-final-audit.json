@@ -1,0 +1,58 @@
+{
+  "stage": "E20 — Accesibilidad funcional del autocompletado de Alimentación",
+  "passed": true,
+  "nodeRegression": {
+    "tests": 142,
+    "passed": 142,
+    "failed": 0,
+    "exitCode": 0
+  },
+  "e20ChromiumAudit": {
+    "passed": true,
+    "checks": 5,
+    "checksPassed": 5,
+    "failures": [],
+    "scope": "nutrition autocompletes only; stubbed local/online providers; no Supabase production access"
+  },
+  "e19VisualRegression": {
+    "passed": true,
+    "checks": 8,
+    "failures": []
+  },
+  "e18ViewPreferencesRegression": {
+    "passed": true,
+    "checks": 8,
+    "failures": []
+  },
+  "projectIntegrity": {
+    "stage": "E20",
+    "staticHtmlIdCount": 529,
+    "duplicateIds": {},
+    "localAssetReferencesChecked": 175,
+    "missingLocalAssets": [],
+    "javascriptFilesChecked": 74,
+    "javascriptSyntaxErrors": [],
+    "cssFilesChecked": 102,
+    "cssStructuralErrors": [],
+    "runtimeFilesChangedAgainstE19": [
+      "css/102-nutrition-autocomplete-accessibility-e20.css",
+      "index.html",
+      "js/50-nutrition-food-autocomplete.js"
+    ],
+    "unexpectedRuntimeFileChangesAgainstE19": [],
+    "changedFilesAgainstE19IncludingDocsTestsArtifacts": 28,
+    "passed": true
+  },
+  "modifiedRuntimeFiles": [
+    "index.html",
+    "js/50-nutrition-food-autocomplete.js",
+    "css/102-nutrition-autocomplete-accessibility-e20.css"
+  ],
+  "supabaseProductionTested": false,
+  "physicalDeviceAndScreenReaderTested": false,
+  "notes": [
+    "Browser audits use Chromium and controlled data/providers.",
+    "No SQL, migration or data schema changes.",
+    "Entrenamiento, Agenda and Calendario runtime files were not changed."
+  ]
+}
