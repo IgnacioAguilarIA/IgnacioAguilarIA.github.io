@@ -1,0 +1,19 @@
+{
+  "stage": "E26",
+  "baseline": "E25",
+  "scope": "Alimentación: lista de compras",
+  "node_test_suites_passed": 173,
+  "node_test_suites_failed": 0,
+  "e26_pure_checks_passed": 8,
+  "e26_pure_checks_failed": 0,
+  "e26_browser_checks_passed": 9,
+  "e26_browser_checks_failed": 0,
+  "javascript_syntax_files_checked": 76,
+  "javascript_syntax_failures": 0,
+  "html_local_resource_references": 182,
+  "html_missing_local_resources": 0,
+  "sql_changes": 0,
+  "training_files_modified": 0,
+  "supabase_live_instance_verified": false,
+  "manual_device_test_performed": false
+}

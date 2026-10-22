@@ -1,0 +1,97 @@
+{
+  "stage": "E31",
+  "checks": [
+    {
+      "name": "Whole-day copy action is available in the weekly plan",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Copy panel is accessible and opens without writing data",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Toggle exposes expanded state and references the copy panel",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Closing the preview panel is non-destructive and restores focus",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Preview lists source meal count, ingredient count and preserves existing destination",
+      "passed": true,
+      "details": "Se agregarán 2 comidas de Lunes a Miércoles, con 2 ingredientes en total. El destino ya tiene 1 comida y ninguna será reemplazada."
+    },
+    {
+      "name": "Preview lists both meals with details and shows incomplete data notices",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Preview is non-destructive until explicit confirmation",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "An ambiguous network response keeps the same preview available for a safe retry",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Retry recognizes the already committed operation without writing duplicate rows",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Confirm copies all source meals to the chosen destination",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Existing destination meal is retained unchanged",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Copies are independent and preserve snapshots/provenance/unknown fields",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Copied meal sort order appends after existing destination items",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Copy recovery is confirmed with a success message and closes preview panel",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Mobile planner has no horizontal overflow after copying",
+      "passed": true,
+      "details": "{'document': 390, 'width': 390}"
+    },
+    {
+      "name": "Concurrent source change rejects stale preview and performs no writes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Reloaded plan reflects the remote edit so the user can preview again",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Desktop viewport also has no horizontal overflow",
+      "passed": true,
+      "details": ""
+    }
+  ],
+  "passed": 18,
+  "failed": 0
+}

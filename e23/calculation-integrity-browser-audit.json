@@ -1,0 +1,128 @@
+{
+  "passed": true,
+  "totalChecks": 7,
+  "passedChecks": 7,
+  "failures": [],
+  "checks": [
+    {
+      "name": "Meal editor marks only the incomplete nutrient instead of zero",
+      "passed": true,
+      "result": {
+        "totals": [
+          {
+            "label": "🔥 Calorías",
+            "value": "190 kcal",
+            "incomplete": false
+          },
+          {
+            "label": "🥩 Proteínas",
+            "value": "Dato incompleto",
+            "incomplete": true
+          },
+          {
+            "label": "🍚 Carbohidratos",
+            "value": "30 g",
+            "incomplete": false
+          },
+          {
+            "label": "🥑 Grasas",
+            "value": "0 g",
+            "incomplete": false
+          },
+          {
+            "label": "Faltan datos de proteínas. Revisá los alimentos señalados; esos nutrientes no se cuentan como cero.",
+            "value": "Totales parciales no presentados como exactos.",
+            "incomplete": false
+          }
+        ],
+        "proteinInput": "",
+        "proteinInputStatus": "incomplete",
+        "caloriesInput": "190",
+        "fatInput": "0",
+        "itemMacros": "\n            Calorías: 380 kcal/100 g\n            Proteínas: dato faltante\n            Carbohidratos: 60 g/100 g\n            Grasas: 0 g/100 g\n          ",
+        "itemWarning": "Datos nutricionales incompletos: proteínas. No se interpretan como cero.",
+        "status": "1 alimento · faltan datos de proteínas. Los totales afectados no se cuentan como cero."
+      }
+    },
+    {
+      "name": "Unknown value clears the numeric summary input while known values and zero stay numeric",
+      "passed": true,
+      "result": {
+        "protein": "",
+        "proteinStatus": "incomplete",
+        "calories": "190",
+        "fatZero": "0"
+      }
+    },
+    {
+      "name": "Food row explains the missing nutrient and preserves provenance context",
+      "passed": true,
+      "result": {
+        "macros": "\n            Calorías: 380 kcal/100 g\n            Proteínas: dato faltante\n            Carbohidratos: 60 g/100 g\n            Grasas: 0 g/100 g\n          ",
+        "warning": "Datos nutricionales incompletos: proteínas. No se interpretan como cero."
+      }
+    },
+    {
+      "name": "Daily planned and consumed summaries label the incomplete macro",
+      "passed": true,
+      "result": {
+        "plannedProtein": "Datos incompletos",
+        "consumedProtein": "Datos incompletos",
+        "plannedCalories": "190 kcal",
+        "consumedCalories": "190 kcal",
+        "note": "Hay alimentos con datos nutricionales incompletos. No se muestran como cero: proteínas. Revisá los alimentos señalados.",
+        "goalCards": [
+          {
+            "text": "🔥 Calorías consumidas190 / 2500 kcal8% del objetivo",
+            "unknown": false,
+            "barHidden": false
+          },
+          {
+            "text": "🥩 Proteínas consumidasDatos incompletos · objetivo 160 gCompletá los datos del alimento para ver el progreso",
+            "unknown": true,
+            "barHidden": true
+          },
+          {
+            "text": "🍚 Carbohidratos consumidas30 / 300 g10% del objetivo",
+            "unknown": false,
+            "barHidden": false
+          },
+          {
+            "text": "🥑 Grasas consumidas0 / 70 g0% del objetivo",
+            "unknown": false,
+            "barHidden": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "Goal progress is withheld where consumed nutrient data are incomplete",
+      "passed": true,
+      "result": {
+        "text": "🥩 Proteínas consumidasDatos incompletos · objetivo 160 gCompletá los datos del alimento para ver el progreso",
+        "unknown": true,
+        "barHidden": true
+      }
+    },
+    {
+      "name": "Secondary nutrition dashboard marks unknown totals without creating false progress",
+      "passed": true,
+      "result": {
+        "protein": "—",
+        "calorie": "190",
+        "proteinRow": [
+          "🥩 Proteína consumidaDatos incompletosCompletá la información del alimento para consultar el progreso hacia 160 g."
+        ],
+        "hasProteinMeter": false
+      }
+    },
+    {
+      "name": "Mobile layout has no horizontal overflow",
+      "passed": true,
+      "result": {
+        "scrollWidth": 390,
+        "innerWidth": 390
+      }
+    }
+  ]
+}

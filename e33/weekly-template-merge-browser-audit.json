@@ -1,0 +1,102 @@
+{
+  "stage": "E33",
+  "checks": [
+    {
+      "name": "Template manager is visible and has correct accessible expanded state",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Opening the panel does not write plan rows",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Saving stores a user-scoped weekly snapshot in preferences",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Template does not store source row IDs/user IDs and preserves nutrition metadata",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Preview adds only to empty days and skips existing target days",
+      "passed": true,
+      "details": "«Semana de estudio»: se agregarán 1 comida en 1 día; 0 comidas de esta selección ya están aplicadas y se omite 1 día. No se reemplazará ninguna comida existente. Los días ocupados se omiten por defecto."
+    },
+    {
+      "name": "Preview is non-destructive before confirmation",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Confirm applies the empty-day portion of the template only",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "The original week is unchanged",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Re-applying the same template does not queue duplicate meals",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Merge mode is opt-in and unchecked by default",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Changing merge mode invalidates the old preview before writes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Merge preview explicitly announces that occupied days will be combined, not replaced",
+      "passed": true,
+      "details": "«Semana de estudio»: se agregarán 1 comida en 1 día; 1 comida de esta selección ya está aplicada y se omiten 0 días. No se reemplazará ninguna comida existente. Modo combinar activado: 1 día ocupado recibirá comidas nuevas sin reemplazar las existentes. | Lunes: agregar 1 comida · conservar 1 comida existente"
+    },
+    {
+      "name": "Merge preview remains non-destructive until confirmation",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Confirming merge adds the missing meal beside the existing one",
+      "passed": true,
+      "details": "{\"rows\": [{\"id\": \"dst-mon\", \"user_id\": \"user-e32\", \"week_start\": \"2026-10-26\", \"day_offset\": 0, \"meal_type\": \"desayuno\", \"title\": \"Desayuno ya organizado\", \"planned_time\": \"08:30\", \"notes\": \"No reemplazar\", \"source_meal_id\": null, \"plan_key\": \"manual:dst-mon\", \"sort_order\": 0, \"ingredients_snapshot\": [], \"nutrition_snapshot\": {}, \"updated_at\": \"2026-10-26T08:30:00.000Z\"}, {\"user_id\": \"user-e32\", \"week_start\": \"2026-10-26\", \"day_offset\": 2, \"meal_type\": \"cena\", \"title\": \"Sopa fuente\", \"planned_time\": \"20:00\", \"notes\": \"\", \"source_meal_id\": null, \"plan_key\": \"manual:week-template:1792634666210-e458dbc5e146:1792634666210-b02e222efae11\", \"sort_order\": 0, \"ingredients_snapshot\": [{\"name\": \"Zapallo\", \"quantity\": null, \"quantity_known\": false, \"unit\": \"g\", \"provenance\": {\"source\": \"custom\", \"reason\": \"unknown\"}}], \"nutrition_snapshot\": {\"calories\": null, \"nutrition_missing_metrics\": [\"calories\", \"protein\", \"carbs\", \"fat\", \"fiber\"]}, \"updated_at\": \"2026-10-22T02:04:26.411Z\", \"id\": \"plan-new-1\", \"created_at\": \"2026-10-22T02:04:26.412Z\"}, {\"user_id\": \"user-e32\", \"week_start\": \"2026-10-26\", \"day_offset\": 0, \"meal_type\": \"desayuno\", \"title\": \"Avena original\", \"planned_time\": \"08:00\", \"notes\": \"Canela\", \"source_meal_id\": null, \"plan_key\": \"manual:week-template:1792634666210-e458dbc5e146:1792634666210-ec045a1eb39b1\", \"sort_order\": 1, \"ingredients_snapshot\": [{\"name\": \"Avena\", \"quantity\": 50, \"quantity_known\": true, \"unit\": \"g\", \"quality\": {\"source\": \"catalog\", \"confidence\": \"high\"}}], \"nutrition_snapshot\": {\"calories\": 190, \"protein_g\": 7, \"fiber_g\": null, \"nutrition_missing_metrics\": [\"fiber\"]}, \"updated_at\": \"2026-10-22T02:04:26.711Z\", \"id\": \"plan-new-2\", \"created_at\": \"2026-10-22T02:04:26.711Z\"}], \"writes\": 2, \"status\": \"Plantilla \\u00abSemana de estudio\\u00bb aplicada: se agreg\\u00f3 1 comida. Todas las comidas que ya exist\\u00edan se conservaron tambi\\u00e9n en los d\\u00edas combinados. La lista de compras todav\\u00eda no se modific\\u00f3.\"}"
+    },
+    {
+      "name": "A merged plan keeps all source and destination meal snapshots independent",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "A concurrent destination change is rejected without writing any template rows",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Deleting a template leaves already-applied weekly meals intact",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Mobile view has no horizontal overflow",
+      "passed": true,
+      "details": "{'doc': 390, 'width': 390}"
+    },
+    {
+      "name": "Desktop view has no horizontal overflow",
+      "passed": true,
+      "details": ""
+    }
+  ],
+  "passed": 19,
+  "failed": 0
+}

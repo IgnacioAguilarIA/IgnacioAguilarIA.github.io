@@ -1,0 +1,23 @@
+{
+  "stage": "E25",
+  "node_tests": {
+    "passed": 172,
+    "failed": 0
+  },
+  "javascript_syntax": {
+    "files_checked": 76,
+    "failed": 0
+  },
+  "e25_browser_audit": {
+    "passed": 5,
+    "total": 5
+  },
+  "html_local_references": {
+    "checked": 181,
+    "missing": 0
+  },
+  "training_related_files_compared": 29,
+  "training_related_files_changed": 0,
+  "sql_changed": false,
+  "production_supabase_tested": false
+}

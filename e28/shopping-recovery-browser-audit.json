@@ -1,0 +1,67 @@
+{
+  "stage": "E28",
+  "checks": [
+    {
+      "name": "Archived recovery control is shown with correct count",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Purchased manual item is not offered for editing",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Unpurchased manual product has edit action",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Archived panel expands and announces item detail",
+      "passed": true,
+      "details": "Productos archivados\n\nEstos productos se quitaron del plan, pero siguen guardados. Podés restaurar uno como pendiente de compra.\n\nPan\nPanadería · 1 unidad\nRestaurar"
+    },
+    {
+      "name": "Restoring an archived product writes only after the action",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Restored product returns to active list and archive count falls to zero",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Inline edit actions can be brought into view on a short mobile screen",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Manual edit updates allowed fields and preserves stable identifiers",
+      "passed": true,
+      "details": "{'id': '202', 'user_id': 'e28-user', 'week_start': '2026-10-19', 'item_key': 'manual:tomate', 'name': 'Tomate perita', 'brand': '', 'quantity': 8, 'quantity_known': True, 'unit': 'unit', 'preparation_state': 'unspecified', 'category': 'Verdulería', 'checked': False, 'active': True, 'source': 'manual', 'source_meals': [], 'updated_at': '2026-10-22T02:05:36.175Z'}"
+    },
+    {
+      "name": "Manual edit gives a clear success status",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Canceling inline edit is a no-write operation",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Stale manual edit is rejected without overwriting newer data",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Mobile layout has no horizontal overflow",
+      "passed": true,
+      "details": "{'doc': 390, 'width': 390}"
+    }
+  ],
+  "passed": 12,
+  "failed": 0
+}

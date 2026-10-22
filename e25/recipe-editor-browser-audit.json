@@ -1,0 +1,46 @@
+{
+  "stage": "E25",
+  "checks": [
+    {
+      "name": "recipe ingredient and totals disclose missing protein",
+      "passed": true,
+      "result": {
+        "ingredient": "Avena con proteína sin informar\nenergía: 380 kcal · proteínas: No informado · carbohidratos: 68 g · grasas: 7 g / 100 g\nCantidad (g)\nQuitar",
+        "preview": "1 ingrediente · 100 g en ingredientes · peso estimado: 100 g\nenergía: 380 kcal · proteínas: Datos incompletos · carbohidratos: 68 g · grasas: 7 g para toda la preparación · valores por 100 g calculados con el peso estimado\nDatos incompletos: proteínas. Completá los nutrientes del alimento para calcular un total fiable."
+      }
+    },
+    {
+      "name": "removed recipe ingredient can be restored within undo window",
+      "passed": true,
+      "result": {
+        "undoVisible": true,
+        "restored": "Avena con proteína sin informar\nenergía: 380 kcal · proteínas: No informado · carbohidratos: 68 g · grasas: 7 g / 100 g\nCantidad (g)\nQuitar"
+      }
+    },
+    {
+      "name": "Escape and beforeunload protect a dirty recipe draft",
+      "passed": true,
+      "result": {
+        "beforeUnloadPrevented": true,
+        "editorStillOpenAfterEscape": true
+      }
+    },
+    {
+      "name": "closing dirty recipe editor is canceled without losing the draft",
+      "passed": true,
+      "result": {
+        "editorStillOpen": true
+      }
+    },
+    {
+      "name": "explicit discard confirmation closes the recipe editor",
+      "passed": true,
+      "result": {
+        "editorClosed": true
+      }
+    }
+  ],
+  "passed": 5,
+  "total": 5,
+  "failures": []
+}

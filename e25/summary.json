@@ -1,0 +1,66 @@
+{
+  "stage": "E25",
+  "node_tests": {
+    "passed": 172,
+    "failed": 0
+  },
+  "javascript_syntax": {
+    "files_checked": 76,
+    "failed": 0
+  },
+  "browser_audits": {
+    "E25_recipe_editor": {
+      "passed": 5,
+      "total": 5
+    },
+    "E23_calculation_integrity": {
+      "passed": 7,
+      "total": 7
+    },
+    "E24_safe_editor": {
+      "passed": 8,
+      "total": 8
+    },
+    "E20_autocomplete": {
+      "passed": 7,
+      "total": 7
+    },
+    "E19_visual": {
+      "passed": 8,
+      "total": 8
+    },
+    "E18_preferences": {
+      "passed": 8,
+      "total": 8
+    },
+    "E17_microinteractions": {
+      "passed": 8,
+      "total": 8
+    },
+    "E16_meal_cards": {
+      "passed": 8,
+      "total": 8
+    },
+    "E12_browse_filters": {
+      "passed": 28,
+      "total": 28
+    },
+    "E10_visual": {
+      "passed": 14,
+      "total": 14
+    },
+    "E7_quick_registration": "passed",
+    "E6_viewports": {
+      "viewports_checked": 7,
+      "failed": 0
+    }
+  },
+  "html_local_references": {
+    "checked": 181,
+    "missing": 0
+  },
+  "training_related_files_compared": 29,
+  "training_related_files_changed": 0,
+  "supabase_production_tested": false,
+  "sql_changed": false
+}

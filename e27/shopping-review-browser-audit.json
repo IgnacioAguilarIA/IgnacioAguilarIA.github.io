@@ -1,0 +1,82 @@
+{
+  "stage": "E27",
+  "checks": [
+    {
+      "name": "Keyboard focus enters the review heading without jumping to the bottom",
+      "passed": true,
+      "details": "Revisar cambios antes de sincronizar"
+    },
+    {
+      "name": "Preview shown before first write",
+      "passed": true,
+      "details": "0"
+    },
+    {
+      "name": "Preview summarizes additions updates and archive",
+      "passed": true,
+      "details": "2 nuevos · 0 reactivados · 2 actualizaciones · 1 pendientes a archivar · 1 cantidades compradas para revisar."
+    },
+    {
+      "name": "Unknown quantities are explicitly warned",
+      "passed": true,
+      "details": "Revisar cambios antes de sincronizar\n\n2 nuevos · 0 reactivados · 2 actualizaciones · 1 pendientes a archivar · 1 cantidades compradas para revisar.\n\nSe agregarán\nEspecias — Cantidad no definida\nBanana — 3 unidad\nSe actualizarán\nAvena: 400 g → 750 g\nLeche: 1 L → 2 L\nSe archivarán pendientes que ya no están en el plan\nPan — 1 unidad (se archivará; no se elimina del historial)\n\nAtención: 1 producto tiene cantidad o unidad no verificable. Se conservará la advertencia; no se inventará una cantidad.\n\n1 producto ya comprado cambia de cantidad según el plan nuevo. Por defecto se conservan las cantidades que registraste como compradas.\n\nSe conservarán 1 producto manual que agregaste por tu cuenta.\n\nActualizar también las cantidades de productos que ya están marcados como comprados.\nAplicar cambios\nCancelar revisión"
+    },
+    {
+      "name": "Purchased quantity change has safe default unchecked",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Existing list is locked while proposal is open",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Cancel leaves database untouched",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Stale preview is rejected without writes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Applying updates planned amount while preserving purchased amount",
+      "passed": true,
+      "details": "[('Avena', 750, False), ('Leche', 1, True)]"
+    },
+    {
+      "name": "Obsolete generated pending row is archived not deleted",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "New product is inserted and manual item retained",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Unverified quantity survives without becoming zero-known",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Mobile preview has no horizontal overflow",
+      "passed": true,
+      "details": "{'documentWidth': 390, 'viewport': 390}"
+    },
+    {
+      "name": "Purchased-quantity override is available only when needed",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Explicit override updates purchased quantity without unchecking it",
+      "passed": true,
+      "details": "{'id': '102', 'user_id': 'e27-user', 'week_start': '2026-10-19', 'item_key': 'generated:leche|marca|unspecified|l|quantity-known', 'name': 'Leche', 'brand': 'Marca', 'quantity': 3, 'quantity_known': True, 'unit': 'l', 'preparation_state': 'unspecified', 'category': 'Lácteos', 'checked': True, 'active': True, 'source': 'generated', 'source_meals': ['m1'], 'updated_at': '2026-10-22T00:55:21.842Z'}"
+    }
+  ],
+  "passed": 15,
+  "failed": 0
+}

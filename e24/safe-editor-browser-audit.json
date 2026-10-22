@@ -1,0 +1,102 @@
+{
+  "passed": true,
+  "totalChecks": 8,
+  "passedChecks": 8,
+  "failures": [],
+  "checks": [
+    {
+      "name": "catalog search alone does not trigger a false unsaved-changes warning",
+      "passed": true,
+      "result": {
+        "open": false,
+        "dialogHidden": true,
+        "closed": 1
+      }
+    },
+    {
+      "name": "unsaved changes are protected and cancel returns to editing",
+      "passed": true,
+      "result": {
+        "dialogShown": true,
+        "open": true,
+        "closed": 0,
+        "dialogHidden": true,
+        "beforeUnloadPrevented": true
+      }
+    },
+    {
+      "name": "discard confirmation closes the editor",
+      "passed": true,
+      "result": {
+        "open": false,
+        "closed": 1
+      }
+    },
+    {
+      "name": "Escape does not silently discard a dirty meal",
+      "passed": true,
+      "result": {
+        "dialogShown": true,
+        "editorStillOpen": true
+      }
+    },
+    {
+      "name": "quantity validation blocks invalid save, marks totals unavailable, then recalculates after correction",
+      "passed": true,
+      "result": {
+        "invalid": {
+          "invalid": "true",
+          "message": "Usá una cantidad mayor que cero y no superior a 1.000.000.",
+          "feedback": "Usá una cantidad mayor que cero y no superior a 1.000.000."
+        },
+        "invalidTotals": {
+          "card": "Revisar cantidad",
+          "warning": "No se muestran totales mientras haya cantidades vacías o inválidas. Corregí las cantidades para recalcular la comida.",
+          "calories": "",
+          "rowTotal": "Revisar cantidad"
+        },
+        "validTotals": {
+          "card": "50 kcal",
+          "warning": false,
+          "calories": "50",
+          "rowTotal": "50 kcal"
+        },
+        "saveCountAfterInvalid": 0,
+        "saveCountAfterValid": 1
+      }
+    },
+    {
+      "name": "removal provides a working undo action",
+      "passed": true,
+      "result": {
+        "countAfterRemove": 0,
+        "toastVisible": true,
+        "restored": {
+          "count": 1,
+          "name": "Avena"
+        }
+      }
+    },
+    {
+      "name": "clear-all requires confirmation and cancel preserves foods",
+      "passed": true,
+      "result": {
+        "dialogShown": true,
+        "afterCancel": 1,
+        "afterConfirm": 0
+      }
+    },
+    {
+      "name": "confirmation dialog exposes alertdialog semantics in mobile viewport",
+      "passed": true,
+      "result": {
+        "role": "alertdialog",
+        "modal": "true",
+        "labelledby": "e24ConfirmTitle",
+        "focusVisible": "44px",
+        "viewport": 390
+      }
+    }
+  ],
+  "scope": "E24 editor interaction tests with local stub data; no Supabase production access"
+}

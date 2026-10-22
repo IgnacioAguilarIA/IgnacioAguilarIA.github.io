@@ -1,0 +1,152 @@
+{
+  "stage": "E30",
+  "checks": [
+    {
+      "name": "Shows the stored nutrition summary for the planned meal",
+      "passed": true,
+      "details": "Nutrición guardada: 280 kcal · 21 g prot. · 42 g carb. · 8 g grasas"
+    },
+    {
+      "name": "Does not display a metric explicitly marked unknown as zero",
+      "passed": true,
+      "details": "Nutrición guardada: 280 kcal · 21 g prot. · 42 g carb. · 8 g grasas"
+    },
+    {
+      "name": "Organize panel opens with an accessible day selector",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Move writes the new day and detaches the old routine key",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Move preserves ingredient and nutrient snapshots",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Duplicate creates a separate planned meal on the selected day",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Duplicate preserves recipe/nutrition and ingredient provenance",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Duplicate is independent of the source routine and has its own key",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Duplicate appears in the correct day card and can be edited",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Concurrent change blocks moving a stale plan row",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Duplicate opens a prefilled copy form without replacing the original",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Optional routine and recipe selectors do not block manual/copy saves",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Saving the duplicate form preserves ingredients and nutrition metadata",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Duplicate form copy has no source-template link and has independent plan key",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Concurrent edit is rejected without overwriting the newer server row",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "The unsaved form draft remains available after conflict detection",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "A deliberate retry after reviewing the conflict saves against the refreshed version",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Concurrent change blocks duplicating a stale plan row",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "A recipe-backed plan row exposes a dedicated portion adjustment action",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Portion editor opens focused with the saved planned portion count",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Live preview explains the scaling factor and frozen recipe behaviour",
+      "passed": true,
+      "details": "Se ajustarán cantidades y nutrientes conocidos ×1,5. Los datos desconocidos seguirán marcados como incompletos; la receta original no cambia."
+    },
+    {
+      "name": "Saving three portions scales quantities and all available nutrient totals",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Unknown ingredient quantity and unknown nutrient remain unknown after scaling",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Ingredient provenance metadata survives portion scaling and simple edits",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Recipe metadata is preserved and its planned scale is updated",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Portion adjustment writes only the plan row and leaves the saved recipe untouched",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "After save, the UI reminds the user to refresh the shopping proposal",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Mobile weekly planner has no horizontal overflow",
+      "passed": true,
+      "details": "{'document': 390, 'width': 390}"
+    },
+    {
+      "name": "Desktop weekly planner has no horizontal overflow",
+      "passed": true,
+      "details": ""
+    }
+  ],
+  "passed": 29,
+  "failed": 0
+}

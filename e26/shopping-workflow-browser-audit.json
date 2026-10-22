@@ -1,0 +1,52 @@
+{
+  "stage": "E26",
+  "checks": [
+    {
+      "name": "Summary counts include all active rows",
+      "passed": true,
+      "details": "('3', '2', '1')"
+    },
+    {
+      "name": "Progress percent accurate",
+      "passed": true,
+      "details": "1 de 3 productos comprados"
+    },
+    {
+      "name": "Unknown quantity warning visible",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Search works case/diacritics-insensitively",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Purchased filter shows only purchased products",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Pending filter excludes purchased rows",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Category and state filters compose",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Empty filter state gives next step",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Mobile view has no horizontal overflow",
+      "passed": true,
+      "details": "scrollWidth=390, width=390"
+    }
+  ],
+  "passed": 9,
+  "failed": 0
+}

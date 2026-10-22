@@ -1,0 +1,137 @@
+{
+  "stage": "E37",
+  "checks": [
+    {
+      "name": "Template manager is visible and has correct accessible expanded state",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Opening the panel does not write plan rows",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Saving stores a user-scoped weekly snapshot in preferences",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Template does not store source row IDs/user IDs and preserves nutrition metadata",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Opening selective apply exposes accessible checkboxes and selects the template contents by default",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Each selected meal has an accessible destination-day selector defaulted to its source day",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Selection panel is non-destructive before preview or confirm",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Clearing selection disables preview and does not write data",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Selection summary tracks exactly one selected meal",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Choosing Friday updates the selected-meal summary without writing data",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Selective preview reports selected subset and automatically preserves an occupied day by merging",
+      "passed": true,
+      "details": "«Semana de estudio»: se agregarán 1 comida en 1 día; 0 comidas de esta selección ya están aplicadas y se omiten 0 días. No se reemplazará ninguna comida existente. Selección parcial: 1 de 2 comidas. Se combinarán solo las seleccionadas, conservando todo lo existente. Se reubicarán 1 comida en días distintos a los de la plantilla (Avena original: Lunes → Viernes)."
+    },
+    {
+      "name": "Preview explains that the meal is moved from Monday to Friday",
+      "passed": true,
+      "details": "«Semana de estudio»: se agregarán 1 comida en 1 día; 0 comidas de esta selección ya están aplicadas y se omiten 0 días. No se reemplazará ninguna comida existente. Selección parcial: 1 de 2 comidas. Se combinarán solo las seleccionadas, conservando todo lo existente. Se reubicarán 1 comida en días distintos a los de la plantilla (Avena original: Lunes → Viernes)."
+    },
+    {
+      "name": "Changing the destination after preview invalidates that preview and performs no write",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "A fresh preview is required after changing the destination back to Friday",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Light theme uses a readable foreground on the selection help",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Previewing a subset still performs no writes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Changing the meal selection invalidates the previous preview before confirmation",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "A fresh preview reflects the updated one-meal selection",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Confirm adds only the selected meal and preserves the existing destination row",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Unselected template meal is not copied",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "A second partial selection adds its meal while keeping the earlier selected copy",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Re-applying a selected meal does not queue duplicates",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "A stale selective preview is rejected after another session changes the week",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Selective application never rewrites saved templates or preferences",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Mobile view has no horizontal overflow",
+      "passed": true,
+      "details": "{'doc': 390, 'width': 390}"
+    },
+    {
+      "name": "Desktop view has no horizontal overflow",
+      "passed": true,
+      "details": ""
+    }
+  ],
+  "passed": 26,
+  "failed": 0
+}

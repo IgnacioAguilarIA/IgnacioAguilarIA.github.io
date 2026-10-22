@@ -1,0 +1,72 @@
+{
+  "stage": "E32",
+  "checks": [
+    {
+      "name": "Template manager is visible and has correct accessible expanded state",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Opening the panel does not write plan rows",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Saving stores a user-scoped weekly snapshot in preferences",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Template does not store source row IDs/user IDs and preserves nutrition metadata",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Preview adds only to empty days and skips existing target days",
+      "passed": true,
+      "details": "«Semana de estudio»: se agregarán 1 comida en 1 día; 0 comidas de esta selección ya están aplicadas y se omite 1 día. No se reemplazará ninguna comida existente. Los días ocupados se omiten por defecto."
+    },
+    {
+      "name": "Preview is non-destructive before confirmation",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Confirm applies the empty-day portion of the template only",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "The original week is unchanged",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Re-applying the same template does not queue duplicate meals",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "A concurrent destination change is rejected without writing any template rows",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Deleting a template leaves already-applied weekly meals intact",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Mobile view has no horizontal overflow",
+      "passed": true,
+      "details": "{'doc': 390, 'width': 390}"
+    },
+    {
+      "name": "Desktop view has no horizontal overflow",
+      "passed": true,
+      "details": ""
+    }
+  ],
+  "passed": 13,
+  "failed": 0
+}
