@@ -1,0 +1,25 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+const editor = fs.readFileSync(path.join(root, 'js/63-nutrition-week-plan-editor.js'), 'utf8');
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const css = fs.readFileSync(path.join(root, 'css/123-nutrition-week-template-post-apply-impact-e42.css'), 'utf8');
+
+assert.match(editor, /function buildPostApplyShoppingHandoff\(\)/);
+assert.match(editor, /function renderPostApplyShoppingImpactE42\(shell,impact\)/);
+assert.match(editor, /renderPostApplyShoppingImpactE42\(shell,impact\)/);
+assert.match(editor, /Ver desglose estimado de compras · solo lectura/);
+assert.match(editor, /No se pudo obtener una estimación completa antes de guardar el plan/);
+assert.match(editor, /Cantidades desconocidas/);
+assert.match(editor, /Productos que cambiarían/);
+assert.match(editor, /Compras cuya cantidad requiere revisión/);
+assert.match(editor, /no guarda la lista ni descuenta existencias/);
+assert.match(html, /css\/123-nutrition-week-template-post-apply-impact-e42\.css\?v=e42/);
+assert.match(html, /js\/63-nutrition-week-plan-editor\.js\?v=e43/);
+assert.match(css, /body\.light/);
+assert.match(css, /prefers-reduced-motion/);
+assert.match(css, /forced-colors/);
+assert.match(css, /focus-visible/);
+assert.match(css, /nutrition-week-template-post-apply-impact-e42>summary/);
+console.log('E42 post-apply shopping impact contract tests: 16/16 passed');

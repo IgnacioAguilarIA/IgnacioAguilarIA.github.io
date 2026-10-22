@@ -1,0 +1,27 @@
+const fs = require('node:fs');
+const path = require('node:path');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+const editor = fs.readFileSync(path.join(root, 'js/63-nutrition-week-plan-editor.js'), 'utf8');
+const shopping = fs.readFileSync(path.join(root, 'js/62-nutrition-week-planner-shopping.js'), 'utf8');
+const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const css = fs.readFileSync(path.join(root, 'css/122-nutrition-week-template-shopping-handoff-e41.css'), 'utf8');
+
+assert.match(editor, /function buildPostApplyShoppingHandoff\(\)/);
+assert.match(editor, /function showPostApplyShoppingHandoff\(shell,week,impact\)/);
+assert.match(editor, /showPostApplyShoppingHandoff\(shell,week,preview\.shopping_impact\)/);
+assert.match(editor, /openShopping\(\{week:targetWeek\}\)/);
+assert.match(editor, /La lista de compras todavía no se modificó/);
+assert.match(editor, /generar una revisión oficial y confirmar esa operación por separado/);
+assert.match(shopping, /function openShopping\(options=\{\}\)/);
+assert.match(shopping, /La semana solicitada para compras debe ser una fecha válida de lunes/);
+assert.match(shopping, /if\(shoppingProposal\|\|shoppingBusy\)/);
+assert.match(html, /css\/122-nutrition-week-template-shopping-handoff-e41\.css\?v=e41/);
+assert.match(html, /js\/62-nutrition-week-planner-shopping\.js\?v=e41/);
+assert.match(html, /js\/63-nutrition-week-plan-editor\.js\?v=e43/);
+assert.match(css, /prefers-reduced-motion/);
+assert.match(css, /forced-colors/);
+assert.match(css, /focus-visible/);
+assert.match(css, /body\.light/);
+assert.match(css, /\[hidden\]\{display:none!important\}/);
+console.log('E41 shopping handoff contract tests: 16/16 passed');

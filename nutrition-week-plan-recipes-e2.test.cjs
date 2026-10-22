@@ -81,7 +81,7 @@ test('Conserva marca, preparación, categoría y metadatos en una instantánea i
   assert.equal(snapshot.nutrition.source_recipe.name,'Arroz con verduras');
   assert.equal(snapshot.nutrition.source_recipe.yield_servings,4);
   assert.equal(snapshot.nutrition.source_recipe.planned_servings,1.5);
-  assert.equal(snapshot.nutrition.source_recipe.snapshot_version,1);
+  assert.equal(snapshot.nutrition.source_recipe.snapshot_version,2);
   assert.equal(recipe.ingredients[0].quantity,200,'No debe mutar la receta original');
 });
 
@@ -114,7 +114,7 @@ test('La interfaz usa las recetas autenticadas y guarda origen más instantánea
   assert.match(src,/AgendaNutritionData/);
   assert.match(src,/loadRecipes\(\)/);
   assert.match(src,/assertOwner\(who\)/);
-  assert.match(src,/snapshot_version:1/);
+  assert.match(src,/snapshot_version:2/);
   assert.match(src,/source_recipe:source/);
   assert.match(src,/ingredients_snapshot:snap\.ingredients/);
   assert.match(src,/Array\.isArray\(meal\.ingredients_snapshot\)/);
@@ -186,9 +186,9 @@ test('Detecta cambios de cantidades en productos ya comprados sin marcar como co
   assert.equal(shop.findPurchasedQuantityConflicts([bought,same,manual],desired).length,1);
   assert.equal(shop.findPurchasedQuantityConflicts([same,manual],desired).length,0);
   assert.equal(shop.sameKnownQuantity({quantity:100,quantity_known:false},{quantity:100,quantity_known:true}),false);
-  assert.match(shoppingSrc,/const purchasedConflicts=findPurchasedQuantityConflicts\(existing,grouped\)/);
-  assert.match(shoppingSrc,/Aceptar: actualizar esas cantidades según el plan nuevo/);
-  assert.match(shoppingSrc,/preservePurchased&&prev\.source==='generated'&&prev\.checked&&!sameKnownQuantity\(prev,item\)/);
+  assert.match(shoppingSrc,/const purchasedConflicts=findPurchasedQuantityConflicts\(old,next\)/);
+  assert.match(shoppingSrc,/Actualizar también las cantidades de productos que ya están marcados como comprados/);
+  assert.match(shoppingSrc,/previous\.source==='generated'&&previous\.checked===true&&!sameKnownQuantity\(previous,item\)&&!updatePurchased/);
 });
 
 test('El editor usa estilos locales, la tabla mantiene snapshots con RLS y el HTML carga módulos en orden',()=>{
