@@ -519,6 +519,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <div class="nutrition-summary-progress-row"><small>Consumido</small><div class="nutrition-summary-progress consumed"><span id="nutritionSummaryConsumedBar"></span></div></div>
 </div>
 </div>
+<div class="e23-nutrition-data-quality-note" id="e23NutritionDataQualityNote" role="status" aria-live="polite" hidden></div>
 <details class="e13-progressive-disclosure e13-nutrition-details" id="nutritionDetailsDisclosure" data-e13-collapsible aria-label="Desglose de nutrientes del día">
   <summary><span class="e13-disclosure-title">Ver detalle nutricional</span><span class="e13-disclosure-subtitle">Calorías, proteínas, carbohidratos y grasas</span><span class="e13-disclosure-chevron" aria-hidden="true">⌄</span></summary>
   <div class="e13-disclosure-body">
@@ -813,7 +814,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 </div>
 <div class="overlay" id="dateOverlay"><div class="modal" onclick="event.stopPropagation()"><div class="modal-head"><div><h3 id="dateModalTitle">＋ Agregar fecha</h3><span id="dateModalInfo">Fecha personal</span></div><button class="close" onclick="closeDateModal()">×</button></div><div class="field"><label>Fecha</label><input class="input" id="dateInput" type="date"/></div><div class="field"><label>Tipo</label><select class="input" id="dateType"><option value="ocupado">📌 Día ocupado</option><option value="importante">⭐ Día importante</option></select></div><div class="field"><label>Título</label><input class="input" id="dateTitle"/></div><div class="field"><label>Descripción</label><input class="input" id="dateDescription"/></div><button class="save" id="saveDateBtn">Guardar fecha</button><button class="danger hidden" id="deleteDateBtn">🗑️ Eliminar fecha</button></div></div>
 <!-- split-js:03-inline-script-03.js -->
-<script src="./js/03-inline-script-03.js"></script>
+<script src="./js/03-inline-script-03.js?v=e23-nutrition-integrity"></script>
 <!-- split-js:04-inline-script-04.js -->
 <script src="./js/04-inline-script-04.js"></script>
 <div class="v25-sheet" id="v25QuickSheet">
@@ -1302,16 +1303,16 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <script src="./js/46-v98-training-stats-repair.js"></script>
 <script src="./js/47-nutrition-food-catalog.js"></script>
 <script src="./js/48-openfoodfacts-adapter.js"></script>
-<script src="./js/49-nutrition-persistence.js"></script>
-<script src="./js/50-nutrition-food-autocomplete.js"></script>
+<script src="./js/49-nutrition-persistence.js?v=e25"></script>
+<script src="./js/50-nutrition-food-autocomplete.js?v=e21"></script>
 <script src="./js/51-nutrition-meal-order.js"></script>
-<script src="./js/52-nutrition-meal-builder.js"></script>
+<script src="./js/52-nutrition-meal-builder.js?v=e23"></script>
 <script src="./js/53-nutrition-meal-copy.js"></script>
-<script src="./js/54-nutrition-consumption.js"></script>
-<script src="./js/55-nutrition-live-summary.js"></script>
+<script src="./js/54-nutrition-consumption.js?v=e23"></script>
+<script src="./js/55-nutrition-live-summary.js?v=e23"></script>
 <script src="./js/56-nutrition-quick-access.js"></script>
 <script src="./js/57-nutrition-account-sync.js"></script>
-<script src="./js/58-nutrition-advanced.js"></script>
+<script src="./js/58-nutrition-advanced.js?v=e25"></script>
 <link href="./css/80-nutrition-routine-tools.css" rel="stylesheet"/>
 <script src="./js/59-nutrition-routine-tools.js"></script>
 <link href="./css/81-nutrition-accessibility-final.css" rel="stylesheet"/>
@@ -1319,9 +1320,24 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <script src="./js/60-nutrition-accessibility-final.js"></script>
 <script src="./js/61-nutrition-final-audit.js"></script>
 <link href="./css/83-nutrition-week-planner-shopping.css" rel="stylesheet"/>
-<script src="./js/62-nutrition-week-planner-shopping.js"></script>
+<script src="./js/62-nutrition-week-planner-shopping.js?v=e41"></script>
 <link href="./css/86-nutrition-week-plan-editor.css" rel="stylesheet"/>
-<script src="./js/63-nutrition-week-plan-editor.js"></script>
+<link href="./css/110-nutrition-week-plan-quick-actions-e29.css?v=e29" rel="stylesheet"/>
+<link href="./css/111-nutrition-recipe-portion-adjustment-e30.css?v=e30" rel="stylesheet"/>
+<link href="./css/112-nutrition-week-plan-copy-day-e31.css?v=e31" rel="stylesheet"/>
+<link href="./css/113-nutrition-week-templates-e32.css?v=e32" rel="stylesheet"/>
+<link href="./css/114-nutrition-week-template-merge-e33.css?v=e33" rel="stylesheet"/>
+<link href="./css/115-nutrition-week-template-management-e34.css?v=e34" rel="stylesheet"/>
+<link href="./css/116-nutrition-week-template-comparison-e35.css?v=e35" rel="stylesheet"/>
+<link href="./css/117-nutrition-week-template-selection-e36.css?v=e36" rel="stylesheet"/>
+<link href="./css/118-nutrition-week-template-target-day-e37.css?v=e37" rel="stylesheet"/>
+<link href="./css/119-nutrition-week-template-bulk-target-e38.css?v=e38" rel="stylesheet"/>
+<link href="./css/120-nutrition-week-template-change-review-e39.css?v=e39" rel="stylesheet"/>
+<link href="./css/121-nutrition-week-template-shopping-impact-e40.css?v=e40"
+<link href="./css/122-nutrition-week-template-shopping-handoff-e41.css?v=e41" rel="stylesheet"/>
+<link href="./css/123-nutrition-week-template-post-apply-impact-e42.css?v=e42" rel="stylesheet"/>
+<link href="./css/124-nutrition-week-template-post-apply-export-e43.css?v=e43" rel="stylesheet"/>
+<script src="./js/63-nutrition-week-plan-editor.js?v=e43"></script>
 <link href="./css/89-nutrition-pantry.css" rel="stylesheet"/>
 <script src="./js/66-nutrition-pantry.js"></script>
 <link href="./css/87-nutrition-barcode-scanner.css" rel="stylesheet"/>
@@ -1338,6 +1354,15 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <link href="./css/98-nutrition-meal-cards-e16.css" rel="stylesheet"/>
 <link href="./css/99-nutrition-microinteractions-e17.css" rel="stylesheet"/>
 <link href="./css/100-nutrition-view-preferences-e18.css" rel="stylesheet"/>
+<link href="./css/101-nutrition-visual-consistency-e19.css" rel="stylesheet"/>
+<link href="./css/102-nutrition-autocomplete-accessibility-e20.css?v=e21" rel="stylesheet"/>
+<link href="./css/103-nutrition-workflow-polish-e22.css?v=e22" rel="stylesheet"/>
+<link href="./css/104-nutrition-calculation-integrity-e23.css?v=e23" rel="stylesheet"/>
+<link href="./css/105-nutrition-safe-editor-e24.css?v=e24" rel="stylesheet"/>
+<link href="./css/106-nutrition-recipe-quality-e25.css?v=e25" rel="stylesheet"/>
+<link href="./css/107-nutrition-shopping-workflow-e26.css?v=e26" rel="stylesheet"/>
+<link href="./css/108-nutrition-shopping-review-e27.css?v=e27" rel="stylesheet"/>
+<link href="./css/109-nutrition-shopping-recovery-e28.css?v=e28" rel="stylesheet"/>
 <script src="./js/65-nutrition-quality-report.js"></script>
 <script src="./js/67-nutrition-meal-save-safety-e8.js"></script>
 <script src="./js/68-nutrition-guided-layout-e13.js"></script>
@@ -1346,5 +1371,7 @@ body.light .v87-weather-card{background:#fff;border-color:#dbe3ee;box-shadow:0 1
 <script src="./js/71-nutrition-meal-cards-e16.js"></script>
 <script src="./js/72-nutrition-microinteractions-e17.js"></script>
 <script src="./js/73-nutrition-view-preferences-e18.js"></script>
+<script src="./js/74-nutrition-data-integrity-e23.js?v=e23"></script>
+<script src="./js/75-nutrition-safe-editor-e24.js?v=e24"></script>
 </body>
 </html>
