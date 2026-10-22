@@ -1,0 +1,24 @@
+/* AgendaFICH E31 — copia segura de un día de planificación */
+.nutrition-plan-copy-day-panel{border:1px solid var(--line,rgba(100,116,139,.28));border-radius:16px;background:var(--card,rgba(127,127,127,.035));padding:14px;margin:0 0 14px;display:grid;gap:12px;min-width:0}
+.nutrition-plan-copy-day-panel[hidden]{display:none!important}
+.nutrition-plan-copy-day-panel h3{margin:0;font-size:1rem;line-height:1.35}
+.nutrition-plan-copy-day-intro{margin:0;color:var(--muted,#94a3b8);font-size:.9rem;line-height:1.5}
+.nutrition-plan-copy-day-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.nutrition-plan-copy-day-fields select{width:100%;min-width:0;max-width:100%;min-height:42px;border:1px solid var(--line,rgba(100,116,139,.34));border-radius:10px;padding:8px 10px;background:var(--card2,transparent);color:inherit;font:inherit}
+.nutrition-plan-copy-day-preview{border:1px solid var(--line,rgba(100,116,139,.25));border-radius:12px;background:var(--surface-card,rgba(127,127,127,.035));padding:12px;min-width:0}
+.nutrition-plan-copy-day-preview[hidden]{display:none!important}
+.nutrition-plan-copy-day-preview-summary{margin:0 0 8px;font-weight:650;line-height:1.5}
+.nutrition-plan-copy-day-preview-list{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.nutrition-plan-copy-day-preview-list li{min-width:0;display:grid;gap:2px;padding:8px 0;border-top:1px solid var(--line,rgba(100,116,139,.16));overflow-wrap:anywhere}
+.nutrition-plan-copy-day-preview-list li:first-child{border-top:0}
+.nutrition-plan-copy-day-preview-list li strong{font-size:.92rem}
+.nutrition-plan-copy-day-preview-list li span,.nutrition-plan-copy-day-warning{color:var(--muted,#94a3b8);font-size:.82rem;line-height:1.45}
+.nutrition-plan-copy-day-warning{color:var(--yellow,#f59e0b)}
+.nutrition-plan-copy-day-actions{display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:8px}
+.nutrition-plan-copy-day-toggle-e31{white-space:normal}
+.nutrition-plan-copy-day-panel button:focus-visible,.nutrition-plan-copy-day-panel select:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+@media(max-width:620px){.nutrition-plan-copy-day-fields{grid-template-columns:minmax(0,1fr)}.nutrition-plan-copy-day-panel{padding:11px;border-radius:13px}.nutrition-plan-copy-day-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.nutrition-plan-copy-day-actions button{width:100%;min-height:42px;white-space:normal}.nutrition-plan-copy-day-actions button:last-child{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){.nutrition-plan-copy-day-panel *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media(forced-colors:active){.nutrition-plan-copy-day-panel,.nutrition-plan-copy-day-preview,.nutrition-plan-copy-day-fields select{border:1px solid CanvasText}.nutrition-plan-copy-day-panel button:focus-visible,.nutrition-plan-copy-day-panel select:focus-visible{outline:2px solid Highlight}}
+
+body.light .nutrition-plan-copy-day-warning{color:#825400}

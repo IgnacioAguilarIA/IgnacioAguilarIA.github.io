@@ -1,0 +1,12 @@
+/* AgendaFICH E33 — combinar plantillas semanales sin reemplazar comidas existentes. */
+.nutrition-week-template-merge-option-e33{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;border:1px solid var(--line,rgba(100,116,139,.28));border-radius:12px;background:var(--surface-card,rgba(127,127,127,.025));cursor:pointer;min-width:0}
+.nutrition-week-template-merge-option-e33 input{flex:0 0 auto;width:18px;height:18px;margin:2px 0 0;accent-color:var(--green,#25845b)}
+.nutrition-week-template-merge-option-e33 span{font-weight:650;line-height:1.45;overflow-wrap:anywhere}
+.nutrition-week-template-merge-help-e33{margin:-5px 0 0 28px;color:var(--muted,#64748b);font-size:.82rem;line-height:1.5;overflow-wrap:anywhere}
+.nutrition-week-templates-preview-list-e32 .is-merge{border-left:3px solid var(--green,#25845b);padding-left:9px;color:var(--text,#166534)}
+.nutrition-week-template-merge-option-e33:focus-within{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+.nutrition-week-template-merge-option-e33 input:focus-visible{outline:2px solid var(--blue,#3b82f6);outline-offset:3px}
+@media(max-width:620px){.nutrition-week-template-merge-option-e33{padding:10px}.nutrition-week-template-merge-help-e33{margin-left:4px}}
+@media(prefers-reduced-motion:reduce){.nutrition-week-template-merge-option-e33 *{transition:none!important;animation:none!important}}
+@media(forced-colors:active){.nutrition-week-template-merge-option-e33{border:1px solid CanvasText}.nutrition-week-template-merge-option-e33 input{accent-color:Highlight}.nutrition-week-templates-preview-list-e32 .is-merge{border-left:3px solid Highlight;color:CanvasText}}
+body.light .nutrition-week-templates-preview-list-e32 .is-merge{color:#17603f}

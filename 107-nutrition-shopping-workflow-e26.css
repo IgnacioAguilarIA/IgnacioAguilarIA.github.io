@@ -1,0 +1,35 @@
+/* E26 — progreso y filtros de la lista de compras. Selectores limitados a Alimentación. */
+.nutrition-shopping-summary{display:grid;gap:12px;margin:12px 0 14px;padding:14px;border:1px solid var(--line,rgba(120,130,150,.24));border-radius:16px;background:var(--surface-card,rgba(120,130,150,.035))}
+.nutrition-shopping-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.nutrition-shopping-metric{display:grid;gap:4px;min-width:0;padding:10px 12px;border:1px solid var(--line,rgba(120,130,150,.2));border-radius:12px;background:var(--card,transparent)}
+.nutrition-shopping-metric span{font-size:.78rem;color:var(--muted,#94a3b8);overflow-wrap:anywhere}
+.nutrition-shopping-metric strong{font-size:1.35rem;line-height:1.2;font-variant-numeric:tabular-nums}
+.nutrition-shopping-progress-wrap{display:grid;gap:7px}
+.nutrition-shopping-progress-label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.86rem}
+.nutrition-shopping-progress-label strong{font-variant-numeric:tabular-nums}
+.nutrition-shopping-progress{height:9px;overflow:hidden;border-radius:999px;background:var(--line,rgba(120,130,150,.25));border:1px solid var(--line,rgba(120,130,150,.15))}
+.nutrition-shopping-progress-fill{display:block;width:0;height:100%;border-radius:inherit;background:var(--green,#21845b);transition:width .18s ease}
+.nutrition-shopping-unknown-note{margin:0;color:var(--muted,#94a3b8);font-size:.82rem;line-height:1.45}
+.nutrition-shopping-unknown-note:not([hidden]){padding:9px 11px;border-inline-start:3px solid #bd8731;border-radius:6px;background:rgba(189,135,49,.09)}
+.nutrition-shopping-filters{display:grid;grid-template-columns:minmax(180px,2fr) minmax(130px,1fr) minmax(150px,1fr);align-items:end;gap:10px;margin:4px 0 12px}
+.nutrition-shopping-search-label,.nutrition-shopping-filter-label{display:grid;gap:5px;min-width:0;font-size:.82rem;font-weight:650}
+.nutrition-shopping-filters input,.nutrition-shopping-filters select{box-sizing:border-box;width:100%;min-width:0;min-height:42px;border:1px solid var(--line,rgba(120,130,150,.3));border-radius:10px;background:var(--card,transparent);color:inherit;padding:8px 10px;font:inherit;font-weight:400}
+.nutrition-shopping-filters input::placeholder{color:var(--muted,#94a3b8);opacity:1}
+.nutrition-shopping-filters input:focus-visible,.nutrition-shopping-filters select:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+.nutrition-shopping-category h3 span{font-weight:500}
+@media(max-width:720px){
+ .nutrition-shopping-summary{padding:11px;gap:10px}
+ .nutrition-shopping-metrics{gap:6px}
+ .nutrition-shopping-metric{padding:9px 8px}
+ .nutrition-shopping-metric strong{font-size:1.2rem}
+ .nutrition-shopping-filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .nutrition-shopping-search-label{grid-column:1/-1}
+}
+@media(max-width:380px){.nutrition-shopping-metric span{font-size:.72rem}.nutrition-shopping-metric strong{font-size:1.1rem}}
+@media(prefers-reduced-motion:reduce){.nutrition-shopping-progress-fill{transition:none}}
+@media(forced-colors:active){.nutrition-shopping-summary,.nutrition-shopping-metric,.nutrition-shopping-progress,.nutrition-shopping-filters input,.nutrition-shopping-filters select{border:1px solid CanvasText}.nutrition-shopping-progress-fill{background:Highlight}}
+/* Orden de lectura: nombre primero, datos secundarios debajo y acciones a la derecha. */
+.nutrition-shopping-row{grid-template-rows:auto auto;align-items:center;row-gap:4px}
+.nutrition-shopping-row>.nutrition-shopping-check{grid-column:1;grid-row:1;align-self:center}
+.nutrition-shopping-row>small{grid-column:1;grid-row:2;margin-left:30px}
+.nutrition-shopping-row>.nutrition-shopping-delete{grid-column:2;grid-row:1/span 2}

@@ -1,0 +1,10 @@
+/* AgendaFICH E30 — ajuste de porciones desde una instantánea del plan, aislado de Entrenamiento. */
+.nutrition-plan-existing-portions{grid-column:1/-1;display:grid;gap:6px;padding:12px;border:1px solid var(--line,rgba(120,130,150,.32));border-radius:12px;background:var(--soft-bg,rgba(100,116,139,.07));min-width:0}
+.nutrition-plan-existing-portions[hidden]{display:none!important}
+.nutrition-plan-existing-portions input{width:100%;min-width:0;min-height:42px;border:1px solid var(--line,rgba(120,130,150,.4));border-radius:9px;padding:9px 11px;background:var(--card2,transparent);color:inherit;font:inherit}
+.nutrition-plan-existing-portions-help{display:block;color:var(--muted,#64748b);font-size:.78rem;line-height:1.5;overflow-wrap:anywhere}
+.nutrition-plan-existing-portions input:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+.nutrition-plan-adjust-portions{border-color:var(--blue,#3b82f6)!important}
+@media(max-width:620px){.nutrition-plan-existing-portions{padding:10px}.nutrition-plan-adjust-portions{flex:1 1 calc(50% - 7px)}}
+@media(prefers-reduced-motion:reduce){.nutrition-plan-existing-portions *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(forced-colors:active){.nutrition-plan-existing-portions,.nutrition-plan-existing-portions input{border:1px solid CanvasText}}

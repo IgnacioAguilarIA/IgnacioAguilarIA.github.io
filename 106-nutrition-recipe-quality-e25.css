@@ -1,0 +1,69 @@
+/* AgendaFICH E25 — integridad nutricional y edición segura de recetas.
+   Todo el alcance visual queda restringido a Alimentación y su modal de recetas. */
+#nutritionAdvancedModal .e25-recipe-data-warning,
+.nutrition-plan-meal .e25-recipe-data-warning {
+  display: block;
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border: 1px solid #d8ad59;
+  border-radius: 10px;
+  background: #fff7e5;
+  color: #704a09;
+  font-size: .88rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+#nutritionAdvancedModal .e25-recipe-nutrition-summary {
+  display: block;
+  margin-top: 8px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+#nutritionAdvancedModal .e25-recipe-undo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--nutrition-border, #cdd8d1);
+  border-radius: 12px;
+  background: var(--nutrition-surface-soft, #f2f7f3);
+  color: var(--nutrition-text, #23372c);
+  font-size: .9rem;
+}
+#nutritionAdvancedModal .e25-recipe-undo[hidden] { display: none !important; }
+#nutritionAdvancedModal .e25-recipe-undo button { flex: 0 0 auto; min-height: 40px; }
+#nutritionAdvancedModal .nutrition-advanced-recipe-preview .e25-recipe-data-warning { margin-top: 12px; }
+#nutritionAdvancedModal .nutrition-recipe-editor-item small { overflow-wrap: anywhere; }
+@media (max-width: 560px) {
+  #nutritionAdvancedModal .e25-recipe-undo { align-items: flex-start; flex-direction: column; }
+  #nutritionAdvancedModal .e25-recipe-undo button { width: 100%; }
+  #nutritionAdvancedModal .e25-recipe-data-warning,
+  .nutrition-plan-meal .e25-recipe-data-warning { padding: 9px 10px; }
+}
+body.dark #nutritionAdvancedModal .e25-recipe-data-warning,
+body.dark .nutrition-plan-meal .e25-recipe-data-warning,
+[data-theme="dark"] #nutritionAdvancedModal .e25-recipe-data-warning,
+[data-theme="dark"] .nutrition-plan-meal .e25-recipe-data-warning {
+  background: #392d17;
+  border-color: #8a6a2c;
+  color: #ffe7b2;
+}
+body.dark #nutritionAdvancedModal .e25-recipe-undo,
+[data-theme="dark"] #nutritionAdvancedModal .e25-recipe-undo {
+  background: var(--nutrition-surface-soft, #202923);
+  color: var(--nutrition-text, #e3eee7);
+}
+@media (prefers-reduced-motion: reduce) {
+  #nutritionAdvancedModal .e25-recipe-undo { scroll-behavior: auto; }
+}
+@media (forced-colors: active) {
+  #nutritionAdvancedModal .e25-recipe-data-warning,
+  .nutrition-plan-meal .e25-recipe-data-warning,
+  #nutritionAdvancedModal .e25-recipe-undo { border: 1px solid CanvasText; }
+}
+#nutritionAdvancedModal :is(button, input, textarea, select):focus-visible {
+  outline: 3px solid var(--focus-ring, #176bba);
+  outline-offset: 2px;
+}

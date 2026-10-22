@@ -1,0 +1,13 @@
+/* E43 — herramientas exportables del recibo informativo de compras */
+.nutrition-week-template-post-apply-export-actions-e43{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.85rem;padding-top:.75rem;border-top:1px solid var(--border-color,rgba(100,116,139,.25))}
+.nutrition-week-template-post-apply-export-actions-e43 .small-btn{min-height:40px}
+.nutrition-week-template-post-apply-export-actions-e43 .small-btn:disabled{opacity:.52;cursor:not-allowed}
+.nutrition-week-template-post-apply-export-status-e43{margin:.55rem 0 0;font-size:.9rem;line-height:1.45;color:var(--text-secondary,#526176)}
+.nutrition-week-template-post-apply-impact-e42 .nutrition-week-template-post-apply-export-actions-e43{max-width:100%}
+.nutrition-week-template-post-apply-export-actions-e43 button:focus-visible{outline:3px solid var(--focus-ring,#3976d4);outline-offset:3px}
+body:not(.light) .nutrition-week-template-post-apply-export-status-e43{color:#cbd5e1}
+body.light .nutrition-week-template-post-apply-export-status-e43{color:#526176}
+@media(max-width:520px){.nutrition-week-template-post-apply-export-actions-e43{display:grid;grid-template-columns:1fr}.nutrition-week-template-post-apply-export-actions-e43 .small-btn{width:100%;white-space:normal}}
+@media(prefers-reduced-motion:reduce){.nutrition-week-template-post-apply-export-actions-e43 *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media(forced-colors:active){.nutrition-week-template-post-apply-export-actions-e43 .small-btn{border:1px solid ButtonText}.nutrition-week-template-post-apply-export-status-e43{color:CanvasText}}
+@media print{.nutrition-week-template-post-apply-export-actions-e43,.nutrition-week-template-post-apply-export-status-e43{display:none!important}}

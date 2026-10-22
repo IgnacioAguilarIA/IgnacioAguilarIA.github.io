@@ -1,0 +1,22 @@
+/* AgendaFICH E36 — selección de comidas específicas desde una plantilla semanal. */
+.nutrition-week-template-meal-selection-e36{margin-top:12px;padding:12px;border:1px solid var(--line,rgba(100,116,139,.26));border-radius:12px;background:var(--surface-card,rgba(127,127,127,.03));color:var(--text,inherit);min-width:0;display:grid;gap:10px}
+.nutrition-week-template-meal-selection-e36[hidden]{display:none!important}
+.nutrition-week-template-meal-selection-e36 h4{margin:0;font-size:.96rem;line-height:1.4;overflow-wrap:anywhere}
+.nutrition-week-template-meal-selection-help-e36,.nutrition-week-template-meal-selection-summary-e36{margin:0;font-size:.84rem;line-height:1.5;color:var(--muted,#64748b);overflow-wrap:anywhere}
+.nutrition-week-template-meal-selection-summary-e36{font-weight:650;color:var(--text,#1f2937)}
+.nutrition-week-template-meal-selection-tools-e36,.nutrition-week-template-meal-selection-actions-e36{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.nutrition-week-template-meal-selection-list-e36{display:grid;gap:5px;max-height:270px;overflow:auto;overscroll-behavior:contain;min-width:0;padding:2px}
+.nutrition-week-template-meal-selection-item-e36{display:flex;align-items:flex-start;gap:9px;min-width:0;padding:9px 10px;border:1px solid var(--line,rgba(100,116,139,.2));border-radius:9px;background:var(--card2,transparent);cursor:pointer;line-height:1.45}
+.nutrition-week-template-meal-selection-item-e36 input{flex:0 0 auto;width:18px;height:18px;margin:2px 0 0;accent-color:var(--green,#25845b)}
+.nutrition-week-template-meal-selection-item-e36 span{min-width:0;overflow-wrap:anywhere;font-size:.85rem}
+.nutrition-week-template-meal-selection-e36 button:focus-visible,.nutrition-week-template-meal-select-toggle-e36:focus-visible,.nutrition-week-template-meal-selection-item-e36 input:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+.nutrition-week-template-meal-selection-e36 button:disabled{opacity:.55;cursor:not-allowed}
+.nutrition-week-template-meal-select-toggle-e36[aria-expanded="true"]{border-color:var(--blue,#3b82f6);box-shadow:inset 0 0 0 1px var(--blue,#3b82f6)}
+@media(max-width:620px){.nutrition-week-template-meal-selection-e36{padding:10px}.nutrition-week-template-meal-selection-tools-e36,.nutrition-week-template-meal-selection-actions-e36{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.nutrition-week-template-meal-selection-tools-e36 button,.nutrition-week-template-meal-selection-actions-e36 button{min-height:42px;white-space:normal}.nutrition-week-template-meal-selection-actions-e36 button{grid-column:1/-1;width:100%}.nutrition-week-template-meal-selection-list-e36{max-height:34vh}}
+@media(max-width:360px){.nutrition-week-template-meal-selection-item-e36{padding:8px}.nutrition-week-template-meal-selection-item-e36 span{font-size:.8rem}}
+@media(prefers-reduced-motion:reduce){.nutrition-week-template-meal-selection-e36 *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media(forced-colors:active){.nutrition-week-template-meal-selection-e36,.nutrition-week-template-meal-selection-item-e36{border:1px solid CanvasText}.nutrition-week-template-meal-selection-e36 button:focus-visible,.nutrition-week-template-meal-selection-item-e36 input:focus-visible{outline:2px solid Highlight}}
+body.light .nutrition-week-template-meal-selection-e36{color:#172338;background:#ffffff;border-color:#dce5ef}
+body.light .nutrition-week-template-meal-selection-help-e36{color:#526176}
+body.light .nutrition-week-template-meal-selection-summary-e36{color:#172338}
+body.light .nutrition-week-template-meal-selection-item-e36{background:#f8fafc;color:#172338;border-color:#dce5ef}

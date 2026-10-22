@@ -1,0 +1,381 @@
+/* Agenda FICH — E19: sistema visual común para Alimentación.
+   Esta capa normaliza controles, diálogos, estados y tablas sin alterar lógica ni datos.
+   Todos los selectores quedan limitados a #nutritionPanel o a herramientas exclusivas de Alimentación. */
+
+/* Tokens para la zona principal. */
+#nutritionPanel {
+  --n19-radius-control: 11px;
+  --n19-radius-card: 15px;
+  --n19-radius-dialog: 20px;
+  --n19-control-bg: var(--n11-surface-soft, #121f32);
+  --n19-control-border: var(--n11-border, #2b3b53);
+  --n19-control-text: var(--n11-text, #edf3fc);
+  --n19-control-muted: var(--n11-muted, #a4b2c7);
+  --n19-focus: var(--n11-blue, #6ca7ff);
+  --n19-line: var(--n11-border, #2b3b53);
+}
+body.light #nutritionPanel {
+  --n19-control-bg: #fff;
+  --n19-control-border: #cfd9e6;
+  --n19-control-text: #172338;
+  --n19-control-muted: #5d6c81;
+  --n19-focus: #2563eb;
+  --n19-line: #dce5ef;
+}
+
+/* Tokens y superficies compartidas por diálogos separados del panel en el DOM. */
+#nutritionOverlay .modal,
+#goalOverlay .modal,
+.nutrition-advanced-modal,
+.nutrition-routine-modal,
+.nutrition-week-modal,
+.nutrition-plan-editor-dialog,
+.nutrition-quality-dialog,
+.nutrition-pantry-modal,
+.e18-view-preferences-dialog {
+  --n19-dialog-bg: #152238;
+  --n19-dialog-soft: #101a2b;
+  --n19-dialog-text: #edf3fc;
+  --n19-dialog-muted: #a4b2c7;
+  --n19-dialog-border: #2b3b53;
+  --n19-dialog-focus: #6ca7ff;
+  background-color: var(--n19-dialog-bg);
+  color: var(--n19-dialog-text);
+  border-color: var(--n19-dialog-border);
+  border-radius: var(--n19-radius-dialog, 20px);
+  box-shadow: 0 24px 68px rgba(0, 0, 0, .25);
+  color-scheme: dark;
+}
+body.light #nutritionOverlay .modal,
+body.light #goalOverlay .modal,
+body.light .nutrition-advanced-modal,
+body.light .nutrition-routine-modal,
+body.light .nutrition-week-modal,
+body.light .nutrition-plan-editor-dialog,
+body.light .nutrition-quality-dialog,
+body.light .nutrition-pantry-modal,
+body.light .e18-view-preferences-dialog {
+  --n19-dialog-bg: #fff;
+  --n19-dialog-soft: #f8fafc;
+  --n19-dialog-text: #172338;
+  --n19-dialog-muted: #596a80;
+  --n19-dialog-border: #d7e1ed;
+  --n19-dialog-focus: #2563eb;
+  background-color: var(--n19-dialog-bg);
+  color: var(--n19-dialog-text);
+  border-color: var(--n19-dialog-border);
+  color-scheme: light;
+}
+
+/* Un mismo tratamiento de fondo para todos los diálogos de Alimentación; se preserva cada z-index. */
+#nutritionOverlay.overlay,
+#goalOverlay.overlay,
+.nutrition-advanced-overlay,
+.nutrition-routine-overlay,
+.nutrition-week-modal-overlay,
+.nutrition-plan-editor-overlay,
+.nutrition-quality-overlay {
+  background-color: rgba(7, 13, 24, .68);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  overscroll-behavior: contain;
+}
+
+/* Unificación de encabezados, divisores y tamaños tipográficos de los diálogos. */
+#nutritionOverlay .modal-head,
+#goalOverlay .modal-head,
+.nutrition-advanced-head,
+.nutrition-routine-head,
+.nutrition-week-modal-head,
+.nutrition-plan-editor-head,
+.e18-view-preferences-head {
+  border-color: var(--n19-dialog-border, var(--n11-border, #d7e1ed));
+}
+#nutritionOverlay .modal-head h3,
+#goalOverlay .modal-head h3,
+.nutrition-advanced-head h3,
+.nutrition-routine-head h3,
+.nutrition-week-modal-heading h2,
+.nutrition-plan-editor-head h2,
+.nutrition-quality-dialog > h2,
+.e18-view-preferences-head h2 {
+  color: var(--n19-dialog-text, var(--n11-text, #172338));
+  letter-spacing: -.02em;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+#nutritionOverlay .modal-head :is(span, p),
+#goalOverlay .modal-head :is(span, p),
+.nutrition-advanced-head p,
+.nutrition-routine-head p,
+.nutrition-week-modal-heading p,
+.nutrition-plan-editor-head p,
+.nutrition-quality-dialog .nutrition-quality-note,
+.e18-view-preferences-head p {
+  color: var(--n19-dialog-muted, var(--n11-muted, #64748b));
+  line-height: 1.55;
+}
+
+/* Campos nativos con altura, relleno y foco consistentes. No afecta casillas ni radios. */
+#nutritionPanel :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+#nutritionOverlay .modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+#goalOverlay .modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-advanced-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-routine-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-week-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-plan-editor-dialog :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-quality-dialog :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-pantry-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.e18-view-preferences-dialog :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  border-radius: var(--n19-radius-control, 11px);
+  border: 1px solid var(--n19-control-border, var(--n19-dialog-border, #cfd9e6));
+  box-sizing: border-box;
+  min-height: 42px;
+  font-family: inherit;
+  line-height: 1.4;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+#nutritionPanel :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  background-color: var(--n19-control-bg);
+  color: var(--n19-control-text);
+}
+#nutritionOverlay .modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+#goalOverlay .modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-advanced-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-routine-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-week-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-plan-editor-dialog :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-quality-dialog :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.nutrition-pantry-modal :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea),
+.e18-view-preferences-dialog :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  background-color: var(--n19-dialog-soft);
+  color: var(--n19-dialog-text);
+}
+#nutritionPanel :is(input, textarea)::placeholder,
+#nutritionOverlay .modal :is(input, textarea)::placeholder,
+#goalOverlay .modal :is(input, textarea)::placeholder,
+.nutrition-advanced-modal :is(input, textarea)::placeholder,
+.nutrition-routine-modal :is(input, textarea)::placeholder,
+.nutrition-week-modal :is(input, textarea)::placeholder,
+.nutrition-plan-editor-dialog :is(input, textarea)::placeholder,
+.nutrition-quality-dialog :is(input, textarea)::placeholder,
+.nutrition-pantry-modal :is(input, textarea)::placeholder,
+.e18-view-preferences-dialog :is(input, textarea)::placeholder {
+  color: var(--n19-control-muted, var(--n19-dialog-muted, #64748b));
+  opacity: .82;
+}
+#nutritionPanel :is(button, a[href], input, select, textarea, summary):focus-visible,
+#nutritionOverlay .modal :is(button, a[href], input, select, textarea, summary):focus-visible,
+#goalOverlay .modal :is(button, a[href], input, select, textarea, summary):focus-visible,
+.nutrition-advanced-modal :is(button, a[href], input, select, textarea, summary):focus-visible,
+.nutrition-routine-modal :is(button, a[href], input, select, textarea, summary):focus-visible,
+.nutrition-week-modal :is(button, a[href], input, select, textarea, summary):focus-visible,
+.nutrition-plan-editor-dialog :is(button, a[href], input, select, textarea, summary):focus-visible,
+.nutrition-quality-dialog :is(button, a[href], input, select, textarea, summary):focus-visible,
+.nutrition-pantry-modal :is(button, a[href], input, select, textarea, summary):focus-visible,
+.e18-view-preferences-dialog :is(button, a[href], input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--n19-focus, var(--n19-dialog-focus, #2563eb));
+  outline-offset: 2px;
+}
+
+/* Botones: se conservan los colores y la semántica de cada acción, unificando forma y ritmo. */
+#nutritionOverlay .modal button,
+#goalOverlay .modal button,
+.nutrition-advanced-modal button,
+.nutrition-routine-modal button,
+.nutrition-week-modal button,
+.nutrition-plan-editor-dialog button,
+.nutrition-quality-dialog button,
+.nutrition-pantry-modal button,
+.e18-view-preferences-dialog button {
+  font-family: inherit;
+  line-height: 1.35;
+  letter-spacing: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+#nutritionOverlay .modal button:not(.close),
+#goalOverlay .modal button:not(.close),
+.nutrition-advanced-modal button,
+.nutrition-routine-modal button,
+.nutrition-week-modal button,
+.nutrition-plan-editor-dialog button,
+.nutrition-quality-dialog button,
+.nutrition-pantry-modal button,
+.e18-view-preferences-dialog button {
+  border-radius: 11px;
+}
+#nutritionOverlay .modal button:disabled,
+#goalOverlay .modal button:disabled,
+.nutrition-advanced-modal button:disabled,
+.nutrition-routine-modal button:disabled,
+.nutrition-week-modal button:disabled,
+.nutrition-plan-editor-dialog button:disabled,
+.nutrition-quality-dialog button:disabled,
+.nutrition-pantry-modal button:disabled,
+.e18-view-preferences-dialog button:disabled {
+  cursor: not-allowed;
+  opacity: .58;
+}
+
+/* Estados, paneles vacíos y avisos comparten el mismo lenguaje sin perder su severidad. */
+#nutritionPanel :is(.meal-empty, .nutrition-meal-builder-empty),
+.nutrition-advanced-empty,
+.nutrition-week-empty,
+.nutrition-shopping-empty,
+.nutrition-plan-empty,
+.nutrition-quality-empty,
+.nutrition-pantry-empty {
+  border-radius: var(--n19-radius-card, 15px);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.nutrition-week-status,
+.nutrition-plan-editor-status,
+.nutrition-quality-status,
+.nutrition-pantry-status,
+.nutrition-routine-status,
+.nutrition-advanced-status,
+.nutrition-meal-copy-status,
+.nutrition-meal-order-status,
+#nutritionPanel .nutrition-meal-builder-status {
+  border-radius: 12px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+/* Tablas e informes: cabeceras diferenciadas, filas legibles y scroll local en móvil. */
+.nutrition-quality-table-wrap,
+.nutrition-routine-table-wrap {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--n19-dialog-border, #d7e1ed);
+  border-radius: 13px;
+  background: var(--n19-dialog-bg, #fff);
+  -webkit-overflow-scrolling: touch;
+}
+.nutrition-quality-table-wrap table,
+.nutrition-routine-table-wrap table,
+.nutrition-routine-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+.nutrition-quality-table-wrap th,
+.nutrition-routine-table-wrap th,
+.nutrition-routine-table th {
+  background: var(--n19-dialog-soft, #f8fafc);
+  color: var(--n19-dialog-text, #172338);
+  font-size: .76rem;
+  font-weight: 850;
+  line-height: 1.4;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--n19-dialog-border, #d7e1ed);
+}
+.nutrition-quality-table-wrap td,
+.nutrition-routine-table-wrap td,
+.nutrition-routine-table td {
+  border-bottom: 1px solid color-mix(in srgb, var(--n19-dialog-border, #d7e1ed) 72%, transparent);
+  font-size: .8rem;
+  line-height: 1.45;
+  vertical-align: top;
+}
+.nutrition-quality-table-wrap th,
+.nutrition-quality-table-wrap td,
+.nutrition-routine-table-wrap th,
+.nutrition-routine-table-wrap td,
+.nutrition-routine-table th,
+.nutrition-routine-table td { padding: 10px 12px; }
+.nutrition-quality-table-wrap tbody tr:last-child td,
+.nutrition-routine-table-wrap tbody tr:last-child td,
+.nutrition-routine-table tbody tr:last-child td { border-bottom: 0; }
+
+/* Jerarquía de títulos y separadores en herramientas avanzadas. */
+.nutrition-advanced-modal h4,
+.nutrition-routine-modal h4,
+.nutrition-week-modal h3,
+.nutrition-plan-editor-dialog h3,
+.nutrition-quality-dialog h3,
+.nutrition-pantry-modal h3 {
+  letter-spacing: -.01em;
+  line-height: 1.35;
+  text-wrap: balance;
+}
+.nutrition-advanced-modal hr,
+.nutrition-routine-modal hr,
+.nutrition-week-modal hr,
+.nutrition-plan-editor-dialog hr,
+.nutrition-quality-dialog hr,
+.nutrition-pantry-modal hr { border: 0; border-top: 1px solid var(--n19-dialog-border, #d7e1ed); }
+
+/* Hover muy discreto solo donde hay puntero; nada de saltos táctiles. */
+@media (hover: hover) and (pointer: fine) {
+  #nutritionOverlay .modal button:not(:disabled),
+  #goalOverlay .modal button:not(:disabled),
+  .nutrition-advanced-modal button:not(:disabled),
+  .nutrition-routine-modal button:not(:disabled),
+  .nutrition-week-modal button:not(:disabled),
+  .nutrition-plan-editor-dialog button:not(:disabled),
+  .nutrition-quality-dialog button:not(:disabled),
+  .nutrition-pantry-modal button:not(:disabled),
+  .e18-view-preferences-dialog button:not(:disabled) { transition: filter .14s ease, border-color .14s ease; }
+  #nutritionOverlay .modal button:hover:not(:disabled),
+  #goalOverlay .modal button:hover:not(:disabled),
+  .nutrition-advanced-modal button:hover:not(:disabled),
+  .nutrition-routine-modal button:hover:not(:disabled),
+  .nutrition-week-modal button:hover:not(:disabled),
+  .nutrition-plan-editor-dialog button:hover:not(:disabled),
+  .nutrition-quality-dialog button:hover:not(:disabled),
+  .nutrition-pantry-modal button:hover:not(:disabled),
+  .e18-view-preferences-dialog button:hover:not(:disabled) { filter: brightness(1.035); }
+}
+
+@media (max-width: 700px) {
+  .nutrition-quality-table-wrap th,
+  .nutrition-quality-table-wrap td,
+  .nutrition-routine-table-wrap th,
+  .nutrition-routine-table-wrap td,
+  .nutrition-routine-table th,
+  .nutrition-routine-table td { padding: 9px 10px; }
+  #nutritionOverlay .modal,
+  #goalOverlay .modal { border-radius: 20px 20px 14px 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel *,
+  #nutritionOverlay *,
+  #goalOverlay *,
+  .nutrition-advanced-modal *,
+  .nutrition-routine-modal *,
+  .nutrition-week-modal *,
+  .nutrition-plan-editor-dialog *,
+  .nutrition-quality-dialog *,
+  .nutrition-pantry-modal *,
+  .e18-view-preferences-dialog * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
+@media (forced-colors: active) {
+  #nutritionPanel :is(input, select, textarea, button),
+  #nutritionOverlay .modal :is(input, select, textarea, button),
+  #goalOverlay .modal :is(input, select, textarea, button),
+  .nutrition-advanced-modal :is(input, select, textarea, button),
+  .nutrition-routine-modal :is(input, select, textarea, button),
+  .nutrition-week-modal :is(input, select, textarea, button),
+  .nutrition-plan-editor-dialog :is(input, select, textarea, button),
+  .nutrition-quality-dialog :is(input, select, textarea, button),
+  .nutrition-pantry-modal :is(input, select, textarea, button),
+  .e18-view-preferences-dialog :is(input, select, textarea, button) { border: 1px solid ButtonText; }
+  #nutritionPanel :is(button, a[href]):focus-visible,
+  #nutritionOverlay .modal :is(button, a[href]):focus-visible,
+  #goalOverlay .modal :is(button, a[href]):focus-visible,
+  .nutrition-advanced-modal :is(button, a[href]):focus-visible,
+  .nutrition-routine-modal :is(button, a[href]):focus-visible,
+  .nutrition-week-modal :is(button, a[href]):focus-visible,
+  .nutrition-plan-editor-dialog :is(button, a[href]):focus-visible,
+  .nutrition-quality-dialog :is(button, a[href]):focus-visible,
+  .nutrition-pantry-modal :is(button, a[href]):focus-visible,
+  .e18-view-preferences-dialog :is(button, a[href]):focus-visible { outline: 2px solid Highlight; }
+}

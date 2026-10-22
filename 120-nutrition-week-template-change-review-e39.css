@@ -1,0 +1,32 @@
+/* E39 — Revisión consolidada de cambios y conflictos para plantillas semanales. */
+.nutrition-week-template-change-review-e39{display:grid;gap:10px;margin:12px 0 4px;padding:12px;border:1px solid var(--line,rgba(148,163,184,.28));border-radius:14px;background:var(--card2,rgba(127,127,127,.035));color:var(--text,#e5eaf1);min-width:0}
+.nutrition-week-template-change-review-e39 h4{margin:0;font-size:.98rem;line-height:1.35;color:inherit}
+.nutrition-week-template-change-review-stats-e39{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.nutrition-week-template-change-review-stat-e39{display:grid;gap:4px;min-width:0;padding:9px 10px;border:1px solid var(--line,rgba(148,163,184,.24));border-radius:10px;background:var(--surface-card,rgba(127,127,127,.035))}
+.nutrition-week-template-change-review-stat-e39 span{font-size:.73rem;line-height:1.35;color:var(--muted,#a8b4c5);overflow-wrap:anywhere}
+.nutrition-week-template-change-review-stat-e39 strong{font-size:1.08rem;line-height:1.2;font-variant-numeric:tabular-nums;color:inherit}
+.nutrition-week-template-change-review-details-e39{border-top:1px solid var(--line,rgba(148,163,184,.22));padding-top:10px;min-width:0}
+.nutrition-week-template-change-review-details-e39>summary{cursor:pointer;min-height:38px;display:flex;align-items:center;gap:8px;font-weight:700;font-size:.83rem;line-height:1.4;color:inherit}
+.nutrition-week-template-change-review-details-e39>summary:focus-visible{outline:3px solid var(--blue,#60a5fa);outline-offset:3px;border-radius:5px}
+.nutrition-week-template-change-review-list-e39{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:8px;max-height:360px;overflow:auto;overscroll-behavior:contain}
+.nutrition-week-template-change-review-item-e39{display:grid;gap:5px;min-width:0;padding:10px;border:1px solid var(--line,rgba(148,163,184,.22));border-radius:10px;background:var(--surface-card,rgba(127,127,127,.025));overflow-wrap:anywhere}
+.nutrition-week-template-change-review-item-top-e39{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;min-width:0}
+.nutrition-week-template-change-review-item-top-e39 strong{min-width:0;font-size:.84rem;line-height:1.4;color:inherit}
+.nutrition-week-template-change-review-badge-e39{flex:0 0 auto;max-width:48%;padding:3px 7px;border:1px solid var(--line,rgba(148,163,184,.28));border-radius:999px;font-size:.68rem;line-height:1.35;font-weight:750;text-align:center}
+.nutrition-week-template-change-review-badge-e39.is-add{color:#86efac;border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.09)}
+.nutrition-week-template-change-review-badge-e39.is-already{color:var(--muted,#a8b4c5);background:rgba(148,163,184,.08)}
+.nutrition-week-template-change-review-badge-e39.is-skip{color:#fcd34d;border-color:rgba(245,158,11,.4);background:rgba(245,158,11,.08)}
+.nutrition-week-template-change-review-route-e39,.nutrition-week-template-change-review-note-e39,.nutrition-week-template-change-review-warning-e39,.nutrition-week-template-change-review-existing-e39{margin:0;font-size:.76rem;line-height:1.45;color:var(--muted,#a8b4c5)}
+.nutrition-week-template-change-review-warning-e39{padding:6px 8px;border-radius:7px;border-inline-start:3px solid var(--warn,#d97706);background:rgba(245,158,11,.075);color:var(--text,#e5eaf1)}
+.nutrition-week-template-change-review-existing-e39{font-size:.72rem}
+body.light .nutrition-week-template-change-review-e39{background:#f8fafc;color:#172338;border-color:#d8e2ec}
+body.light .nutrition-week-template-change-review-stat-e39,body.light .nutrition-week-template-change-review-item-e39{background:#fff;border-color:#dce5ef}
+body.light .nutrition-week-template-change-review-stat-e39 span,body.light .nutrition-week-template-change-review-route-e39,body.light .nutrition-week-template-change-review-note-e39,body.light .nutrition-week-template-change-review-existing-e39{color:#526176}
+body.light .nutrition-week-template-change-review-warning-e39{color:#653d09;background:#fff7e6;border-color:#e9b45b}
+body.light .nutrition-week-template-change-review-badge-e39.is-already{color:#526176}
+body.light .nutrition-week-template-change-review-badge-e39.is-add{color:#166534}
+body.light .nutrition-week-template-change-review-badge-e39.is-skip{color:#92400e}
+@media(max-width:620px){.nutrition-week-template-change-review-e39{padding:10px;gap:9px}.nutrition-week-template-change-review-stats-e39{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.nutrition-week-template-change-review-stat-e39{padding:8px}.nutrition-week-template-change-review-stat-e39 span{font-size:.7rem}.nutrition-week-template-change-review-item-e39{padding:9px}.nutrition-week-template-change-review-list-e39{max-height:320px}}
+@media(max-width:360px){.nutrition-week-template-change-review-stats-e39{grid-template-columns:minmax(0,1fr)}.nutrition-week-template-change-review-item-top-e39{flex-direction:column;align-items:flex-start}.nutrition-week-template-change-review-badge-e39{max-width:100%}}
+@media(prefers-reduced-motion:reduce){.nutrition-week-template-change-review-e39 *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media(forced-colors:active){.nutrition-week-template-change-review-e39,.nutrition-week-template-change-review-stat-e39,.nutrition-week-template-change-review-item-e39,.nutrition-week-template-change-review-warning-e39{border:1px solid CanvasText}.nutrition-week-template-change-review-e39 :focus-visible{outline:2px solid Highlight}.nutrition-week-template-change-review-badge-e39{border:1px solid CanvasText}}

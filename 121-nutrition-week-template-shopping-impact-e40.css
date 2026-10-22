@@ -1,0 +1,29 @@
+/* E40 — Estimación de solo lectura del impacto de una plantilla en la lista de compras. */
+.nutrition-week-template-shopping-impact-e40{display:grid;gap:9px;min-width:0;margin:4px 0 2px;padding:12px;border:1px solid var(--line,rgba(148,163,184,.28));border-radius:12px;background:rgba(100,116,139,.055);color:var(--text,#e5eaf1)}
+.nutrition-week-template-shopping-impact-e40 h5{margin:0;font-size:.9rem;line-height:1.35;color:inherit}
+.nutrition-week-template-shopping-impact-summary-e40,.nutrition-week-template-shopping-impact-note-e40,.nutrition-week-template-shopping-impact-warning-e40{margin:0;font-size:.76rem;line-height:1.5;color:var(--muted,#a8b4c5);overflow-wrap:anywhere}
+.nutrition-week-template-shopping-impact-summary-e40{color:inherit}
+.nutrition-week-template-shopping-impact-stats-e40{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;min-width:0}
+.nutrition-week-template-shopping-impact-stat-e40{display:grid;align-content:start;gap:4px;min-width:0;padding:8px;border:1px solid var(--line,rgba(148,163,184,.24));border-radius:9px;background:var(--surface-card,rgba(127,127,127,.035))}
+.nutrition-week-template-shopping-impact-stat-e40 span{font-size:.68rem;line-height:1.35;color:var(--muted,#a8b4c5);overflow-wrap:anywhere}
+.nutrition-week-template-shopping-impact-stat-e40 strong{font-size:1.02rem;line-height:1.2;font-variant-numeric:tabular-nums;color:inherit}
+.nutrition-week-template-shopping-impact-notices-e40{display:grid;gap:6px;min-width:0}
+.nutrition-week-template-shopping-impact-warning-e40{padding:7px 9px;border-inline-start:3px solid #d97706;border-radius:7px;background:rgba(245,158,11,.09);color:var(--text,#e5eaf1)}
+.nutrition-week-template-shopping-impact-note-e40{padding:7px 9px;border-inline-start:3px solid #60a5fa;border-radius:7px;background:rgba(96,165,250,.08);color:var(--text,#e5eaf1)}
+.nutrition-week-template-shopping-impact-details-e40{border-top:1px solid var(--line,rgba(148,163,184,.22));padding-top:8px;min-width:0}
+.nutrition-week-template-shopping-impact-details-e40>summary{cursor:pointer;display:flex;align-items:center;min-height:36px;font-size:.77rem;line-height:1.4;font-weight:700;color:inherit}
+.nutrition-week-template-shopping-impact-details-e40>summary:focus-visible{outline:3px solid var(--blue,#60a5fa);outline-offset:3px;border-radius:5px}
+.nutrition-week-template-shopping-impact-list-e40{display:grid;gap:5px;max-height:260px;overflow:auto;overscroll-behavior:contain;list-style:none;margin:8px 0 0;padding:0;min-width:0}
+.nutrition-week-template-shopping-impact-group-e40{padding-top:7px;border-top:1px solid var(--line,rgba(148,163,184,.2));font-size:.73rem;line-height:1.35;font-weight:750;color:inherit;overflow-wrap:anywhere}
+.nutrition-week-template-shopping-impact-group-e40:first-child{padding-top:0;border-top:0}
+.nutrition-week-template-shopping-impact-item-e40,.nutrition-week-template-shopping-impact-more-e40{padding:6px 8px;border:1px solid var(--line,rgba(148,163,184,.2));border-radius:7px;background:var(--surface-card,rgba(127,127,127,.025));font-size:.72rem;line-height:1.45;color:var(--muted,#a8b4c5);overflow-wrap:anywhere}
+.nutrition-week-template-shopping-impact-more-e40{font-style:italic}
+body.light .nutrition-week-template-shopping-impact-e40{background:#f8fafc;color:#172338;border-color:#d8e2ec}
+body.light .nutrition-week-template-shopping-impact-stat-e40,body.light .nutrition-week-template-shopping-impact-item-e40,body.light .nutrition-week-template-shopping-impact-more-e40{background:#fff;border-color:#dce5ef}
+body.light .nutrition-week-template-shopping-impact-stat-e40 span,body.light .nutrition-week-template-shopping-impact-note-e40,body.light .nutrition-week-template-shopping-impact-item-e40,body.light .nutrition-week-template-shopping-impact-more-e40{color:#526176}
+body.light .nutrition-week-template-shopping-impact-warning-e40{color:#653d09;background:#fff7e6;border-color:#e9b45b}
+body.light .nutrition-week-template-shopping-impact-note-e40{color:#1e40af;background:#eff6ff;border-color:#93c5fd}
+@media(max-width:620px){.nutrition-week-template-shopping-impact-e40{padding:10px;gap:8px}.nutrition-week-template-shopping-impact-stats-e40{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.nutrition-week-template-shopping-impact-stat-e40{padding:7px}.nutrition-week-template-shopping-impact-stat-e40 span{font-size:.67rem}.nutrition-week-template-shopping-impact-list-e40{max-height:230px}}
+@media(max-width:360px){.nutrition-week-template-shopping-impact-stats-e40{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){.nutrition-week-template-shopping-impact-e40 *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media(forced-colors:active){.nutrition-week-template-shopping-impact-e40,.nutrition-week-template-shopping-impact-stat-e40,.nutrition-week-template-shopping-impact-warning-e40,.nutrition-week-template-shopping-impact-note-e40,.nutrition-week-template-shopping-impact-item-e40{border:1px solid CanvasText}.nutrition-week-template-shopping-impact-e40 :focus-visible{outline:2px solid Highlight}}

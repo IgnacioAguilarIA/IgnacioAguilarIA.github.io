@@ -1,0 +1,159 @@
+/* E16 — refinamiento visual de tarjetas de comidas. Todo queda limitado a Alimentación. */
+#nutritionPanel #mealList .meal-card {
+  border-radius: 18px;
+  border: 1px solid var(--n11-border, rgba(148,163,184,.25));
+  overflow: hidden;
+  background: var(--n11-surface, #152238);
+  box-shadow: 0 4px 14px rgba(0,0,0,.045);
+  transition: border-color .16s ease, box-shadow .16s ease;
+}
+#nutritionPanel #mealList .meal-card-head {
+  align-items: flex-start;
+  padding: 15px 15px 12px;
+  gap: 12px;
+}
+#nutritionPanel #mealList .meal-card-head > div:first-child { min-width: 0; }
+#nutritionPanel #mealList .meal-name {
+  font-size: 1rem;
+  font-weight: 820;
+  line-height: 1.35;
+  letter-spacing: -.012em;
+}
+#nutritionPanel #mealList .e16-meal-glance {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;
+  margin-top: 7px;
+}
+#nutritionPanel #mealList .e16-meal-glance:empty { display: none; }
+#nutritionPanel #mealList .e16-meal-glance .e15-meal-card-kcal {
+  min-height: 26px;
+  margin: 0;
+  padding: 4px 9px;
+  font-size: .72rem;
+  font-weight: 850;
+  letter-spacing: .005em;
+}
+#nutritionPanel #mealList .e16-meal-protein,
+#nutritionPanel #mealList .e16-meal-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 26px;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--n11-border, rgba(148,163,184,.24));
+  border-radius: 999px;
+  color: var(--n11-muted, #a3b1c6);
+  background: var(--n11-surface-soft, rgba(127,127,127,.07));
+  font-size: .68rem;
+  font-weight: 750;
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+#nutritionPanel #mealList .e16-meal-protein { color: var(--n11-text, #e7edf5); }
+#nutritionPanel #mealList .e16-meal-time { margin-left: auto; white-space: nowrap; }
+#nutritionPanel #mealList .e15-meal-card-preview {
+  margin-top: 7px;
+  max-width: 68ch;
+  font-size: .77rem;
+  line-height: 1.48;
+}
+#nutritionPanel #mealList .meal-actions { display: flex; align-items: center; gap: 6px; }
+#nutritionPanel #mealList .meal-actions .meal-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--n11-border, rgba(148,163,184,.3));
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+#nutritionPanel #mealList .meal-actions .meal-action:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--n11-blue, #3b82f6) 75%, transparent);
+  outline-offset: 2px;
+}
+#nutritionPanel #mealList .meal-actions .meal-action.delete { color: #f87171; }
+#nutritionPanel #mealList .e15-meal-details {
+  border-top-color: var(--n11-border, rgba(148,163,184,.2));
+  transition: background-color .15s ease;
+}
+#nutritionPanel #mealList .e15-meal-details > summary {
+  min-height: 44px;
+  padding: 10px 15px;
+  font-size: .75rem;
+  font-weight: 780;
+}
+#nutritionPanel #mealList .e15-meal-details[open] > summary {
+  color: var(--n11-text, #e7edf5);
+}
+#nutritionPanel #mealList .e15-meal-details-body {
+  gap: 10px;
+  padding: 0 15px 15px;
+}
+#nutritionPanel #mealList .e15-meal-details-body .meal-chip {
+  min-height: 25px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  font-size: .7rem;
+  line-height: 1.25;
+}
+body.light #nutritionPanel #mealList .meal-card {
+  background: #fff;
+  border-color: #dce5ef;
+  box-shadow: 0 4px 14px rgba(15,23,42,.045);
+}
+body.light #nutritionPanel #mealList .e16-meal-protein,
+body.light #nutritionPanel #mealList .e16-meal-time {
+  color: #475569;
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+body.light #nutritionPanel #mealList .e16-meal-protein { color: #334155; }
+body.light #nutritionPanel #mealList .e15-meal-details[open] > summary { color: #1e293b; }
+@media (max-width: 700px) {
+  #nutritionPanel #mealList .meal-card { border-radius: 15px; }
+  #nutritionPanel #mealList .meal-card-head { padding: 13px 12px 11px; gap: 8px; }
+  #nutritionPanel #mealList .meal-name { font-size: .94rem; }
+  #nutritionPanel #mealList .e16-meal-glance { gap: 5px; margin-top: 6px; }
+  #nutritionPanel #mealList .e16-meal-glance .e15-meal-card-kcal,
+  #nutritionPanel #mealList .e16-meal-protein,
+  #nutritionPanel #mealList .e16-meal-time { min-height: 25px; font-size: .67rem; }
+  #nutritionPanel #mealList .e16-meal-time { margin-left: 0; }
+  #nutritionPanel #mealList .e15-meal-card-preview { font-size: .73rem; }
+  #nutritionPanel #mealList .meal-actions { gap: 5px; }
+  #nutritionPanel #mealList .meal-actions .meal-action { width: 44px; height: 44px; }
+  #nutritionPanel #mealList .e15-meal-details > summary { padding-inline: 12px; }
+  #nutritionPanel #mealList .e15-meal-details-body { padding-inline: 12px; }
+}
+@media (max-width: 360px) {
+  #nutritionPanel #mealList .meal-card-head { align-items: flex-start; }
+  #nutritionPanel #mealList .meal-actions { gap: 4px; }
+  #nutritionPanel #mealList .meal-actions .meal-action { width: 44px; height: 44px; border-radius: 10px; }
+  #nutritionPanel #mealList .e16-meal-time { margin-left: 0; }
+}
+@media (hover: hover) and (pointer: fine) {
+  #nutritionPanel #mealList .meal-card:hover { border-color: var(--n11-border-strong, #91a8c5); box-shadow: 0 8px 20px rgba(0,0,0,.075); }
+  #nutritionPanel #mealList .meal-actions .meal-action:hover { border-color: var(--n11-blue, #60a5fa); background: rgba(59,130,246,.075); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel #mealList .meal-card,
+  #nutritionPanel #mealList .meal-actions .meal-action,
+  #nutritionPanel #mealList .e15-meal-details { transition: none !important; }
+}
+@media (forced-colors: active) {
+  #nutritionPanel #mealList .meal-card,
+  #nutritionPanel #mealList .e16-meal-protein,
+  #nutritionPanel #mealList .e16-meal-time { border: 1px solid CanvasText; }
+}
+@media (hover: none) and (pointer: coarse) {
+  #nutritionPanel #mealList .meal-actions .meal-action,
+  #nutritionPanel #mealList .e15-meal-details > summary { min-height: 44px; }
+}

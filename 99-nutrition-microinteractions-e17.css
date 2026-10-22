@@ -1,0 +1,141 @@
+/* E17 — microinteracciones sutiles. Estilos limitados a controles y contenido de Alimentación. */
+#nutritionPanel #mealList .meal-card,
+#nutritionPanel #mealList .meal-card .meal-action,
+#nutritionPanel #mealList .e15-meal-details > summary,
+#nutritionPanel .nutrition-actions > button,
+#nutritionPanel #nutritionMoreTools summary,
+#nutritionPanel .e15-tool-group-actions > button,
+#nutritionPanel .nutrition-food-quick-card button,
+#nutritionOverlay button,
+#nutritionAdvancedModal button,
+#nutritionQualityOverlay button {
+  transition:
+    transform .12s ease,
+    box-shadow .16s ease,
+    border-color .16s ease,
+    background-color .16s ease,
+    color .16s ease;
+}
+
+#nutritionPanel button:active:not(:disabled),
+#nutritionOverlay button:active:not(:disabled),
+#nutritionAdvancedModal button:active:not(:disabled),
+#nutritionQualityOverlay button:active:not(:disabled) {
+  transform: translateY(1px) scale(.985);
+}
+
+#nutritionPanel #mealList .meal-card.e17-saved-feedback {
+  animation: nutrition-e17-saved 1.65s ease-out both;
+}
+#nutritionPanel #mealList .meal-card.e17-focus-arrival {
+  animation: nutrition-e17-focus-arrival .95s ease-out both;
+}
+#nutritionPanel #mealList .e15-meal-details-body.e17-detail-entered {
+  animation: nutrition-e17-details-in .28s ease-out both;
+}
+#nutritionPanel #mealList .e15-meal-details-body.e17-detail-saved-feedback {
+  animation: nutrition-e17-detail-saved 1.35s ease-out both;
+}
+#nutritionPanel #mealFoods.e17-field-updated {
+  animation: nutrition-e17-field-updated 1.05s ease-out both;
+}
+#nutritionPanel #nutritionGoalBtn.e17-action-confirmed {
+  animation: nutrition-e17-action-confirmed 1.2s ease-out both;
+}
+#nutritionPanel #nutritionSyncStatus.e17-sync-confirmed {
+  animation: nutrition-e17-sync-confirmed 1.35s ease-out both;
+}
+#nutritionPanel #nutritionFoodQuickStatus.e17-feedback-pulse {
+  animation: nutrition-e17-status-pulse 1.15s ease-out both;
+}
+
+#nutritionPanel #mealList .e15-meal-details > summary:focus-visible,
+#nutritionPanel #mealList .meal-action:focus-visible,
+#nutritionPanel .nutrition-actions > button:focus-visible,
+#nutritionPanel #nutritionMoreTools summary:focus-visible,
+#nutritionPanel .e15-tool-group-actions > button:focus-visible,
+#nutritionPanel .nutrition-food-quick-card button:focus-visible,
+#nutritionOverlay button:focus-visible,
+#nutritionAdvancedModal button:focus-visible,
+#nutritionQualityOverlay button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--n11-blue, #4786e8) 82%, transparent);
+  outline-offset: 3px;
+}
+
+@keyframes nutrition-e17-saved {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); border-color: var(--n11-border, #cbd5e1); }
+  18% { box-shadow: 0 0 0 3px rgba(34, 197, 94, .19); border-color: #36a879; }
+  66% { box-shadow: 0 0 0 2px rgba(34, 197, 94, .10); border-color: #4aa985; }
+  100% { box-shadow: 0 4px 14px rgba(0,0,0,.045); border-color: var(--n11-border, #cbd5e1); }
+}
+@keyframes nutrition-e17-focus-arrival {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(71, 134, 232, 0); }
+  24% { box-shadow: 0 0 0 3px rgba(71, 134, 232, .22); }
+}
+@keyframes nutrition-e17-details-in {
+  from { opacity: .68; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes nutrition-e17-detail-saved {
+  0%, 100% { background-color: transparent; }
+  35% { background-color: rgba(34, 197, 94, .09); }
+}
+@keyframes nutrition-e17-field-updated {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(71, 134, 232, 0); border-color: var(--n11-border, #cbd5e1); }
+  30% { box-shadow: 0 0 0 3px rgba(71, 134, 232, .16); border-color: var(--n11-blue, #4786e8); }
+}
+@keyframes nutrition-e17-action-confirmed {
+  0%, 100% { box-shadow: none; }
+  28% { box-shadow: 0 0 0 3px rgba(34, 197, 94, .2); }
+}
+@keyframes nutrition-e17-sync-confirmed {
+  0%, 100% { box-shadow: none; }
+  32% { box-shadow: 0 0 0 3px rgba(34, 197, 94, .13); }
+}
+@keyframes nutrition-e17-status-pulse {
+  0%, 100% { box-shadow: none; }
+  34% { box-shadow: 0 0 0 3px rgba(34, 197, 94, .13); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #nutritionPanel #mealList .meal-card:hover { transform: translateY(-1px); }
+  #nutritionPanel #mealList .meal-actions .meal-action:hover:not(:disabled),
+  #nutritionPanel .nutrition-actions > button:hover:not(:disabled),
+  #nutritionPanel .e15-tool-group-actions > button:hover:not(:disabled),
+  #nutritionPanel .nutrition-food-quick-card button:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel #mealList .meal-card,
+  #nutritionPanel #mealList .meal-card .meal-action,
+  #nutritionPanel #mealList .e15-meal-details > summary,
+  #nutritionPanel .nutrition-actions > button,
+  #nutritionPanel #nutritionMoreTools summary,
+  #nutritionPanel .e15-tool-group-actions > button,
+  #nutritionPanel .nutrition-food-quick-card button,
+  #nutritionOverlay button,
+  #nutritionAdvancedModal button,
+  #nutritionQualityOverlay button,
+  #nutritionPanel .e17-saved-feedback,
+  #nutritionPanel .e17-focus-arrival,
+  #nutritionPanel .e17-detail-entered,
+  #nutritionPanel .e17-detail-saved-feedback,
+  #nutritionPanel .e17-field-updated,
+  #nutritionPanel .e17-action-confirmed,
+  #nutritionPanel .e17-sync-confirmed,
+  #nutritionPanel .e17-feedback-pulse {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  #nutritionPanel #mealList .meal-card.e17-saved-feedback,
+  #nutritionPanel #mealList .meal-card.e17-focus-arrival { outline: 2px solid Highlight; }
+  #nutritionPanel #mealFoods.e17-field-updated,
+  #nutritionPanel #nutritionGoalBtn.e17-action-confirmed,
+  #nutritionPanel #nutritionSyncStatus.e17-sync-confirmed { outline: 2px solid Highlight; }
+}

@@ -1,0 +1,236 @@
+/* Agenda FICH — E14: estados coherentes de carga, vacío, aviso y error.
+   Los selectores se limitan a componentes de Alimentación. */
+
+.nutrition-advanced-status[data-e14-state],
+.nutrition-routine-status[data-e14-state],
+.nutrition-meal-copy-status[data-e14-state],
+.nutrition-meal-builder-status[data-e14-state],
+.nutrition-food-catalog-status[data-e14-state],
+.nutrition-meal-order-status[data-e14-state],
+.nutrition-week-status[data-e14-state],
+.nutrition-pantry-status[data-e14-state],
+.nutrition-quality-status[data-e14-state],
+#nutritionQualityStatus[data-e14-state] {
+  border-radius: 12px;
+  border: 1px solid var(--line, rgba(148,163,184,.28));
+  border-inline-start-width: 3px;
+  padding: 10px 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  transition: background-color .16s ease, border-color .16s ease;
+}
+
+.nutrition-advanced-status[data-e14-state="loading"],
+.nutrition-routine-status[data-e14-state="loading"],
+.nutrition-meal-copy-status[data-e14-state="loading"],
+.nutrition-meal-builder-status[data-e14-state="loading"],
+.nutrition-food-catalog-status[data-e14-state="loading"],
+.nutrition-meal-order-status[data-e14-state="loading"],
+.nutrition-week-status[data-e14-state="loading"],
+.nutrition-pantry-status[data-e14-state="loading"],
+.nutrition-quality-status[data-e14-state="loading"],
+#nutritionQualityStatus[data-e14-state="loading"] {
+  border-inline-start-color: #4f8de8;
+  background: rgba(79,141,232,.075);
+}
+
+.nutrition-advanced-status[data-e14-state="success"],
+.nutrition-routine-status[data-e14-state="success"],
+.nutrition-meal-copy-status[data-e14-state="success"],
+.nutrition-meal-order-status[data-e14-state="success"],
+.nutrition-week-status[data-e14-state="success"],
+.nutrition-pantry-status[data-e14-state="success"],
+.nutrition-quality-status[data-e14-state="success"],
+#nutritionQualityStatus[data-e14-state="success"] {
+  border-inline-start-color: #26966a;
+  background: rgba(38,150,106,.075);
+}
+
+.nutrition-advanced-status[data-e14-state="warning"],
+.nutrition-routine-status[data-e14-state="warning"],
+.nutrition-meal-copy-status[data-e14-state="warning"],
+.nutrition-meal-order-status[data-e14-state="warning"],
+.nutrition-week-status[data-e14-state="warning"],
+.nutrition-pantry-status[data-e14-state="warning"],
+.nutrition-quality-status[data-e14-state="warning"],
+#nutritionQualityStatus[data-e14-state="warning"] {
+  border-inline-start-color: #c28a24;
+  background: rgba(194,138,36,.09);
+}
+
+.nutrition-advanced-status[data-e14-state="error"],
+.nutrition-routine-status[data-e14-state="error"],
+.nutrition-meal-copy-status[data-e14-state="error"],
+.nutrition-meal-builder-status[data-e14-state="error"],
+.nutrition-food-catalog-status[data-e14-state="error"],
+.nutrition-meal-order-status[data-e14-state="error"],
+.nutrition-week-status[data-e14-state="error"],
+.nutrition-pantry-status[data-e14-state="error"],
+.nutrition-quality-status[data-e14-state="error"],
+#nutritionQualityStatus[data-e14-state="error"] {
+  border-inline-start-color: #d44c55;
+  background: rgba(212,76,85,.075);
+}
+
+.nutrition-advanced-status[data-e14-state="empty"],
+.nutrition-routine-status[data-e14-state="empty"],
+.nutrition-pantry-status[data-e14-state="empty"],
+.nutrition-quality-status[data-e14-state="empty"],
+#nutritionQualityStatus[data-e14-state="empty"] {
+  border-style: dashed;
+  border-inline-start-color: #8492a6;
+  background: rgba(132,146,166,.065);
+}
+
+.nutrition-e14-retry {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+  margin: 7px 0 10px;
+  padding: 8px 13px;
+  border: 1px solid var(--n11-border, #cbd5e1);
+  border-radius: 11px;
+  background: var(--n11-surface, #fff);
+  color: var(--n11-text, #172338);
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 750;
+  line-height: 1.25;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.nutrition-e14-retry:hover:not(:disabled) { filter: brightness(.97); }
+.nutrition-e14-retry:focus-visible { outline: 3px solid #4786e8; outline-offset: 3px; }
+.nutrition-e14-retry:disabled { cursor: not-allowed; opacity: .68; }
+
+#nutritionPanel #nutritionMealLoadFeedback[hidden] { display: none !important; }
+#nutritionPanel .nutrition-e14-meal-feedback {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  min-width: 0;
+  margin: 9px 0 13px;
+  padding: 13px 14px;
+  border: 1px solid rgba(212,76,85,.34);
+  border-inline-start: 4px solid #d44c55;
+  border-radius: 14px;
+  background: rgba(212,76,85,.08);
+  color: var(--n11-text, #172338);
+}
+#nutritionPanel .nutrition-e14-feedback-mark {
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 25px;
+  border-radius: 50%;
+  background: rgba(212,76,85,.15);
+  color: #d44c55;
+  font-size: .85rem;
+  font-weight: 900;
+}
+#nutritionPanel .nutrition-e14-feedback-copy { min-width: 0; flex: 1; }
+#nutritionPanel .nutrition-e14-feedback-copy strong { display: block; margin: 1px 0 4px; font-size: .88rem; line-height: 1.35; }
+#nutritionPanel .nutrition-e14-feedback-copy p { margin: 0; color: var(--n11-muted, #64748b); font-size: .79rem; line-height: 1.5; overflow-wrap: anywhere; }
+#nutritionPanel .nutrition-e14-meal-feedback .nutrition-e14-retry { flex: 0 0 auto; margin: 0; min-height: 40px; }
+#nutritionPanel[data-e14-load-state="error"] #mealList .meal-empty { display: none !important; }
+
+#nutritionPanel #mealList .meal-empty[data-e14-state="loading"] {
+  display: flex;
+  flex-direction: column;
+  min-height: 112px;
+  border-style: solid;
+  background: rgba(79,141,232,.055);
+  border-color: rgba(79,141,232,.22);
+  color: var(--n11-muted, #64748b);
+}
+#nutritionPanel #mealList .meal-empty[data-e14-state="loading"]::before {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0 auto 12px;
+  border: 2px solid rgba(79,141,232,.18);
+  border-top-color: #4f8de8;
+  border-radius: 50%;
+  animation: nutrition-e14-spin .8s linear infinite;
+}
+#nutritionPanel #mealList .meal-empty[data-e14-state="empty"] {
+  display: flex;
+  flex-direction: column;
+  min-height: 126px;
+  border-color: var(--n11-border, #dce5ef);
+  background: var(--n11-surface-soft, #f8fafc);
+  color: var(--n11-muted, #64748b);
+}
+#nutritionPanel #mealList .meal-empty[data-e14-state="empty"]::before {
+  content: "🍽️";
+  display: block;
+  margin: 0 auto 8px;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.nutrition-advanced-empty {
+  border: 1px dashed var(--line, rgba(148,163,184,.32));
+  border-radius: 13px;
+  background: rgba(148,163,184,.045);
+  padding: 16px 14px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.nutrition-advanced-empty[hidden] { display: none !important; }
+
+body.light .nutrition-e14-retry { background: #fff; color: #1e293b; border-color: #cbd5e1; }
+body.light #nutritionPanel .nutrition-e14-meal-feedback { background: #fff1f2; color: #881337; border-color: #fecdd3; border-inline-start-color: #be123c; }
+body.light #nutritionPanel .nutrition-e14-feedback-mark { background: #ffe4e6; color: #be123c; }
+body.light #nutritionPanel .nutrition-e14-feedback-copy p { color: #6b7280; }
+body.light .nutrition-advanced-status[data-e14-state="error"],
+body.light .nutrition-routine-status[data-e14-state="error"],
+body.light .nutrition-week-status[data-e14-state="error"],
+body.light .nutrition-pantry-status[data-e14-state="error"],
+body.light .nutrition-quality-status[data-e14-state="error"],
+body.light #nutritionQualityStatus[data-e14-state="error"] { background: #fff1f2; color: #9f1239; border-inline-start-color: #be123c; }
+body.light .nutrition-advanced-status[data-e14-state="success"],
+body.light .nutrition-routine-status[data-e14-state="success"],
+body.light .nutrition-week-status[data-e14-state="success"],
+body.light .nutrition-pantry-status[data-e14-state="success"],
+body.light .nutrition-quality-status[data-e14-state="success"],
+body.light #nutritionQualityStatus[data-e14-state="success"] { background: #ecfdf5; color: #166534; }
+body.light .nutrition-advanced-status[data-e14-state="warning"],
+body.light .nutrition-routine-status[data-e14-state="warning"],
+body.light .nutrition-week-status[data-e14-state="warning"],
+body.light .nutrition-pantry-status[data-e14-state="warning"],
+body.light .nutrition-quality-status[data-e14-state="warning"],
+body.light #nutritionQualityStatus[data-e14-state="warning"] { background: #fffbeb; color: #92400e; }
+body.light #nutritionPanel #mealList .meal-empty[data-e14-state="empty"] { color: #526176; background: #f8fafc; }
+
+@keyframes nutrition-e14-spin { to { transform: rotate(360deg); } }
+
+@media (min-width: 701px) and (max-width: 900px) {
+  /* Tabletas táctiles: mantener objetivos de toque de al menos 44 px. */
+  .nutrition-e14-retry,
+  #nutritionPanel .nutrition-e14-meal-feedback .nutrition-e14-retry { min-height: 44px; }
+}
+
+@media (max-width: 700px) {
+  #nutritionPanel .nutrition-e14-meal-feedback { flex-wrap: wrap; padding: 12px; }
+  #nutritionPanel .nutrition-e14-feedback-copy { flex-basis: calc(100% - 39px); }
+  #nutritionPanel .nutrition-e14-meal-feedback .nutrition-e14-retry { margin-left: 36px; min-width: 108px; min-height: 44px; }
+  .nutrition-e14-retry { min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel #mealList .meal-empty[data-e14-state="loading"]::before { animation: none; border-top-color: rgba(79,141,232,.45); }
+  .nutrition-advanced-status[data-e14-state], .nutrition-e14-retry { transition: none !important; }
+}
+
+@media (forced-colors: active) {
+  .nutrition-e14-retry, #nutritionPanel .nutrition-e14-meal-feedback,
+  .nutrition-advanced-status[data-e14-state], .nutrition-routine-status[data-e14-state],
+  .nutrition-week-status[data-e14-state], .nutrition-pantry-status[data-e14-state],
+  .nutrition-quality-status[data-e14-state], #nutritionQualityStatus[data-e14-state] { border: 1px solid CanvasText; }
+  .nutrition-e14-retry:focus-visible { outline: 2px solid Highlight; }
+}

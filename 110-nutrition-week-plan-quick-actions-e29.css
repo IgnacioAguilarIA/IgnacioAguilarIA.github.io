@@ -1,0 +1,14 @@
+/* Agenda FICH E29 — acciones rápidas del plan semanal, aisladas del resto de la app. */
+.nutrition-plan-nutrition-summary{display:block;padding:7px 9px;border-radius:8px;background:var(--soft-bg,rgba(100,116,139,.09));color:var(--text,#e5e7eb)!important;font-size:.78rem!important;font-weight:650;line-height:1.5}
+.nutrition-plan-transfer{display:grid;gap:9px;min-width:0;padding:11px;border:1px solid var(--line,rgba(120,130,150,.28));border-radius:11px;background:var(--surface-card,rgba(120,130,150,.055))}
+.nutrition-plan-transfer[hidden]{display:none}
+.nutrition-plan-transfer-label{display:grid;gap:5px;min-width:0;font-size:.8rem;font-weight:650}
+.nutrition-plan-transfer-label span{line-height:1.4;overflow-wrap:anywhere}
+.nutrition-plan-transfer-label select{width:100%;min-height:42px;min-width:0;border:1px solid var(--line,rgba(120,130,150,.35));border-radius:9px;background:var(--card2,transparent);color:inherit;padding:8px 10px;font:inherit;font-weight:400}
+.nutrition-plan-transfer-help{margin:0!important;color:var(--muted,#94a3b8)!important;font-size:.76rem!important;line-height:1.5!important}
+.nutrition-plan-transfer-actions{display:flex;flex-wrap:wrap;gap:7px}
+.nutrition-plan-transfer-actions>*{flex:1 1 auto;min-height:40px}
+.nutrition-plan-editor-dialog .nutrition-plan-transfer select:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+@media(max-width:420px){.nutrition-plan-row-actions>*{flex:1 1 calc(50% - 7px);min-width:0}.nutrition-plan-transfer-actions>*{flex:1 1 100%}.nutrition-plan-nutrition-summary{overflow-wrap:anywhere}}
+@media(prefers-reduced-motion:reduce){.nutrition-plan-transfer *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(forced-colors:active){.nutrition-plan-transfer,.nutrition-plan-nutrition-summary{border:1px solid CanvasText}.nutrition-plan-transfer-label select{border:1px solid ButtonText}}

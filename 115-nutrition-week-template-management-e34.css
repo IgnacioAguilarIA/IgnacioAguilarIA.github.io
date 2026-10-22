@@ -1,0 +1,32 @@
+/* AgendaFICH E34 — administración de plantillas semanales. Alcance exclusivo de Alimentación. */
+.nutrition-week-template-card-e34{min-width:0;overflow:hidden}
+.nutrition-week-template-card-e34 .nutrition-week-template-card-top-e32{align-items:flex-start;gap:12px}
+.nutrition-week-template-card-e34 .nutrition-week-template-card-text-e32{min-width:0;flex:1}
+.nutrition-week-template-card-e34 .nutrition-week-template-card-text-e32 strong{display:block;overflow-wrap:anywhere}
+.nutrition-week-template-card-e34 .nutrition-week-template-card-actions-e32{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;min-width:0}
+.nutrition-week-template-card-e34 .nutrition-week-template-card-actions-e32 .small-btn{white-space:normal;min-height:34px}
+.nutrition-week-template-detail-e34{margin-top:12px;padding:12px;border:1px solid var(--line,rgba(100,116,139,.25));border-radius:12px;background:var(--surface-card,rgba(127,127,127,.025));min-width:0}
+.nutrition-week-template-detail-e34[hidden],.nutrition-week-template-rename-e34[hidden]{display:none!important}
+.nutrition-week-template-stats-e34{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.nutrition-week-template-stat-e34{display:flex;flex-direction:column;gap:5px;min-width:0;padding:9px;border:1px solid var(--line,rgba(100,116,139,.2));border-radius:10px;background:var(--surface-card,transparent)}
+.nutrition-week-template-stat-e34 span{color:var(--muted,#64748b);font-size:.76rem;line-height:1.35;overflow-wrap:anywhere}
+.nutrition-week-template-stat-e34 strong{font-size:1.15rem;line-height:1.2;color:var(--text,#1f2937)}
+.nutrition-week-template-days-e34{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:10px 0 0}
+.nutrition-week-template-days-e34 li{padding:5px 9px;border-radius:999px;background:var(--surface-card,rgba(127,127,127,.06));border:1px solid var(--line,rgba(100,116,139,.22));font-size:.8rem;overflow-wrap:anywhere}
+.nutrition-week-template-rename-e34{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end;margin-top:12px;padding:12px;border:1px solid var(--line,rgba(100,116,139,.25));border-radius:12px;background:var(--surface-card,rgba(127,127,127,.025))}
+.nutrition-week-template-rename-e34 .nutrition-plan-field{min-width:0}
+.nutrition-week-template-rename-e34 input{width:100%;min-width:0;box-sizing:border-box}
+.nutrition-week-template-rename-actions-e34{display:flex;flex-wrap:wrap;gap:6px}
+.nutrition-week-template-card-e34 button:focus-visible,.nutrition-week-template-rename-e34 input:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+.nutrition-week-template-card-e34 button:disabled{opacity:.58;cursor:not-allowed}
+@media(max-width:760px){
+ .nutrition-week-template-card-e34 .nutrition-week-template-card-top-e32{display:flex;flex-direction:column}
+ .nutrition-week-template-card-e34 .nutrition-week-template-card-actions-e32{justify-content:flex-start;width:100%}
+ .nutrition-week-template-stats-e34{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .nutrition-week-template-rename-e34{grid-template-columns:minmax(0,1fr)}
+ .nutrition-week-template-rename-actions-e34{justify-content:flex-start}
+}
+@media(max-width:360px){.nutrition-week-template-card-e34 .nutrition-week-template-card-actions-e32 .small-btn{flex:1 1 calc(50% - 6px)}.nutrition-week-template-stats-e34{gap:6px}.nutrition-week-template-stat-e34{padding:8px}}
+@media(prefers-reduced-motion:reduce){.nutrition-week-template-card-e34 *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+@media(forced-colors:active){.nutrition-week-template-detail-e34,.nutrition-week-template-stat-e34,.nutrition-week-template-days-e34 li,.nutrition-week-template-rename-e34{border:1px solid CanvasText}.nutrition-week-template-card-e34 button:focus-visible,.nutrition-week-template-rename-e34 input:focus-visible{outline:2px solid Highlight}}
+body.light .nutrition-week-template-stat-e34 strong{color:#1f2937}

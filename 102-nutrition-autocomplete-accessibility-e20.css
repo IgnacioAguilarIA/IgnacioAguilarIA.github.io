@@ -1,0 +1,28 @@
+/* Agenda FICH — E20: semántica visible y estados accesibles del autocompletado de Alimentación. */
+.nutrition-food-autocomplete-list{display:grid;gap:0;min-width:0}
+.nutrition-food-autocomplete-state{display:flex;align-items:center;gap:8px;padding:14px 10px;font-size:9px;line-height:1.4;opacity:.78}
+.nutrition-food-autocomplete-state[hidden]{display:none!important}
+.nutrition-food-autocomplete-item[aria-selected="true"]{background:rgba(59,130,246,.16);border-color:rgba(96,165,250,.6)}
+.nutrition-food-autocomplete-item:focus-visible{outline:3px solid #60a5fa;outline-offset:2px}
+body.light .nutrition-food-autocomplete-item[aria-selected="true"]{background:#dbeafe;border-color:#3b82f6;color:#0f172a}
+@media (forced-colors:active){
+  .nutrition-food-autocomplete-item[aria-selected="true"],.nutrition-food-autocomplete-item:focus-visible{outline:2px solid Highlight;outline-offset:2px;border-color:Highlight}
+  .nutrition-food-autocomplete-state{forced-color-adjust:auto;color:CanvasText;opacity:1}
+}
+@media (prefers-reduced-motion:reduce){.nutrition-food-autocomplete-spinner{animation:none}}
+
+
+/* E21: identificación rápida de variantes y protección visual de datos incompletos. */
+.nutrition-food-autocomplete-quality{
+  display:inline-flex;align-items:center;gap:4px;max-width:100%;margin-top:4px;padding:4px 7px;
+  border:1px solid #d6a24a;border-radius:7px;background:rgba(245,158,11,.12);color:#8a5700;
+  font-size:10px;font-weight:650;line-height:1.35;white-space:normal;overflow-wrap:anywhere
+}
+.nutrition-food-autocomplete-variant{
+  display:inline-flex;align-items:center;margin-inline-start:5px;padding:2px 6px;border-radius:999px;
+  background:rgba(100,116,139,.12);color:inherit;font-size:9px;font-weight:650;vertical-align:middle
+}
+body.dark .nutrition-food-autocomplete-quality{background:rgba(245,158,11,.13);border-color:#9a6b20;color:#f5d28b}
+@media (forced-colors:active){
+  .nutrition-food-autocomplete-quality,.nutrition-food-autocomplete-variant{forced-color-adjust:auto;border:1px solid CanvasText;color:CanvasText;background:Canvas}
+}
