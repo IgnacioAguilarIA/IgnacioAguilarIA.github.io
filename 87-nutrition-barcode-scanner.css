@@ -1,0 +1,38 @@
+/* Etapa D6 — búsqueda por código de barras, acotada a Alimentación. */
+.nutrition-barcode-scanner{margin:10px 0 12px;border:1px solid var(--line,rgba(148,163,184,.24));border-radius:13px;background:var(--soft-bg,rgba(148,163,184,.055));overflow:hidden;color:inherit}
+.nutrition-barcode-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px}
+.nutrition-barcode-head strong{display:block;font-size:12px;font-weight:850}
+.nutrition-barcode-head small{display:block;margin-top:3px;color:var(--muted,#94a3b8);font-size:11px;line-height:1.4}
+.nutrition-barcode-toggle,.nutrition-barcode-primary,.nutrition-barcode-secondary{min-height:42px;border:1px solid var(--line,rgba(148,163,184,.28));border-radius:10px;padding:8px 12px;background:var(--card,transparent);color:inherit;font:inherit;font-size:12px;font-weight:750;cursor:pointer}
+.nutrition-barcode-toggle,.nutrition-barcode-primary{background:var(--blue,#2563eb);color:#fff;border-color:transparent}
+.nutrition-barcode-panel{padding:0 12px 12px;border-top:1px solid var(--line,rgba(148,163,184,.18))}
+.nutrition-barcode-panel[hidden],.nutrition-barcode-video[hidden],.nutrition-barcode-camera-actions [hidden]{display:none!important}
+.nutrition-barcode-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:end;padding-top:12px}
+.nutrition-barcode-form label{grid-column:1/-1;font-size:11px;font-weight:750}
+.nutrition-barcode-form input{width:100%;min-width:0;min-height:42px;box-sizing:border-box;border:1px solid var(--line,rgba(148,163,184,.32));border-radius:10px;background:var(--card,transparent);color:inherit;padding:9px 11px;font:inherit;font-size:14px;letter-spacing:.035em}
+.nutrition-barcode-form input:focus-visible,.nutrition-barcode-scanner button:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+.nutrition-barcode-help{display:block;margin-top:7px;color:var(--muted,#94a3b8);font-size:10px;line-height:1.45}
+.nutrition-barcode-camera-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.nutrition-barcode-video{display:block;width:100%;max-height:300px;object-fit:cover;background:#05080d;border-radius:12px;margin-top:10px;border:1px solid var(--line,rgba(148,163,184,.25))}
+.nutrition-barcode-status{margin:9px 0 0;padding:9px 10px;border-radius:9px;background:var(--card,rgba(148,163,184,.06));font-size:11px;line-height:1.45;overflow-wrap:anywhere}
+.nutrition-barcode-status:empty{display:none}
+.nutrition-barcode-status[data-state="success"]{border-inline-start:3px solid #16865d}
+.nutrition-barcode-status[data-state="warning"]{border-inline-start:3px solid #c48721}
+.nutrition-barcode-status[data-state="error"]{border-inline-start:3px solid #c24141}
+.nutrition-barcode-status[data-state="loading"]{border-inline-start:3px solid var(--blue,#3b82f6)}
+.nutrition-food-data-warning{display:grid;gap:3px;margin-top:9px;padding:9px 10px;border:1px solid rgba(196,135,33,.45);border-inline-start:3px solid #c48721;border-radius:9px;background:rgba(196,135,33,.08);font-size:10px;line-height:1.45}
+.nutrition-food-data-warning strong{font-size:11px}
+.nutrition-food-data-warning span{overflow-wrap:anywhere}
+body.light .nutrition-barcode-scanner{background:#f8fafc;border-color:#dbe3ee}
+body.light .nutrition-barcode-form input,body.light .nutrition-barcode-secondary{background:#fff;border-color:#dbe3ee;color:#0f172a}
+body.light .nutrition-barcode-status{background:#fff}
+@media(max-width:600px){
+ .nutrition-barcode-head{align-items:stretch;flex-direction:column}
+ .nutrition-barcode-toggle,.nutrition-barcode-primary,.nutrition-barcode-secondary{width:100%;min-height:44px}
+ .nutrition-barcode-form{grid-template-columns:minmax(0,1fr)}
+ .nutrition-barcode-form label{grid-column:auto}
+ .nutrition-barcode-camera-actions{display:grid;grid-template-columns:minmax(0,1fr)}
+ .nutrition-barcode-video{max-height:38dvh}
+}
+@media(prefers-reduced-motion:reduce){.nutrition-barcode-scanner *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(forced-colors:active){.nutrition-barcode-scanner,.nutrition-barcode-form input,.nutrition-barcode-scanner button,.nutrition-barcode-status{border:1px solid ButtonText}.nutrition-barcode-status[data-state="error"],.nutrition-barcode-status[data-state="success"],.nutrition-barcode-status[data-state="warning"]{border-inline-start:4px solid CanvasText}}

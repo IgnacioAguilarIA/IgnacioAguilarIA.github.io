@@ -1,0 +1,221 @@
+/* Agenda FICH V98 — Etapa 5: acabado visual, legibilidad y accesibilidad.
+   Todos los selectores de la sección principal se limitan a Alimentación. */
+#nutritionPanel {
+  color: var(--text, #e5e7eb);
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  scroll-margin-top: 16px;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+}
+#nutritionPanel .nutrition-head p,
+#nutritionPanel .nutrition-meal-builder-subtitle,
+#nutritionPanel .nutrition-meal-builder-note,
+#nutritionPanel .nutrition-meal-builder-status,
+#nutritionPanel .nutrition-meal-builder-empty,
+#nutritionPanel .nutrition-meal-builder-item-brand,
+#nutritionPanel .nutrition-meal-builder-item-macros span,
+#nutritionPanel .nutrition-meal-builder-item-qty label,
+#nutritionPanel .nutrition-meal-builder-item-total span,
+#nutritionPanel .nutrition-meal-builder-totals span,
+#nutritionPanel .nutrition-summary-block-title,
+#nutritionPanel #mealList .meal-foods,
+#nutritionPanel #mealList .meal-description,
+#nutritionPanel #mealList .meal-chip,
+#nutritionOverlay .nutrition-meal-builder-subtitle,
+#nutritionOverlay .nutrition-meal-builder-status,
+#nutritionOverlay .nutrition-meal-builder-empty,
+#nutritionOverlay .nutrition-meal-builder-item-brand,
+#nutritionOverlay .nutrition-meal-builder-item-macros span,
+#nutritionOverlay .nutrition-meal-builder-item-qty label,
+#nutritionOverlay .nutrition-meal-builder-item-total span,
+#nutritionOverlay .nutrition-meal-builder-totals span,
+#nutritionOverlay .nutrition-meal-builder-note {
+  font-size: max(11px, .75rem);
+  line-height: 1.5;
+}
+#nutritionPanel .nutrition-head p { font-size: .875rem; }
+#nutritionPanel #nutritionDays .workout-day-btn {
+  min-height: 46px;
+  font-size: .75rem;
+  font-weight: 750;
+}
+#nutritionPanel .nutrition-summary-kicker,
+#nutritionPanel .nutrition-summary-block-title { font-size: .78rem; }
+#nutritionPanel .nutrition-summary-metric > span { font-size: .76rem; line-height: 1.4; }
+#nutritionPanel .nutrition-summary-metric strong { font-size: 1rem; line-height: 1.25; }
+#nutritionPanel #nutritionGoals .goal-card h4 { font-size: .78rem; line-height: 1.4; }
+#nutritionPanel #nutritionGoals .goal-card strong { font-size: 1rem; line-height: 1.35; }
+#nutritionPanel #nutritionGoals .goal-card > span { font-size: .72rem; line-height: 1.4; }
+#nutritionPanel #mealTabs .meal-tab { min-height: 48px; font-size: .78rem; line-height: 1.35; }
+#nutritionPanel #mealList .meal-name { font-size: 1rem; line-height: 1.35; }
+#nutritionPanel #mealList .meal-foods { font-size: .8rem; }
+#nutritionPanel #mealList .meal-description { font-size: .78rem; }
+#nutritionPanel #mealList .meal-chip { font-size: .7rem; line-height: 1.4; }
+#nutritionPanel #mealList .meal-action {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  font-size: 1rem;
+}
+#nutritionPanel .nutrition-actions > button,
+#nutritionPanel .nutrition-meal-order-tools > button,
+#nutritionOverlay .nutrition-meal-builder-tool,
+#nutritionOverlay .nutrition-food-catalog-toggle,
+#nutritionOverlay .nutrition-food-catalog-find,
+#nutritionOverlay .nutrition-food-save,
+#nutritionOverlay .nutrition-food-apply,
+#nutritionOverlay .nutrition-food-favorite-toggle,
+#nutritionOverlay .nutrition-meal-builder-remove,
+#nutritionOverlay .nutrition-meal-builder-tool,
+#nutritionOverlay .save,
+#nutritionOverlay .secondary,
+#goalOverlay .save,
+#goalOverlay .secondary {
+  min-height: 42px;
+}
+#nutritionPanel button,
+#nutritionOverlay button,
+#goalOverlay button,
+.nutrition-advanced-modal button,
+.nutrition-advanced-modal input,
+.nutrition-advanced-modal select,
+.nutrition-advanced-modal textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+#nutritionPanel button:focus-visible,
+#nutritionOverlay button:focus-visible,
+#nutritionOverlay input:focus-visible,
+#nutritionOverlay select:focus-visible,
+#nutritionOverlay textarea:focus-visible,
+#goalOverlay button:focus-visible,
+#goalOverlay input:focus-visible,
+.nutrition-advanced-modal button:focus-visible,
+.nutrition-advanced-modal input:focus-visible,
+.nutrition-advanced-modal select:focus-visible,
+.nutrition-advanced-modal textarea:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 2px;
+}
+#nutritionPanel button:disabled,
+#nutritionOverlay button:disabled,
+#goalOverlay button:disabled,
+.nutrition-advanced-modal button:disabled {
+  opacity: .58;
+  cursor: not-allowed;
+  transform: none;
+}
+#nutritionOverlay .nutrition-meal-builder-title { font-size: 1rem; line-height: 1.4; }
+#nutritionOverlay .nutrition-meal-builder-tool { font-size: .76rem; line-height: 1.3; }
+#nutritionOverlay .nutrition-meal-builder-item-name { font-size: .85rem; line-height: 1.4; }
+#nutritionOverlay .nutrition-meal-builder-qty { min-height: 44px; font-size: .9rem; }
+#nutritionOverlay .nutrition-meal-builder-item-total strong { font-size: .85rem; }
+#nutritionOverlay .nutrition-meal-builder-totals strong { font-size: .95rem; }
+#nutritionPanel .nutrition-sync-status { font-size: .8rem; }
+
+/* Diálogos avanzados: foco visible, botones accesibles y acciones siempre localizables. */
+.nutrition-advanced-overlay { overscroll-behavior: contain; }
+.nutrition-advanced-modal {
+  background: #111827;
+  color: #f3f4f6;
+  border-color: rgba(148, 163, 184, .28);
+}
+.nutrition-advanced-head h3 { font-size: 1.2rem; }
+.nutrition-advanced-head p { font-size: .9rem; }
+.nutrition-advanced-form label,
+.nutrition-recipe-card-controls label,
+.nutrition-advanced-history-toolbar label { font-size: .9rem; }
+.nutrition-advanced-form .input,
+.nutrition-recipe-card-controls .input,
+.nutrition-advanced-history-toolbar select { min-height: 44px; font-size: 1rem; }
+.nutrition-advanced-primary,
+.nutrition-advanced-secondary,
+.nutrition-advanced-danger { min-height: 44px; font-size: .9rem; }
+.nutrition-advanced-actions {
+  position: sticky;
+  bottom: -13px;
+  z-index: 2;
+  padding: 12px 0 max(2px, env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(180deg, rgba(17,24,39,0), #111827 20%);
+}
+.nutrition-advanced-empty { font-size: .9rem; }
+.nutrition-advanced-status { font-size: .9rem; }
+.nutrition-advanced-note { font-size: .86rem; }
+.nutrition-advanced-recipe-preview { font-size: .92rem; }
+.nutrition-recipe-card-main > small,
+.nutrition-recipe-card-main > span,
+.nutrition-recipe-card-main p { font-size: .86rem; }
+.nutrition-recipe-card-controls label { font-size: .84rem; }
+.nutrition-recipe-card-controls button { min-height: 42px; font-size: .86rem; }
+.nutrition-history-day > header strong { font-size: .95rem; }
+.nutrition-history-day > header span,
+.nutrition-history-item small { font-size: .82rem; }
+.nutrition-history-item strong { font-size: .92rem; }
+.nutrition-history-item > span { font-size: .88rem; }
+.nutrition-advanced-close { min-width: 44px; min-height: 44px; }
+
+body.light .nutrition-advanced-modal {
+  background: #fff;
+  color: #172033;
+  border-color: #d6deea;
+}
+body.light .nutrition-advanced-head { border-color: #e2e8f0; }
+body.light .nutrition-advanced-actions {
+  background: linear-gradient(180deg, rgba(255,255,255,0), #fff 20%);
+}
+body.light #nutritionPanel { color: #172033; }
+body.light #nutritionPanel .nutrition-summary-block-title { color: #475569; }
+body.light #nutritionPanel .nutrition-summary-metric > span,
+body.light #nutritionPanel #nutritionGoals .goal-card h4,
+body.light #nutritionPanel #nutritionGoals .goal-card > span { color: #475569; }
+body.light #nutritionPanel #nutritionGoals .goal-card strong,
+body.light #nutritionPanel .nutrition-summary-metric strong { color: #111827; }
+body.light #nutritionPanel #mealList .meal-foods,
+body.light #nutritionPanel #mealList .meal-description { color: #475569; }
+body.light #nutritionOverlay .nutrition-meal-builder-item-brand,
+body.light #nutritionOverlay .nutrition-meal-builder-item-qty label,
+body.light #nutritionOverlay .nutrition-meal-builder-item-total span,
+body.light #nutritionOverlay .nutrition-meal-builder-note { color: #475569; opacity: 1; }
+
+@media (max-width: 700px) {
+  #nutritionPanel { padding: 12px; border-radius: 18px; }
+  #nutritionPanel .nutrition-head { gap: 12px; }
+  #nutritionPanel .nutrition-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  #nutritionPanel .nutrition-actions > button { width: 100%; min-width: 0; padding: 10px 8px; font-size: .82rem; }
+  #nutritionPanel .nutrition-goal-btn { grid-column: 1; }
+  #nutritionPanel .nutrition-history-btn { grid-column: 2; }
+  #nutritionPanel #addMealBtn { grid-column: 1 / -1; }
+  #nutritionPanel { padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px)); }
+  .nutrition-advanced-toast { bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+  #nutritionPanel .nutrition-day-summary-head { gap: 12px; }
+  #nutritionPanel .nutrition-summary-progress-row small { min-width: 74px; font-size: .72rem; }
+  #nutritionPanel .nutrition-summary-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #nutritionPanel #nutritionDays .workout-day-btn { font-size: .75rem; padding: 8px 4px; }
+  #nutritionPanel #mealList .meal-card { padding: 12px; }
+  #nutritionOverlay .meal-form-grid,
+  #nutritionOverlay .meal-form-grid.three { grid-template-columns: 1fr; }
+  #nutritionOverlay .nutrition-meal-builder-item { gap: 8px; }
+  #nutritionOverlay .nutrition-meal-builder-item-macros span { font-size: .7rem; }
+  .nutrition-advanced-history-toolbar { align-items: stretch; flex-direction: column; }
+  .nutrition-advanced-history-toolbar select { width: 100%; max-width: none; }
+  .nutrition-history-item { align-items: flex-start; }
+}
+@media (max-width: 380px) {
+  #nutritionPanel .nutrition-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #nutritionPanel .nutrition-goal-btn { grid-column: 1; }
+  #nutritionPanel .nutrition-history-btn { grid-column: 2; }
+  #nutritionPanel #addMealBtn { grid-column: 1 / -1; }
+  #nutritionPanel #nutritionDays { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  #nutritionPanel #mealTabs { grid-template-columns: 1fr 1fr; }
+  #nutritionOverlay .nutrition-meal-builder-totals { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .nutrition-advanced-overlay { padding: 6px; }
+  .nutrition-advanced-head { gap: 8px; }
+  .nutrition-advanced-body { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel *, #nutritionOverlay *, #goalOverlay *, .nutrition-advanced-modal * {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

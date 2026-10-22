@@ -1,0 +1,270 @@
+/* Agenda FICH — Diseño profesional para toda la sección Alimentación */
+#nutritionPanel{
+  background:linear-gradient(180deg,rgba(17,24,39,.98),rgba(15,23,42,.96));
+  border:1px solid rgba(96,165,250,.16);
+  border-radius:26px;
+  padding:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.20);
+}
+
+#nutritionPanel .nutrition-head{
+  align-items:center;
+  padding:2px 0 16px;
+  margin-bottom:15px;
+  border-bottom:1px solid rgba(148,163,184,.12);
+}
+#nutritionPanel .nutrition-head h2{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:22px;
+  letter-spacing:-.02em;
+}
+#nutritionPanel .nutrition-head h2::before{
+  content:'🍽️';
+  display:inline-flex;
+  width:36px;height:36px;
+  align-items:center;justify-content:center;
+  border-radius:12px;
+  background:rgba(34,197,94,.10);
+  border:1px solid rgba(34,197,94,.18);
+  font-size:18px;
+}
+#nutritionPanel .nutrition-head p{max-width:720px}
+#nutritionPanel .nutrition-actions{gap:8px}
+#nutritionPanel .nutrition-actions .nutrition-goal-btn,
+#nutritionPanel .nutrition-actions .small-btn{
+  min-height:40px;
+  padding:10px 14px;
+  box-shadow:0 7px 16px rgba(0,0,0,.14);
+}
+
+/* Selector de día */
+#nutritionPanel #nutritionDays{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:7px;
+  margin:0 0 14px;
+  padding:0;
+  overflow:visible;
+}
+#nutritionPanel #nutritionDays .workout-day-btn{
+  min-width:0;
+  width:100%;
+  min-height:48px;
+  padding:8px 7px;
+  border-radius:13px;
+  font-size:10px;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease;
+}
+#nutritionPanel #nutritionDays .workout-day-btn:hover{transform:translateY(-1px)}
+#nutritionPanel #nutritionDays .workout-day-btn.active{box-shadow:0 8px 18px rgba(37,99,235,.18)}
+
+/* Resumen diario */
+#nutritionPanel .nutrition-day-summary{
+  position:relative;
+  overflow:hidden;
+  padding:16px;
+  margin-bottom:14px;
+  border-radius:18px;
+  background:linear-gradient(135deg,rgba(59,130,246,.12),rgba(34,197,94,.08));
+  border-color:rgba(96,165,250,.20);
+}
+#nutritionPanel .nutrition-day-summary::after{
+  content:'';
+  position:absolute;
+  width:130px;height:130px;
+  right:-48px;top:-62px;
+  border-radius:50%;
+  border:18px solid rgba(96,165,250,.06);
+  pointer-events:none;
+}
+#nutritionPanel .nutrition-summary-metric{
+  min-height:68px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:11px 12px;
+  border-radius:13px;
+  background:rgba(2,6,23,.28);
+  border-color:rgba(148,163,184,.12);
+}
+#nutritionPanel .nutrition-summary-metric strong{font-size:14px}
+
+/* Objetivos */
+#nutritionPanel #nutritionGoals{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:9px;
+}
+#nutritionPanel #nutritionGoals .goal-card{
+  position:relative;
+  overflow:hidden;
+  min-height:96px;
+  padding:12px;
+  border-radius:15px;
+  background:rgba(15,23,42,.72);
+  border:1px solid rgba(148,163,184,.12);
+  transition:transform .16s ease,border-color .16s ease;
+}
+#nutritionPanel #nutritionGoals .goal-card:hover{transform:translateY(-1px);border-color:rgba(96,165,250,.24)}
+#nutritionPanel #nutritionGoals .goal-card h4{font-size:10px;margin-bottom:7px}
+#nutritionPanel #nutritionGoals .goal-card strong{font-size:15px}
+#nutritionPanel #nutritionGoals .goal-bar{margin-top:9px;height:6px}
+#nutritionPanel .goal-settings{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 11px;
+  margin-bottom:13px;
+  border-style:solid;
+  background:rgba(148,163,184,.035);
+  border-radius:12px;
+}
+
+/* Tipos de comida */
+#nutritionPanel #mealTabs{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:12px;
+}
+#nutritionPanel #mealTabs .meal-tab{
+  position:relative;
+  min-height:52px;
+  padding:10px 8px;
+  border-radius:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease;
+}
+#nutritionPanel #mealTabs .meal-tab:hover{transform:translateY(-1px);border-color:rgba(96,165,250,.35)}
+#nutritionPanel #mealTabs .meal-tab.active{box-shadow:0 9px 20px rgba(37,99,235,.18)}
+
+/* Lista de comidas */
+#nutritionPanel #mealList{
+  max-height:560px;
+  padding:2px;
+  gap:11px;
+  scrollbar-width:thin;
+}
+#nutritionPanel #mealList .meal-card{
+  position:relative;
+  overflow:hidden;
+  padding:15px;
+  border-radius:17px;
+  background:linear-gradient(145deg,rgba(34,197,94,.08),rgba(59,130,246,.09) 70%,rgba(15,23,42,.20));
+  border:1px solid rgba(96,165,250,.15);
+  box-shadow:0 9px 20px rgba(0,0,0,.10);
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+#nutritionPanel #mealList .meal-card:hover{
+  transform:translateY(-1px);
+  border-color:rgba(96,165,250,.27);
+  box-shadow:0 13px 26px rgba(0,0,0,.15);
+}
+#nutritionPanel #mealList .meal-card::before{
+  content:'';
+  position:absolute;
+  inset:0 auto 0 0;
+  width:3px;
+  background:linear-gradient(180deg,rgba(34,197,94,.75),rgba(59,130,246,.55));
+}
+#nutritionPanel #mealList .meal-name{font-size:15px;line-height:1.25;margin-bottom:7px}
+#nutritionPanel #mealList .meal-foods{font-size:11px;line-height:1.5;margin-top:8px}
+#nutritionPanel #mealList .meal-description{font-size:10px;line-height:1.5}
+#nutritionPanel #mealList .meal-meta{margin-top:10px}
+#nutritionPanel #mealList .meal-chip{padding:5px 8px;font-size:9px}
+#nutritionPanel #mealList .meal-actions{opacity:.82;transition:opacity .15s ease}
+#nutritionPanel #mealList .meal-card:hover .meal-actions{opacity:1}
+#nutritionPanel #mealList .meal-action{width:32px;height:32px;border-radius:10px}
+#nutritionPanel #mealList .meal-empty{
+  min-height:220px;
+  background:rgba(148,163,184,.025);
+}
+
+/* Formulario para agregar/editar alimento */
+#nutritionOverlay .modal{
+  width:min(640px,100%);
+  max-height:min(88vh,860px);
+  overflow:auto;
+  border-radius:24px;
+  border-color:rgba(96,165,250,.20);
+  box-shadow:0 28px 70px rgba(0,0,0,.52);
+}
+#nutritionOverlay .modal-head{
+  position:sticky;
+  top:-20px;
+  z-index:3;
+  padding-bottom:12px;
+  margin-bottom:15px;
+  background:rgba(17,24,39,.99);
+  border-bottom:1px solid rgba(148,163,184,.10);
+}
+#nutritionOverlay .modal-head h3{font-size:20px}
+#nutritionOverlay .field label{font-size:11px;font-weight:800}
+#nutritionOverlay .input{min-height:44px}
+#nutritionOverlay .meal-form-grid{gap:10px}
+#nutritionOverlay .meal-form-actions{gap:8px;margin-top:4px}
+#nutritionOverlay .save{box-shadow:0 10px 22px rgba(37,99,235,.18)}
+#nutritionOverlay .meal-help{padding:9px 10px;border-radius:11px;background:rgba(148,163,184,.045);border:1px solid rgba(148,163,184,.10)}
+
+/* Modal de objetivos */
+#goalOverlay .modal{
+  border-radius:24px;
+  border-color:rgba(34,197,94,.18);
+}
+#goalOverlay .goal-modal-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+#goalOverlay .input{min-height:44px}
+#goalOverlay .save{margin-top:3px}
+
+/* Light theme */
+body.light #nutritionPanel{
+  background:linear-gradient(180deg,#ffffff,#f8fafc);
+  border-color:#dbe3ee;
+  box-shadow:0 18px 42px rgba(15,23,42,.08);
+}
+body.light #nutritionPanel .nutrition-head{border-color:#e5e7eb}
+body.light #nutritionPanel #nutritionGoals .goal-card,
+body.light #nutritionPanel .nutrition-summary-metric{
+  background:#fff;
+  border-color:#dbe3ee;
+}
+body.light #nutritionPanel #mealList .meal-card{box-shadow:0 7px 18px rgba(15,23,42,.06)}
+body.light #nutritionOverlay .modal-head{background:rgba(255,255,255,.99);border-color:#e5e7eb}
+
+/* Tablet / mobile */
+@media(max-width:950px){
+  #nutritionPanel #nutritionDays{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #nutritionPanel #nutritionGoals{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #nutritionPanel #mealTabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  #nutritionPanel{padding:14px;border-radius:20px}
+  #nutritionPanel .nutrition-head{align-items:flex-start}
+  #nutritionPanel .nutrition-head h2{font-size:18px}
+  #nutritionPanel .nutrition-head h2::before{width:32px;height:32px;font-size:16px}
+  #nutritionPanel .nutrition-actions{width:100%;display:grid;grid-template-columns:1fr 1fr}
+  #nutritionPanel .nutrition-actions>*{width:100%;justify-content:center;text-align:center}
+  #nutritionPanel #nutritionDays{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  #nutritionPanel #nutritionDays .workout-day-btn{min-height:44px;font-size:9px}
+  #nutritionPanel .nutrition-day-summary{padding:13px}
+  #nutritionPanel .nutrition-summary-metrics{gap:6px}
+  #nutritionPanel .nutrition-summary-metric{min-height:62px;padding:9px}
+  #nutritionPanel #nutritionGoals{gap:7px}
+  #nutritionPanel #nutritionGoals .goal-card{min-height:88px;padding:10px}
+  #nutritionPanel #mealTabs{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  #nutritionPanel #mealTabs .meal-tab{min-height:48px;font-size:10px}
+  #nutritionPanel #mealList{max-height:none}
+  #nutritionPanel #mealList .meal-card{padding:13px}
+  #nutritionOverlay .modal{padding:16px;border-radius:20px;max-height:90vh}
+  #nutritionOverlay .modal-head{top:-16px}
+  #goalOverlay .goal-modal-grid{grid-template-columns:1fr}
+}

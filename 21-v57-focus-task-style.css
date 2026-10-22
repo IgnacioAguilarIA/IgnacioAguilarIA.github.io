@@ -1,0 +1,15 @@
+.v57-focus-taskbar{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin:8px 0 10px}
+.v57-focus-taskbar label{display:block;font-size:9px;font-weight:800;color:var(--muted);margin-bottom:5px}
+.v57-focus-task-select{width:100%;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:#0f172a;color:#fff;font-size:10px;outline:none}
+.v57-focus-task-select:focus{border-color:var(--blue)}
+.v57-focus-task-open{padding:8px 10px;border-radius:10px;border:1px solid rgba(96,165,250,.18);background:rgba(59,130,246,.08);color:#dbeafe;font-size:9px;font-weight:800;cursor:pointer;white-space:nowrap}
+.v57-focus-task-open:disabled{opacity:.45;cursor:not-allowed}
+.v57-focus-task-meta{font-size:8px;color:var(--muted);margin:-2px 0 8px;line-height:1.35}
+.v57-focus-task-progress{margin-top:9px;padding:9px 10px;border-radius:11px;background:rgba(255,255,255,.03);border:1px solid rgba(148,163,184,.09)}
+.v57-focus-task-progress strong{font-size:10px}.v57-focus-task-progress span{display:block;font-size:8px;color:var(--muted);margin-top:3px}
+.v57-focus-task-list{margin-top:10px;display:flex;flex-direction:column;gap:6px;max-height:150px;overflow:auto}
+.v57-focus-task-row{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:8px 9px;border-radius:10px;background:rgba(15,23,42,.46);border:1px solid rgba(148,163,184,.08)}
+.v57-focus-task-row-title{font-size:9px;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.v57-focus-task-row-meta{font-size:7px;color:var(--muted);margin-top:2px}
+.v57-focus-task-row-time{font-size:9px;font-weight:900;color:#bfdbfe;white-space:nowrap}
+body.light .v57-focus-task-select{background:#fff;color:#0f172a;border-color:#cbd5e1}body.light .v57-focus-task-open{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}body.light .v57-focus-task-progress,body.light .v57-focus-task-row{background:#f8fafc;border-color:#dbe3ee}
+@media(max-width:600px){.v57-focus-taskbar{grid-template-columns:1fr}.v57-focus-task-open{width:100%}}

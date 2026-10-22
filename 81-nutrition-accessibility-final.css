@@ -1,0 +1,118 @@
+/* Agenda FICH — Etapa C1: accesibilidad, consistencia y controles táctiles de Alimentación.
+   Selectores limitados a las pantallas y diálogos nutricionales. */
+#nutritionPanel :is(button,input,select,textarea,a[href],[tabindex]):focus-visible,
+#nutritionOverlay :is(button,input,select,textarea,a[href],[tabindex]):focus-visible,
+#goalOverlay :is(button,input,select,textarea,a[href],[tabindex]):focus-visible,
+.nutrition-advanced-overlay :is(button,input,select,textarea,a[href],[tabindex]):focus-visible,
+.nutrition-routine-overlay :is(button,input,select,textarea,a[href],[tabindex]):focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 3px;
+}
+#nutritionPanel :is(button,input,select,textarea),
+#nutritionOverlay :is(button,input,select,textarea),
+#goalOverlay :is(button,input,select,textarea),
+.nutrition-advanced-overlay :is(button,input,select,textarea),
+.nutrition-routine-overlay :is(button,input,select,textarea) {
+  accent-color: var(--accent, #2563eb);
+}
+#nutritionPanel .nutrition-actions > button,
+#nutritionPanel #nutritionDays > button,
+#nutritionPanel #mealTabs > button,
+#nutritionPanel #mealList .meal-action,
+#nutritionOverlay .meal-form-actions > button,
+#goalOverlay #saveGoalsBtn,
+#goalOverlay #goalCloseBtn,
+.nutrition-advanced-modal button,
+.nutrition-routine-modal button {
+  min-height: 44px;
+}
+#nutritionPanel #mealList .meal-action { min-width: 44px; }
+#nutritionPanel :is(input,select,textarea),
+#nutritionOverlay :is(input,select,textarea),
+#goalOverlay :is(input,select,textarea),
+.nutrition-advanced-modal :is(input,select,textarea),
+.nutrition-routine-modal :is(input,select,textarea) {
+  max-width: 100%;
+  scroll-margin-block: 96px;
+}
+#nutritionPanel [aria-pressed="true"],
+#nutritionPanel [aria-selected="true"] {
+  box-shadow: inset 0 0 0 2px rgba(96,165,250,.78);
+}
+.nutrition-routine-modal,
+.nutrition-advanced-modal,
+#nutritionOverlay .modal,
+#goalOverlay .modal {
+  overscroll-behavior: contain;
+}
+.nutrition-routine-head p,
+.nutrition-routine-note,
+.nutrition-routine-status,
+.nutrition-routine-stat-card small,
+.nutrition-advanced-head p,
+.nutrition-advanced-form small,
+.nutrition-advanced-note,
+.nutrition-advanced-status {
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+body.light .nutrition-routine-modal,
+body.light .nutrition-advanced-modal {
+  color: #172033;
+  background: #fff;
+  border-color: #cbd5e1;
+}
+body.light .nutrition-routine-note,
+body.light .nutrition-advanced-note,
+body.light .nutrition-advanced-recipe-preview {
+  color: #334155;
+  opacity: 1;
+  background: #f1f5f9;
+}
+body.light .nutrition-routine-head p,
+body.light .nutrition-routine-stat-card small,
+body.light .nutrition-advanced-head p,
+body.light .nutrition-advanced-form small,
+body.light .nutrition-advanced-status,
+body.light .nutrition-recipe-card-main small,
+body.light .nutrition-recipe-card-main span,
+body.light .nutrition-history-day > header span,
+body.light .nutrition-history-item small {
+  color: #475569;
+  opacity: 1;
+}
+.nutrition-routine-status:empty,
+.nutrition-advanced-status:empty { min-height: 0; }
+@media (max-width: 600px) {
+  .nutrition-routine-actions { position: sticky; bottom: 0; z-index: 2; flex-wrap: wrap; }
+  .nutrition-routine-actions button { flex: 1 1 120px; }
+  #nutritionPanel #nutritionDays > button,
+  #nutritionPanel #mealTabs > button { min-width: 0; padding-inline: 5px; }
+}
+@media (max-width: 360px) {
+  .nutrition-routine-stat-grid { grid-template-columns: minmax(0, 1fr); }
+  .nutrition-routine-stats-controls { align-items: stretch; flex-direction: column; }
+  .nutrition-routine-stats-controls select,
+  .nutrition-routine-stats-controls button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #nutritionPanel *, #nutritionOverlay *, #goalOverlay *,
+  .nutrition-advanced-overlay *, .nutrition-routine-overlay * {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+@media (forced-colors: active) {
+  #nutritionPanel :is(button,input,select,textarea,a[href]):focus-visible,
+  #nutritionOverlay :is(button,input,select,textarea,a[href]):focus-visible,
+  #goalOverlay :is(button,input,select,textarea,a[href]):focus-visible,
+  .nutrition-advanced-overlay :is(button,input,select,textarea,a[href]):focus-visible,
+  .nutrition-routine-overlay :is(button,input,select,textarea,a[href]):focus-visible {
+    outline: 2px solid Highlight;
+  }
+  #nutritionPanel [aria-pressed="true"], #nutritionPanel [aria-selected="true"] {
+    outline: 1px solid Highlight;
+  }
+}

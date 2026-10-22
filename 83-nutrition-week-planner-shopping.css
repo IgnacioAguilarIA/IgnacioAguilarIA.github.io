@@ -1,0 +1,64 @@
+/* Etapa D4: herramientas semanales de Alimentación. Todos los selectores están acotados a estas herramientas. */
+.nutrition-week-tool-btn{white-space:normal;line-height:1.25}
+.nutrition-week-modal-overlay{position:fixed;inset:0;z-index:12000;background:rgba(7,12,22,.72);display:flex;align-items:center;justify-content:center;padding:clamp(8px,2.5vw,24px);overflow:auto;overscroll-behavior:contain}
+.nutrition-week-modal{width:min(1080px,100%);max-height:min(92dvh,900px);overflow:auto;background:var(--card, #111827);color:var(--text, #fff);border:1px solid var(--line, rgba(120,130,150,.26));border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,.3);padding:clamp(14px,2.5vw,24px);outline:none}
+.nutrition-week-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding-bottom:14px;border-bottom:1px solid var(--line,rgba(120,130,150,.22));margin-bottom:16px}
+.nutrition-week-modal-heading h2{margin:0;font-size:clamp(1.2rem,2.2vw,1.65rem);line-height:1.25}
+.nutrition-week-modal-heading p{margin:6px 0 0;color:var(--muted,#94a3b8);font-size:.92rem;line-height:1.5}
+.nutrition-week-close{border:1px solid var(--line,rgba(120,130,150,.35));border-radius:10px;background:transparent;color:inherit;padding:9px 12px;min-height:42px;font-weight:650;cursor:pointer}
+.nutrition-week-actions{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px}
+.nutrition-week-status{padding:10px 12px;margin:10px 0 14px;border-radius:10px;background:var(--soft-bg,rgba(100,116,139,.10));color:inherit;font-size:.9rem;line-height:1.45}
+.nutrition-week-status[hidden]{display:none}
+.nutrition-week-status[data-state="success"]{border-inline-start:3px solid #21845b}
+.nutrition-week-status[data-state="error"]{border-inline-start:3px solid #bf4545}
+.nutrition-week-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.nutrition-week-day-card{min-width:0;border:1px solid var(--line,rgba(120,130,150,.25));border-radius:14px;padding:14px;background:var(--surface-card,rgba(120,130,150,.035));display:flex;flex-direction:column;gap:10px}
+.nutrition-week-day-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nutrition-week-day-head h3{margin:0;font-size:1.05rem}
+.nutrition-week-pill{font-size:.78rem;padding:4px 8px;border-radius:999px;background:var(--soft-bg,rgba(100,116,139,.12));white-space:nowrap}
+.nutrition-week-empty{color:var(--muted,#94a3b8);margin:4px 0;line-height:1.5}
+.nutrition-week-meals{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+.nutrition-week-meals li{display:grid;gap:3px;padding-bottom:8px;border-bottom:1px solid var(--line,rgba(120,130,150,.17));min-width:0}
+.nutrition-week-meals li:last-child{border-bottom:0;padding-bottom:0}
+.nutrition-week-meals strong{overflow-wrap:anywhere;font-size:.92rem}
+.nutrition-week-meals span{color:var(--muted,#94a3b8);font-size:.82rem;line-height:1.4}
+.nutrition-week-macros{margin:auto 0 0;color:var(--muted,#94a3b8);font-size:.8rem;line-height:1.5;padding-top:4px}
+.nutrition-week-open-day{border:1px solid var(--line,rgba(120,130,150,.32));border-radius:10px;background:transparent;color:inherit;padding:9px 12px;min-height:42px;font-weight:650;cursor:pointer;width:100%;margin-top:auto}
+.nutrition-week-open-day:hover,.nutrition-week-close:hover{background:var(--soft-bg,rgba(100,116,139,.10))}
+.nutrition-shopping-tools{display:flex;align-items:end;flex-wrap:wrap;gap:8px}
+.nutrition-shopping-week-label{display:grid;gap:5px;font-size:.82rem;font-weight:650;min-width:190px;flex:1}
+.nutrition-shopping-week-label input{width:100%;min-height:42px}
+.nutrition-shopping-add-form{display:grid;grid-template-columns:minmax(150px,2fr) minmax(90px,.8fr) minmax(100px,1fr) minmax(130px,1fr);gap:10px;padding:14px;border:1px solid var(--line,rgba(120,130,150,.26));border-radius:12px;margin:12px 0}
+.nutrition-shopping-add-form[hidden]{display:none}
+.nutrition-shopping-add-form label{display:grid;gap:5px;font-size:.82rem;font-weight:650;min-width:0}
+.nutrition-shopping-add-form input,.nutrition-shopping-add-form select{width:100%;min-width:0;min-height:42px;border:1px solid var(--line,rgba(120,130,150,.35));border-radius:9px;background:var(--card2,transparent);color:inherit;padding:8px 10px}
+.nutrition-shopping-form-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.nutrition-shopping-list{display:grid;gap:13px;margin-top:14px}
+.nutrition-shopping-empty{padding:22px 14px;border:1px dashed var(--line,rgba(120,130,150,.38));border-radius:12px;text-align:center;color:var(--muted,#94a3b8);line-height:1.5}
+.nutrition-shopping-category{border:1px solid var(--line,rgba(120,130,150,.25));border-radius:13px;overflow:hidden}
+.nutrition-shopping-category h3{margin:0;padding:10px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--soft-bg,rgba(100,116,139,.09));font-size:.92rem}
+.nutrition-shopping-category h3 span{font-size:.78rem;color:var(--muted,#94a3b8)}
+.nutrition-shopping-category ul{list-style:none;padding:0;margin:0}
+.nutrition-shopping-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:11px 12px;border-top:1px solid var(--line,rgba(120,130,150,.14));min-width:0}
+.nutrition-shopping-row:first-child{border-top:0}
+.nutrition-shopping-check{display:flex;align-items:center;gap:10px;min-width:0;cursor:pointer;grid-row:span 2}
+.nutrition-shopping-check input{width:20px;height:20px;min-width:20px;accent-color:var(--blue,#3b82f6);cursor:pointer}
+.nutrition-shopping-name{font-weight:650;overflow-wrap:anywhere}
+.nutrition-shopping-row small{grid-column:1;grid-row:2;margin-left:30px;color:var(--muted,#94a3b8);font-size:.8rem;line-height:1.4;overflow-wrap:anywhere}
+.nutrition-shopping-row.is-checked .nutrition-shopping-name{text-decoration:line-through;color:var(--muted,#94a3b8)}
+.nutrition-shopping-delete{grid-column:2;grid-row:1/span 2;align-self:center;border:1px solid var(--line,rgba(120,130,150,.3));border-radius:9px;min-height:38px;min-width:38px;background:transparent;color:inherit;font-size:1.1rem;cursor:pointer}
+.nutrition-week-modal .small-btn.primary{width:auto;min-height:42px;padding:9px 12px;border:1px solid rgba(96,165,250,.30);border-radius:999px;font-size:12px}.nutrition-week-modal button:focus-visible,.nutrition-week-modal input:focus-visible,.nutrition-week-modal select:focus-visible{outline:3px solid var(--blue,#3b82f6);outline-offset:2px}
+@media(max-width:720px){
+ .nutrition-week-tool-btn{flex:1 1 calc(50% - 8px);min-width:0}
+ .nutrition-week-modal-overlay{align-items:flex-end;padding:6px}
+ .nutrition-week-modal{max-height:94dvh;border-radius:18px 18px 12px 12px;padding:14px;width:100%}
+ .nutrition-week-grid{grid-template-columns:1fr}
+ .nutrition-shopping-tools>*{flex:1 1 calc(50% - 8px)}
+ .nutrition-shopping-week-label{flex:1 1 100%}
+ .nutrition-shopping-add-form{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .nutrition-shopping-add-form label:first-child{grid-column:1/-1}
+ .nutrition-week-actions{justify-content:stretch}
+ .nutrition-week-actions button{flex:1}
+}
+@media(prefers-reduced-motion:reduce){.nutrition-week-modal-overlay *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(forced-colors:active){.nutrition-week-day-card,.nutrition-shopping-category,.nutrition-shopping-row,.nutrition-week-close,.nutrition-week-open-day,.nutrition-shopping-delete{border:1px solid ButtonText}.nutrition-week-status[data-state="success"],.nutrition-week-status[data-state="error"]{border-inline-start:4px solid CanvasText}}

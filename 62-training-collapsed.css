@@ -1,0 +1,87 @@
+/* V98 — entrenamiento compacto
+   La rutina básica queda visible. Los paneles de estadísticas/progreso avanzados
+   se muestran solo cuando el usuario los solicita.
+*/
+
+#trainingDetailsToggleWrap{
+  margin:16px 0 2px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+
+.training-details-toggle{
+  width:100%;
+  min-height:46px;
+  padding:11px 14px;
+  border-radius:14px;
+  border:1px solid rgba(96,165,250,.25);
+  background:rgba(59,130,246,.09);
+  color:#dbeafe;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  transition:transform .15s ease,background .15s ease,border-color .15s ease;
+}
+
+.training-details-toggle:hover{
+  background:rgba(59,130,246,.14);
+  border-color:rgba(96,165,250,.42);
+}
+
+.training-details-toggle:active{transform:scale(.99)}
+
+.training-details-toggle:focus-visible{
+  outline:2px solid rgba(96,165,250,.65);
+  outline-offset:2px;
+}
+
+.training-details-help{
+  display:block;
+  margin-top:6px;
+  text-align:center;
+  color:var(--muted);
+  font-size:9px;
+  line-height:1.4;
+}
+
+/* Estado cerrado: ocultar únicamente información avanzada de la sección.
+   La Vista de Entrenamiento/overlay no se toca. */
+body:not(.v98-training-details-open) #workoutPanel .workout-analytics,
+body:not(.v98-training-details-open) #workoutPanel .exercise-progress,
+body:not(.v98-training-details-open) #workoutPanel .workout-history,
+body:not(.v98-training-details-open) #workoutPanel #v83WorkoutSuite,
+body:not(.v98-training-details-open) #workoutPanel #v92TrainingInsights,
+body:not(.v98-training-details-open) #workoutPanel #v93TrainingUpgrade,
+body:not(.v98-training-details-open) #workoutPanel #v96TrainingFinal,
+body:not(.v98-training-details-open) #v52WorkoutDashboard{
+  display:none !important;
+}
+
+/* Cuando se abre, los módulos recuperan su display natural. */
+body.v98-training-details-open #workoutPanel .workout-analytics{display:grid}
+body.v98-training-details-open #workoutPanel .exercise-progress,
+body.v98-training-details-open #workoutPanel .workout-history,
+body.v98-training-details-open #workoutPanel #v83WorkoutSuite,
+body.v98-training-details-open #workoutPanel #v92TrainingInsights,
+body.v98-training-details-open #workoutPanel #v93TrainingUpgrade,
+body.v98-training-details-open #workoutPanel #v96TrainingFinal,
+body.v98-training-details-open #v52WorkoutDashboard{
+  display:block;
+}
+
+@media(max-width:700px){
+  #trainingDetailsToggleWrap{margin-top:14px}
+  .training-details-toggle{min-height:48px;font-size:11px}
+  .training-details-help{font-size:8px}
+}
+
+body.light .training-details-toggle{
+  background:#eff6ff;
+  border-color:#bfdbfe;
+  color:#1e3a8a;
+}
+body.light .training-details-toggle:hover{background:#dbeafe}

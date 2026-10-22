@@ -1,0 +1,2 @@
+/* Prevent non-visual helper nodes from affecting layout if a legacy module is injected. */
+body > script, body > style { display:none !important; }

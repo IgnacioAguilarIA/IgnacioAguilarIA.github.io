@@ -1,0 +1,80 @@
+/* Agenda FICH D7 — trazabilidad nutricional y exportación de informes. */
+.nutrition-quality-open{margin-inline-start:6px}
+.nutrition-quality-overlay{position:fixed;inset:0;z-index:100100;background:rgba(4,10,20,.72);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box;overflow:auto}
+.nutrition-quality-dialog{width:min(900px,100%);max-height:min(90dvh,900px);overflow:auto;background:var(--card,#fff);color:var(--text,#0f172a);border:1px solid var(--line,#dbe3ee);border-radius:18px;box-shadow:0 24px 90px rgba(0,0,0,.32);padding:clamp(14px,3vw,24px);box-sizing:border-box}
+.nutrition-quality-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.nutrition-quality-head h2{font-size:clamp(18px,2.4vw,24px);line-height:1.2;margin:0;font-weight:850}
+.nutrition-quality-head p,.nutrition-quality-list-head p{font-size:12px;color:var(--muted,#64748b);line-height:1.5;margin:6px 0 0}
+.nutrition-quality-close{width:42px;height:42px;flex:0 0 42px;border:1px solid var(--line,#dbe3ee);border-radius:12px;background:transparent;color:inherit;font-size:24px;cursor:pointer}
+.nutrition-quality-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 10px}
+.nutrition-quality-toolbar button{min-height:42px}
+.nutrition-quality-status{font-size:12px;line-height:1.5;margin:10px 0;padding:10px 12px;background:var(--soft-bg,rgba(148,163,184,.09));border:1px solid var(--line,rgba(148,163,184,.3));border-radius:10px;overflow-wrap:anywhere}
+.nutrition-quality-counts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 20px}
+.nutrition-quality-count{display:flex;align-items:start;justify-content:space-between;gap:8px;padding:10px 12px;border:1px solid var(--line,rgba(148,163,184,.25));border-radius:10px;font-size:11px;line-height:1.45}
+.nutrition-quality-count strong{font-size:15px;flex:0 0 auto}
+.nutrition-quality-list-head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin:12px 0}
+.nutrition-quality-list-head h3{font-size:15px;margin:0}
+.nutrition-quality-list-head p{max-width:430px;margin:0}
+.nutrition-quality-food-list{display:grid;gap:8px}
+.nutrition-quality-food{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px;border:1px solid var(--line,rgba(148,163,184,.23));border-radius:12px;min-width:0}
+.nutrition-quality-food-main{display:grid;gap:4px;min-width:0;overflow-wrap:anywhere}
+.nutrition-quality-food-main strong{font-size:13px}
+.nutrition-quality-food-main span,.nutrition-quality-food-main small,.nutrition-quality-food-main a{font-size:11px;line-height:1.45;color:var(--muted,#64748b)}
+.nutrition-quality-food-main small{color:var(--text,#334155)}
+.nutrition-quality-food-main a{color:var(--blue,#2563eb);text-decoration:underline;text-underline-offset:2px}
+.nutrition-quality-food-actions{display:flex;align-items:center;justify-content:flex-end;flex:0 0 auto;max-width:240px}
+.nutrition-quality-verified,.nutrition-quality-needs-data{font-size:11px;font-weight:750;line-height:1.4}
+.nutrition-quality-verified{color:#16865d}.nutrition-quality-needs-data{color:#9a6700}
+.nutrition-quality-empty{padding:18px;border:1px dashed var(--line,#cbd5e1);border-radius:12px;font-size:12px;line-height:1.55;color:var(--muted,#64748b)}
+.nutrition-quality-note,.nutrition-quality-footer{font-size:11px;color:var(--muted,#64748b);line-height:1.55;margin:12px 0 0}
+.nutrition-quality-footer{padding-top:12px;border-top:1px solid var(--line,rgba(148,163,184,.2))}
+.nutrition-quality-dialog button:focus-visible{outline:3px solid var(--blue,#2563eb);outline-offset:2px}
+body.light .nutrition-quality-dialog{background:#fff;color:#0f172a;border-color:#dbe3ee}
+body.light .nutrition-quality-food-main small{color:#334155}
+@media(max-width:640px){.nutrition-quality-overlay{padding:0;align-items:stretch}.nutrition-quality-dialog{width:100%;max-height:100dvh;border-radius:0;padding:16px}.nutrition-quality-toolbar{display:grid;grid-template-columns:1fr 1fr}.nutrition-quality-toolbar button:first-child{grid-column:1/-1}.nutrition-quality-counts{grid-template-columns:1fr}.nutrition-quality-list-head{display:block}.nutrition-quality-list-head p{margin-top:5px}.nutrition-quality-food{align-items:stretch;flex-direction:column}.nutrition-quality-food-actions{max-width:none;justify-content:flex-start}.nutrition-quality-food-actions button{width:100%;min-height:44px}.nutrition-quality-close{min-height:42px}}
+@media(prefers-reduced-motion:reduce){.nutrition-quality-dialog *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(forced-colors:active){.nutrition-quality-dialog,.nutrition-quality-food,.nutrition-quality-count,.nutrition-quality-close,.nutrition-quality-status{border:1px solid CanvasText}.nutrition-quality-dialog button:focus-visible{outline:2px solid Highlight}}
+
+/* D8 — period filtering and daily summary, scoped exclusively to the nutrition report. */
+.nutrition-quality-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;align-items:end;gap:10px;padding:12px;border:1px solid var(--line,rgba(148,163,184,.25));border-radius:12px;margin:14px 0 8px}
+.nutrition-quality-filters label{display:grid;gap:5px;color:var(--muted,#64748b);font-size:11px;font-weight:750}
+.nutrition-quality-filters input{width:100%;min-width:0;min-height:42px;padding:8px 10px;border:1px solid var(--line,#cbd5e1);border-radius:9px;background:var(--card,#fff);color:var(--text,#0f172a);font:inherit;box-sizing:border-box}
+.nutrition-quality-daily{margin:14px 0 20px;min-width:0}
+.nutrition-quality-daily h3{font-size:15px;margin:0 0 6px}
+.nutrition-quality-table-wrap{max-width:100%;overflow:auto;border:1px solid var(--line,rgba(148,163,184,.25));border-radius:10px}
+.nutrition-quality-table-wrap table{width:100%;border-collapse:collapse;font-size:11px;min-width:700px}
+.nutrition-quality-table-wrap th,.nutrition-quality-table-wrap td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line,rgba(148,163,184,.2));white-space:nowrap}
+.nutrition-quality-table-wrap th{position:sticky;top:0;background:var(--soft-bg,#f1f5f9);font-weight:800}
+.nutrition-quality-table-wrap tbody tr:last-child td{border-bottom:0}
+.nutrition-quality-table-wrap td:nth-child(n+4):nth-child(-n+7){text-align:right;font-variant-numeric:tabular-nums}
+.nutrition-quality-table-wrap td:nth-child(2){color:var(--muted,#64748b)}
+body.light .nutrition-quality-filters input{background:#fff;color:#0f172a;border-color:#cbd5e1}
+body.light .nutrition-quality-table-wrap th{background:#f1f5f9;color:#0f172a}
+@media(max-width:640px){.nutrition-quality-filters{grid-template-columns:1fr 1fr}.nutrition-quality-filters button{grid-column:1/-1;min-height:44px}.nutrition-quality-table-wrap table{min-width:680px}}
+
+/* E4B — auditoría orientativa, categoría y comparación entre períodos; limitado al informe de Alimentación. */
+.nutrition-quality-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr) auto}
+.nutrition-quality-filters select{width:100%;min-width:0;min-height:42px;padding:8px 10px;border:1px solid var(--line,#cbd5e1);border-radius:9px;background:var(--card,#fff);color:var(--text,#0f172a);font:inherit;box-sizing:border-box}
+.nutrition-quality-audit,.nutrition-quality-comparison{margin:18px 0 20px}
+.nutrition-quality-audit h3,.nutrition-quality-comparison h3{font-size:15px;margin:0 0 6px}
+.nutrition-quality-audit-list{display:grid;gap:8px;margin-top:10px}
+.nutrition-quality-audit-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px;border:1px solid var(--line,rgba(148,163,184,.25));border-radius:12px;min-width:0}
+.nutrition-quality-audit-item>div{min-width:0;display:grid;gap:4px}
+.nutrition-quality-audit-item strong{font-size:12px;overflow-wrap:anywhere}
+.nutrition-quality-audit-item span{font-size:11px;font-weight:750;overflow-wrap:anywhere}
+.nutrition-quality-audit-item p{font-size:11px;line-height:1.5;margin:0;color:var(--muted,#64748b);overflow-wrap:anywhere}
+.nutrition-quality-audit-item small{font-size:10px;line-height:1.4;color:var(--muted,#64748b);overflow-wrap:anywhere}
+.nutrition-quality-audit-severity{flex:0 0 auto;max-width:110px;padding:5px 7px;border-radius:8px;background:var(--soft-bg,rgba(148,163,184,.12));text-align:center}
+.nutrition-quality-audit-item.severity-error{border-inline-start:4px solid #b91c1c}
+.nutrition-quality-audit-item.severity-warning{border-inline-start:4px solid #b7791f}
+.nutrition-quality-audit-item.severity-info{border-inline-start:4px solid #64748b}
+.nutrition-quality-comparison-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.nutrition-quality-comparison-card{border:1px solid var(--line,rgba(148,163,184,.25));border-radius:12px;padding:12px;min-width:0}
+.nutrition-quality-comparison-card h4{font-size:13px;margin:0 0 8px}
+.nutrition-quality-comparison-card dl{display:grid;gap:6px;margin:0}
+.nutrition-quality-comparison-card dl>div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:8px;align-items:start}
+.nutrition-quality-comparison-card dt{font-size:10px;line-height:1.4;color:var(--muted,#64748b)}
+.nutrition-quality-comparison-card dd{font-size:11px;line-height:1.4;font-weight:750;text-align:right;margin:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+body.light .nutrition-quality-filters select{background:#fff;color:#0f172a;border-color:#cbd5e1}
+@media(max-width:760px){.nutrition-quality-filters{grid-template-columns:1fr 1fr}.nutrition-quality-filters label:nth-child(3),.nutrition-quality-filters button{grid-column:1/-1}.nutrition-quality-comparison-grid{grid-template-columns:1fr}.nutrition-quality-audit-item{flex-direction:column}.nutrition-quality-audit-severity{max-width:none;align-self:flex-start}}
+@media(forced-colors:active){.nutrition-quality-audit-item,.nutrition-quality-comparison-card{border:1px solid CanvasText}.nutrition-quality-audit-item.severity-error,.nutrition-quality-audit-item.severity-warning,.nutrition-quality-audit-item.severity-info{border-inline-start:4px solid CanvasText}}

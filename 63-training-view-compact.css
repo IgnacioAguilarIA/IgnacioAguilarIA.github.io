@@ -1,0 +1,72 @@
+/* V98 — Vista de entrenamiento compacta.
+   El bloque avanzado queda al final y oculto hasta que el usuario lo abre. */
+.v28-advanced-details{
+  margin:14px 0 0;
+  padding-top:12px;
+  border-top:1px solid rgba(148,163,184,.12);
+}
+
+.v28-advanced-content{
+  display:none;
+}
+
+.v28-advanced-details.open .v28-advanced-content{
+  display:block;
+}
+
+.v28-advanced-toggle{
+  width:100%;
+  min-height:44px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid rgba(96,165,250,.22);
+  background:rgba(59,130,246,.08);
+  color:#dbeafe;
+  font-size:10px;
+  font-weight:800;
+  cursor:pointer;
+  transition:background .15s ease,border-color .15s ease,transform .15s ease;
+}
+
+.v28-advanced-toggle:hover{
+  background:rgba(59,130,246,.13);
+  border-color:rgba(96,165,250,.38);
+}
+
+.v28-advanced-toggle:active{transform:scale(.99)}
+
+.v28-advanced-toggle:focus-visible{
+  outline:2px solid rgba(96,165,250,.62);
+  outline-offset:2px;
+}
+
+.v28-advanced-help{
+  display:block;
+  margin-top:6px;
+  text-align:center;
+  color:var(--muted);
+  font-size:8px;
+  line-height:1.4;
+}
+
+/* Los tres paneles conservan sus propios estilos y lógica; acá solo se controla
+   su posición dentro de la vista. */
+.v28-advanced-content > #v50PrevPerf,
+.v28-advanced-content > #v51TrainingInsights,
+.v28-advanced-content > #v52TrainingProgress{
+  margin-top:12px;
+}
+
+body.light .v28-advanced-toggle{
+  background:#eff6ff;
+  border-color:#bfdbfe;
+  color:#1e3a8a;
+}
+
+body.light .v28-advanced-toggle:hover{background:#dbeafe}
+
+@media(max-width:600px){
+  .v28-advanced-details{margin-top:12px;padding-top:11px}
+  .v28-advanced-toggle{min-height:46px;font-size:10px}
+  .v28-advanced-help{font-size:8px}
+}

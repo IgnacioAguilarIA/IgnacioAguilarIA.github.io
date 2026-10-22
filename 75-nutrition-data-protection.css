@@ -1,0 +1,9 @@
+/* Etapa 3 — estado visible de sincronización, aislado en Alimentación. */
+.nutrition-sync-status{display:flex;align-items:center;gap:9px;margin:0 0 14px;padding:9px 12px;border:1px solid var(--border,#d8dee9);border-radius:12px;background:var(--surface,#fff);color:var(--text-muted,#667085);font-size:.82rem;line-height:1.35}
+.nutrition-sync-dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#8a94a6}
+.nutrition-sync-status.is-saved .nutrition-sync-dot{background:#24945b}
+.nutrition-sync-status.is-pending .nutrition-sync-dot{background:#c68a22}
+.nutrition-sync-status.is-warning .nutrition-sync-dot,.nutrition-sync-status.is-error .nutrition-sync-dot{background:#cf4545}
+.nutrition-sync-status.is-pending{border-color:rgba(198,138,34,.42)}
+.nutrition-sync-status.is-warning,.nutrition-sync-status.is-error{border-color:rgba(207,69,69,.42)}
+@media(prefers-color-scheme:dark){.nutrition-sync-status{background:var(--surface,#171a20);color:var(--text-muted,#aeb7c5)}}

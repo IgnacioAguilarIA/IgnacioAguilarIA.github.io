@@ -1,0 +1,42 @@
+/* Estado de consumo de alimentos dentro de las comidas */
+.nutrition-consumption-panel{margin:12px 0 0;padding:12px 14px;border:1px solid rgba(127,127,127,.16);border-radius:14px;background:rgba(127,127,127,.055)}
+.nutrition-consumption-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.nutrition-consumption-head>div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.nutrition-consumption-head strong{font-size:.84rem}
+.nutrition-consumption-head span{font-size:.72rem;opacity:.7}
+.nutrition-consumption-all{border:0;border-radius:9px;padding:7px 9px;background:rgba(37,99,235,.1);color:inherit;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap}
+.nutrition-consumption-all:hover{background:rgba(37,99,235,.16)}
+.nutrition-consumption-list{display:grid;gap:6px}
+.nutrition-consumption-item{display:grid;grid-template-columns:18px minmax(0,1fr) auto;align-items:center;gap:8px;padding:8px 9px;border-radius:10px;background:rgba(255,255,255,.04);cursor:default;transition:background .16s ease,opacity .16s ease}
+.nutrition-consumption-item:hover{background:rgba(127,127,127,.08)}
+.nutrition-consumption-item input{position:absolute;opacity:0;pointer-events:none}
+.nutrition-consumption-check{width:18px;height:18px;border-radius:6px;border:1px solid currentColor;display:grid;place-items:center;font-size:.72rem;opacity:.58}
+.nutrition-consumption-item.is-consumed .nutrition-consumption-check{background:var(--accent,#2563eb);border-color:var(--accent,#2563eb);color:#fff;opacity:1}
+.nutrition-consumption-item.is-consumed .nutrition-consumption-name{opacity:.62}
+.nutrition-consumption-name{display:flex;flex-direction:column;min-width:0;gap:2px}
+.nutrition-consumption-name strong{font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nutrition-consumption-name small{font-size:.7rem;opacity:.68}
+.nutrition-meal-builder-item-total{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.nutrition-meal-consumed-toggle{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;cursor:pointer;opacity:.78;user-select:none}
+.nutrition-meal-consumed-toggle input{accent-color:var(--accent,#2563eb)}
+@media(max-width:560px){
+  .nutrition-consumption-head{align-items:flex-start;flex-direction:row;flex-wrap:wrap}
+  .nutrition-consumption-all{width:auto}
+  .nutrition-consumption-item{grid-template-columns:18px minmax(0,1fr);align-items:start}
+  .nutrition-consumption-toggle{grid-column:2;justify-self:start;margin-top:2px;min-width:0}
+}
+
+/* Consumo: hacerlo visible como parte del plan diario */
+.nutrition-consumption-panel{box-sizing:border-box}
+.nutrition-consumption-item{border:1px solid rgba(127,127,127,.12)}
+.nutrition-consumption-item.is-consumed{outline:1px solid rgba(37,99,235,.18)}
+.nutrition-consumption-check{flex:0 0 18px}
+
+.nutrition-consumption-toggle{border:1px solid rgba(127,127,127,.2);border-radius:8px;padding:5px 8px;background:rgba(127,127,127,.06);color:inherit;font-size:.67rem;font-weight:700;cursor:pointer;white-space:nowrap;justify-self:end;min-width:92px;text-align:center;transition:background .15s ease,border-color .15s ease,opacity .15s ease}.nutrition-consumption-toggle:hover{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.28)}.nutrition-consumption-toggle:disabled{cursor:wait;opacity:.6}.nutrition-consumption-item.is-consumed .nutrition-consumption-toggle{background:rgba(37,99,235,.14);border-color:rgba(37,99,235,.28)}
+@media (max-width:720px){.nutrition-consumption-item{grid-template-columns:18px minmax(0,1fr);}.nutrition-consumption-toggle{grid-column:2;justify-self:start;margin-top:2px;min-width:0}}
+
+
+/* Mostrar macros del alimento solo cuando fue marcado como consumido */
+.nutrition-consumption-name small{line-height:1.35;min-height:1em}
+.nutrition-consumption-item:not(.is-consumed) .nutrition-consumption-name small{opacity:.58}
+.nutrition-consumption-item.is-consumed .nutrition-consumption-name small{opacity:.9;font-weight:600}

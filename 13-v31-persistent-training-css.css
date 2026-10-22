@@ -1,0 +1,19 @@
+.v31-training-mini{
+ position:fixed;left:10px;right:10px;bottom:94px;z-index:330;display:none;
+ align-items:center;gap:10px;padding:10px 12px;border-radius:15px;
+ background:rgba(17,24,39,.97);border:1px solid rgba(96,165,250,.25);
+ box-shadow:0 16px 40px rgba(0,0,0,.28);backdrop-filter:blur(12px)
+}
+.v31-training-mini.show{display:flex}
+.v31-mini-main{min-width:0;flex:1}
+.v31-mini-title{font-size:10px;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v31-mini-sub{font-size:9px;color:#94a3b8;margin-top:2px}
+.v31-mini-timer{font-size:13px;font-weight:900;color:#93c5fd;font-variant-numeric:tabular-nums}
+.v31-mini-actions{display:flex;gap:6px}
+.v31-mini-btn{border:1px solid rgba(148,163,184,.16);border-radius:9px;background:rgba(255,255,255,.05);color:#dbeafe;padding:8px 9px;font-size:9px;font-weight:900;cursor:pointer}
+.v31-mini-btn.primary{background:rgba(59,130,246,.14);border-color:rgba(96,165,250,.28)}
+body.light .v31-training-mini{background:rgba(255,255,255,.98);border-color:#bfdbfe;box-shadow:0 16px 40px rgba(15,23,42,.16)}
+body.light .v31-mini-title{color:#0f172a}
+body.light .v31-mini-sub{color:#64748b}
+body.light .v31-mini-btn{background:#fff;color:#334155;border-color:#dbe3ee}
+@media(max-width:600px){.v31-training-mini{bottom:92px;left:8px;right:8px;padding:9px}}

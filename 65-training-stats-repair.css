@@ -1,0 +1,4 @@
+.training-stats-note{margin-top:8px;padding:8px 10px;border-radius:10px;border:1px solid rgba(96,165,250,.14);background:rgba(59,130,246,.05);font-size:9px;color:var(--muted)}
+.progress-chart{width:100%;height:auto;display:block;overflow:visible}.progress-chart circle{cursor:pointer}.progress-metric-buttons{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.progress-metric-btn{min-height:32px;padding:0 9px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:inherit;font-size:9px;font-weight:800;cursor:pointer}.progress-metric-btn.active{background:rgba(59,130,246,.12);border-color:rgba(96,165,250,.35)}
+.v92-ti-controls select:disabled{opacity:.55;cursor:not-allowed}.v94-history-item{cursor:pointer}.v94-history-item:focus-visible{outline:2px solid rgba(96,165,250,.6);outline-offset:2px}
+body.light .progress-metric-btn{background:#fff;color:#334155;border-color:#cbd5e1}

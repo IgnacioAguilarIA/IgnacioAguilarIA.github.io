@@ -1,0 +1,5 @@
+/* Oculta solo en Entrenamiento los resúmenes generales de Inicio y la barra de sincronización. */
+body.training-top-clean #v25Goals,
+body.training-top-clean #v39SyncBar{
+  display:none !important;
+}
