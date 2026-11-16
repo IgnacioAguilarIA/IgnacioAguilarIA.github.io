@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-15T16:18:13.954732+00:00",
+  "updated_at": "2026-11-16T19:31:42.756867+00:00",
   "timezone": "America/Argentina/Cordoba",
   "events": [
     {
@@ -29417,5 +29417,7 @@
       "status": "announced"
     }
   ],
-  "update_errors": []
+  "update_errors": [
+    "CTERA: Response ended prematurely"
+  ]
 }
